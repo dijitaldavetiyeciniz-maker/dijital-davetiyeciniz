@@ -1,6 +1,10 @@
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Template1 from '@/components/templates/Template1';
+import Template2 from '@/components/templates/Template2';
+import Template3 from '@/components/templates/Template3';
+import Template4 from '@/components/templates/Template4';
+import Template5 from '@/components/templates/Template5';
 
 // Next.js App Router Page
 export default async function WeddingPage({
@@ -23,11 +27,18 @@ export default async function WeddingPage({
   }
 
   // Veritabanından gelen template_id değerine göre uygun şablonu render et.
-  // İleride buraya Template2, Template3 eklenebilir.
-  if (wedding.template_id === 'template1') {
-    return <Template1 wedding={wedding} />;
+  switch (wedding.template_id) {
+    case 'template1':
+      return <Template1 wedding={wedding} />;
+    case 'template2':
+      return <Template2 wedding={wedding} />;
+    case 'template3':
+      return <Template3 wedding={wedding} />;
+    case 'template4':
+      return <Template4 wedding={wedding} />;
+    case 'template5':
+      return <Template5 wedding={wedding} />;
+    default:
+      return <Template1 wedding={wedding} />;
   }
-
-  // Eğer bilinmeyen bir şablon girilmişse varsayılan olarak Template1 göster.
-  return <Template1 wedding={wedding} />;
 }
