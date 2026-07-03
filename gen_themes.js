@@ -8,7 +8,7 @@ const colors = [
 ];
 const fonts = ['sans', 'serif', 'mono'];
 const categories = ['Modern', 'Klasik', 'Karanlık', 'Minimalist', 'Lüks', 'Doğal'];
-const templates = ['template1', 'template2', 'template3', 'template4', 'template5'];
+const templates = ['template1', 'template2', 'template3', 'template4', 'template5', 'template6', 'template7', 'template8', 'template9', 'template10'];
 const adjectives = ['Gül', 'Okyanus', 'Lavanta', 'Zümrüt', 'Ateş', 'Zeytin', 'Kahve', 'Pırlanta', 'Safir', 'Vogue', 'Gece', 'Güneş', 'Ay', 'Yıldız', 'Bahar', 'Güz', 'Kış'];
 const nouns = ['Rüyası', 'Esintisi', 'Gecesi', 'Dalı', 'Çekirdeği', 'Grisi', 'Siyahı', 'Işıltısı', 'Büyüsü', 'Sessizliği', 'Yankısı', 'Gölgesi', 'Masalı', 'Şiiri', 'Efsanesi'];
 
@@ -37,7 +37,7 @@ const fileContent = `export interface ThemePreset {
   id: string;
   name: string;
   category: 'Modern' | 'Klasik' | 'Karanlık' | 'Minimalist' | 'Lüks' | 'Doğal';
-  template_id: 'template1' | 'template2' | 'template3' | 'template4' | 'template5';
+  template_id: 'template1' | 'template2' | 'template3' | 'template4' | 'template5' | 'template6' | 'template7' | 'template8' | 'template9' | 'template10';
   primary_color: string;
   font_family: 'sans' | 'serif' | 'mono';
   background_image_url: string | null;

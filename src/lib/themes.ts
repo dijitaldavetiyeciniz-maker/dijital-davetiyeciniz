@@ -2,7 +2,7 @@ export interface ThemePreset {
   id: string;
   name: string;
   category: 'Modern' | 'Klasik' | 'Karanlık' | 'Minimalist' | 'Lüks' | 'Doğal';
-  template_id: 'template1' | 'template2' | 'template3' | 'template4' | 'template5';
+  template_id: 'template1' | 'template2' | 'template3' | 'template4' | 'template5' | 'template6' | 'template7' | 'template8' | 'template9' | 'template10';
   primary_color: string;
   font_family: 'sans' | 'serif' | 'mono';
   background_image_url: string | null;
@@ -58,7 +58,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-6',
     name: 'Zeytin Grisi 6',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#dc2626',
     font_family: 'mono',
     background_image_url: null
@@ -67,7 +67,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-7',
     name: 'Kahve Siyahı 7',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#ea580c',
     font_family: 'sans',
     background_image_url: null
@@ -76,7 +76,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-8',
     name: 'Pırlanta Işıltısı 8',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#65a30d',
     font_family: 'serif',
     background_image_url: null
@@ -85,7 +85,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-9',
     name: 'Safir Büyüsü 9',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#0d9488',
     font_family: 'mono',
     background_image_url: null
@@ -94,7 +94,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-10',
     name: 'Vogue Sessizliği 10',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#2563eb',
     font_family: 'sans',
     background_image_url: null
@@ -148,7 +148,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-16',
     name: 'Güz Rüyası 16',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#52525b',
     font_family: 'sans',
     background_image_url: null
@@ -157,7 +157,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-17',
     name: 'Kış Esintisi 17',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#000000',
     font_family: 'serif',
     background_image_url: null
@@ -166,7 +166,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-18',
     name: 'Gül Gecesi 18',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#1c1917',
     font_family: 'mono',
     background_image_url: null
@@ -175,7 +175,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-19',
     name: 'Okyanus Dalı 19',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#78350f',
     font_family: 'sans',
     background_image_url: null
@@ -184,7 +184,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-20',
     name: 'Lavanta Çekirdeği 20',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#831843',
     font_family: 'serif',
     background_image_url: null
@@ -238,7 +238,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-26',
     name: 'Safir Yankısı 26',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#7c3aed',
     font_family: 'serif',
     background_image_url: null
@@ -247,7 +247,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-27',
     name: 'Vogue Gölgesi 27',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#d97706',
     font_family: 'mono',
     background_image_url: null
@@ -256,7 +256,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-28',
     name: 'Gece Masalı 28',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#16a34a',
     font_family: 'sans',
     background_image_url: null
@@ -265,7 +265,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-29',
     name: 'Güneş Şiiri 29',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#dc2626',
     font_family: 'serif',
     background_image_url: null
@@ -274,7 +274,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-30',
     name: 'Ay Efsanesi 30',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#ea580c',
     font_family: 'mono',
     background_image_url: null
@@ -328,7 +328,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-36',
     name: 'Okyanus Grisi 36',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#c026d3',
     font_family: 'mono',
     background_image_url: null
@@ -337,7 +337,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-37',
     name: 'Lavanta Siyahı 37',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#db2777',
     font_family: 'sans',
     background_image_url: null
@@ -346,7 +346,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-38',
     name: 'Zümrüt Işıltısı 38',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#475569',
     font_family: 'serif',
     background_image_url: null
@@ -355,7 +355,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-39',
     name: 'Ateş Büyüsü 39',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#52525b',
     font_family: 'mono',
     background_image_url: null
@@ -364,7 +364,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-40',
     name: 'Zeytin Sessizliği 40',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#000000',
     font_family: 'sans',
     background_image_url: null
@@ -418,7 +418,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-46',
     name: 'Güneş Rüyası 46',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#312e81',
     font_family: 'sans',
     background_image_url: null
@@ -427,7 +427,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-47',
     name: 'Ay Esintisi 47',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#e11d48',
     font_family: 'serif',
     background_image_url: null
@@ -436,7 +436,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-48',
     name: 'Yıldız Gecesi 48',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#0284c7',
     font_family: 'mono',
     background_image_url: null
@@ -445,7 +445,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-49',
     name: 'Bahar Dalı 49',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#7c3aed',
     font_family: 'sans',
     background_image_url: null
@@ -454,7 +454,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-50',
     name: 'Güz Çekirdeği 50',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#d97706',
     font_family: 'serif',
     background_image_url: null
@@ -508,7 +508,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-56',
     name: 'Ateş Yankısı 56',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#2563eb',
     font_family: 'serif',
     background_image_url: null
@@ -517,7 +517,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-57',
     name: 'Zeytin Gölgesi 57',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#4f46e5',
     font_family: 'mono',
     background_image_url: null
@@ -526,7 +526,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-58',
     name: 'Kahve Masalı 58',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#9333ea',
     font_family: 'sans',
     background_image_url: null
@@ -535,7 +535,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-59',
     name: 'Pırlanta Şiiri 59',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#c026d3',
     font_family: 'serif',
     background_image_url: null
@@ -544,7 +544,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-60',
     name: 'Safir Efsanesi 60',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#db2777',
     font_family: 'mono',
     background_image_url: null
@@ -598,7 +598,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-66',
     name: 'Bahar Grisi 66',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#831843',
     font_family: 'mono',
     background_image_url: null
@@ -607,7 +607,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-67',
     name: 'Güz Siyahı 67',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#064e3b',
     font_family: 'sans',
     background_image_url: null
@@ -616,7 +616,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-68',
     name: 'Kış Işıltısı 68',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#1e3a8a',
     font_family: 'serif',
     background_image_url: null
@@ -625,7 +625,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-69',
     name: 'Gül Büyüsü 69',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#312e81',
     font_family: 'mono',
     background_image_url: null
@@ -634,7 +634,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-70',
     name: 'Okyanus Sessizliği 70',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#e11d48',
     font_family: 'sans',
     background_image_url: null
@@ -688,7 +688,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-76',
     name: 'Pırlanta Rüyası 76',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#ea580c',
     font_family: 'sans',
     background_image_url: null
@@ -697,7 +697,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-77',
     name: 'Safir Esintisi 77',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#65a30d',
     font_family: 'serif',
     background_image_url: null
@@ -706,7 +706,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-78',
     name: 'Vogue Gecesi 78',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#0d9488',
     font_family: 'mono',
     background_image_url: null
@@ -715,7 +715,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-79',
     name: 'Gece Dalı 79',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#2563eb',
     font_family: 'sans',
     background_image_url: null
@@ -724,7 +724,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-80',
     name: 'Güneş Çekirdeği 80',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#4f46e5',
     font_family: 'serif',
     background_image_url: null
@@ -778,7 +778,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-86',
     name: 'Gül Yankısı 86',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#000000',
     font_family: 'serif',
     background_image_url: null
@@ -787,7 +787,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-87',
     name: 'Okyanus Gölgesi 87',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#1c1917',
     font_family: 'mono',
     background_image_url: null
@@ -796,7 +796,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-88',
     name: 'Lavanta Masalı 88',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#78350f',
     font_family: 'sans',
     background_image_url: null
@@ -805,7 +805,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-89',
     name: 'Zümrüt Şiiri 89',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#831843',
     font_family: 'serif',
     background_image_url: null
@@ -814,7 +814,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-90',
     name: 'Ateş Efsanesi 90',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#064e3b',
     font_family: 'mono',
     background_image_url: null
@@ -868,7 +868,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-96',
     name: 'Gece Grisi 96',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#d97706',
     font_family: 'mono',
     background_image_url: null
@@ -877,7 +877,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-97',
     name: 'Güneş Siyahı 97',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#16a34a',
     font_family: 'sans',
     background_image_url: null
@@ -886,7 +886,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-98',
     name: 'Ay Işıltısı 98',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#dc2626',
     font_family: 'serif',
     background_image_url: null
@@ -895,7 +895,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-99',
     name: 'Yıldız Büyüsü 99',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#ea580c',
     font_family: 'mono',
     background_image_url: null
@@ -904,7 +904,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-100',
     name: 'Bahar Sessizliği 100',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#65a30d',
     font_family: 'sans',
     background_image_url: null
@@ -958,7 +958,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-106',
     name: 'Zümrüt Rüyası 106',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#db2777',
     font_family: 'sans',
     background_image_url: null
@@ -967,7 +967,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-107',
     name: 'Ateş Esintisi 107',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#475569',
     font_family: 'serif',
     background_image_url: null
@@ -976,7 +976,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-108',
     name: 'Zeytin Gecesi 108',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#52525b',
     font_family: 'mono',
     background_image_url: null
@@ -985,7 +985,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-109',
     name: 'Kahve Dalı 109',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#000000',
     font_family: 'sans',
     background_image_url: null
@@ -994,7 +994,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-110',
     name: 'Pırlanta Çekirdeği 110',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#1c1917',
     font_family: 'serif',
     background_image_url: null
@@ -1048,7 +1048,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-116',
     name: 'Yıldız Yankısı 116',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#e11d48',
     font_family: 'serif',
     background_image_url: null
@@ -1057,7 +1057,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-117',
     name: 'Bahar Gölgesi 117',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#0284c7',
     font_family: 'mono',
     background_image_url: null
@@ -1066,7 +1066,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-118',
     name: 'Güz Masalı 118',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#7c3aed',
     font_family: 'sans',
     background_image_url: null
@@ -1075,7 +1075,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-119',
     name: 'Kış Şiiri 119',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#d97706',
     font_family: 'serif',
     background_image_url: null
@@ -1084,7 +1084,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-120',
     name: 'Gül Efsanesi 120',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#16a34a',
     font_family: 'mono',
     background_image_url: null
@@ -1138,7 +1138,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-126',
     name: 'Kahve Grisi 126',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#4f46e5',
     font_family: 'mono',
     background_image_url: null
@@ -1147,7 +1147,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-127',
     name: 'Pırlanta Siyahı 127',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#9333ea',
     font_family: 'sans',
     background_image_url: null
@@ -1156,7 +1156,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-128',
     name: 'Safir Işıltısı 128',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#c026d3',
     font_family: 'serif',
     background_image_url: null
@@ -1165,7 +1165,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-129',
     name: 'Vogue Büyüsü 129',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#db2777',
     font_family: 'mono',
     background_image_url: null
@@ -1174,7 +1174,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-130',
     name: 'Gece Sessizliği 130',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#475569',
     font_family: 'sans',
     background_image_url: null
@@ -1228,7 +1228,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-136',
     name: 'Kış Rüyası 136',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#064e3b',
     font_family: 'sans',
     background_image_url: null
@@ -1237,7 +1237,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-137',
     name: 'Gül Esintisi 137',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#1e3a8a',
     font_family: 'serif',
     background_image_url: null
@@ -1246,7 +1246,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-138',
     name: 'Okyanus Gecesi 138',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#312e81',
     font_family: 'mono',
     background_image_url: null
@@ -1255,7 +1255,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-139',
     name: 'Lavanta Dalı 139',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#e11d48',
     font_family: 'sans',
     background_image_url: null
@@ -1264,7 +1264,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-140',
     name: 'Zümrüt Çekirdeği 140',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#0284c7',
     font_family: 'serif',
     background_image_url: null
@@ -1318,7 +1318,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-146',
     name: 'Vogue Yankısı 146',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#65a30d',
     font_family: 'serif',
     background_image_url: null
@@ -1327,7 +1327,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-147',
     name: 'Gece Gölgesi 147',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#0d9488',
     font_family: 'mono',
     background_image_url: null
@@ -1336,7 +1336,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-148',
     name: 'Güneş Masalı 148',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#2563eb',
     font_family: 'sans',
     background_image_url: null
@@ -1345,7 +1345,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-149',
     name: 'Ay Şiiri 149',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#4f46e5',
     font_family: 'serif',
     background_image_url: null
@@ -1354,7 +1354,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-150',
     name: 'Yıldız Efsanesi 150',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#9333ea',
     font_family: 'mono',
     background_image_url: null
@@ -1408,7 +1408,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-156',
     name: 'Lavanta Grisi 156',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#1c1917',
     font_family: 'mono',
     background_image_url: null
@@ -1417,7 +1417,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-157',
     name: 'Zümrüt Siyahı 157',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#78350f',
     font_family: 'sans',
     background_image_url: null
@@ -1426,7 +1426,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-158',
     name: 'Ateş Işıltısı 158',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#831843',
     font_family: 'serif',
     background_image_url: null
@@ -1435,7 +1435,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-159',
     name: 'Zeytin Büyüsü 159',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#064e3b',
     font_family: 'mono',
     background_image_url: null
@@ -1444,7 +1444,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-160',
     name: 'Kahve Sessizliği 160',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#1e3a8a',
     font_family: 'sans',
     background_image_url: null
@@ -1498,7 +1498,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-166',
     name: 'Ay Rüyası 166',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#16a34a',
     font_family: 'sans',
     background_image_url: null
@@ -1507,7 +1507,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-167',
     name: 'Yıldız Esintisi 167',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#dc2626',
     font_family: 'serif',
     background_image_url: null
@@ -1516,7 +1516,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-168',
     name: 'Bahar Gecesi 168',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#ea580c',
     font_family: 'mono',
     background_image_url: null
@@ -1525,7 +1525,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-169',
     name: 'Güz Dalı 169',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#65a30d',
     font_family: 'sans',
     background_image_url: null
@@ -1534,7 +1534,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-170',
     name: 'Kış Çekirdeği 170',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#0d9488',
     font_family: 'serif',
     background_image_url: null
@@ -1588,7 +1588,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-176',
     name: 'Zeytin Yankısı 176',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#475569',
     font_family: 'serif',
     background_image_url: null
@@ -1597,7 +1597,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-177',
     name: 'Kahve Gölgesi 177',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#52525b',
     font_family: 'mono',
     background_image_url: null
@@ -1606,7 +1606,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-178',
     name: 'Pırlanta Masalı 178',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#000000',
     font_family: 'sans',
     background_image_url: null
@@ -1615,7 +1615,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-179',
     name: 'Safir Şiiri 179',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#1c1917',
     font_family: 'serif',
     background_image_url: null
@@ -1624,7 +1624,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-180',
     name: 'Vogue Efsanesi 180',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#78350f',
     font_family: 'mono',
     background_image_url: null
@@ -1678,7 +1678,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-186',
     name: 'Güz Grisi 186',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#0284c7',
     font_family: 'mono',
     background_image_url: null
@@ -1687,7 +1687,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-187',
     name: 'Kış Siyahı 187',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#7c3aed',
     font_family: 'sans',
     background_image_url: null
@@ -1696,7 +1696,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-188',
     name: 'Gül Işıltısı 188',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#d97706',
     font_family: 'serif',
     background_image_url: null
@@ -1705,7 +1705,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-189',
     name: 'Okyanus Büyüsü 189',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#16a34a',
     font_family: 'mono',
     background_image_url: null
@@ -1714,7 +1714,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-190',
     name: 'Lavanta Sessizliği 190',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#dc2626',
     font_family: 'sans',
     background_image_url: null
@@ -1768,7 +1768,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-196',
     name: 'Safir Rüyası 196',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#9333ea',
     font_family: 'sans',
     background_image_url: null
@@ -1777,7 +1777,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-197',
     name: 'Vogue Esintisi 197',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#c026d3',
     font_family: 'serif',
     background_image_url: null
@@ -1786,7 +1786,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-198',
     name: 'Gece Gecesi 198',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#db2777',
     font_family: 'mono',
     background_image_url: null
@@ -1795,7 +1795,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-199',
     name: 'Güneş Dalı 199',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#475569',
     font_family: 'sans',
     background_image_url: null
@@ -1804,7 +1804,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-200',
     name: 'Ay Çekirdeği 200',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#52525b',
     font_family: 'serif',
     background_image_url: null
@@ -1858,7 +1858,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-206',
     name: 'Okyanus Yankısı 206',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#1e3a8a',
     font_family: 'serif',
     background_image_url: null
@@ -1867,7 +1867,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-207',
     name: 'Lavanta Gölgesi 207',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#312e81',
     font_family: 'mono',
     background_image_url: null
@@ -1876,7 +1876,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-208',
     name: 'Zümrüt Masalı 208',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#e11d48',
     font_family: 'sans',
     background_image_url: null
@@ -1885,7 +1885,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-209',
     name: 'Ateş Şiiri 209',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#0284c7',
     font_family: 'serif',
     background_image_url: null
@@ -1894,7 +1894,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-210',
     name: 'Zeytin Efsanesi 210',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#7c3aed',
     font_family: 'mono',
     background_image_url: null
@@ -1948,7 +1948,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-216',
     name: 'Güneş Grisi 216',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#0d9488',
     font_family: 'mono',
     background_image_url: null
@@ -1957,7 +1957,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-217',
     name: 'Ay Siyahı 217',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#2563eb',
     font_family: 'sans',
     background_image_url: null
@@ -1966,7 +1966,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-218',
     name: 'Yıldız Işıltısı 218',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#4f46e5',
     font_family: 'serif',
     background_image_url: null
@@ -1975,7 +1975,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-219',
     name: 'Bahar Büyüsü 219',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#9333ea',
     font_family: 'mono',
     background_image_url: null
@@ -1984,7 +1984,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-220',
     name: 'Güz Sessizliği 220',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#c026d3',
     font_family: 'sans',
     background_image_url: null
@@ -2038,7 +2038,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-226',
     name: 'Ateş Rüyası 226',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#78350f',
     font_family: 'sans',
     background_image_url: null
@@ -2047,7 +2047,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-227',
     name: 'Zeytin Esintisi 227',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#831843',
     font_family: 'serif',
     background_image_url: null
@@ -2056,7 +2056,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-228',
     name: 'Kahve Gecesi 228',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#064e3b',
     font_family: 'mono',
     background_image_url: null
@@ -2065,7 +2065,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-229',
     name: 'Pırlanta Dalı 229',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#1e3a8a',
     font_family: 'sans',
     background_image_url: null
@@ -2074,7 +2074,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-230',
     name: 'Safir Çekirdeği 230',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#312e81',
     font_family: 'serif',
     background_image_url: null
@@ -2128,7 +2128,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-236',
     name: 'Bahar Yankısı 236',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#dc2626',
     font_family: 'serif',
     background_image_url: null
@@ -2137,7 +2137,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-237',
     name: 'Güz Gölgesi 237',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#ea580c',
     font_family: 'mono',
     background_image_url: null
@@ -2146,7 +2146,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-238',
     name: 'Kış Masalı 238',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#65a30d',
     font_family: 'sans',
     background_image_url: null
@@ -2155,7 +2155,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-239',
     name: 'Gül Şiiri 239',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#0d9488',
     font_family: 'serif',
     background_image_url: null
@@ -2164,7 +2164,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-240',
     name: 'Okyanus Efsanesi 240',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#2563eb',
     font_family: 'mono',
     background_image_url: null
@@ -2218,7 +2218,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-246',
     name: 'Pırlanta Grisi 246',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#52525b',
     font_family: 'mono',
     background_image_url: null
@@ -2227,7 +2227,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-247',
     name: 'Safir Siyahı 247',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#000000',
     font_family: 'sans',
     background_image_url: null
@@ -2236,7 +2236,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-248',
     name: 'Vogue Işıltısı 248',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#1c1917',
     font_family: 'serif',
     background_image_url: null
@@ -2245,7 +2245,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-249',
     name: 'Gece Büyüsü 249',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#78350f',
     font_family: 'mono',
     background_image_url: null
@@ -2254,7 +2254,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-250',
     name: 'Güneş Sessizliği 250',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#831843',
     font_family: 'sans',
     background_image_url: null
@@ -2308,7 +2308,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-256',
     name: 'Gül Rüyası 256',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#7c3aed',
     font_family: 'sans',
     background_image_url: null
@@ -2317,7 +2317,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-257',
     name: 'Okyanus Esintisi 257',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#d97706',
     font_family: 'serif',
     background_image_url: null
@@ -2326,7 +2326,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-258',
     name: 'Lavanta Gecesi 258',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#16a34a',
     font_family: 'mono',
     background_image_url: null
@@ -2335,7 +2335,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-259',
     name: 'Zümrüt Dalı 259',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#dc2626',
     font_family: 'sans',
     background_image_url: null
@@ -2344,7 +2344,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-260',
     name: 'Ateş Çekirdeği 260',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#ea580c',
     font_family: 'serif',
     background_image_url: null
@@ -2398,7 +2398,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-266',
     name: 'Gece Yankısı 266',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#c026d3',
     font_family: 'serif',
     background_image_url: null
@@ -2407,7 +2407,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-267',
     name: 'Güneş Gölgesi 267',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#db2777',
     font_family: 'mono',
     background_image_url: null
@@ -2416,7 +2416,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-268',
     name: 'Ay Masalı 268',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#475569',
     font_family: 'sans',
     background_image_url: null
@@ -2425,7 +2425,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-269',
     name: 'Yıldız Şiiri 269',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#52525b',
     font_family: 'serif',
     background_image_url: null
@@ -2434,7 +2434,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-270',
     name: 'Bahar Efsanesi 270',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#000000',
     font_family: 'mono',
     background_image_url: null
@@ -2488,7 +2488,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-276',
     name: 'Zümrüt Grisi 276',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#312e81',
     font_family: 'mono',
     background_image_url: null
@@ -2497,7 +2497,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-277',
     name: 'Ateş Siyahı 277',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#e11d48',
     font_family: 'sans',
     background_image_url: null
@@ -2506,7 +2506,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-278',
     name: 'Zeytin Işıltısı 278',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#0284c7',
     font_family: 'serif',
     background_image_url: null
@@ -2515,7 +2515,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-279',
     name: 'Kahve Büyüsü 279',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#7c3aed',
     font_family: 'mono',
     background_image_url: null
@@ -2524,7 +2524,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-280',
     name: 'Pırlanta Sessizliği 280',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#d97706',
     font_family: 'sans',
     background_image_url: null
@@ -2578,7 +2578,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-286',
     name: 'Yıldız Rüyası 286',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#2563eb',
     font_family: 'sans',
     background_image_url: null
@@ -2587,7 +2587,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-287',
     name: 'Bahar Esintisi 287',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#4f46e5',
     font_family: 'serif',
     background_image_url: null
@@ -2596,7 +2596,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-288',
     name: 'Güz Gecesi 288',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#9333ea',
     font_family: 'mono',
     background_image_url: null
@@ -2605,7 +2605,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-289',
     name: 'Kış Dalı 289',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#c026d3',
     font_family: 'sans',
     background_image_url: null
@@ -2614,7 +2614,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-290',
     name: 'Gül Çekirdeği 290',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#db2777',
     font_family: 'serif',
     background_image_url: null
@@ -2668,7 +2668,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-296',
     name: 'Kahve Yankısı 296',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#831843',
     font_family: 'serif',
     background_image_url: null
@@ -2677,7 +2677,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-297',
     name: 'Pırlanta Gölgesi 297',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#064e3b',
     font_family: 'mono',
     background_image_url: null
@@ -2686,7 +2686,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-298',
     name: 'Safir Masalı 298',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#1e3a8a',
     font_family: 'sans',
     background_image_url: null
@@ -2695,7 +2695,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-299',
     name: 'Vogue Şiiri 299',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#312e81',
     font_family: 'serif',
     background_image_url: null
@@ -2704,7 +2704,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-300',
     name: 'Gece Efsanesi 300',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#e11d48',
     font_family: 'mono',
     background_image_url: null
@@ -2758,7 +2758,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-306',
     name: 'Kış Grisi 306',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#ea580c',
     font_family: 'mono',
     background_image_url: null
@@ -2767,7 +2767,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-307',
     name: 'Gül Siyahı 307',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#65a30d',
     font_family: 'sans',
     background_image_url: null
@@ -2776,7 +2776,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-308',
     name: 'Okyanus Işıltısı 308',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#0d9488',
     font_family: 'serif',
     background_image_url: null
@@ -2785,7 +2785,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-309',
     name: 'Lavanta Büyüsü 309',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#2563eb',
     font_family: 'mono',
     background_image_url: null
@@ -2794,7 +2794,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-310',
     name: 'Zümrüt Sessizliği 310',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#4f46e5',
     font_family: 'sans',
     background_image_url: null
@@ -2848,7 +2848,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-316',
     name: 'Vogue Rüyası 316',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#000000',
     font_family: 'sans',
     background_image_url: null
@@ -2857,7 +2857,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-317',
     name: 'Gece Esintisi 317',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#1c1917',
     font_family: 'serif',
     background_image_url: null
@@ -2866,7 +2866,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-318',
     name: 'Güneş Gecesi 318',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#78350f',
     font_family: 'mono',
     background_image_url: null
@@ -2875,7 +2875,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-319',
     name: 'Ay Dalı 319',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#831843',
     font_family: 'sans',
     background_image_url: null
@@ -2884,7 +2884,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-320',
     name: 'Yıldız Çekirdeği 320',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#064e3b',
     font_family: 'serif',
     background_image_url: null
@@ -2938,7 +2938,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-326',
     name: 'Lavanta Yankısı 326',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#d97706',
     font_family: 'serif',
     background_image_url: null
@@ -2947,7 +2947,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-327',
     name: 'Zümrüt Gölgesi 327',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#16a34a',
     font_family: 'mono',
     background_image_url: null
@@ -2956,7 +2956,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-328',
     name: 'Ateş Masalı 328',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#dc2626',
     font_family: 'sans',
     background_image_url: null
@@ -2965,7 +2965,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-329',
     name: 'Zeytin Şiiri 329',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#ea580c',
     font_family: 'serif',
     background_image_url: null
@@ -2974,7 +2974,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-330',
     name: 'Kahve Efsanesi 330',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#65a30d',
     font_family: 'mono',
     background_image_url: null
@@ -3028,7 +3028,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-336',
     name: 'Ay Grisi 336',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#db2777',
     font_family: 'mono',
     background_image_url: null
@@ -3037,7 +3037,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-337',
     name: 'Yıldız Siyahı 337',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#475569',
     font_family: 'sans',
     background_image_url: null
@@ -3046,7 +3046,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-338',
     name: 'Bahar Işıltısı 338',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#52525b',
     font_family: 'serif',
     background_image_url: null
@@ -3055,7 +3055,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-339',
     name: 'Güz Büyüsü 339',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#000000',
     font_family: 'mono',
     background_image_url: null
@@ -3064,7 +3064,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-340',
     name: 'Kış Sessizliği 340',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#1c1917',
     font_family: 'sans',
     background_image_url: null
@@ -3118,7 +3118,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-346',
     name: 'Zeytin Rüyası 346',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#e11d48',
     font_family: 'sans',
     background_image_url: null
@@ -3127,7 +3127,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-347',
     name: 'Kahve Esintisi 347',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#0284c7',
     font_family: 'serif',
     background_image_url: null
@@ -3136,7 +3136,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-348',
     name: 'Pırlanta Gecesi 348',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#7c3aed',
     font_family: 'mono',
     background_image_url: null
@@ -3145,7 +3145,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-349',
     name: 'Safir Dalı 349',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#d97706',
     font_family: 'sans',
     background_image_url: null
@@ -3154,7 +3154,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-350',
     name: 'Vogue Çekirdeği 350',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#16a34a',
     font_family: 'serif',
     background_image_url: null
@@ -3208,7 +3208,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-356',
     name: 'Güz Yankısı 356',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#4f46e5',
     font_family: 'serif',
     background_image_url: null
@@ -3217,7 +3217,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-357',
     name: 'Kış Gölgesi 357',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#9333ea',
     font_family: 'mono',
     background_image_url: null
@@ -3226,7 +3226,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-358',
     name: 'Gül Masalı 358',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#c026d3',
     font_family: 'sans',
     background_image_url: null
@@ -3235,7 +3235,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-359',
     name: 'Okyanus Şiiri 359',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#db2777',
     font_family: 'serif',
     background_image_url: null
@@ -3244,7 +3244,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-360',
     name: 'Lavanta Efsanesi 360',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#475569',
     font_family: 'mono',
     background_image_url: null
@@ -3298,7 +3298,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-366',
     name: 'Safir Grisi 366',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#064e3b',
     font_family: 'mono',
     background_image_url: null
@@ -3307,7 +3307,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-367',
     name: 'Vogue Siyahı 367',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#1e3a8a',
     font_family: 'sans',
     background_image_url: null
@@ -3316,7 +3316,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-368',
     name: 'Gece Işıltısı 368',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#312e81',
     font_family: 'serif',
     background_image_url: null
@@ -3325,7 +3325,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-369',
     name: 'Güneş Büyüsü 369',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#e11d48',
     font_family: 'mono',
     background_image_url: null
@@ -3334,7 +3334,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-370',
     name: 'Ay Sessizliği 370',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#0284c7',
     font_family: 'sans',
     background_image_url: null
@@ -3388,7 +3388,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-376',
     name: 'Okyanus Rüyası 376',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#65a30d',
     font_family: 'sans',
     background_image_url: null
@@ -3397,7 +3397,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-377',
     name: 'Lavanta Esintisi 377',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#0d9488',
     font_family: 'serif',
     background_image_url: null
@@ -3406,7 +3406,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-378',
     name: 'Zümrüt Gecesi 378',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#2563eb',
     font_family: 'mono',
     background_image_url: null
@@ -3415,7 +3415,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-379',
     name: 'Ateş Dalı 379',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#4f46e5',
     font_family: 'sans',
     background_image_url: null
@@ -3424,7 +3424,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-380',
     name: 'Zeytin Çekirdeği 380',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#9333ea',
     font_family: 'serif',
     background_image_url: null
@@ -3478,7 +3478,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-386',
     name: 'Güneş Yankısı 386',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#1c1917',
     font_family: 'serif',
     background_image_url: null
@@ -3487,7 +3487,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-387',
     name: 'Ay Gölgesi 387',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#78350f',
     font_family: 'mono',
     background_image_url: null
@@ -3496,7 +3496,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-388',
     name: 'Yıldız Masalı 388',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#831843',
     font_family: 'sans',
     background_image_url: null
@@ -3505,7 +3505,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-389',
     name: 'Bahar Şiiri 389',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#064e3b',
     font_family: 'serif',
     background_image_url: null
@@ -3514,7 +3514,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-390',
     name: 'Güz Efsanesi 390',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#1e3a8a',
     font_family: 'mono',
     background_image_url: null
@@ -3568,7 +3568,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-396',
     name: 'Ateş Grisi 396',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#16a34a',
     font_family: 'mono',
     background_image_url: null
@@ -3577,7 +3577,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-397',
     name: 'Zeytin Siyahı 397',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#dc2626',
     font_family: 'sans',
     background_image_url: null
@@ -3586,7 +3586,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-398',
     name: 'Kahve Işıltısı 398',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#ea580c',
     font_family: 'serif',
     background_image_url: null
@@ -3595,7 +3595,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-399',
     name: 'Pırlanta Büyüsü 399',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#65a30d',
     font_family: 'mono',
     background_image_url: null
@@ -3604,7 +3604,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-400',
     name: 'Safir Sessizliği 400',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#0d9488',
     font_family: 'sans',
     background_image_url: null
@@ -3658,7 +3658,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-406',
     name: 'Bahar Rüyası 406',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#475569',
     font_family: 'sans',
     background_image_url: null
@@ -3667,7 +3667,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-407',
     name: 'Güz Esintisi 407',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#52525b',
     font_family: 'serif',
     background_image_url: null
@@ -3676,7 +3676,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-408',
     name: 'Kış Gecesi 408',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#000000',
     font_family: 'mono',
     background_image_url: null
@@ -3685,7 +3685,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-409',
     name: 'Gül Dalı 409',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#1c1917',
     font_family: 'sans',
     background_image_url: null
@@ -3694,7 +3694,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-410',
     name: 'Okyanus Çekirdeği 410',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#78350f',
     font_family: 'serif',
     background_image_url: null
@@ -3748,7 +3748,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-416',
     name: 'Pırlanta Yankısı 416',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#0284c7',
     font_family: 'serif',
     background_image_url: null
@@ -3757,7 +3757,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-417',
     name: 'Safir Gölgesi 417',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#7c3aed',
     font_family: 'mono',
     background_image_url: null
@@ -3766,7 +3766,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-418',
     name: 'Vogue Masalı 418',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#d97706',
     font_family: 'sans',
     background_image_url: null
@@ -3775,7 +3775,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-419',
     name: 'Gece Şiiri 419',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#16a34a',
     font_family: 'serif',
     background_image_url: null
@@ -3784,7 +3784,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-420',
     name: 'Güneş Efsanesi 420',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#dc2626',
     font_family: 'mono',
     background_image_url: null
@@ -3838,7 +3838,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-426',
     name: 'Gül Grisi 426',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#9333ea',
     font_family: 'mono',
     background_image_url: null
@@ -3847,7 +3847,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-427',
     name: 'Okyanus Siyahı 427',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#c026d3',
     font_family: 'sans',
     background_image_url: null
@@ -3856,7 +3856,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-428',
     name: 'Lavanta Işıltısı 428',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#db2777',
     font_family: 'serif',
     background_image_url: null
@@ -3865,7 +3865,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-429',
     name: 'Zümrüt Büyüsü 429',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#475569',
     font_family: 'mono',
     background_image_url: null
@@ -3874,7 +3874,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-430',
     name: 'Ateş Sessizliği 430',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#52525b',
     font_family: 'sans',
     background_image_url: null
@@ -3928,7 +3928,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-436',
     name: 'Gece Rüyası 436',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#1e3a8a',
     font_family: 'sans',
     background_image_url: null
@@ -3937,7 +3937,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-437',
     name: 'Güneş Esintisi 437',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#312e81',
     font_family: 'serif',
     background_image_url: null
@@ -3946,7 +3946,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-438',
     name: 'Ay Gecesi 438',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#e11d48',
     font_family: 'mono',
     background_image_url: null
@@ -3955,7 +3955,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-439',
     name: 'Yıldız Dalı 439',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#0284c7',
     font_family: 'sans',
     background_image_url: null
@@ -3964,7 +3964,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-440',
     name: 'Bahar Çekirdeği 440',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#7c3aed',
     font_family: 'serif',
     background_image_url: null
@@ -4018,7 +4018,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-446',
     name: 'Zümrüt Yankısı 446',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#0d9488',
     font_family: 'serif',
     background_image_url: null
@@ -4027,7 +4027,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-447',
     name: 'Ateş Gölgesi 447',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#2563eb',
     font_family: 'mono',
     background_image_url: null
@@ -4036,7 +4036,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-448',
     name: 'Zeytin Masalı 448',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#4f46e5',
     font_family: 'sans',
     background_image_url: null
@@ -4045,7 +4045,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-449',
     name: 'Kahve Şiiri 449',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#9333ea',
     font_family: 'serif',
     background_image_url: null
@@ -4054,7 +4054,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-450',
     name: 'Pırlanta Efsanesi 450',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#c026d3',
     font_family: 'mono',
     background_image_url: null
@@ -4108,7 +4108,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-456',
     name: 'Yıldız Grisi 456',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#78350f',
     font_family: 'mono',
     background_image_url: null
@@ -4117,7 +4117,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-457',
     name: 'Bahar Siyahı 457',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#831843',
     font_family: 'sans',
     background_image_url: null
@@ -4126,7 +4126,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-458',
     name: 'Güz Işıltısı 458',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#064e3b',
     font_family: 'serif',
     background_image_url: null
@@ -4135,7 +4135,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-459',
     name: 'Kış Büyüsü 459',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#1e3a8a',
     font_family: 'mono',
     background_image_url: null
@@ -4144,7 +4144,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-460',
     name: 'Gül Sessizliği 460',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#312e81',
     font_family: 'sans',
     background_image_url: null
@@ -4198,7 +4198,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-466',
     name: 'Kahve Rüyası 466',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#dc2626',
     font_family: 'sans',
     background_image_url: null
@@ -4207,7 +4207,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-467',
     name: 'Pırlanta Esintisi 467',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#ea580c',
     font_family: 'serif',
     background_image_url: null
@@ -4216,7 +4216,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-468',
     name: 'Safir Gecesi 468',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#65a30d',
     font_family: 'mono',
     background_image_url: null
@@ -4225,7 +4225,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-469',
     name: 'Vogue Dalı 469',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#0d9488',
     font_family: 'sans',
     background_image_url: null
@@ -4234,7 +4234,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-470',
     name: 'Gece Çekirdeği 470',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#2563eb',
     font_family: 'serif',
     background_image_url: null
@@ -4288,7 +4288,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-476',
     name: 'Kış Yankısı 476',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#52525b',
     font_family: 'serif',
     background_image_url: null
@@ -4297,7 +4297,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-477',
     name: 'Gül Gölgesi 477',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#000000',
     font_family: 'mono',
     background_image_url: null
@@ -4306,7 +4306,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-478',
     name: 'Okyanus Masalı 478',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#1c1917',
     font_family: 'sans',
     background_image_url: null
@@ -4315,7 +4315,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-479',
     name: 'Lavanta Şiiri 479',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#78350f',
     font_family: 'serif',
     background_image_url: null
@@ -4324,7 +4324,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-480',
     name: 'Zümrüt Efsanesi 480',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#831843',
     font_family: 'mono',
     background_image_url: null
@@ -4378,7 +4378,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-486',
     name: 'Vogue Grisi 486',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#7c3aed',
     font_family: 'mono',
     background_image_url: null
@@ -4387,7 +4387,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-487',
     name: 'Gece Siyahı 487',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#d97706',
     font_family: 'sans',
     background_image_url: null
@@ -4396,7 +4396,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-488',
     name: 'Güneş Işıltısı 488',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#16a34a',
     font_family: 'serif',
     background_image_url: null
@@ -4405,7 +4405,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-489',
     name: 'Ay Büyüsü 489',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#dc2626',
     font_family: 'mono',
     background_image_url: null
@@ -4414,7 +4414,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-490',
     name: 'Yıldız Sessizliği 490',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#ea580c',
     font_family: 'sans',
     background_image_url: null
@@ -4468,7 +4468,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-496',
     name: 'Lavanta Rüyası 496',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#c026d3',
     font_family: 'sans',
     background_image_url: null
@@ -4477,7 +4477,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-497',
     name: 'Zümrüt Esintisi 497',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#db2777',
     font_family: 'serif',
     background_image_url: null
@@ -4486,7 +4486,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-498',
     name: 'Ateş Gecesi 498',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#475569',
     font_family: 'mono',
     background_image_url: null
@@ -4495,7 +4495,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-499',
     name: 'Zeytin Dalı 499',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#52525b',
     font_family: 'sans',
     background_image_url: null
@@ -4504,7 +4504,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-500',
     name: 'Kahve Çekirdeği 500',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#000000',
     font_family: 'serif',
     background_image_url: null
@@ -4558,7 +4558,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-506',
     name: 'Ay Yankısı 506',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#312e81',
     font_family: 'serif',
     background_image_url: null
@@ -4567,7 +4567,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-507',
     name: 'Yıldız Gölgesi 507',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#e11d48',
     font_family: 'mono',
     background_image_url: null
@@ -4576,7 +4576,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-508',
     name: 'Bahar Masalı 508',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#0284c7',
     font_family: 'sans',
     background_image_url: null
@@ -4585,7 +4585,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-509',
     name: 'Güz Şiiri 509',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#7c3aed',
     font_family: 'serif',
     background_image_url: null
@@ -4594,7 +4594,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-510',
     name: 'Kış Efsanesi 510',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#d97706',
     font_family: 'mono',
     background_image_url: null
@@ -4648,7 +4648,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-516',
     name: 'Zeytin Grisi 516',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#2563eb',
     font_family: 'mono',
     background_image_url: null
@@ -4657,7 +4657,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-517',
     name: 'Kahve Siyahı 517',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#4f46e5',
     font_family: 'sans',
     background_image_url: null
@@ -4666,7 +4666,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-518',
     name: 'Pırlanta Işıltısı 518',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#9333ea',
     font_family: 'serif',
     background_image_url: null
@@ -4675,7 +4675,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-519',
     name: 'Safir Büyüsü 519',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#c026d3',
     font_family: 'mono',
     background_image_url: null
@@ -4684,7 +4684,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-520',
     name: 'Vogue Sessizliği 520',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#db2777',
     font_family: 'sans',
     background_image_url: null
@@ -4738,7 +4738,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-526',
     name: 'Güz Rüyası 526',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#831843',
     font_family: 'sans',
     background_image_url: null
@@ -4747,7 +4747,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-527',
     name: 'Kış Esintisi 527',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#064e3b',
     font_family: 'serif',
     background_image_url: null
@@ -4756,7 +4756,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-528',
     name: 'Gül Gecesi 528',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#1e3a8a',
     font_family: 'mono',
     background_image_url: null
@@ -4765,7 +4765,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-529',
     name: 'Okyanus Dalı 529',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#312e81',
     font_family: 'sans',
     background_image_url: null
@@ -4774,7 +4774,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-530',
     name: 'Lavanta Çekirdeği 530',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#e11d48',
     font_family: 'serif',
     background_image_url: null
@@ -4828,7 +4828,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-536',
     name: 'Safir Yankısı 536',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#ea580c',
     font_family: 'serif',
     background_image_url: null
@@ -4837,7 +4837,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-537',
     name: 'Vogue Gölgesi 537',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#65a30d',
     font_family: 'mono',
     background_image_url: null
@@ -4846,7 +4846,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-538',
     name: 'Gece Masalı 538',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#0d9488',
     font_family: 'sans',
     background_image_url: null
@@ -4855,7 +4855,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-539',
     name: 'Güneş Şiiri 539',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#2563eb',
     font_family: 'serif',
     background_image_url: null
@@ -4864,7 +4864,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-540',
     name: 'Ay Efsanesi 540',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#4f46e5',
     font_family: 'mono',
     background_image_url: null
@@ -4918,7 +4918,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-546',
     name: 'Okyanus Grisi 546',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#000000',
     font_family: 'mono',
     background_image_url: null
@@ -4927,7 +4927,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-547',
     name: 'Lavanta Siyahı 547',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#1c1917',
     font_family: 'sans',
     background_image_url: null
@@ -4936,7 +4936,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-548',
     name: 'Zümrüt Işıltısı 548',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#78350f',
     font_family: 'serif',
     background_image_url: null
@@ -4945,7 +4945,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-549',
     name: 'Ateş Büyüsü 549',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#831843',
     font_family: 'mono',
     background_image_url: null
@@ -4954,7 +4954,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-550',
     name: 'Zeytin Sessizliği 550',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#064e3b',
     font_family: 'sans',
     background_image_url: null
@@ -5008,7 +5008,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-556',
     name: 'Güneş Rüyası 556',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#d97706',
     font_family: 'sans',
     background_image_url: null
@@ -5017,7 +5017,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-557',
     name: 'Ay Esintisi 557',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#16a34a',
     font_family: 'serif',
     background_image_url: null
@@ -5026,7 +5026,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-558',
     name: 'Yıldız Gecesi 558',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#dc2626',
     font_family: 'mono',
     background_image_url: null
@@ -5035,7 +5035,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-559',
     name: 'Bahar Dalı 559',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#ea580c',
     font_family: 'sans',
     background_image_url: null
@@ -5044,7 +5044,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-560',
     name: 'Güz Çekirdeği 560',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#65a30d',
     font_family: 'serif',
     background_image_url: null
@@ -5098,7 +5098,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-566',
     name: 'Ateş Yankısı 566',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#db2777',
     font_family: 'serif',
     background_image_url: null
@@ -5107,7 +5107,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-567',
     name: 'Zeytin Gölgesi 567',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#475569',
     font_family: 'mono',
     background_image_url: null
@@ -5116,7 +5116,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-568',
     name: 'Kahve Masalı 568',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#52525b',
     font_family: 'sans',
     background_image_url: null
@@ -5125,7 +5125,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-569',
     name: 'Pırlanta Şiiri 569',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#000000',
     font_family: 'serif',
     background_image_url: null
@@ -5134,7 +5134,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-570',
     name: 'Safir Efsanesi 570',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#1c1917',
     font_family: 'mono',
     background_image_url: null
@@ -5188,7 +5188,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-576',
     name: 'Bahar Grisi 576',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#e11d48',
     font_family: 'mono',
     background_image_url: null
@@ -5197,7 +5197,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-577',
     name: 'Güz Siyahı 577',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#0284c7',
     font_family: 'sans',
     background_image_url: null
@@ -5206,7 +5206,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-578',
     name: 'Kış Işıltısı 578',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#7c3aed',
     font_family: 'serif',
     background_image_url: null
@@ -5215,7 +5215,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-579',
     name: 'Gül Büyüsü 579',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#d97706',
     font_family: 'mono',
     background_image_url: null
@@ -5224,7 +5224,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-580',
     name: 'Okyanus Sessizliği 580',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#16a34a',
     font_family: 'sans',
     background_image_url: null
@@ -5278,7 +5278,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-586',
     name: 'Pırlanta Rüyası 586',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#4f46e5',
     font_family: 'sans',
     background_image_url: null
@@ -5287,7 +5287,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-587',
     name: 'Safir Esintisi 587',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#9333ea',
     font_family: 'serif',
     background_image_url: null
@@ -5296,7 +5296,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-588',
     name: 'Vogue Gecesi 588',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#c026d3',
     font_family: 'mono',
     background_image_url: null
@@ -5305,7 +5305,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-589',
     name: 'Gece Dalı 589',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#db2777',
     font_family: 'sans',
     background_image_url: null
@@ -5314,7 +5314,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-590',
     name: 'Güneş Çekirdeği 590',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#475569',
     font_family: 'serif',
     background_image_url: null
@@ -5368,7 +5368,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-596',
     name: 'Gül Yankısı 596',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#064e3b',
     font_family: 'serif',
     background_image_url: null
@@ -5377,7 +5377,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-597',
     name: 'Okyanus Gölgesi 597',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#1e3a8a',
     font_family: 'mono',
     background_image_url: null
@@ -5386,7 +5386,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-598',
     name: 'Lavanta Masalı 598',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#312e81',
     font_family: 'sans',
     background_image_url: null
@@ -5395,7 +5395,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-599',
     name: 'Zümrüt Şiiri 599',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#e11d48',
     font_family: 'serif',
     background_image_url: null
@@ -5404,7 +5404,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-600',
     name: 'Ateş Efsanesi 600',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#0284c7',
     font_family: 'mono',
     background_image_url: null
@@ -5458,7 +5458,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-606',
     name: 'Gece Grisi 606',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#65a30d',
     font_family: 'mono',
     background_image_url: null
@@ -5467,7 +5467,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-607',
     name: 'Güneş Siyahı 607',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#0d9488',
     font_family: 'sans',
     background_image_url: null
@@ -5476,7 +5476,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-608',
     name: 'Ay Işıltısı 608',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#2563eb',
     font_family: 'serif',
     background_image_url: null
@@ -5485,7 +5485,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-609',
     name: 'Yıldız Büyüsü 609',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#4f46e5',
     font_family: 'mono',
     background_image_url: null
@@ -5494,7 +5494,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-610',
     name: 'Bahar Sessizliği 610',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#9333ea',
     font_family: 'sans',
     background_image_url: null
@@ -5548,7 +5548,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-616',
     name: 'Zümrüt Rüyası 616',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#1c1917',
     font_family: 'sans',
     background_image_url: null
@@ -5557,7 +5557,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-617',
     name: 'Ateş Esintisi 617',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#78350f',
     font_family: 'serif',
     background_image_url: null
@@ -5566,7 +5566,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-618',
     name: 'Zeytin Gecesi 618',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#831843',
     font_family: 'mono',
     background_image_url: null
@@ -5575,7 +5575,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-619',
     name: 'Kahve Dalı 619',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#064e3b',
     font_family: 'sans',
     background_image_url: null
@@ -5584,7 +5584,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-620',
     name: 'Pırlanta Çekirdeği 620',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#1e3a8a',
     font_family: 'serif',
     background_image_url: null
@@ -5638,7 +5638,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-626',
     name: 'Yıldız Yankısı 626',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#16a34a',
     font_family: 'serif',
     background_image_url: null
@@ -5647,7 +5647,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-627',
     name: 'Bahar Gölgesi 627',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#dc2626',
     font_family: 'mono',
     background_image_url: null
@@ -5656,7 +5656,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-628',
     name: 'Güz Masalı 628',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#ea580c',
     font_family: 'sans',
     background_image_url: null
@@ -5665,7 +5665,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-629',
     name: 'Kış Şiiri 629',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#65a30d',
     font_family: 'serif',
     background_image_url: null
@@ -5674,7 +5674,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-630',
     name: 'Gül Efsanesi 630',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#0d9488',
     font_family: 'mono',
     background_image_url: null
@@ -5728,7 +5728,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-636',
     name: 'Kahve Grisi 636',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#475569',
     font_family: 'mono',
     background_image_url: null
@@ -5737,7 +5737,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-637',
     name: 'Pırlanta Siyahı 637',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#52525b',
     font_family: 'sans',
     background_image_url: null
@@ -5746,7 +5746,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-638',
     name: 'Safir Işıltısı 638',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#000000',
     font_family: 'serif',
     background_image_url: null
@@ -5755,7 +5755,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-639',
     name: 'Vogue Büyüsü 639',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#1c1917',
     font_family: 'mono',
     background_image_url: null
@@ -5764,7 +5764,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-640',
     name: 'Gece Sessizliği 640',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#78350f',
     font_family: 'sans',
     background_image_url: null
@@ -5818,7 +5818,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-646',
     name: 'Kış Rüyası 646',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#0284c7',
     font_family: 'sans',
     background_image_url: null
@@ -5827,7 +5827,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-647',
     name: 'Gül Esintisi 647',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#7c3aed',
     font_family: 'serif',
     background_image_url: null
@@ -5836,7 +5836,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-648',
     name: 'Okyanus Gecesi 648',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#d97706',
     font_family: 'mono',
     background_image_url: null
@@ -5845,7 +5845,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-649',
     name: 'Lavanta Dalı 649',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#16a34a',
     font_family: 'sans',
     background_image_url: null
@@ -5854,7 +5854,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-650',
     name: 'Zümrüt Çekirdeği 650',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#dc2626',
     font_family: 'serif',
     background_image_url: null
@@ -5908,7 +5908,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-656',
     name: 'Vogue Yankısı 656',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#9333ea',
     font_family: 'serif',
     background_image_url: null
@@ -5917,7 +5917,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-657',
     name: 'Gece Gölgesi 657',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#c026d3',
     font_family: 'mono',
     background_image_url: null
@@ -5926,7 +5926,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-658',
     name: 'Güneş Masalı 658',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#db2777',
     font_family: 'sans',
     background_image_url: null
@@ -5935,7 +5935,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-659',
     name: 'Ay Şiiri 659',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#475569',
     font_family: 'serif',
     background_image_url: null
@@ -5944,7 +5944,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-660',
     name: 'Yıldız Efsanesi 660',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#52525b',
     font_family: 'mono',
     background_image_url: null
@@ -5998,7 +5998,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-666',
     name: 'Lavanta Grisi 666',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#1e3a8a',
     font_family: 'mono',
     background_image_url: null
@@ -6007,7 +6007,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-667',
     name: 'Zümrüt Siyahı 667',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#312e81',
     font_family: 'sans',
     background_image_url: null
@@ -6016,7 +6016,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-668',
     name: 'Ateş Işıltısı 668',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#e11d48',
     font_family: 'serif',
     background_image_url: null
@@ -6025,7 +6025,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-669',
     name: 'Zeytin Büyüsü 669',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#0284c7',
     font_family: 'mono',
     background_image_url: null
@@ -6034,7 +6034,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-670',
     name: 'Kahve Sessizliği 670',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#7c3aed',
     font_family: 'sans',
     background_image_url: null
@@ -6088,7 +6088,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-676',
     name: 'Ay Rüyası 676',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#0d9488',
     font_family: 'sans',
     background_image_url: null
@@ -6097,7 +6097,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-677',
     name: 'Yıldız Esintisi 677',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#2563eb',
     font_family: 'serif',
     background_image_url: null
@@ -6106,7 +6106,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-678',
     name: 'Bahar Gecesi 678',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#4f46e5',
     font_family: 'mono',
     background_image_url: null
@@ -6115,7 +6115,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-679',
     name: 'Güz Dalı 679',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#9333ea',
     font_family: 'sans',
     background_image_url: null
@@ -6124,7 +6124,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-680',
     name: 'Kış Çekirdeği 680',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#c026d3',
     font_family: 'serif',
     background_image_url: null
@@ -6178,7 +6178,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-686',
     name: 'Zeytin Yankısı 686',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#78350f',
     font_family: 'serif',
     background_image_url: null
@@ -6187,7 +6187,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-687',
     name: 'Kahve Gölgesi 687',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#831843',
     font_family: 'mono',
     background_image_url: null
@@ -6196,7 +6196,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-688',
     name: 'Pırlanta Masalı 688',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#064e3b',
     font_family: 'sans',
     background_image_url: null
@@ -6205,7 +6205,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-689',
     name: 'Safir Şiiri 689',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#1e3a8a',
     font_family: 'serif',
     background_image_url: null
@@ -6214,7 +6214,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-690',
     name: 'Vogue Efsanesi 690',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#312e81',
     font_family: 'mono',
     background_image_url: null
@@ -6268,7 +6268,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-696',
     name: 'Güz Grisi 696',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#dc2626',
     font_family: 'mono',
     background_image_url: null
@@ -6277,7 +6277,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-697',
     name: 'Kış Siyahı 697',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#ea580c',
     font_family: 'sans',
     background_image_url: null
@@ -6286,7 +6286,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-698',
     name: 'Gül Işıltısı 698',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#65a30d',
     font_family: 'serif',
     background_image_url: null
@@ -6295,7 +6295,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-699',
     name: 'Okyanus Büyüsü 699',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#0d9488',
     font_family: 'mono',
     background_image_url: null
@@ -6304,7 +6304,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-700',
     name: 'Lavanta Sessizliği 700',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#2563eb',
     font_family: 'sans',
     background_image_url: null
@@ -6358,7 +6358,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-706',
     name: 'Safir Rüyası 706',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#52525b',
     font_family: 'sans',
     background_image_url: null
@@ -6367,7 +6367,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-707',
     name: 'Vogue Esintisi 707',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#000000',
     font_family: 'serif',
     background_image_url: null
@@ -6376,7 +6376,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-708',
     name: 'Gece Gecesi 708',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#1c1917',
     font_family: 'mono',
     background_image_url: null
@@ -6385,7 +6385,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-709',
     name: 'Güneş Dalı 709',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#78350f',
     font_family: 'sans',
     background_image_url: null
@@ -6394,7 +6394,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-710',
     name: 'Ay Çekirdeği 710',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#831843',
     font_family: 'serif',
     background_image_url: null
@@ -6448,7 +6448,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-716',
     name: 'Okyanus Yankısı 716',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#7c3aed',
     font_family: 'serif',
     background_image_url: null
@@ -6457,7 +6457,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-717',
     name: 'Lavanta Gölgesi 717',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#d97706',
     font_family: 'mono',
     background_image_url: null
@@ -6466,7 +6466,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-718',
     name: 'Zümrüt Masalı 718',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#16a34a',
     font_family: 'sans',
     background_image_url: null
@@ -6475,7 +6475,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-719',
     name: 'Ateş Şiiri 719',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#dc2626',
     font_family: 'serif',
     background_image_url: null
@@ -6484,7 +6484,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-720',
     name: 'Zeytin Efsanesi 720',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#ea580c',
     font_family: 'mono',
     background_image_url: null
@@ -6538,7 +6538,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-726',
     name: 'Güneş Grisi 726',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#c026d3',
     font_family: 'mono',
     background_image_url: null
@@ -6547,7 +6547,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-727',
     name: 'Ay Siyahı 727',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#db2777',
     font_family: 'sans',
     background_image_url: null
@@ -6556,7 +6556,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-728',
     name: 'Yıldız Işıltısı 728',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#475569',
     font_family: 'serif',
     background_image_url: null
@@ -6565,7 +6565,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-729',
     name: 'Bahar Büyüsü 729',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#52525b',
     font_family: 'mono',
     background_image_url: null
@@ -6574,7 +6574,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-730',
     name: 'Güz Sessizliği 730',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#000000',
     font_family: 'sans',
     background_image_url: null
@@ -6628,7 +6628,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-736',
     name: 'Ateş Rüyası 736',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#312e81',
     font_family: 'sans',
     background_image_url: null
@@ -6637,7 +6637,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-737',
     name: 'Zeytin Esintisi 737',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#e11d48',
     font_family: 'serif',
     background_image_url: null
@@ -6646,7 +6646,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-738',
     name: 'Kahve Gecesi 738',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#0284c7',
     font_family: 'mono',
     background_image_url: null
@@ -6655,7 +6655,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-739',
     name: 'Pırlanta Dalı 739',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#7c3aed',
     font_family: 'sans',
     background_image_url: null
@@ -6664,7 +6664,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-740',
     name: 'Safir Çekirdeği 740',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#d97706',
     font_family: 'serif',
     background_image_url: null
@@ -6718,7 +6718,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-746',
     name: 'Bahar Yankısı 746',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#2563eb',
     font_family: 'serif',
     background_image_url: null
@@ -6727,7 +6727,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-747',
     name: 'Güz Gölgesi 747',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#4f46e5',
     font_family: 'mono',
     background_image_url: null
@@ -6736,7 +6736,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-748',
     name: 'Kış Masalı 748',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#9333ea',
     font_family: 'sans',
     background_image_url: null
@@ -6745,7 +6745,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-749',
     name: 'Gül Şiiri 749',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#c026d3',
     font_family: 'serif',
     background_image_url: null
@@ -6754,7 +6754,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-750',
     name: 'Okyanus Efsanesi 750',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#db2777',
     font_family: 'mono',
     background_image_url: null
@@ -6808,7 +6808,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-756',
     name: 'Pırlanta Grisi 756',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#831843',
     font_family: 'mono',
     background_image_url: null
@@ -6817,7 +6817,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-757',
     name: 'Safir Siyahı 757',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#064e3b',
     font_family: 'sans',
     background_image_url: null
@@ -6826,7 +6826,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-758',
     name: 'Vogue Işıltısı 758',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#1e3a8a',
     font_family: 'serif',
     background_image_url: null
@@ -6835,7 +6835,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-759',
     name: 'Gece Büyüsü 759',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#312e81',
     font_family: 'mono',
     background_image_url: null
@@ -6844,7 +6844,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-760',
     name: 'Güneş Sessizliği 760',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#e11d48',
     font_family: 'sans',
     background_image_url: null
@@ -6898,7 +6898,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-766',
     name: 'Gül Rüyası 766',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#ea580c',
     font_family: 'sans',
     background_image_url: null
@@ -6907,7 +6907,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-767',
     name: 'Okyanus Esintisi 767',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#65a30d',
     font_family: 'serif',
     background_image_url: null
@@ -6916,7 +6916,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-768',
     name: 'Lavanta Gecesi 768',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#0d9488',
     font_family: 'mono',
     background_image_url: null
@@ -6925,7 +6925,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-769',
     name: 'Zümrüt Dalı 769',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#2563eb',
     font_family: 'sans',
     background_image_url: null
@@ -6934,7 +6934,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-770',
     name: 'Ateş Çekirdeği 770',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#4f46e5',
     font_family: 'serif',
     background_image_url: null
@@ -6988,7 +6988,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-776',
     name: 'Gece Yankısı 776',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#000000',
     font_family: 'serif',
     background_image_url: null
@@ -6997,7 +6997,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-777',
     name: 'Güneş Gölgesi 777',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#1c1917',
     font_family: 'mono',
     background_image_url: null
@@ -7006,7 +7006,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-778',
     name: 'Ay Masalı 778',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#78350f',
     font_family: 'sans',
     background_image_url: null
@@ -7015,7 +7015,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-779',
     name: 'Yıldız Şiiri 779',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#831843',
     font_family: 'serif',
     background_image_url: null
@@ -7024,7 +7024,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-780',
     name: 'Bahar Efsanesi 780',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#064e3b',
     font_family: 'mono',
     background_image_url: null
@@ -7078,7 +7078,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-786',
     name: 'Zümrüt Grisi 786',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#d97706',
     font_family: 'mono',
     background_image_url: null
@@ -7087,7 +7087,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-787',
     name: 'Ateş Siyahı 787',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#16a34a',
     font_family: 'sans',
     background_image_url: null
@@ -7096,7 +7096,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-788',
     name: 'Zeytin Işıltısı 788',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#dc2626',
     font_family: 'serif',
     background_image_url: null
@@ -7105,7 +7105,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-789',
     name: 'Kahve Büyüsü 789',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#ea580c',
     font_family: 'mono',
     background_image_url: null
@@ -7114,7 +7114,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-790',
     name: 'Pırlanta Sessizliği 790',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#65a30d',
     font_family: 'sans',
     background_image_url: null
@@ -7168,7 +7168,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-796',
     name: 'Yıldız Rüyası 796',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#db2777',
     font_family: 'sans',
     background_image_url: null
@@ -7177,7 +7177,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-797',
     name: 'Bahar Esintisi 797',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#475569',
     font_family: 'serif',
     background_image_url: null
@@ -7186,7 +7186,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-798',
     name: 'Güz Gecesi 798',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#52525b',
     font_family: 'mono',
     background_image_url: null
@@ -7195,7 +7195,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-799',
     name: 'Kış Dalı 799',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#000000',
     font_family: 'sans',
     background_image_url: null
@@ -7204,7 +7204,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-800',
     name: 'Gül Çekirdeği 800',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#1c1917',
     font_family: 'serif',
     background_image_url: null
@@ -7258,7 +7258,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-806',
     name: 'Kahve Yankısı 806',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#e11d48',
     font_family: 'serif',
     background_image_url: null
@@ -7267,7 +7267,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-807',
     name: 'Pırlanta Gölgesi 807',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#0284c7',
     font_family: 'mono',
     background_image_url: null
@@ -7276,7 +7276,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-808',
     name: 'Safir Masalı 808',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#7c3aed',
     font_family: 'sans',
     background_image_url: null
@@ -7285,7 +7285,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-809',
     name: 'Vogue Şiiri 809',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#d97706',
     font_family: 'serif',
     background_image_url: null
@@ -7294,7 +7294,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-810',
     name: 'Gece Efsanesi 810',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#16a34a',
     font_family: 'mono',
     background_image_url: null
@@ -7348,7 +7348,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-816',
     name: 'Kış Grisi 816',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#4f46e5',
     font_family: 'mono',
     background_image_url: null
@@ -7357,7 +7357,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-817',
     name: 'Gül Siyahı 817',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#9333ea',
     font_family: 'sans',
     background_image_url: null
@@ -7366,7 +7366,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-818',
     name: 'Okyanus Işıltısı 818',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#c026d3',
     font_family: 'serif',
     background_image_url: null
@@ -7375,7 +7375,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-819',
     name: 'Lavanta Büyüsü 819',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#db2777',
     font_family: 'mono',
     background_image_url: null
@@ -7384,7 +7384,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-820',
     name: 'Zümrüt Sessizliği 820',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#475569',
     font_family: 'sans',
     background_image_url: null
@@ -7438,7 +7438,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-826',
     name: 'Vogue Rüyası 826',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#064e3b',
     font_family: 'sans',
     background_image_url: null
@@ -7447,7 +7447,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-827',
     name: 'Gece Esintisi 827',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#1e3a8a',
     font_family: 'serif',
     background_image_url: null
@@ -7456,7 +7456,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-828',
     name: 'Güneş Gecesi 828',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#312e81',
     font_family: 'mono',
     background_image_url: null
@@ -7465,7 +7465,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-829',
     name: 'Ay Dalı 829',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#e11d48',
     font_family: 'sans',
     background_image_url: null
@@ -7474,7 +7474,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-830',
     name: 'Yıldız Çekirdeği 830',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#0284c7',
     font_family: 'serif',
     background_image_url: null
@@ -7528,7 +7528,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-836',
     name: 'Lavanta Yankısı 836',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#65a30d',
     font_family: 'serif',
     background_image_url: null
@@ -7537,7 +7537,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-837',
     name: 'Zümrüt Gölgesi 837',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#0d9488',
     font_family: 'mono',
     background_image_url: null
@@ -7546,7 +7546,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-838',
     name: 'Ateş Masalı 838',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#2563eb',
     font_family: 'sans',
     background_image_url: null
@@ -7555,7 +7555,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-839',
     name: 'Zeytin Şiiri 839',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#4f46e5',
     font_family: 'serif',
     background_image_url: null
@@ -7564,7 +7564,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-840',
     name: 'Kahve Efsanesi 840',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#9333ea',
     font_family: 'mono',
     background_image_url: null
@@ -7618,7 +7618,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-846',
     name: 'Ay Grisi 846',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#1c1917',
     font_family: 'mono',
     background_image_url: null
@@ -7627,7 +7627,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-847',
     name: 'Yıldız Siyahı 847',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#78350f',
     font_family: 'sans',
     background_image_url: null
@@ -7636,7 +7636,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-848',
     name: 'Bahar Işıltısı 848',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#831843',
     font_family: 'serif',
     background_image_url: null
@@ -7645,7 +7645,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-849',
     name: 'Güz Büyüsü 849',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#064e3b',
     font_family: 'mono',
     background_image_url: null
@@ -7654,7 +7654,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-850',
     name: 'Kış Sessizliği 850',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#1e3a8a',
     font_family: 'sans',
     background_image_url: null
@@ -7708,7 +7708,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-856',
     name: 'Zeytin Rüyası 856',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#16a34a',
     font_family: 'sans',
     background_image_url: null
@@ -7717,7 +7717,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-857',
     name: 'Kahve Esintisi 857',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#dc2626',
     font_family: 'serif',
     background_image_url: null
@@ -7726,7 +7726,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-858',
     name: 'Pırlanta Gecesi 858',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#ea580c',
     font_family: 'mono',
     background_image_url: null
@@ -7735,7 +7735,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-859',
     name: 'Safir Dalı 859',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#65a30d',
     font_family: 'sans',
     background_image_url: null
@@ -7744,7 +7744,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-860',
     name: 'Vogue Çekirdeği 860',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#0d9488',
     font_family: 'serif',
     background_image_url: null
@@ -7798,7 +7798,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-866',
     name: 'Güz Yankısı 866',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#475569',
     font_family: 'serif',
     background_image_url: null
@@ -7807,7 +7807,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-867',
     name: 'Kış Gölgesi 867',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#52525b',
     font_family: 'mono',
     background_image_url: null
@@ -7816,7 +7816,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-868',
     name: 'Gül Masalı 868',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#000000',
     font_family: 'sans',
     background_image_url: null
@@ -7825,7 +7825,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-869',
     name: 'Okyanus Şiiri 869',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#1c1917',
     font_family: 'serif',
     background_image_url: null
@@ -7834,7 +7834,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-870',
     name: 'Lavanta Efsanesi 870',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#78350f',
     font_family: 'mono',
     background_image_url: null
@@ -7888,7 +7888,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-876',
     name: 'Safir Grisi 876',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#0284c7',
     font_family: 'mono',
     background_image_url: null
@@ -7897,7 +7897,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-877',
     name: 'Vogue Siyahı 877',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#7c3aed',
     font_family: 'sans',
     background_image_url: null
@@ -7906,7 +7906,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-878',
     name: 'Gece Işıltısı 878',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#d97706',
     font_family: 'serif',
     background_image_url: null
@@ -7915,7 +7915,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-879',
     name: 'Güneş Büyüsü 879',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#16a34a',
     font_family: 'mono',
     background_image_url: null
@@ -7924,7 +7924,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-880',
     name: 'Ay Sessizliği 880',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#dc2626',
     font_family: 'sans',
     background_image_url: null
@@ -7978,7 +7978,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-886',
     name: 'Okyanus Rüyası 886',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#9333ea',
     font_family: 'sans',
     background_image_url: null
@@ -7987,7 +7987,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-887',
     name: 'Lavanta Esintisi 887',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#c026d3',
     font_family: 'serif',
     background_image_url: null
@@ -7996,7 +7996,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-888',
     name: 'Zümrüt Gecesi 888',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#db2777',
     font_family: 'mono',
     background_image_url: null
@@ -8005,7 +8005,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-889',
     name: 'Ateş Dalı 889',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#475569',
     font_family: 'sans',
     background_image_url: null
@@ -8014,7 +8014,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-890',
     name: 'Zeytin Çekirdeği 890',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#52525b',
     font_family: 'serif',
     background_image_url: null
@@ -8068,7 +8068,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-896',
     name: 'Güneş Yankısı 896',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#1e3a8a',
     font_family: 'serif',
     background_image_url: null
@@ -8077,7 +8077,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-897',
     name: 'Ay Gölgesi 897',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#312e81',
     font_family: 'mono',
     background_image_url: null
@@ -8086,7 +8086,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-898',
     name: 'Yıldız Masalı 898',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#e11d48',
     font_family: 'sans',
     background_image_url: null
@@ -8095,7 +8095,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-899',
     name: 'Bahar Şiiri 899',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#0284c7',
     font_family: 'serif',
     background_image_url: null
@@ -8104,7 +8104,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-900',
     name: 'Güz Efsanesi 900',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#7c3aed',
     font_family: 'mono',
     background_image_url: null
@@ -8158,7 +8158,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-906',
     name: 'Ateş Grisi 906',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#0d9488',
     font_family: 'mono',
     background_image_url: null
@@ -8167,7 +8167,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-907',
     name: 'Zeytin Siyahı 907',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#2563eb',
     font_family: 'sans',
     background_image_url: null
@@ -8176,7 +8176,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-908',
     name: 'Kahve Işıltısı 908',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#4f46e5',
     font_family: 'serif',
     background_image_url: null
@@ -8185,7 +8185,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-909',
     name: 'Pırlanta Büyüsü 909',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#9333ea',
     font_family: 'mono',
     background_image_url: null
@@ -8194,7 +8194,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-910',
     name: 'Safir Sessizliği 910',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#c026d3',
     font_family: 'sans',
     background_image_url: null
@@ -8248,7 +8248,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-916',
     name: 'Bahar Rüyası 916',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#78350f',
     font_family: 'sans',
     background_image_url: null
@@ -8257,7 +8257,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-917',
     name: 'Güz Esintisi 917',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#831843',
     font_family: 'serif',
     background_image_url: null
@@ -8266,7 +8266,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-918',
     name: 'Kış Gecesi 918',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#064e3b',
     font_family: 'mono',
     background_image_url: null
@@ -8275,7 +8275,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-919',
     name: 'Gül Dalı 919',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#1e3a8a',
     font_family: 'sans',
     background_image_url: null
@@ -8284,7 +8284,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-920',
     name: 'Okyanus Çekirdeği 920',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#312e81',
     font_family: 'serif',
     background_image_url: null
@@ -8338,7 +8338,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-926',
     name: 'Pırlanta Yankısı 926',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#dc2626',
     font_family: 'serif',
     background_image_url: null
@@ -8347,7 +8347,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-927',
     name: 'Safir Gölgesi 927',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#ea580c',
     font_family: 'mono',
     background_image_url: null
@@ -8356,7 +8356,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-928',
     name: 'Vogue Masalı 928',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#65a30d',
     font_family: 'sans',
     background_image_url: null
@@ -8365,7 +8365,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-929',
     name: 'Gece Şiiri 929',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#0d9488',
     font_family: 'serif',
     background_image_url: null
@@ -8374,7 +8374,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-930',
     name: 'Güneş Efsanesi 930',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#2563eb',
     font_family: 'mono',
     background_image_url: null
@@ -8428,7 +8428,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-936',
     name: 'Gül Grisi 936',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#52525b',
     font_family: 'mono',
     background_image_url: null
@@ -8437,7 +8437,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-937',
     name: 'Okyanus Siyahı 937',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#000000',
     font_family: 'sans',
     background_image_url: null
@@ -8446,7 +8446,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-938',
     name: 'Lavanta Işıltısı 938',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#1c1917',
     font_family: 'serif',
     background_image_url: null
@@ -8455,7 +8455,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-939',
     name: 'Zümrüt Büyüsü 939',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#78350f',
     font_family: 'mono',
     background_image_url: null
@@ -8464,7 +8464,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-940',
     name: 'Ateş Sessizliği 940',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#831843',
     font_family: 'sans',
     background_image_url: null
@@ -8518,7 +8518,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-946',
     name: 'Gece Rüyası 946',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#7c3aed',
     font_family: 'sans',
     background_image_url: null
@@ -8527,7 +8527,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-947',
     name: 'Güneş Esintisi 947',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#d97706',
     font_family: 'serif',
     background_image_url: null
@@ -8536,7 +8536,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-948',
     name: 'Ay Gecesi 948',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#16a34a',
     font_family: 'mono',
     background_image_url: null
@@ -8545,7 +8545,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-949',
     name: 'Yıldız Dalı 949',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#dc2626',
     font_family: 'sans',
     background_image_url: null
@@ -8554,7 +8554,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-950',
     name: 'Bahar Çekirdeği 950',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#ea580c',
     font_family: 'serif',
     background_image_url: null
@@ -8608,7 +8608,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-956',
     name: 'Zümrüt Yankısı 956',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#c026d3',
     font_family: 'serif',
     background_image_url: null
@@ -8617,7 +8617,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-957',
     name: 'Ateş Gölgesi 957',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#db2777',
     font_family: 'mono',
     background_image_url: null
@@ -8626,7 +8626,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-958',
     name: 'Zeytin Masalı 958',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#475569',
     font_family: 'sans',
     background_image_url: null
@@ -8635,7 +8635,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-959',
     name: 'Kahve Şiiri 959',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#52525b',
     font_family: 'serif',
     background_image_url: null
@@ -8644,7 +8644,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-960',
     name: 'Pırlanta Efsanesi 960',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#000000',
     font_family: 'mono',
     background_image_url: null
@@ -8698,7 +8698,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-966',
     name: 'Yıldız Grisi 966',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#312e81',
     font_family: 'mono',
     background_image_url: null
@@ -8707,7 +8707,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-967',
     name: 'Bahar Siyahı 967',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#e11d48',
     font_family: 'sans',
     background_image_url: null
@@ -8716,7 +8716,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-968',
     name: 'Güz Işıltısı 968',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#0284c7',
     font_family: 'serif',
     background_image_url: null
@@ -8725,7 +8725,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-969',
     name: 'Kış Büyüsü 969',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#7c3aed',
     font_family: 'mono',
     background_image_url: null
@@ -8734,7 +8734,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-970',
     name: 'Gül Sessizliği 970',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#d97706',
     font_family: 'sans',
     background_image_url: null
@@ -8788,7 +8788,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-976',
     name: 'Kahve Rüyası 976',
     category: 'Minimalist',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#2563eb',
     font_family: 'sans',
     background_image_url: null
@@ -8797,7 +8797,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-977',
     name: 'Pırlanta Esintisi 977',
     category: 'Lüks',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#4f46e5',
     font_family: 'serif',
     background_image_url: null
@@ -8806,7 +8806,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-978',
     name: 'Safir Gecesi 978',
     category: 'Doğal',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#9333ea',
     font_family: 'mono',
     background_image_url: null
@@ -8815,7 +8815,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-979',
     name: 'Vogue Dalı 979',
     category: 'Modern',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#c026d3',
     font_family: 'sans',
     background_image_url: null
@@ -8824,7 +8824,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-980',
     name: 'Gece Çekirdeği 980',
     category: 'Klasik',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#db2777',
     font_family: 'serif',
     background_image_url: null
@@ -8878,7 +8878,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-986',
     name: 'Kış Yankısı 986',
     category: 'Klasik',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#831843',
     font_family: 'serif',
     background_image_url: null
@@ -8887,7 +8887,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-987',
     name: 'Gül Gölgesi 987',
     category: 'Karanlık',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#064e3b',
     font_family: 'mono',
     background_image_url: null
@@ -8896,7 +8896,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-988',
     name: 'Okyanus Masalı 988',
     category: 'Minimalist',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#1e3a8a',
     font_family: 'sans',
     background_image_url: null
@@ -8905,7 +8905,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-989',
     name: 'Lavanta Şiiri 989',
     category: 'Lüks',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#312e81',
     font_family: 'serif',
     background_image_url: null
@@ -8914,7 +8914,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-990',
     name: 'Zümrüt Efsanesi 990',
     category: 'Doğal',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#e11d48',
     font_family: 'mono',
     background_image_url: null
@@ -8968,7 +8968,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-996',
     name: 'Vogue Grisi 996',
     category: 'Doğal',
-    template_id: 'template1',
+    template_id: 'template6',
     primary_color: '#ea580c',
     font_family: 'mono',
     background_image_url: null
@@ -8977,7 +8977,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-997',
     name: 'Gece Siyahı 997',
     category: 'Modern',
-    template_id: 'template2',
+    template_id: 'template7',
     primary_color: '#65a30d',
     font_family: 'sans',
     background_image_url: null
@@ -8986,7 +8986,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-998',
     name: 'Güneş Işıltısı 998',
     category: 'Klasik',
-    template_id: 'template3',
+    template_id: 'template8',
     primary_color: '#0d9488',
     font_family: 'serif',
     background_image_url: null
@@ -8995,7 +8995,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-999',
     name: 'Ay Büyüsü 999',
     category: 'Karanlık',
-    template_id: 'template4',
+    template_id: 'template9',
     primary_color: '#2563eb',
     font_family: 'mono',
     background_image_url: null
@@ -9004,7 +9004,7 @@ export const predefinedThemes: ThemePreset[] = [
     id: 'theme-1000',
     name: 'Yıldız Sessizliği 1000',
     category: 'Minimalist',
-    template_id: 'template5',
+    template_id: 'template10',
     primary_color: '#4f46e5',
     font_family: 'sans',
     background_image_url: null

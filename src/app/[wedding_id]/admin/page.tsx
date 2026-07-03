@@ -410,6 +410,11 @@ export default function CoupleAdminPage({
                       <option value="template3">Şablon 3 (Doğal / Kağıt)</option>
                       <option value="template4">Şablon 4 (Lüks Çerçeve)</option>
                       <option value="template5">Şablon 5 (Minimalist)</option>
+                      <option value="template6">Şablon 6 (Romantik Çiçekli)</option>
+                      <option value="template7">Şablon 7 (Vintage Polaroid)</option>
+                      <option value="template8">Şablon 8 (Altın Varaklı Lüks)</option>
+                      <option value="template9">Şablon 9 (Modern Geometrik)</option>
+                      <option value="template10">Şablon 10 (Klasik Mektup)</option>
                     </select>
                   </div>
                   <div>
