@@ -37,14 +37,14 @@ export default function Template3({ wedding }: TemplateProps) {
 
   return (
     <div 
-      className={`min-h-screen flex flex-col items-center justify-center p-6 pb-28 text-[#4A3B32] ${fontFamilyClass} relative`}
+      className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 pb-28 text-[#4A3B32] ${fontFamilyClass} relative`}
       style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : '#F4F1EA' }}
     >
       {/* Hafif Overlay (Eğer resim varsa) */}
       {wedding.background_image_url && <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" />}
 
       <div 
-        className="max-w-2xl w-full bg-white/90 backdrop-blur-md shadow-xl p-10 text-center relative border-8 z-10"
+        className="max-w-[420px] mx-auto w-full bg-white/90 backdrop-blur-md shadow-2xl p-8 sm:p-10 text-center relative border-8 z-10 my-8"
         style={{ borderColor: `${primaryColor}30` }}
       >
         <Leaf className="w-10 h-10 mx-auto mb-6" style={{ color: primaryColor }} />

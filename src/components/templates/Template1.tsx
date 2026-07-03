@@ -40,7 +40,7 @@ export default function Template1({ wedding }: TemplateProps) {
 
   return (
     <div 
-      className={`min-h-screen flex flex-col items-center justify-center p-6 pb-28 text-slate-800 ${fontFamilyClass} relative overflow-hidden`}
+      className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 pb-28 text-slate-800 ${fontFamilyClass} relative overflow-hidden`}
       style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : `${primaryColor}15` }}
     >
       {/* Koyu Overlay (Sadece arkaplan resmi varsa) */}
@@ -54,7 +54,7 @@ export default function Template1({ wedding }: TemplateProps) {
         </>
       )}
 
-      <div className="max-w-2xl w-full bg-white/90 backdrop-blur-md rounded-3xl shadow-xl p-10 text-center relative z-10 border border-white/50">
+      <div className="max-w-[420px] mx-auto w-full bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-8 sm:p-10 text-center relative z-10 border border-white/50 my-8">
         <Sparkles className="w-8 h-8 mx-auto mb-6" style={{ color: primaryColor }} />
         
         <h3 className="font-medium tracking-widest uppercase mb-4 text-sm" style={{ color: primaryColor }}>

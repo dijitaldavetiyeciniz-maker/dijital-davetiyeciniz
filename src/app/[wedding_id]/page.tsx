@@ -68,9 +68,14 @@ export default async function WeddingPage({
       templateComponent = <Template1 wedding={wedding} />;
   }
 
-  return (
-    <Envelope brideName={wedding.bride_name} groomName={wedding.groom_name}>
+  // Zarf kullanımı kontrolü (use_envelope sütunu true ise veya null/undefined ise varsayılan true)
+  const useEnvelope = wedding.use_envelope !== false;
+
+  return useEnvelope ? (
+    <Envelope brideName={wedding.bride_name} groomName={wedding.groom_name} primaryColor={wedding.primary_color}>
       {templateComponent}
     </Envelope>
+  ) : (
+    <>{templateComponent}</>
   );
 }

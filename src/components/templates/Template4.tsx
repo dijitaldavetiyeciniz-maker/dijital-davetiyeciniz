@@ -39,13 +39,13 @@ export default function Template4({ wedding }: TemplateProps) {
 
   return (
     <div 
-      className={`min-h-screen flex flex-col items-center justify-center p-6 pb-28 text-slate-900 ${fontFamilyClass} relative`}
+      className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 pb-28 text-slate-900 ${fontFamilyClass} relative`}
       style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : '#ffffff' }}
     >
       {/* Beyaz Overlay (Arkaplan resmi varsa) */}
       {wedding.background_image_url && <div className="absolute inset-0 bg-white/80 backdrop-blur-sm" />}
 
-      <div className="max-w-2xl w-full p-10 text-center relative z-10">
+      <div className="max-w-[420px] mx-auto w-full p-8 sm:p-10 text-center relative z-10 bg-white/80 backdrop-blur shadow-2xl rounded-sm my-8 border border-amber-200/50">
         <div 
           className="absolute inset-0 border-[1px] m-2 rounded-t-full pointer-events-none opacity-50" 
           style={{ borderColor: primaryColor }}

@@ -52,7 +52,7 @@ export default function Template2({ wedding }: TemplateProps) {
         </>
       )}
 
-      <div className="max-w-2xl w-full bg-white/5 backdrop-blur-xl rounded-[2rem] border border-white/10 p-10 text-center relative z-10 shadow-2xl">
+      <div className="max-w-[420px] mx-auto w-full bg-white/5 backdrop-blur-xl rounded-[2rem] border border-white/10 p-8 sm:p-10 text-center relative z-10 shadow-2xl my-8">
         <Heart className="w-12 h-12 mx-auto mb-6 animate-pulse" style={{ color: primaryColor }} />
         
         <h3 className="font-medium tracking-[0.3em] uppercase mb-4 text-xs" style={{ color: primaryColor }}>

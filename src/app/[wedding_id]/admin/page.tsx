@@ -27,6 +27,7 @@ export default function CoupleAdminPage({
   const [bgImageUrl, setBgImageUrl] = useState('');
   const [telegramBotToken, setTelegramBotToken] = useState('');
   const [telegramChatId, setTelegramChatId] = useState('');
+  const [useEnvelope, setUseEnvelope] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [themes, setThemes] = useState<any[]>([]);
@@ -67,6 +68,7 @@ export default function CoupleAdminPage({
       if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
       if (weddingData.telegram_bot_token) setTelegramBotToken(weddingData.telegram_bot_token);
       if (weddingData.telegram_chat_id) setTelegramChatId(weddingData.telegram_chat_id);
+      if (weddingData.use_envelope !== undefined && weddingData.use_envelope !== null) setUseEnvelope(weddingData.use_envelope);
       
       setLoading(false);
     }
@@ -101,7 +103,8 @@ export default function CoupleAdminPage({
         font_family: fontFamily,
         background_image_url: bgImageUrl,
         telegram_bot_token: telegramBotToken,
-        telegram_chat_id: telegramChatId
+        telegram_chat_id: telegramChatId,
+        use_envelope: useEnvelope
       })
       .eq('id', wedding.id);
       
@@ -375,6 +378,23 @@ export default function CoupleAdminPage({
 
                   <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="https://resim-linki.com/foto.jpg" className="w-full border p-3 rounded-xl bg-slate-50 text-sm font-mono" />
                 </div>
+              </div>
+
+              <div className="pt-6 border-t border-slate-200">
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-rose-500" /> Site Giriş Animasyonu
+                </h3>
+                <label className="flex items-center justify-between p-4 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
+                  <div>
+                    <div className="font-bold text-slate-800">Zarf Açılış Animasyonu</div>
+                    <div className="text-xs text-slate-500 mt-1">Siteye girildiğinde mühürlü bir zarf animasyonu gösterilsin.</div>
+                  </div>
+                  <div className="relative">
+                    <input type="checkbox" className="sr-only" checked={useEnvelope} onChange={e => setUseEnvelope(e.target.checked)} />
+                    <div className={`block w-14 h-8 rounded-full transition-colors ${useEnvelope ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${useEnvelope ? 'transform translate-x-6' : ''}`}></div>
+                  </div>
+                </label>
               </div>
 
               <div className="pt-6 border-t border-slate-200">
