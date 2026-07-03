@@ -27,19 +27,32 @@ export default function Template3({ wedding }: TemplateProps) {
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
   
+  const primaryColor = wedding.primary_color || '#7C8964'; // default olive green
+  const fontFamilyClass = wedding.font_family === 'sans' ? 'font-sans' : wedding.font_family === 'mono' ? 'font-mono' : 'font-serif';
+  const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
+  
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#F4F1EA] flex flex-col items-center justify-center p-6 pb-28 text-[#4A3B32] font-serif">
-      <div className="max-w-2xl w-full bg-white rounded-sm shadow-xl p-10 text-center relative border-8 border-[#E8E1D3]">
-        <Leaf className="w-10 h-10 text-[#7C8964] mx-auto mb-6" />
+    <div 
+      className={`min-h-screen flex flex-col items-center justify-center p-6 pb-28 text-[#4A3B32] ${fontFamilyClass} relative`}
+      style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : '#F4F1EA' }}
+    >
+      {/* Hafif Overlay (Eğer resim varsa) */}
+      {wedding.background_image_url && <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" />}
+
+      <div 
+        className="max-w-2xl w-full bg-white/90 backdrop-blur-md shadow-xl p-10 text-center relative border-8 z-10"
+        style={{ borderColor: `${primaryColor}30` }}
+      >
+        <Leaf className="w-10 h-10 mx-auto mb-6" style={{ color: primaryColor }} />
         
-        <h3 className="text-[#7C8964] font-serif italic mb-6 text-xl">
+        <h3 className="italic mb-6 text-xl" style={{ color: primaryColor }}>
           {wedding.custom_message || 'Birlikte yeni bir hayata...'}
         </h3>
         
-        <h1 className="text-6xl md:text-8xl font-serif text-[#4A3B32] mb-10 tracking-widest leading-tight">
-          {wedding.bride_name} <br/> <span className="text-4xl text-[#7C8964] py-2 inline-block">&</span> <br/> {wedding.groom_name}
+        <h1 className="text-6xl md:text-8xl text-[#4A3B32] mb-10 tracking-widest leading-tight">
+          {wedding.bride_name} <br/> <span className="text-4xl py-2 inline-block" style={{ color: primaryColor }}>&</span> <br/> {wedding.groom_name}
         </h1>
         
         {wedding.wedding_date && (
@@ -48,7 +61,7 @@ export default function Template3({ wedding }: TemplateProps) {
           </div>
         )}
         
-        <div className="flex flex-col gap-5 text-lg font-serif mb-12">
+        <div className="flex flex-col gap-5 text-lg mb-12">
           <div className="flex items-center justify-center gap-2">
             <Calendar className="w-5 h-5 text-[#8D7B68]" />
             <span>{dateStr} - {timeStr}</span>
@@ -68,7 +81,8 @@ export default function Template3({ wedding }: TemplateProps) {
                 href={wedding.google_maps_url} 
                 target="_blank" 
                 rel="noreferrer"
-                className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-[#7C8964] hover:text-[#687353] hover:underline transition-colors"
+                className="mt-3 inline-flex items-center gap-2 text-sm font-bold hover:underline transition-colors"
+                style={{ color: primaryColor }}
               >
                 <Navigation className="w-4 h-4" />
                 Haritada Gör
@@ -79,7 +93,8 @@ export default function Template3({ wedding }: TemplateProps) {
 
         <button 
           onClick={() => setIsRsvpOpen(true)}
-          className="w-full px-10 py-4 bg-[#7C8964] text-white rounded-none font-serif text-lg hover:bg-[#687353] transition-colors border-2 border-[#7C8964] hover:border-[#687353]"
+          className="w-full px-10 py-4 text-white rounded-none text-lg transition-colors border-2 hover:bg-opacity-90"
+          style={{ backgroundColor: primaryColor, borderColor: primaryColor }}
         >
           Davete Yanıt Ver (LCV)
         </button>
@@ -88,14 +103,14 @@ export default function Template3({ wedding }: TemplateProps) {
       <FloatingActionBar 
         onRsvpClick={() => setIsRsvpOpen(true)} 
         googleMapsUrl={wedding.google_maps_url} 
-        primaryColor="#7C8964" 
+        primaryColor={primaryColor} 
       />
 
       <RsvpModal 
         weddingId={wedding.id} 
         isOpen={isRsvpOpen} 
         onClose={() => setIsRsvpOpen(false)} 
-        primaryColor="#7C8964" 
+        primaryColor={primaryColor} 
       />
     </div>
   );

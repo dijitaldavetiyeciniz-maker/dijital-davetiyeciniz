@@ -29,22 +29,43 @@ export default function Template4({ wedding }: TemplateProps) {
   
   const eventTitle = wedding.event_type ? `${wedding.event_type} TÖRENİ` : 'DÜĞÜN TÖRENİ';
   
+  const primaryColor = wedding.primary_color || '#d97706'; // default amber-600
+  const fontFamilyClass = wedding.font_family === 'sans' ? 'font-sans' : wedding.font_family === 'mono' ? 'font-mono' : 'font-serif';
+  const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
+  
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 pb-28 text-slate-900 font-serif">
-      <div className="max-w-2xl w-full p-10 text-center relative">
-        <div className="absolute inset-0 border-[1px] border-amber-300 m-2 rounded-t-full pointer-events-none" />
-        <div className="absolute inset-0 border-[1px] border-amber-300 m-4 rounded-t-full pointer-events-none" />
+    <div 
+      className={`min-h-screen flex flex-col items-center justify-center p-6 pb-28 text-slate-900 ${fontFamilyClass} relative`}
+      style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : '#ffffff' }}
+    >
+      {/* Beyaz Overlay (Arkaplan resmi varsa) */}
+      {wedding.background_image_url && <div className="absolute inset-0 bg-white/80 backdrop-blur-sm" />}
+
+      <div className="max-w-2xl w-full p-10 text-center relative z-10">
+        <div 
+          className="absolute inset-0 border-[1px] m-2 rounded-t-full pointer-events-none opacity-50" 
+          style={{ borderColor: primaryColor }}
+        />
+        <div 
+          className="absolute inset-0 border-[1px] m-4 rounded-t-full pointer-events-none" 
+          style={{ borderColor: primaryColor }}
+        />
         
-        <Crown className="w-12 h-12 text-amber-500 mx-auto mb-6 relative z-10" />
+        <Crown className="w-12 h-12 mx-auto mb-6 relative z-10" style={{ color: primaryColor }} />
         
-        <h3 className="text-amber-600 font-serif tracking-[0.4em] uppercase mb-6 text-sm relative z-10">
+        <h3 
+          className="font-serif tracking-[0.4em] uppercase mb-6 text-sm relative z-10 font-bold"
+          style={{ color: primaryColor }}
+        >
           {eventTitle}
         </h3>
         
-        <h1 className="text-5xl md:text-6xl font-serif text-slate-900 mb-8 relative z-10 uppercase tracking-widest leading-tight">
-          {wedding.bride_name} <br/> <span className="text-amber-500 text-3xl py-2 inline-block">ile</span> <br/> {wedding.groom_name}
+        <h1 className="text-5xl md:text-6xl text-slate-900 mb-8 relative z-10 uppercase tracking-widest leading-tight">
+          {wedding.bride_name} <br/> 
+          <span className="text-3xl py-2 inline-block" style={{ color: primaryColor }}>ile</span> 
+          <br/> {wedding.groom_name}
         </h1>
         
         {wedding.custom_message && (
@@ -53,7 +74,7 @@ export default function Template4({ wedding }: TemplateProps) {
           </p>
         )}
         
-        <div className="w-24 h-px bg-amber-300 mx-auto mb-8 relative z-10" />
+        <div className="w-24 h-px mx-auto mb-8 relative z-10" style={{ backgroundColor: primaryColor }} />
         
         {wedding.wedding_date && (
           <div className="mb-8 relative z-10">
@@ -61,17 +82,17 @@ export default function Template4({ wedding }: TemplateProps) {
           </div>
         )}
         
-        <div className="flex flex-col gap-6 text-lg font-serif mb-10 relative z-10">
+        <div className="flex flex-col gap-6 text-lg mb-10 relative z-10">
           <div>
-            <div className="text-amber-600 text-sm tracking-widest uppercase mb-1">Tarih</div>
+            <div className="text-sm tracking-widest uppercase mb-1 font-bold" style={{ color: primaryColor }}>Tarih</div>
             <div className="text-xl">{dateStr}</div>
             <div className="text-slate-500 text-base">{timeStr}</div>
           </div>
           <div>
-            <div className="text-amber-600 text-sm tracking-widest uppercase mb-1">Mekan</div>
+            <div className="text-sm tracking-widest uppercase mb-1 font-bold" style={{ color: primaryColor }}>Mekan</div>
             <div className="text-xl font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</div>
             {wedding.venue_address && (
-              <div className="text-slate-500 text-base mt-1">{wedding.venue_address}</div>
+              <div className="text-slate-500 text-base mt-1 px-8">{wedding.venue_address}</div>
             )}
             
             {wedding.google_maps_url && (
@@ -79,7 +100,8 @@ export default function Template4({ wedding }: TemplateProps) {
                 href={wedding.google_maps_url} 
                 target="_blank" 
                 rel="noreferrer"
-                className="mt-3 inline-flex items-center justify-center gap-2 text-sm font-bold text-amber-600 hover:text-amber-700 hover:underline transition-colors"
+                className="mt-3 inline-flex items-center justify-center gap-2 text-sm font-bold hover:underline transition-colors"
+                style={{ color: primaryColor }}
               >
                 <Navigation className="w-4 h-4" />
                 Haritada Gör
@@ -90,7 +112,8 @@ export default function Template4({ wedding }: TemplateProps) {
 
         <button 
           onClick={() => setIsRsvpOpen(true)}
-          className="w-full px-12 py-4 bg-slate-900 text-amber-500 rounded-none font-serif tracking-widest uppercase hover:bg-slate-800 transition-colors relative z-10 border border-amber-500"
+          className="w-full px-12 py-4 bg-slate-900 rounded-none tracking-widest uppercase hover:bg-slate-800 transition-colors relative z-10 border"
+          style={{ color: primaryColor, borderColor: primaryColor }}
         >
           Katılım Bildirimi (LCV)
         </button>
@@ -99,14 +122,14 @@ export default function Template4({ wedding }: TemplateProps) {
       <FloatingActionBar 
         onRsvpClick={() => setIsRsvpOpen(true)} 
         googleMapsUrl={wedding.google_maps_url} 
-        primaryColor="#f59e0b" 
+        primaryColor={primaryColor} 
       />
 
       <RsvpModal 
         weddingId={wedding.id} 
         isOpen={isRsvpOpen} 
         onClose={() => setIsRsvpOpen(false)} 
-        primaryColor="#f59e0b" // amber-500
+        primaryColor={primaryColor} 
       />
     </div>
   );

@@ -21,6 +21,7 @@ export default function CoupleAdminPage({
   const [activeTab, setActiveTab] = useState<'rsvps' | 'design' | 'payment'>('rsvps');
   
   // Tasarım Stüdyosu State
+  const [templateId, setTemplateId] = useState('template1');
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
   const [fontFamily, setFontFamily] = useState('sans');
   const [bgImageUrl, setBgImageUrl] = useState('');
@@ -28,8 +29,14 @@ export default function CoupleAdminPage({
   const [telegramChatId, setTelegramChatId] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [themes, setThemes] = useState<any[]>([]);
 
   useEffect(() => {
+    // Hazır temaları yükle
+    import('@/lib/themes').then(module => {
+      setThemes(module.predefinedThemes);
+    });
+
     async function loadData() {
       // 1. Düğün bilgilerini çek
       const { data: weddingData, error } = await supabase
@@ -54,6 +61,7 @@ export default function CoupleAdminPage({
         fetchRsvps(weddingData.id);
       }
       
+      if (weddingData.template_id) setTemplateId(weddingData.template_id);
       if (weddingData.primary_color) setPrimaryColor(weddingData.primary_color);
       if (weddingData.font_family) setFontFamily(weddingData.font_family);
       if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
@@ -88,6 +96,7 @@ export default function CoupleAdminPage({
     const { error } = await supabase
       .from('weddings')
       .update({
+        template_id: templateId,
         primary_color: primaryColor,
         font_family: fontFamily,
         background_image_url: bgImageUrl,
@@ -101,6 +110,13 @@ export default function CoupleAdminPage({
     } else {
       alert('Hata oluştu: ' + error.message);
     }
+  }
+
+  function applyPreset(theme: any) {
+    setTemplateId(theme.template_id);
+    setPrimaryColor(theme.primary_color);
+    setFontFamily(theme.font_family);
+    setBgImageUrl(theme.background_image_url || '');
   }
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -267,12 +283,46 @@ export default function CoupleAdminPage({
 
         {activeTab === 'design' && (
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+            <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
               <Paintbrush className="w-6 h-6 text-rose-500" /> Tasarım Stüdyosu
             </h2>
-            <p className="text-slate-500 mb-8">Davetiyenizin renklerini, yazı tiplerini ve fotoğraflarını buradan değiştirebilirsiniz.</p>
+            <p className="text-slate-500 mb-8">Premium temalardan birini tek tıkla seçebilir veya aşağıdan kendi özel renk ve fontunuzu belirleyebilirsiniz.</p>
             
+            {/* HAZIR TEMALAR */}
+            <div className="mb-10">
+              <h3 className="font-bold text-lg mb-4 text-slate-800">1. Premium Temalar (Tek Tıkla Uygula)</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                {themes.map(theme => (
+                  <button 
+                    key={theme.id}
+                    onClick={() => applyPreset(theme)}
+                    className="flex flex-col items-center p-3 rounded-xl border-2 transition-all hover:shadow-md text-left"
+                    style={{ borderColor: primaryColor === theme.primary_color && templateId === theme.template_id ? theme.primary_color : '#e2e8f0' }}
+                  >
+                    <div className="w-10 h-10 rounded-full mb-2 shadow-inner" style={{ backgroundColor: theme.primary_color }}></div>
+                    <span className="text-xs font-bold text-slate-700 text-center line-clamp-1">{theme.name}</span>
+                    <span className="text-[10px] text-slate-400 mt-1">{theme.category}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="h-px bg-slate-200 mb-10 w-full" />
+
+            <h3 className="font-bold text-lg mb-6 text-slate-800">2. İnce Ayarlar (Manuel Tasarım)</h3>
             <div className="space-y-6 max-w-lg">
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">Ana Şablon Yapısı</label>
+                <select value={templateId} onChange={e => setTemplateId(e.target.value)} className="w-full border p-3 rounded-xl bg-slate-50">
+                  <option value="template1">Şablon 1: Cam Efektli (Soft)</option>
+                  <option value="template2">Şablon 2: Karanlık (Neon Işıklı)</option>
+                  <option value="template3">Şablon 3: Rustik (Doğa Konseptli)</option>
+                  <option value="template4">Şablon 4: Lüks (Kraliyet Tarzı)</option>
+                  <option value="template5">Şablon 5: Minimalist (Modern Vogue)</option>
+                </select>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium mb-2">Tema Ana Rengi</label>
                 <div className="flex items-center gap-4">
@@ -280,6 +330,7 @@ export default function CoupleAdminPage({
                   <span className="text-slate-500 font-mono">{primaryColor}</span>
                 </div>
               </div>
+              
               
               <div>
                 <label className="block text-sm font-medium mb-2">Yazı Tipi (Font Ailesi)</label>

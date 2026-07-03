@@ -28,23 +28,36 @@ export default function Template2({ wedding }: TemplateProps) {
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
   
   const eventTitle = wedding.event_type ? `${wedding.event_type} TÖRENİ` : 'DÜĞÜN TÖRENİ';
+  const primaryColor = wedding.primary_color || '#3b82f6'; // default blue
+  const fontFamilyClass = wedding.font_family === 'serif' ? 'font-serif' : wedding.font_family === 'mono' ? 'font-mono' : 'font-sans';
+  const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
   
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 pb-28 text-white relative overflow-hidden font-sans">
+    <div 
+      className={`min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 pb-28 text-white relative overflow-hidden ${fontFamilyClass}`}
+      style={bgImageStyle}
+    >
+      {/* Koyu Overlay (Arkaplan resmi varsa yazılar okunsun diye) */}
+      {wedding.background_image_url && <div className="absolute inset-0 bg-slate-950/80" />}
+
       {/* Arkaplan Işıkları */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 blur-[120px] rounded-full pointer-events-none" />
+      {!wedding.background_image_url && (
+        <>
+          <div className="absolute top-0 left-1/4 w-96 h-96 blur-[120px] rounded-full pointer-events-none" style={{ backgroundColor: `${primaryColor}40` }} />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 blur-[120px] rounded-full pointer-events-none" style={{ backgroundColor: `${primaryColor}30` }} />
+        </>
+      )}
 
       <div className="max-w-2xl w-full bg-white/5 backdrop-blur-xl rounded-[2rem] border border-white/10 p-10 text-center relative z-10 shadow-2xl">
-        <Heart className="w-12 h-12 text-blue-400 mx-auto mb-6 animate-pulse" />
+        <Heart className="w-12 h-12 mx-auto mb-6 animate-pulse" style={{ color: primaryColor }} />
         
-        <h3 className="text-blue-300 font-medium tracking-[0.3em] uppercase mb-4 text-xs">
+        <h3 className="font-medium tracking-[0.3em] uppercase mb-4 text-xs" style={{ color: primaryColor }}>
           {eventTitle}
         </h3>
         
-        <h1 className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 mb-8 tracking-tight leading-tight py-2">
+        <h1 className="text-5xl md:text-7xl font-extrabold mb-8 tracking-tight leading-tight py-2 text-white drop-shadow-lg">
           {wedding.bride_name} <br/><span className="text-3xl text-white/50">&</span><br/> {wedding.groom_name}
         </h1>
         
@@ -62,14 +75,14 @@ export default function Template2({ wedding }: TemplateProps) {
         
         <div className="flex flex-col gap-4 text-lg text-slate-300 font-light mb-10 mt-6">
           <div className="flex items-center justify-center gap-3 bg-white/5 py-3 rounded-2xl border border-white/5">
-            <Calendar className="w-5 h-5 text-indigo-400" />
+            <Calendar className="w-5 h-5" style={{ color: primaryColor }} />
             <span>{dateStr} <span className="text-slate-500 mx-2">|</span> {timeStr}</span>
           </div>
           
           <div className="flex flex-col items-center justify-center gap-2 bg-white/5 p-4 rounded-2xl border border-white/5">
             <div className="flex items-center gap-3">
-              <MapPin className="w-5 h-5 text-purple-400" />
-              <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
+              <MapPin className="w-5 h-5" style={{ color: primaryColor }} />
+              <span className="font-bold text-white">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
             </div>
             {wedding.venue_address && (
               <span className="text-sm text-slate-400 font-light px-8">{wedding.venue_address}</span>
@@ -80,7 +93,8 @@ export default function Template2({ wedding }: TemplateProps) {
                 href={wedding.google_maps_url} 
                 target="_blank" 
                 rel="noreferrer"
-                className="mt-2 inline-flex items-center gap-2 text-sm font-bold text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+                className="mt-2 inline-flex items-center gap-2 text-sm font-bold hover:underline transition-colors"
+                style={{ color: primaryColor }}
               >
                 <Navigation className="w-4 h-4" />
                 Haritada Gör
@@ -91,7 +105,8 @@ export default function Template2({ wedding }: TemplateProps) {
 
         <button 
           onClick={() => setIsRsvpOpen(true)}
-          className="w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-bold hover:shadow-lg hover:shadow-blue-500/25 transition-all hover:-translate-y-1"
+          className="w-full px-8 py-4 text-white rounded-2xl font-bold shadow-lg transition-all hover:-translate-y-1"
+          style={{ backgroundColor: primaryColor, boxShadow: `0 10px 25px -5px ${primaryColor}60` }}
         >
           LCV Formunu Doldur
         </button>
@@ -100,14 +115,14 @@ export default function Template2({ wedding }: TemplateProps) {
       <FloatingActionBar 
         onRsvpClick={() => setIsRsvpOpen(true)} 
         googleMapsUrl={wedding.google_maps_url} 
-        primaryColor="#6366f1" 
+        primaryColor={primaryColor} 
       />
 
       <RsvpModal 
         weddingId={wedding.id} 
         isOpen={isRsvpOpen} 
         onClose={() => setIsRsvpOpen(false)} 
-        primaryColor="#6366f1" 
+        primaryColor={primaryColor} 
       />
     </div>
   );
