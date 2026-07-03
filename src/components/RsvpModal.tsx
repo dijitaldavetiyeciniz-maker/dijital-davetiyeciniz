@@ -36,14 +36,31 @@ export default function RsvpModal({ weddingId, isOpen, onClose, primaryColor = '
     ]);
 
     setIsSubmitting(false);
-    if (!error) {
+    if (error) {
+      alert("Bir hata oluştu: " + error.message);
+    } else {
+      // Başarılı kayıttan sonra Telegram bildirimi gönder
+      try {
+        await fetch('/api/telegram/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            wedding_id: weddingId,
+            guest_name: guestName,
+            is_attending: isAttending,
+            guest_count: isAttending ? guestCount : 0,
+            message: message
+          })
+        });
+      } catch (e) {
+        console.error("Telegram bildirim hatası", e);
+      }
+
       setIsSuccess(true);
       setTimeout(() => {
         setIsSuccess(false);
         onClose();
       }, 3000);
-    } else {
-      alert("Bir hata oluştu: " + error.message);
     }
   }
 

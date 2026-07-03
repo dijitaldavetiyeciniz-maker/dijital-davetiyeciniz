@@ -26,6 +26,7 @@ export default function CoupleAdminPage({
   const [bgImageUrl, setBgImageUrl] = useState('');
   const [telegramBotToken, setTelegramBotToken] = useState('');
   const [telegramChatId, setTelegramChatId] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
@@ -100,6 +101,43 @@ export default function CoupleAdminPage({
     } else {
       alert('Hata oluştu: ' + error.message);
     }
+  }
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files || e.target.files.length === 0) return;
+    
+    if (!telegramBotToken || !telegramChatId) {
+      alert("Lütfen önce sayfanın altından Telegram Bot Token ve Chat ID bilgilerinizi girip 'Kaydet' butonuna basın.");
+      return;
+    }
+
+    const file = e.target.files[0];
+    setIsUploading(true);
+
+    const formData = new FormData();
+    formData.append('photo', file);
+    formData.append('wedding_id', wedding.id);
+
+    try {
+      const res = await fetch('/api/telegram/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        // Dosya yüklendi, Proxy URL'sini oluştur ve arkaplan kutusuna yerleştir
+        const proxyUrl = `/api/image?file_id=${data.file_id}&wedding_id=${wedding.id}`;
+        setBgImageUrl(proxyUrl);
+        alert("Fotoğraf başarıyla Telegram'a yüklendi! Lütfen 'Kaydet' butonuna basmayı unutmayın.");
+      } else {
+        alert("Yükleme başarısız: " + data.error);
+      }
+    } catch (err) {
+      alert("Bir hata oluştu.");
+    }
+    
+    setIsUploading(false);
   }
 
   if (loading) return <div className="p-10 text-center">Yükleniyor...</div>;
@@ -253,9 +291,39 @@ export default function CoupleAdminPage({
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Arkaplan Görsel Linki (Opsiyonel)</label>
-                <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="https://resim-linki.com/foto.jpg" className="w-full border p-3 rounded-xl bg-slate-50" />
-                <p className="text-xs text-slate-400 mt-2">Düz renk yerine kendi fotoğrafınızı arkaplan yapmak için resminizin internet linkini buraya yapıştırın.</p>
+                <label className="block text-sm font-medium mb-2">Arkaplan Görseli</label>
+                
+                <div className="flex flex-col gap-4">
+                  <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:bg-slate-50 transition-colors">
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleFileUpload} 
+                      className="hidden" 
+                      id="file-upload" 
+                      disabled={isUploading}
+                    />
+                    <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center justify-center gap-2">
+                      <div className="w-12 h-12 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                        </svg>
+                      </div>
+                      <span className="font-bold text-slate-700">
+                        {isUploading ? "Yükleniyor (Lütfen bekleyin)..." : "Bilgisayardan Fotoğraf Seç (Ücretsiz)"}
+                      </span>
+                      <span className="text-xs text-slate-400">Telegram Bot üzerinden 0 maliyetle sınırsız barındırma</span>
+                    </label>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="h-px bg-slate-200 flex-1"></div>
+                    <span className="text-xs text-slate-400 font-bold uppercase">VEYA MANUEL LİNK GİRİN</span>
+                    <div className="h-px bg-slate-200 flex-1"></div>
+                  </div>
+
+                  <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="https://resim-linki.com/foto.jpg" className="w-full border p-3 rounded-xl bg-slate-50 text-sm font-mono" />
+                </div>
               </div>
 
               <div className="pt-6 border-t border-slate-200">
