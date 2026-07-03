@@ -32,6 +32,19 @@ export default function SuperAdminPage() {
     setLoading(false);
   }
 
+  async function togglePaymentStatus(id: string, currentStatus: boolean) {
+    const { error } = await supabase
+      .from('weddings')
+      .update({ is_paid: !currentStatus })
+      .eq('id', id);
+    
+    if (!error) {
+      fetchWeddings(); // Listeyi yenile
+    } else {
+      alert("Hata: " + error.message);
+    }
+  }
+
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
     const { error } = await supabase.from('weddings').insert([
@@ -187,6 +200,12 @@ export default function SuperAdminPage() {
                       <a href={`/${w.slug}`} target="_blank" className="text-blue-500 text-sm font-medium flex items-center gap-1 hover:underline">
                         Siteye Git <ExternalLink className="w-4 h-4" />
                       </a>
+                      <button 
+                        onClick={() => togglePaymentStatus(w.id, w.is_paid)}
+                        className={`text-sm font-bold px-3 py-1 rounded border transition-colors ${w.is_paid ? 'border-orange-500 text-orange-500 hover:bg-orange-50' : 'bg-emerald-500 text-white hover:bg-emerald-600'}`}
+                      >
+                        {w.is_paid ? 'Ödemeyi İptal Et' : 'Ödemeyi Onayla (Yayına Al)'}
+                      </button>
                       <a href={`/${w.slug}/admin`} target="_blank" className="text-rose-500 text-sm font-medium flex items-center gap-1 hover:underline">
                         Müşteri Paneli (Şifre: {w.admin_password})
                       </a>

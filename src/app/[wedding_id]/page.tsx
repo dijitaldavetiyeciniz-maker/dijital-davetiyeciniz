@@ -5,6 +5,7 @@ import Template2 from '@/components/templates/Template2';
 import Template3 from '@/components/templates/Template3';
 import Template4 from '@/components/templates/Template4';
 import Template5 from '@/components/templates/Template5';
+import Envelope from '@/components/Envelope';
 
 // Next.js App Router Page
 export default async function WeddingPage({
@@ -45,18 +46,30 @@ export default async function WeddingPage({
   }
 
   // Veritabanından gelen template_id değerine göre uygun şablonu render et.
+  let templateComponent;
   switch (wedding.template_id) {
     case 'template1':
-      return <Template1 wedding={wedding} />;
+      templateComponent = <Template1 wedding={wedding} />;
+      break;
     case 'template2':
-      return <Template2 wedding={wedding} />;
+      templateComponent = <Template2 wedding={wedding} />;
+      break;
     case 'template3':
-      return <Template3 wedding={wedding} />;
+      templateComponent = <Template3 wedding={wedding} />;
+      break;
     case 'template4':
-      return <Template4 wedding={wedding} />;
+      templateComponent = <Template4 wedding={wedding} />;
+      break;
     case 'template5':
-      return <Template5 wedding={wedding} />;
+      templateComponent = <Template5 wedding={wedding} />;
+      break;
     default:
-      return <Template1 wedding={wedding} />;
+      templateComponent = <Template1 wedding={wedding} />;
   }
+
+  return (
+    <Envelope brideName={wedding.bride_name} groomName={wedding.groom_name}>
+      {templateComponent}
+    </Envelope>
+  );
 }
