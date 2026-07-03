@@ -42,17 +42,18 @@ export default function SuperAdminPage() {
       prevWeddings.map(w => w.id === id ? { ...w, is_paid: !currentStatus } : w)
     );
 
-    const { error } = await supabase
+    const { data, error, count } = await supabase
       .from('weddings')
       .update({ is_paid: !currentStatus })
-      .eq('id', id);
+      .eq('id', id)
+      .select();
     
-    if (error) {
-      // Eğer hata olursa eski haline geri döndür
+    if (error || !data || data.length === 0) {
+      // Eğer hata olursa veya RLS (Güvenlik) engellediyse eski haline geri döndür
       setWeddings(prevWeddings => 
         prevWeddings.map(w => w.id === id ? { ...w, is_paid: currentStatus } : w)
       );
-      alert("Hata: " + error.message);
+      alert("Güvenlik Engeli (RLS): Supabase'de güncelleme izniniz yok. Lütfen Supabase SQL Editor'den UPDATE iznini açın.");
     } else if (!currentStatus) {
       // Ödeme YENİ onaylandıysa (false -> true), siteyi yeni sekmede aç
       window.open(`/${slug}`, '_blank');
