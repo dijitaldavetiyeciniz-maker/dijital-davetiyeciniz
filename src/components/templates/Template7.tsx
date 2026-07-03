@@ -1,6 +1,10 @@
 'use client';
 import { Calendar, MapPin, Navigation } from 'lucide-react';
+import { useState } from 'react';
 import CountdownTimer from '../CountdownTimer';
+import RsvpModal from '../RsvpModal';
+import FloatingActionBar from '../FloatingActionBar';
+import { isColorLight } from '@/lib/colorUtils';
 
 interface TemplateProps {
   wedding: any;
@@ -10,65 +14,119 @@ export default function Template7({ wedding }: TemplateProps) {
   const dateObj = wedding.wedding_date ? new Date(wedding.wedding_date) : new Date();
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-
+  
+  const [isRsvpOpen, setIsRsvpOpen] = useState(false);
+  
   const primaryColor = wedding.primary_color || '#3b82f6';
   const textColor = wedding.text_color || '#1e293b';
+  // Vintage often looks good with a serif or handwritten style.
   const fontFamilyClass = wedding.font_family === 'serif' ? 'font-serif' : wedding.font_family === 'mono' ? 'font-mono' : 'font-sans';
-  const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
+  
+  // Background texture is solid or a subtle pattern with primaryColor.
+  const textIsLight = isColorLight(textColor);
+  
+  // Polaroid card is always white-ish or dark-ish based on text color for contrast
+  const polaroidBg = textIsLight ? '#1e293b' : '#ffffff';
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 pb-28 text-slate-900 ${fontFamilyClass} bg-slate-100`}>
-      <div 
-        className="max-w-[420px] mx-auto w-full bg-white shadow-2xl p-4 sm:p-6 text-center relative z-10 my-8 rounded-sm transform rotate-1"
-      >
-        <div 
-          className="w-full h-80 bg-slate-200 mb-6 rounded-sm relative overflow-hidden"
-          style={bgImageStyle}
-        >
-          {!wedding.background_image_url && <div className="absolute inset-0 flex items-center justify-center text-slate-400 font-medium">Fotoğraf Eklenmedi</div>}
-        </div>
-        
-        <h1 className="text-4xl font-bold mb-2 flex flex-col gap-1 items-center" style={{ color: primaryColor }}>
-          {wedding.bride_parents && <span className="text-xs font-normal text-slate-400">{wedding.bride_parents}</span>}
-          <span>{wedding.bride_name}</span>
-          <span className="text-xl text-slate-300">&</span>
-          <span>{wedding.groom_name}</span>
-          {wedding.groom_parents && <span className="text-xs font-normal text-slate-400 mt-1">{wedding.groom_parents}</span>}
-        </h1>
+    <div 
+      className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 pb-32 ${fontFamilyClass} relative overflow-hidden`}
+      style={{ backgroundColor: `${primaryColor}15`, color: textColor }}
+    >
+      {/* Background Decor */}
+      <div className="absolute inset-0 opacity-20" style={{ 
+        backgroundImage: `radial-gradient(circle at center, ${primaryColor} 0%, transparent 70%)` 
+      }}></div>
 
-        <p className="text-slate-600 mb-6 mt-4 text-sm px-4">
-          {wedding.custom_message || 'Hayatımızın bu en anlamlı gününde sizleri de aramızda görmekten mutluluk duyarız.'}
-        </p>
-        
-        {wedding.wedding_date && (
-          <div className="mb-6 transform -rotate-1">
-            <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="minimal" />
+      <div 
+        className="max-w-lg w-full relative z-10 shadow-2xl p-4 sm:p-6 pb-12 rotate-[-2deg] transition-transform hover:rotate-0"
+        style={{ backgroundColor: polaroidBg }}
+      >
+        {/* Fotoğraf Alanı */}
+        {wedding.background_image_url ? (
+          <div 
+            className="w-full h-80 sm:h-[400px] bg-cover bg-center mb-8"
+            style={{ backgroundImage: `url(${wedding.background_image_url})`, backgroundColor: '#e2e8f0' }}
+          ></div>
+        ) : (
+          <div 
+            className="w-full h-80 sm:h-[400px] flex items-center justify-center mb-8"
+            style={{ backgroundColor: '#e2e8f0' }}
+          >
+            <span className="opacity-50 text-slate-800">Görsel Yok</span>
           </div>
         )}
-        
-        <div className="grid grid-cols-2 gap-4 text-left border-t-2 border-dashed border-slate-200 pt-6">
-          <div>
-            <div className="flex items-center gap-1 mb-1">
-              <Calendar className="w-4 h-4" style={{ color: primaryColor }} />
-              <span className="font-bold text-xs uppercase text-slate-500">Tarih</span>
-            </div>
-            <div className="font-bold text-sm">{dateStr}</div>
-            <div className="text-slate-500 text-sm">{timeStr}</div>
+
+        {/* Polaroid Alt Metin Alanı */}
+        <div className="text-center px-4">
+          <h1 className="text-4xl sm:text-6xl font-bold mb-4">
+            {wedding.bride_name} & {wedding.groom_name}
+          </h1>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-sm opacity-80 mb-6">
+            <span>{dateStr}</span>
+            <span className="hidden sm:inline">•</span>
+            <span>{timeStr}</span>
           </div>
-          <div>
-            <div className="flex items-center gap-1 mb-1">
-              <MapPin className="w-4 h-4" style={{ color: primaryColor }} />
-              <span className="font-bold text-xs uppercase text-slate-500">Mekan</span>
-            </div>
-            <div className="font-bold text-sm line-clamp-1">{wedding.venue_name || 'Mekan Yok'}</div>
+          
+          {wedding.custom_message && (
+            <p className="text-lg font-light italic mb-8 opacity-90">
+              "{wedding.custom_message}"
+            </p>
+          )}
+
+          <div className="w-full border-t border-dashed my-8" style={{ borderColor: `${primaryColor}40` }}></div>
+          
+          <div className="flex flex-col items-center gap-2 mb-8">
+            <MapPin className="w-6 h-6 mb-2" style={{ color: primaryColor }} />
+            <span className="font-bold text-lg">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
+            {wedding.venue_address && (
+              <span className="opacity-70 text-sm mt-1">{wedding.venue_address}</span>
+            )}
+            
             {wedding.google_maps_url && (
-              <a href={wedding.google_maps_url} target="_blank" rel="noreferrer" className="text-xs font-bold hover:underline" style={{ color: primaryColor }}>
-                Harita Linki
+              <a 
+                href={wedding.google_maps_url} 
+                target="_blank" 
+                rel="noreferrer"
+                className="mt-4 flex items-center gap-2 text-xs uppercase tracking-widest font-bold underline"
+                style={{ color: primaryColor }}
+              >
+                <Navigation className="w-3 h-3" />
+                Haritaya Git
               </a>
             )}
           </div>
+          
+          {wedding.wedding_date && (
+            <div className="my-8">
+              <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="minimal" />
+            </div>
+          )}
+
+          <button 
+            onClick={() => setIsRsvpOpen(true)}
+            className="w-full py-4 uppercase tracking-widest text-sm font-bold border-2 transition-all hover:bg-black/5"
+            style={{ borderColor: primaryColor, color: primaryColor }}
+          >
+            Davete Cevap Ver
+          </button>
         </div>
       </div>
+
+      <FloatingActionBar 
+        onRsvpClick={() => setIsRsvpOpen(true)} 
+        googleMapsUrl={wedding.google_maps_url} 
+        primaryColor={primaryColor}
+        styleType="minimal" 
+      />
+
+      <RsvpModal 
+        weddingId={wedding.id} 
+        isOpen={isRsvpOpen} 
+        onClose={() => setIsRsvpOpen(false)} 
+        primaryColor={primaryColor} 
+      />
     </div>
   );
 }

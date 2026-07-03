@@ -5,51 +5,36 @@ import BubblesEffect from '../effects/BubblesEffect';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
+import { isColorLight } from '@/lib/colorUtils';
 
 interface TemplateProps {
-  wedding: {
-    id: string;
-    bride_name: string;
-    groom_name: string;
-    bride_parents: string | null;
-    groom_parents: string | null;
-    wedding_date: string | null;
-    event_type: string | null;
-    venue_name: string | null;
-    venue_address: string | null;
-    google_maps_url: string | null;
-    custom_message: string | null;
-    primary_color: string | null;
-    font_family: string | null;
-    background_image_url: string | null;
-  };
+  wedding: any;
 }
 
 export default function Template1({ wedding }: TemplateProps) {
   const dateObj = wedding.wedding_date ? new Date(wedding.wedding_date) : new Date();
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-  
   const eventTitle = wedding.event_type ? `${wedding.event_type} Töreni` : 'Düğün Töreni';
-  
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
   
-  // Dinamik Tasarım Değişkenleri
   const primaryColor = wedding.primary_color || '#f43f5e';
-  const textColor = wedding.text_color || '#1e293b'; // Default Rose-500
+  const textColor = wedding.text_color || '#1e293b';
   const fontFamilyClass = wedding.font_family === 'serif' ? 'font-serif' : wedding.font_family === 'mono' ? 'font-mono' : 'font-sans';
   const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
 
+  // Text is light -> Dark card for contrast. Text is dark -> Light card.
+  const textIsLight = isColorLight(textColor);
+  const cardBgClass = textIsLight ? 'bg-black/60 border-white/20' : 'bg-white/90 border-white/50';
+
   return (
     <div 
-      className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 pb-28 text-slate-800 ${fontFamilyClass} relative overflow-hidden`}
-      style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : `${primaryColor}15` }}
+      className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 pb-28 ${fontFamilyClass} relative overflow-hidden`}
+      style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : `${primaryColor}15`, color: textColor }}
     >
-      {/* Koyu Overlay (Sadece arkaplan resmi varsa) */}
       {wedding.background_image_url && <div className="absolute inset-0 bg-black/40" />}
       <BubblesEffect />
 
-      {/* Arkaplan Süslemeleri (Eğer resim yoksa göster) */}
       {!wedding.background_image_url && (
         <>
           <div className="absolute top-0 left-0 w-64 h-64 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob" style={{ backgroundColor: primaryColor }} />
@@ -57,50 +42,48 @@ export default function Template1({ wedding }: TemplateProps) {
         </>
       )}
 
-      <div className="max-w-[420px] mx-auto w-full bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-8 sm:p-10 text-center relative z-10 border border-white/50 my-8">
+      <div className={`max-w-[420px] mx-auto w-full backdrop-blur-md rounded-3xl shadow-2xl p-8 sm:p-10 text-center relative z-10 border my-8 transition-colors ${cardBgClass}`}>
         <Sparkles className="w-8 h-8 mx-auto mb-6" style={{ color: primaryColor }} />
         
         <h3 className="font-medium tracking-widest uppercase mb-4 text-sm" style={{ color: primaryColor }}>
           {eventTitle}
         </h3>
         
-        <h1 className="text-5xl md:text-7xl font-bold text-slate-800 mb-8 mt-4 leading-tight">
+        <h1 className="text-5xl md:text-7xl font-bold mb-8 mt-4 leading-tight">
           <div className="flex flex-col items-center">
-            {wedding.bride_parents && <span className="text-sm md:text-xl tracking-widest opacity-80 font-light mb-2">{wedding.bride_parents}</span>}
+            {wedding.bride_parents && <span className="text-sm md:text-xl tracking-widest opacity-70 font-light mb-2">{wedding.bride_parents}</span>}
             <span>{wedding.bride_name}</span>
           </div>
           <span className="text-3xl my-2 mx-auto block text-center" style={{ color: primaryColor }}>&</span>
           <div className="flex flex-col items-center">
             <span>{wedding.groom_name}</span>
-            {wedding.groom_parents && <span className="text-sm md:text-xl tracking-widest opacity-80 font-light mt-2">{wedding.groom_parents}</span>}
+            {wedding.groom_parents && <span className="text-sm md:text-xl tracking-widest opacity-70 font-light mt-2">{wedding.groom_parents}</span>}
           </div>
         </h1>
         
-        {/* Özel Söz / Mesaj */}
         {wedding.custom_message && (
-          <p className="text-lg text-slate-600 font-light italic mb-8 px-4 leading-relaxed">
+          <p className="text-lg font-light italic mb-8 px-4 leading-relaxed opacity-90">
             "{wedding.custom_message}"
           </p>
         )}
         
-        {/* Geri Sayım Sayacı */}
         {wedding.wedding_date && (
           <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="glass" />
         )}
         
-        <div className="flex flex-col gap-5 text-lg font-medium text-slate-700 mb-10 mt-6">
-          <div className="flex items-center justify-center gap-3 bg-white py-3 rounded-xl border shadow-sm" style={{ borderColor: `${primaryColor}30` }}>
+        <div className="flex flex-col gap-5 text-lg font-medium mb-10 mt-6">
+          <div className="flex items-center justify-center gap-3 py-3 rounded-xl border shadow-sm" style={{ borderColor: `${primaryColor}30`, backgroundColor: textIsLight ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.7)' }}>
             <Calendar className="w-5 h-5" style={{ color: primaryColor }} />
-            <span>{dateStr} <span className="mx-2" style={{ color: `${primaryColor}70` }}>|</span> {timeStr}</span>
+            <span>{dateStr} <span className="mx-2" style={{ color: primaryColor, opacity: 0.7 }}>|</span> {timeStr}</span>
           </div>
           
-          <div className="flex flex-col items-center justify-center gap-2 bg-white p-4 rounded-xl border shadow-sm" style={{ borderColor: `${primaryColor}30` }}>
+          <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border shadow-sm" style={{ borderColor: `${primaryColor}30`, backgroundColor: textIsLight ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.7)' }}>
             <div className="flex items-center gap-3">
               <MapPin className="w-5 h-5" style={{ color: primaryColor }} />
               <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
             </div>
             {wedding.venue_address && (
-              <span className="text-sm text-slate-500 font-light px-8">{wedding.venue_address}</span>
+              <span className="text-sm font-light px-8 opacity-70">{wedding.venue_address}</span>
             )}
             
             {wedding.google_maps_url && (
@@ -131,6 +114,7 @@ export default function Template1({ wedding }: TemplateProps) {
         onRsvpClick={() => setIsRsvpOpen(true)} 
         googleMapsUrl={wedding.google_maps_url} 
         primaryColor={primaryColor} 
+        styleType="orbs"
       />
 
       <RsvpModal 

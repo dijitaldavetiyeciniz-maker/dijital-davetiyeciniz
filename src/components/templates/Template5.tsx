@@ -1,126 +1,135 @@
 'use client';
-import { Calendar, MapPin, ArrowRight, Navigation } from 'lucide-react';
+import { Calendar, MapPin, Navigation } from 'lucide-react';
 import { useState } from 'react';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
+import { isColorLight } from '@/lib/colorUtils';
 
 interface TemplateProps {
-  wedding: {
-    id: string;
-    bride_name: string;
-    groom_name: string;
-    bride_parents: string | null;
-    groom_parents: string | null;
-    wedding_date: string | null;
-    event_type: string | null;
-    venue_name: string | null;
-    venue_address: string | null;
-    google_maps_url: string | null;
-    custom_message: string | null;
-    primary_color: string | null;
-    font_family: string | null;
-    background_image_url: string | null;
-  };
+  wedding: any;
 }
 
 export default function Template5({ wedding }: TemplateProps) {
   const dateObj = wedding.wedding_date ? new Date(wedding.wedding_date) : new Date();
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-
-  const primaryColor = wedding.primary_color || '#000000';
-  const textColor = wedding.text_color || '#1e293b'; // default black
-  const fontFamilyClass = wedding.font_family === 'serif' ? 'font-serif' : wedding.font_family === 'mono' ? 'font-mono' : 'font-sans';
-  const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
-
+  const eventTitle = wedding.event_type ? `${wedding.event_type}` : 'Düğün';
+  
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
+  
+  const primaryColor = wedding.primary_color || '#000000';
+  const textColor = wedding.text_color || '#000000';
+  const fontFamilyClass = wedding.font_family === 'serif' ? 'font-serif' : wedding.font_family === 'mono' ? 'font-mono' : 'font-sans';
+  
+  // Minimalist Asymmetric - Half image, Half text.
+  // We need a solid background for the text side based on textColor.
+  const textIsLight = isColorLight(textColor);
+  const textSideBgColor = textIsLight ? '#111827' : '#ffffff';
 
   return (
     <div 
-      className={`min-h-screen flex flex-col justify-center p-6 pb-28 text-zinc-900 ${fontFamilyClass} relative`}
-      style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : '#fafafa' }} // zinc-50
+      className={`min-h-screen flex flex-col lg:flex-row ${fontFamilyClass} relative overflow-hidden`}
+      style={{ backgroundColor: textSideBgColor, color: textColor }}
     >
-      {/* Hafif Açık Overlay (Eğer resim varsa) */}
-      {wedding.background_image_url && <div className="absolute inset-0 bg-white/70 backdrop-blur-md" />}
+      {/* Sol / Üst Taraf - Görsel */}
+      {wedding.background_image_url ? (
+        <div 
+          className="w-full lg:w-1/2 h-[40vh] lg:h-screen bg-cover bg-center"
+          style={{ backgroundImage: `url(${wedding.background_image_url})` }}
+        />
+      ) : (
+        <div 
+          className="w-full lg:w-1/2 h-[40vh] lg:h-screen flex items-center justify-center opacity-30"
+          style={{ backgroundColor: primaryColor }}
+        >
+          <span className="tracking-widest uppercase text-sm">Görsel Yok</span>
+        </div>
+      )}
 
-      <div className="max-w-[420px] mx-auto w-full flex flex-col items-center gap-8 relative z-10 bg-white/95 backdrop-blur shadow-2xl p-8 sm:p-10 rounded-2xl my-8 text-center">
-        
-        <div className="flex-1">
-          <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-4 flex flex-col items-center justify-center w-full gap-2" style={{ color: primaryColor }}>
-            <div className="flex flex-col items-center gap-1">
-              {wedding.bride_parents && <span className="text-xl md:text-3xl tracking-widest opacity-60 font-light block mb-2">{wedding.bride_parents}</span>}
-              <span>{wedding.bride_name}</span>
-            </div>
-            <span className="text-slate-300 text-3xl my-2">&</span>
-            <div className="flex flex-col items-center gap-1">
-              <span>{wedding.groom_name}</span>
-              {wedding.groom_parents && <span className="text-xl md:text-3xl tracking-widest opacity-60 font-light block mt-2">{wedding.groom_parents}</span>}
-            </div>
-          </h1>
-          <p className="text-xl text-zinc-600 font-medium mb-10 max-w-sm">
-            {wedding.custom_message || 'Hayatımızın en özel gününde sizleri de aramızda görmekten mutluluk duyarız.'}
-          </p>
+      {/* Sağ / Alt Taraf - İçerik */}
+      <div className="w-full lg:w-1/2 min-h-[60vh] lg:h-screen overflow-y-auto pb-32 lg:pb-12 custom-scrollbar">
+        <div className="max-w-xl mx-auto p-8 sm:p-16 lg:p-24 flex flex-col justify-center min-h-full">
           
-          {wedding.wedding_date && (
-            <div className="mb-10 max-w-xs">
-              <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="minimal" />
+          <div className="w-8 h-8 mb-12" style={{ backgroundColor: primaryColor }}></div>
+          
+          <h3 className="tracking-widest uppercase text-xs opacity-60 mb-4">
+            {eventTitle}
+          </h3>
+          
+          <h1 className="text-5xl sm:text-7xl font-bold leading-none mb-10 tracking-tight">
+            <span className="block mb-2">{wedding.bride_name}</span>
+            <span className="block opacity-30 text-3xl my-2">&</span>
+            <span className="block">{wedding.groom_name}</span>
+          </h1>
+
+          {(wedding.bride_parents || wedding.groom_parents) && (
+            <div className="flex flex-col gap-2 mb-12 opacity-70 text-sm tracking-wider">
+              {wedding.bride_parents && <span>{wedding.bride_parents}</span>}
+              {wedding.groom_parents && <span>{wedding.groom_parents}</span>}
             </div>
           )}
           
-          <div className="space-y-6 mb-12">
-            <div className="flex flex-col items-center gap-2">
-              <Calendar className="w-6 h-6 mt-1" style={{ color: primaryColor }} />
-              <div>
-                <div className="font-bold text-lg">{dateStr}</div>
-                <div className="text-zinc-500">{timeStr}</div>
+          {wedding.custom_message && (
+            <p className="text-lg sm:text-2xl font-light italic mb-16 leading-relaxed opacity-90 border-l-2 pl-6" style={{ borderColor: primaryColor }}>
+              "{wedding.custom_message}"
+            </p>
+          )}
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 mb-16">
+            <div>
+              <h4 className="text-xs tracking-widest uppercase opacity-50 mb-4">Ne Zaman</h4>
+              <div className="flex flex-col gap-1 text-lg">
+                <span className="font-medium">{dateStr}</span>
+                <span className="opacity-70">{timeStr}</span>
               </div>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <MapPin className="w-6 h-6 mt-1" style={{ color: primaryColor }} />
-              <div>
-                <div className="font-bold text-lg">{wedding.venue_name || 'Mekan Belirtilmedi'}</div>
-                {wedding.venue_address && (
-                  <div className="text-zinc-500">{wedding.venue_address}</div>
-                )}
+            
+            <div>
+              <h4 className="text-xs tracking-widest uppercase opacity-50 mb-4">Nerede</h4>
+              <div className="flex flex-col gap-1 text-lg">
+                <span className="font-medium">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
+                {wedding.venue_address && <span className="text-sm opacity-70 mt-2">{wedding.venue_address}</span>}
                 {wedding.google_maps_url && (
                   <a 
                     href={wedding.google_maps_url} 
                     target="_blank" 
                     rel="noreferrer"
-                    className="mt-2 inline-flex items-center gap-2 text-sm font-bold hover:underline transition-colors"
+                    className="inline-flex items-center gap-2 text-xs font-bold uppercase mt-4 hover:opacity-70 transition-opacity"
                     style={{ color: primaryColor }}
                   >
-                    <Navigation className="w-4 h-4" />
+                    <Navigation className="w-3 h-3" />
                     Haritada Gör
                   </a>
                 )}
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="w-full text-white p-8 rounded-xl flex flex-col justify-center" style={{ backgroundColor: primaryColor }}>
-          <h2 className="text-2xl font-bold mb-8">Sen de Gel.</h2>
-          <p className="text-white/80 mb-8">
-            Lütfen katılım durumunuzu aşağıdaki butona tıklayarak bize bildirin.
-          </p>
+          
+          {wedding.wedding_date && (
+            <div className="mb-16">
+              <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="minimal" />
+            </div>
+          )}
+          
           <button 
             onClick={() => setIsRsvpOpen(true)}
-            className="flex items-center justify-between w-full p-4 bg-white font-bold hover:bg-zinc-100 transition-colors group"
-            style={{ color: primaryColor }}
+            className="w-full sm:w-auto px-12 py-5 uppercase tracking-widest text-xs font-bold transition-all hover:opacity-80"
+            style={{ 
+              backgroundColor: primaryColor, 
+              color: textIsLight ? '#000' : '#fff'
+            }}
           >
-            <span>LCV Formu</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+            LCV ONAYLA
           </button>
         </div>
-
       </div>
 
       <FloatingActionBar 
         onRsvpClick={() => setIsRsvpOpen(true)} 
         googleMapsUrl={wedding.google_maps_url} 
-        primaryColor={primaryColor} 
+        primaryColor={primaryColor}
+        styleType="minimal" 
       />
 
       <RsvpModal 

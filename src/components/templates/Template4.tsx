@@ -1,138 +1,138 @@
 'use client';
-import { Sparkles, Calendar, MapPin, Crown, Navigation } from 'lucide-react';
+import { Calendar, MapPin, Navigation, Crown } from 'lucide-react';
 import { useState } from 'react';
 import SparklesEffect from '../effects/SparklesEffect';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
+import { isColorLight } from '@/lib/colorUtils';
 
 interface TemplateProps {
-  wedding: {
-    id: string;
-    bride_name: string;
-    groom_name: string;
-    bride_parents: string | null;
-    groom_parents: string | null;
-    wedding_date: string | null;
-    event_type: string | null;
-    venue_name: string | null;
-    venue_address: string | null;
-    google_maps_url: string | null;
-    custom_message: string | null;
-    primary_color: string | null;
-    font_family: string | null;
-    background_image_url: string | null;
-  };
+  wedding: any;
 }
 
 export default function Template4({ wedding }: TemplateProps) {
   const dateObj = wedding.wedding_date ? new Date(wedding.wedding_date) : new Date();
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-  
-  const eventTitle = wedding.event_type ? `${wedding.event_type} TÖRENİ` : 'DÜĞÜN TÖRENİ';
-  
-  const primaryColor = wedding.primary_color || '#d97706';
-  const textColor = wedding.text_color || '#1e293b'; // default amber-600
-  const fontFamilyClass = wedding.font_family === 'sans' ? 'font-sans' : wedding.font_family === 'mono' ? 'font-mono' : 'font-serif';
-  const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
+  const eventTitle = wedding.event_type ? `${wedding.event_type} Töreni` : 'Düğün Töreni';
   
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
+  
+  const primaryColor = wedding.primary_color || '#d4af37';
+  const textColor = wedding.text_color || '#1e293b';
+  const fontFamilyClass = wedding.font_family === 'sans' ? 'font-sans' : wedding.font_family === 'mono' ? 'font-mono' : 'font-serif';
+  const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' } : {};
+
+  const textIsLight = isColorLight(textColor);
+  const innerBgColor = textIsLight ? 'rgba(0, 0, 0, 0.85)' : 'rgba(255, 255, 255, 0.95)';
 
   return (
     <div 
-      className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 pb-28 text-slate-900 ${fontFamilyClass} relative`}
-      style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : '#ffffff' }}
+      className={`min-h-screen flex items-center justify-center p-4 sm:p-8 pb-32 ${fontFamilyClass} relative overflow-hidden`}
+      style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : `${primaryColor}20`, color: textColor }}
     >
-      {/* Beyaz Overlay (Arkaplan resmi varsa) */}
-      {wedding.background_image_url && <div className="absolute inset-0 bg-white/80 backdrop-blur-sm" />}
+      <SparklesEffect color={primaryColor} />
 
-      <div className="max-w-[420px] mx-auto w-full p-8 sm:p-10 text-center relative z-10 bg-white/80 backdrop-blur shadow-2xl rounded-sm my-8 border border-amber-200/50">
+      {/* Dış Çerçeve */}
+      <div 
+        className="w-full max-w-2xl min-h-[90vh] relative z-10 rounded-sm p-2 sm:p-3 shadow-2xl backdrop-blur-sm"
+        style={{ backgroundColor: innerBgColor }}
+      >
+        {/* İç Çift Çerçeve */}
         <div 
-          className="absolute inset-0 border-[1px] m-2 rounded-t-full pointer-events-none opacity-50" 
+          className="w-full h-full border p-1 rounded-sm"
           style={{ borderColor: primaryColor }}
-        />
-        <div 
-          className="absolute inset-0 border-[1px] m-4 rounded-t-full pointer-events-none" 
-          style={{ borderColor: primaryColor }}
-        />
-        
-        <Crown className="w-12 h-12 mx-auto mb-6 relative z-10" style={{ color: primaryColor }} />
-        
-        <h3 
-          className="font-serif tracking-[0.4em] uppercase mb-6 text-sm relative z-10 font-bold"
-          style={{ color: primaryColor }}
         >
-          {eventTitle}
-        </h3>
-        
-        <h1 className="text-5xl md:text-6xl text-slate-900 mb-8 relative z-10 uppercase tracking-widest leading-tight">
-          <div className="flex flex-col items-center">
-            {wedding.bride_parents && <span className="text-sm md:text-xl tracking-widest opacity-80 font-light mb-2">{wedding.bride_parents}</span>}
-            <span>{wedding.bride_name}</span>
-          </div>
-          <span className="text-3xl my-2 mx-auto block text-center" style={{ color: primaryColor }}>&</span>
-          <div className="flex flex-col items-center">
-            <span>{wedding.groom_name}</span>
-            {wedding.groom_parents && <span className="text-sm md:text-xl tracking-widest opacity-80 font-light mt-2">{wedding.groom_parents}</span>}
-          </div>
-        </h1>
-        
-        {wedding.custom_message && (
-          <p className="text-lg text-slate-600 font-light italic mb-8 px-4 leading-relaxed relative z-10">
-            "{wedding.custom_message}"
-          </p>
-        )}
-        
-        <div className="w-24 h-px mx-auto mb-8 relative z-10" style={{ backgroundColor: primaryColor }} />
-        
-        {wedding.wedding_date && (
-          <div className="mb-8 relative z-10">
-            <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="elegant" />
-          </div>
-        )}
-        
-        <div className="flex flex-col gap-6 text-lg mb-10 relative z-10">
-          <div>
-            <div className="text-sm tracking-widest uppercase mb-1 font-bold" style={{ color: primaryColor }}>Tarih</div>
-            <div className="text-xl">{dateStr}</div>
-            <div className="text-slate-500 text-base">{timeStr}</div>
-          </div>
-          <div>
-            <div className="text-sm tracking-widest uppercase mb-1 font-bold" style={{ color: primaryColor }}>Mekan</div>
-            <div className="text-xl font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</div>
-            {wedding.venue_address && (
-              <div className="text-slate-500 text-base mt-1 px-8">{wedding.venue_address}</div>
+          <div 
+            className="w-full h-full border-2 border-dashed rounded-sm px-6 py-16 sm:px-12 flex flex-col items-center justify-center text-center relative"
+            style={{ borderColor: `${primaryColor}80` }}
+          >
+            {/* Köşe Süsleri */}
+            <div className="absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2" style={{ borderColor: primaryColor }}></div>
+            <div className="absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2" style={{ borderColor: primaryColor }}></div>
+            <div className="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2" style={{ borderColor: primaryColor }}></div>
+            <div className="absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2" style={{ borderColor: primaryColor }}></div>
+
+            <Crown className="w-12 h-12 mb-8" style={{ color: primaryColor }} />
+            
+            <h3 className="tracking-[0.4em] uppercase text-xs opacity-80 mb-8 font-light">
+              {eventTitle}
+            </h3>
+            
+            <h1 className="text-4xl sm:text-6xl font-normal leading-relaxed mb-6">
+              <div className="flex flex-col items-center">
+                {wedding.bride_parents && <span className="text-xs sm:text-sm tracking-widest opacity-60 mb-2">{wedding.bride_parents}</span>}
+                <span className="italic">{wedding.bride_name}</span>
+              </div>
+              <div className="my-6 w-16 h-px mx-auto" style={{ backgroundColor: primaryColor }}></div>
+              <div className="flex flex-col items-center">
+                <span className="italic">{wedding.groom_name}</span>
+                {wedding.groom_parents && <span className="text-xs sm:text-sm tracking-widest opacity-60 mt-2">{wedding.groom_parents}</span>}
+              </div>
+            </h1>
+            
+            {wedding.custom_message && (
+              <p className="text-sm sm:text-base font-light italic mt-8 px-4 opacity-90 max-w-sm mx-auto leading-loose">
+                {wedding.custom_message}
+              </p>
             )}
             
-            {wedding.google_maps_url && (
-              <a 
-                href={wedding.google_maps_url} 
-                target="_blank" 
-                rel="noreferrer"
-                className="mt-3 inline-flex items-center justify-center gap-2 text-sm font-bold hover:underline transition-colors"
-                style={{ color: primaryColor }}
-              >
-                <Navigation className="w-4 h-4" />
-                Haritada Gör
-              </a>
+            {wedding.wedding_date && (
+              <div className="mt-12 w-full">
+                <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="elegant" />
+              </div>
             )}
+            
+            <div className="flex flex-col w-full gap-6 text-sm font-light mt-16 max-w-sm">
+              <div className="flex flex-col items-center justify-center p-4 border" style={{ borderColor: `${primaryColor}40` }}>
+                <Calendar className="w-5 h-5 mb-3" style={{ color: primaryColor }} />
+                <span className="tracking-widest uppercase mb-1">{dateStr}</span>
+                <span className="opacity-70">{timeStr}</span>
+              </div>
+              
+              <div className="flex flex-col items-center justify-center p-4 border" style={{ borderColor: `${primaryColor}40` }}>
+                <MapPin className="w-5 h-5 mb-3" style={{ color: primaryColor }} />
+                <span className="font-bold tracking-widest uppercase mb-2 text-center">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
+                {wedding.venue_address && (
+                  <span className="opacity-70 text-center px-4 mb-4 leading-relaxed">{wedding.venue_address}</span>
+                )}
+                
+                {wedding.google_maps_url && (
+                  <a 
+                    href={wedding.google_maps_url} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 text-xs font-semibold tracking-widest uppercase hover:opacity-70 transition-opacity"
+                    style={{ color: primaryColor }}
+                  >
+                    <Navigation className="w-3 h-3" />
+                    Yol Tarifi Al
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <button 
+              onClick={() => setIsRsvpOpen(true)}
+              className="mt-12 px-10 py-3 uppercase tracking-widest text-xs font-semibold border-2 transition-all hover:bg-white/10"
+              style={{ 
+                borderColor: primaryColor, 
+                color: primaryColor,
+                backgroundColor: 'transparent'
+              }}
+            >
+              LCV Gönder
+            </button>
           </div>
         </div>
-
-        <button 
-          onClick={() => setIsRsvpOpen(true)}
-          className="w-full px-12 py-4 bg-slate-900 rounded-none tracking-widest uppercase hover:bg-slate-800 transition-colors relative z-10 border"
-          style={{ color: primaryColor, borderColor: primaryColor }}
-        >
-          Katılım Bildirimi (LCV)
-        </button>
       </div>
 
       <FloatingActionBar 
         onRsvpClick={() => setIsRsvpOpen(true)} 
         googleMapsUrl={wedding.google_maps_url} 
-        primaryColor={primaryColor} 
+        primaryColor={primaryColor}
+        styleType="pill" 
       />
 
       <RsvpModal 
