@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Template1 from '@/components/templates/Template1';
