@@ -27,8 +27,12 @@ export default function RegisterPage() {
     if (error) {
       setErrorMsg(error.message);
     } else {
-      // Başarılıysa doğrudan giriş ekranına veya dashboard'a at
-      router.push('/dashboard');
+      if (data.session) {
+        // Başarılıysa doğrudan giriş ekranına veya dashboard'a at
+        router.push('/dashboard');
+      } else {
+        setErrorMsg('Kayıt başarılı! Lütfen e-posta adresinize gelen onay linkine tıklayın. (Spam/Gereksiz kutusunu kontrol etmeyi unutmayın)');
+      }
     }
   };
 
