@@ -7,9 +7,11 @@ interface EnvelopeProps {
   children: React.ReactNode;
   brideName: string;
   groomName: string;
+  primaryColor?: string;
+  envelopeColor?: string;
 }
 
-export default function Envelope({ children, brideName, groomName }: EnvelopeProps) {
+export default function Envelope({ children, brideName, groomName, primaryColor = '#9f1239', envelopeColor = '#e6d5c3' }: EnvelopeProps) {
   const [isOpened, setIsOpened] = useState(false);
   const [showContent, setShowContent] = useState(false);
 
@@ -38,7 +40,7 @@ export default function Envelope({ children, brideName, groomName }: EnvelopePro
             onClick={!isOpened ? handleOpen : undefined}
           >
             {/* Zarfın Arka Yüzü (Gövde) */}
-            <div className="absolute inset-0 bg-[#e6d5c3] rounded-sm shadow-2xl overflow-hidden border border-[#d4c1aa]">
+            <div className="absolute inset-0 rounded-sm shadow-2xl overflow-hidden border border-black/10" style={{ backgroundColor: envelopeColor }}>
               {/* Zarfın İçindeki Davetiye (Gözüken Kısım) */}
               <motion.div 
                 className="absolute inset-4 bg-white rounded-sm shadow-inner flex flex-col items-center justify-center p-4 border border-slate-100"
@@ -58,21 +60,21 @@ export default function Envelope({ children, brideName, groomName }: EnvelopePro
             <div 
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: 'linear-gradient(to bottom right, transparent 49%, #f0e4d4 50%)',
+                background: 'linear-gradient(to bottom right, transparent 49%, rgba(0,0,0,0.05) 50%)',
                 clipPath: 'polygon(0 0, 50% 50%, 0 100%)'
               }}
             />
             <div 
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: 'linear-gradient(to bottom left, transparent 49%, #ebd9c8 50%)',
+                background: 'linear-gradient(to bottom left, transparent 49%, rgba(0,0,0,0.1) 50%)',
                 clipPath: 'polygon(100% 0, 50% 50%, 100% 100%)'
               }}
             />
             <div 
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: '#f4ebd8',
+                backgroundColor: 'rgba(255,255,255,0.1)',
                 clipPath: 'polygon(0 100%, 50% 50%, 100% 100%)'
               }}
             />
@@ -81,9 +83,9 @@ export default function Envelope({ children, brideName, groomName }: EnvelopePro
             <motion.div 
               className="absolute top-0 left-0 right-0 h-full pointer-events-none origin-top z-20 drop-shadow-xl"
               style={{
-                background: '#e6d5c3',
+                backgroundColor: envelopeColor,
                 clipPath: 'polygon(0 0, 50% 55%, 100% 0)',
-                borderTop: '1px solid #fff'
+                borderTop: '1px solid rgba(255,255,255,0.5)'
               }}
               initial={{ rotateX: 0 }}
               animate={isOpened ? { rotateX: 180 } : { rotateX: 0 }}
@@ -92,16 +94,20 @@ export default function Envelope({ children, brideName, groomName }: EnvelopePro
 
             {/* Mühür (Wax Seal) */}
             <motion.div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[20%] md:-translate-y-[10%] z-30 w-16 h-16 md:w-20 md:h-20 bg-rose-800 rounded-full flex items-center justify-center shadow-lg cursor-pointer border-2 border-rose-900/50"
-              style={{ boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.3)' }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[20%] md:-translate-y-[10%] z-30 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-lg cursor-pointer border-2"
+              style={{ 
+                backgroundColor: primaryColor,
+                borderColor: 'rgba(0,0,0,0.2)',
+                boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5), 0 5px 15px rgba(0,0,0,0.3)' 
+              }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 1, scale: 1 }}
               animate={isOpened ? { opacity: 0, scale: 0 } : { opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-rose-700/50 flex items-center justify-center bg-rose-800/80">
-                <Sparkles className="w-6 h-6 text-rose-200/80" />
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border flex items-center justify-center" style={{ borderColor: 'rgba(255,255,255,0.2)', backgroundColor: 'rgba(0,0,0,0.1)' }}>
+                <Sparkles className="w-6 h-6 text-white/80" />
               </div>
               <div className="absolute -bottom-6 w-32 text-center text-white/50 text-xs font-medium tracking-widest uppercase">
                 Açmak için dokunun

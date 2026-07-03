@@ -71,7 +71,12 @@ export default async function WeddingPage({
   const useEnvelope = wedding.use_envelope !== false;
 
   return useEnvelope ? (
-    <Envelope brideName={wedding.bride_name} groomName={wedding.groom_name} primaryColor={wedding.primary_color}>
+    <Envelope 
+      brideName={wedding.bride_name} 
+      groomName={wedding.groom_name} 
+      primaryColor={wedding.primary_color}
+      envelopeColor={wedding.envelope_color}
+    >
       {templateComponent}
     </Envelope>
   ) : (

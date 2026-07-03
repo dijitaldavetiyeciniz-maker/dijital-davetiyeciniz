@@ -24,6 +24,7 @@ export default function CoupleAdminPage({
   const [templateId, setTemplateId] = useState('template1');
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
   const [textColor, setTextColor] = useState('#1e293b'); // Yeni eklenen metin rengi
+  const [envelopeColor, setEnvelopeColor] = useState('#e6d5c3');
   const [fontFamily, setFontFamily] = useState('sans');
   const [bgImageUrl, setBgImageUrl] = useState('');
   const [telegramBotToken, setTelegramBotToken] = useState('');
@@ -80,6 +81,7 @@ export default function CoupleAdminPage({
       if (weddingData.template_id) setTemplateId(weddingData.template_id);
       if (weddingData.primary_color) setPrimaryColor(weddingData.primary_color);
       if (weddingData.text_color) setTextColor(weddingData.text_color);
+      if (weddingData.envelope_color) setEnvelopeColor(weddingData.envelope_color);
       if (weddingData.font_family) setFontFamily(weddingData.font_family);
       if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
       if (weddingData.telegram_bot_token) setTelegramBotToken(weddingData.telegram_bot_token);
@@ -128,6 +130,7 @@ export default function CoupleAdminPage({
         template_id: templateId,
         primary_color: primaryColor,
         text_color: textColor,
+        envelope_color: envelopeColor,
         font_family: fontFamily,
         background_image_url: bgImageUrl,
         telegram_bot_token: telegramBotToken,
@@ -480,6 +483,17 @@ export default function CoupleAdminPage({
                       <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${useEnvelope ? 'transform translate-x-6' : ''}`}></div>
                     </div>
                   </label>
+                  
+                  {useEnvelope && (
+                    <div className="mt-4 p-4 bg-slate-50 border rounded-xl">
+                      <label className="block text-sm font-medium mb-2">Zarf Gövde Rengi</label>
+                      <div className="flex items-center gap-4">
+                        <input type="color" value={envelopeColor} onChange={e => setEnvelopeColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
+                        <span className="text-slate-500 font-mono text-sm">{envelopeColor}</span>
+                        <span className="text-xs text-slate-400 ml-2">(Mühür rengi "Ana Renk" olarak ayarlanmıştır)</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>
