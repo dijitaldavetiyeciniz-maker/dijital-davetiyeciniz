@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect, use } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save } from 'lucide-react';
