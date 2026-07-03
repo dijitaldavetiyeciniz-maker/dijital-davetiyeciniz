@@ -1,7 +1,7 @@
 'use client';
 import { Calendar, MapPin, Navigation, Feather } from 'lucide-react';
 import { useState } from 'react';
-import SparklesEffect from '../effects/SparklesEffect';
+
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
@@ -38,7 +38,7 @@ export default function Template10({ wedding }: TemplateProps) {
         <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/aged-paper.png')]"></div>
       )}
       
-      <SparklesEffect color={primaryColor} />
+
 
       <div className="max-w-2xl w-full relative z-10 text-center flex flex-col items-center">
         

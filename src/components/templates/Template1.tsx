@@ -1,7 +1,7 @@
 'use client';
 import { Sparkles, Calendar, MapPin, Navigation } from 'lucide-react';
 import { useState } from 'react';
-import BubblesEffect from '../effects/BubblesEffect';
+
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
@@ -33,7 +33,7 @@ export default function Template1({ wedding }: TemplateProps) {
       style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : `${primaryColor}15`, color: textColor }}
     >
       {wedding.background_image_url && <div className="absolute inset-0 bg-black/40" />}
-      <BubblesEffect />
+
 
       {!wedding.background_image_url && (
         <>

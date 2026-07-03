@@ -12,6 +12,10 @@ import Template8 from '@/components/templates/Template8';
 import Template9 from '@/components/templates/Template9';
 import Template10 from '@/components/templates/Template10';
 import Envelope from '@/components/Envelope';
+import BubblesEffect from '@/components/effects/BubblesEffect';
+import SparklesEffect from '@/components/effects/SparklesEffect';
+import HeartsEffect from '@/components/effects/HeartsEffect';
+import SnowEffect from '@/components/effects/SnowEffect';
 
 // Next.js App Router Page
 export default async function WeddingPage({
@@ -69,6 +73,21 @@ export default async function WeddingPage({
 
   // Zarf kullanımı kontrolü (use_envelope sütunu true ise veya null/undefined ise varsayılan true)
   const useEnvelope = wedding.use_envelope !== false;
+  
+  let effectComponent = null;
+  switch (wedding.effect_type) {
+    case 'bubbles': effectComponent = <BubblesEffect />; break;
+    case 'sparkles': effectComponent = <SparklesEffect />; break;
+    case 'hearts': effectComponent = <HeartsEffect color={wedding.primary_color} />; break;
+    case 'snow': effectComponent = <SnowEffect />; break;
+  }
+
+  const contentWithEffect = (
+    <>
+      {effectComponent}
+      {templateComponent}
+    </>
+  );
 
   return useEnvelope ? (
     <Envelope 
@@ -77,9 +96,9 @@ export default async function WeddingPage({
       primaryColor={wedding.primary_color}
       envelopeColor={wedding.envelope_color}
     >
-      {templateComponent}
+      {contentWithEffect}
     </Envelope>
   ) : (
-    <>{templateComponent}</>
+    contentWithEffect
   );
 }

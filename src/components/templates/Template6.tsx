@@ -1,7 +1,7 @@
 'use client';
 import { Calendar, MapPin, Navigation } from 'lucide-react';
 import { useState } from 'react';
-import BubblesEffect from '../effects/BubblesEffect';
+
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
@@ -32,7 +32,7 @@ export default function Template6({ wedding }: TemplateProps) {
       className={`min-h-screen flex flex-col items-center p-6 sm:p-12 pb-32 ${fontFamilyClass} relative overflow-hidden`}
       style={{ backgroundColor: bgColor, color: textColor }}
     >
-      <BubblesEffect />
+
 
       <div className="max-w-2xl w-full relative z-10 flex flex-col items-center text-center mt-12">
         

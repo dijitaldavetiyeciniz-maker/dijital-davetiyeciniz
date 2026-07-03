@@ -1,7 +1,8 @@
 'use client';
 import { useState, useEffect, use } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save } from 'lucide-react';
+import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2 } from 'lucide-react';
+import { getRandomQuote } from '@/lib/aiQuotes';
 
 export default function CoupleAdminPage({
   params,
@@ -25,6 +26,7 @@ export default function CoupleAdminPage({
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
   const [textColor, setTextColor] = useState('#1e293b'); // Yeni eklenen metin rengi
   const [envelopeColor, setEnvelopeColor] = useState('#e6d5c3');
+  const [effectType, setEffectType] = useState('');
   const [fontFamily, setFontFamily] = useState('sans');
   const [bgImageUrl, setBgImageUrl] = useState('');
   const [telegramBotToken, setTelegramBotToken] = useState('');
@@ -82,6 +84,7 @@ export default function CoupleAdminPage({
       if (weddingData.primary_color) setPrimaryColor(weddingData.primary_color);
       if (weddingData.text_color) setTextColor(weddingData.text_color);
       if (weddingData.envelope_color) setEnvelopeColor(weddingData.envelope_color);
+      if (weddingData.effect_type) setEffectType(weddingData.effect_type);
       if (weddingData.font_family) setFontFamily(weddingData.font_family);
       if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
       if (weddingData.telegram_bot_token) setTelegramBotToken(weddingData.telegram_bot_token);
@@ -131,6 +134,7 @@ export default function CoupleAdminPage({
         primary_color: primaryColor,
         text_color: textColor,
         envelope_color: envelopeColor,
+        effect_type: effectType,
         font_family: fontFamily,
         background_image_url: bgImageUrl,
         telegram_bot_token: telegramBotToken,
@@ -161,6 +165,15 @@ export default function CoupleAdminPage({
     setPrimaryColor(theme.primary_color);
     setFontFamily(theme.font_family);
     setBgImageUrl(theme.background_image_url || '');
+  }
+
+  function handleAIGenerate() {
+    let newQuote = getRandomQuote();
+    // Aynı söz gelmesin diye basit bir kontrol
+    while (newQuote === customMessage && customMessage.length > 0) {
+      newQuote = getRandomQuote();
+    }
+    setCustomMessage(newQuote);
   }
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -382,8 +395,13 @@ export default function CoupleAdminPage({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Çifte Özel Söz / Davet Metni</label>
-                  <textarea value={customMessage} onChange={e=>setCustomMessage(e.target.value)} rows={2} className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white resize-none" />
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-sm font-medium">Çifte Özel Söz / Davet Metni</label>
+                    <button onClick={handleAIGenerate} type="button" className="text-xs font-bold text-rose-500 bg-rose-50 px-3 py-1 rounded-full flex items-center gap-1 hover:bg-rose-100 transition-colors">
+                      <Wand2 className="w-3 h-3" /> Yapay Zeka ile Yazdır
+                    </button>
+                  </div>
+                  <textarea value={customMessage} onChange={e=>setCustomMessage(e.target.value)} rows={3} className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white resize-none" />
                 </div>
               </div>
 
@@ -464,6 +482,18 @@ export default function CoupleAdminPage({
                     </div>
                     <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="veya manuel URL gir: https://..." className="w-full border p-2 rounded-lg bg-slate-50 text-xs font-mono" />
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Arkaplan Animasyonu</label>
+                  <select value={effectType} onChange={e => setEffectType(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50">
+                    <option value="">Yok (Sade)</option>
+                    <option value="bubbles">Uçan Baloncuklar</option>
+                    <option value="sparkles">Altın/Gümüş Işıltılar</option>
+                    <option value="hearts">Uçan Kalpler</option>
+                    <option value="snow">Kar Taneleri</option>
+                  </select>
+                  <p className="text-xs text-slate-400 mt-1">Sitenin en arkasında sürekli hareket eden zarif animasyonlar.</p>
                 </div>
               </div>
 

@@ -1,7 +1,7 @@
 'use client';
 import { Calendar, MapPin, Heart, Navigation } from 'lucide-react';
 import { useState } from 'react';
-import SparklesEffect from '../effects/SparklesEffect';
+
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
@@ -35,7 +35,7 @@ export default function Template2({ wedding }: TemplateProps) {
     >
       {/* Koyu/Açık Neon Overlay */}
       {wedding.background_image_url && <div className={`absolute inset-0 ${overlayClass}`} />}
-      <SparklesEffect color={primaryColor} />
+
 
       <div className="max-w-[500px] w-full text-center relative z-10 my-10 flex flex-col items-center justify-center min-h-[80vh]">
         

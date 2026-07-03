@@ -1,7 +1,7 @@
 'use client';
 import { Calendar, MapPin, Navigation, Crown } from 'lucide-react';
 import { useState } from 'react';
-import SparklesEffect from '../effects/SparklesEffect';
+
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
@@ -32,7 +32,7 @@ export default function Template4({ wedding }: TemplateProps) {
       className={`min-h-screen flex items-center justify-center p-4 sm:p-8 pb-32 ${fontFamilyClass} relative overflow-hidden`}
       style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : `${primaryColor}20`, color: textColor }}
     >
-      <SparklesEffect color={primaryColor} />
+
 
       {/* Dış Çerçeve */}
       <div 
