@@ -1,5 +1,5 @@
 'use client';
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
@@ -16,6 +16,18 @@ function CreateForm() {
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        // Oturum yoksa kayıt olmaya veya girişe yönlendir
+        router.push('/kayit-ol');
+      } else {
+        setUser(session.user);
+      }
+    });
+  }, [router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -36,6 +48,7 @@ function CreateForm() {
     // 2. Insert new wedding
     const { error } = await supabase.from('weddings').insert([
       {
+        user_id: user?.id,
         bride_name: brideName,
         groom_name: groomName,
         slug: cleanSlug,

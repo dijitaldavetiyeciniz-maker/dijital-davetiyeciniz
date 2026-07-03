@@ -15,7 +15,7 @@ export default function CoupleAdminPage({
   const [loading, setLoading] = useState(true);
   
   const [passwordInput, setPasswordInput] = useState('');
-  const [isAuthed, setIsAuthed] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
   const [activeTab, setActiveTab] = useState<'rsvps' | 'design' | 'payment'>('rsvps');
@@ -24,25 +24,41 @@ export default function CoupleAdminPage({
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
   const [fontFamily, setFontFamily] = useState('sans');
   const [bgImageUrl, setBgImageUrl] = useState('');
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
-    fetchWedding();
-  }, []);
-
-  async function fetchWedding() {
-    const { data } = await supabase
-      .from('weddings')
-      .select('*')
-      .eq('slug', wedding_id)
-      .single();
-    if (data) {
-      setWedding(data);
-      if (data.primary_color) setPrimaryColor(data.primary_color);
-      if (data.font_family) setFontFamily(data.font_family);
-      if (data.background_image_url) setBgImageUrl(data.background_image_url);
+    async function loadData() {
+      // 1. Düğün bilgilerini çek
+      const { data: weddingData, error } = await supabase
+        .from('weddings')
+        .select('*')
+        .eq('slug', wedding_id)
+        .single();
+        
+      if (error || !weddingData) {
+        setLoading(false);
+        return;
+      }
+      setWedding(weddingData);
+      
+      // 2. Mevcut kullanıcının (Auth) oturumunu kontrol et
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // Eğer giren kişi bu davetiyenin sahibiyse, şifre sormadan içeri al!
+      if (session?.user?.id && session.user.id === weddingData.user_id) {
+        setIsOwner(true);
+        setIsAuthenticated(true);
+        fetchRsvps(weddingData.id);
+      }
+      
+      if (weddingData.primary_color) setPrimaryColor(weddingData.primary_color);
+      if (weddingData.font_family) setFontFamily(weddingData.font_family);
+      if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
+      
+      setLoading(false);
     }
-    setLoading(false);
-  }
+    loadData();
+  }, [wedding_id]);
 
   async function fetchRsvps(weddingId: string) {
     const { data } = await supabase
@@ -56,7 +72,7 @@ export default function CoupleAdminPage({
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     if (wedding && passwordInput === wedding.admin_password) {
-      setIsAuthed(true);
+      setIsAuthenticated(true);
       fetchRsvps(wedding.id);
     } else {
       setErrorMsg('Şifre hatalı. Lütfen tekrar deneyin.');
@@ -83,15 +99,15 @@ export default function CoupleAdminPage({
   if (loading) return <div className="p-10 text-center">Yükleniyor...</div>;
   if (!wedding) return <div className="p-10 text-center">Böyle bir düğün bulunamadı.</div>;
 
-  if (!isAuthed) {
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center">
-          <div className="w-16 h-16 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="bg-white rounded-3xl shadow-xl w-full max-w-md p-8 text-center border border-slate-100">
+          <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6 text-rose-500">
             <Lock className="w-8 h-8" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">{wedding.bride_name} & {wedding.groom_name}</h1>
-          <p className="text-slate-500 mb-8">Lütfen yönetim paneli şifrenizi girin.</p>
+          <h1 className="text-2xl font-bold text-slate-800 mb-2">Tasarım Paneli</h1>
+          <p className="text-slate-500 mb-8">Davetiyenizi düzenlemek için şifrenizi girin. (Veya <a href="/giris-yap" className="text-rose-500 hover:underline font-bold">Giriş Yaparak</a> şifresiz erişin).</p>
           
           <form onSubmit={handleLogin}>
             <input 
@@ -122,7 +138,7 @@ export default function CoupleAdminPage({
             <h1 className="text-3xl font-bold mb-2">{wedding.bride_name} & {wedding.groom_name}</h1>
             <p className="text-slate-500">Müşteri Yönetim Paneli</p>
           </div>
-          <button onClick={() => setIsAuthed(false)} className="text-sm font-medium text-slate-500 hover:text-slate-800">Çıkış Yap</button>
+          <button onClick={() => setIsAuthenticated(false)} className="text-sm font-medium text-slate-500 hover:text-slate-800">Çıkış Yap</button>
         </header>
         
         {/* Sekmeler (Tabs) */}
