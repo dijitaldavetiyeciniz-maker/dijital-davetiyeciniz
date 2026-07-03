@@ -25,7 +25,17 @@ export default function RegisterPage() {
     setIsLoading(false);
 
     if (error) {
-      setErrorMsg(error.message);
+      let trMessage = error.message;
+      if (error.message.includes('User already registered')) {
+        trMessage = 'Bu e-posta adresi ile zaten kayıt olunmuş. Lütfen Giriş Yap sayfasına gidin.';
+      } else if (error.message.includes('Password should be at least')) {
+        trMessage = 'Şifreniz en az 6 karakter olmalıdır.';
+      } else if (error.message.includes('rate limit')) {
+        trMessage = 'Çok fazla deneme yaptınız. Lütfen biraz bekleyip tekrar deneyin.';
+      } else if (error.message.includes('Email link is invalid')) {
+        trMessage = 'E-posta onay linki geçersiz veya süresi dolmuş.';
+      }
+      setErrorMsg(trMessage);
     } else {
       if (data.session) {
         // Başarılıysa doğrudan giriş ekranına veya dashboard'a at
