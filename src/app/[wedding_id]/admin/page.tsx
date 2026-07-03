@@ -28,6 +28,20 @@ export default function CoupleAdminPage({
   const [telegramBotToken, setTelegramBotToken] = useState('');
   const [telegramChatId, setTelegramChatId] = useState('');
   const [useEnvelope, setUseEnvelope] = useState(true);
+  
+  // Genel Bilgiler State
+  const [brideName, setBrideName] = useState('');
+  const [groomName, setGroomName] = useState('');
+  const [brideParents, setBrideParents] = useState('');
+  const [groomParents, setGroomParents] = useState('');
+  const [weddingDate, setWeddingDate] = useState('');
+  const [venueName, setVenueName] = useState('');
+  const [venueAddress, setVenueAddress] = useState('');
+  const [googleMapsUrl, setGoogleMapsUrl] = useState('');
+  const [customMessage, setCustomMessage] = useState('');
+  
+  const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
+
   const [isUploading, setIsUploading] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [themes, setThemes] = useState<any[]>([]);
@@ -70,6 +84,17 @@ export default function CoupleAdminPage({
       if (weddingData.telegram_chat_id) setTelegramChatId(weddingData.telegram_chat_id);
       if (weddingData.use_envelope !== undefined && weddingData.use_envelope !== null) setUseEnvelope(weddingData.use_envelope);
       
+      // Genel Bilgileri Doldur
+      if (weddingData.bride_name) setBrideName(weddingData.bride_name);
+      if (weddingData.groom_name) setGroomName(weddingData.groom_name);
+      if (weddingData.bride_parents) setBrideParents(weddingData.bride_parents);
+      if (weddingData.groom_parents) setGroomParents(weddingData.groom_parents);
+      if (weddingData.wedding_date) setWeddingDate(weddingData.wedding_date);
+      if (weddingData.venue_name) setVenueName(weddingData.venue_name);
+      if (weddingData.venue_address) setVenueAddress(weddingData.venue_address);
+      if (weddingData.google_maps_url) setGoogleMapsUrl(weddingData.google_maps_url);
+      if (weddingData.custom_message) setCustomMessage(weddingData.custom_message);
+      
       setLoading(false);
     }
     loadData();
@@ -104,12 +129,22 @@ export default function CoupleAdminPage({
         background_image_url: bgImageUrl,
         telegram_bot_token: telegramBotToken,
         telegram_chat_id: telegramChatId,
-        use_envelope: useEnvelope
+        use_envelope: useEnvelope,
+        bride_name: brideName,
+        groom_name: groomName,
+        bride_parents: brideParents,
+        groom_parents: groomParents,
+        wedding_date: weddingDate,
+        venue_name: venueName,
+        venue_address: venueAddress,
+        google_maps_url: googleMapsUrl,
+        custom_message: customMessage
       })
       .eq('id', wedding.id);
       
     if (!error) {
-      alert('Tasarım ayarları başarıyla kaydedildi!');
+      alert('Tüm ayarlar başarıyla kaydedildi!');
+      setPreviewKey(Date.now()); // Iframe'i yenile
     } else {
       alert('Hata oluştu: ' + error.message);
     }
@@ -285,144 +320,182 @@ export default function CoupleAdminPage({
         )}
 
         {activeTab === 'design' && (
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-            <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
-              <Paintbrush className="w-6 h-6 text-rose-500" /> Tasarım Stüdyosu
-            </h2>
-            <p className="text-slate-500 mb-8">Premium temalardan birini tek tıkla seçebilir veya aşağıdan kendi özel renk ve fontunuzu belirleyebilirsiniz.</p>
-            
-            {/* HAZIR TEMALAR */}
-            <div className="mb-10">
-              <h3 className="font-bold text-lg mb-4 text-slate-800">1. Premium Temalar (Tek Tıkla Uygula)</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                {themes.map(theme => (
-                  <button 
-                    key={theme.id}
-                    onClick={() => applyPreset(theme)}
-                    className="flex flex-col items-center p-3 rounded-xl border-2 transition-all hover:shadow-md text-left"
-                    style={{ borderColor: primaryColor === theme.primary_color && templateId === theme.template_id ? theme.primary_color : '#e2e8f0' }}
-                  >
-                    <div className="w-10 h-10 rounded-full mb-2 shadow-inner" style={{ backgroundColor: theme.primary_color }}></div>
-                    <span className="text-xs font-bold text-slate-700 text-center line-clamp-1">{theme.name}</span>
-                    <span className="text-[10px] text-slate-400 mt-1">{theme.category}</span>
-                  </button>
-                ))}
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* SOL KOLON: Form ve Ayarlar */}
+            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+              <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
+                <Paintbrush className="w-6 h-6 text-rose-500" /> Tasarım Stüdyosu
+              </h2>
+              <p className="text-slate-500 mb-8">Bilgilerinizi ve temanızı güncelledikten sonra "Kaydet" butonuna basarak sağdaki önizlemede sonuçları görebilirsiniz.</p>
+              
+              {/* BÖLÜM 1: GENEL BİLGİLER */}
+              <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">1. Genel Bilgiler</h3>
+              <div className="space-y-4 mb-10">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Gelin / Gelin Adayı</label>
+                    <input value={brideName} onChange={e=>setBrideName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Damat / Damat Adayı</label>
+                    <input value={groomName} onChange={e=>setGroomName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Gelin Anne & Baba</label>
+                    <input value={brideParents} onChange={e=>setBrideParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Damat Anne & Baba</label>
+                    <input value={groomParents} onChange={e=>setGroomParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Tarih ve Saat</label>
+                    <input type="datetime-local" value={weddingDate} onChange={e=>setWeddingDate(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Mekan Adı</label>
+                    <input value={venueName} onChange={e=>setVenueName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Açık Adres</label>
+                    <input value={venueAddress} onChange={e=>setVenueAddress(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Google Maps Linki</label>
+                    <input value={googleMapsUrl} onChange={e=>setGoogleMapsUrl(e.target.value)} type="url" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Çifte Özel Söz / Davet Metni</label>
+                  <textarea value={customMessage} onChange={e=>setCustomMessage(e.target.value)} rows={2} className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white resize-none" />
+                </div>
               </div>
+
+              {/* BÖLÜM 2: TEMA SEÇİMİ */}
+              <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">2. Tema ve Renkler (1000+ Seçenek)</h3>
+              
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2">Hazır Şablonlardan Seç</label>
+                <div className="max-h-60 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {themes.map(theme => (
+                    <button 
+                      key={theme.id}
+                      onClick={() => applyPreset(theme)}
+                      className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white ${templateId === theme.template_id && primaryColor === theme.primary_color ? 'border-blue-500 shadow-md ring-2 ring-blue-100' : 'border-slate-200'}`}
+                    >
+                      <div className="w-6 h-6 rounded-full mb-1 shadow-inner" style={{ backgroundColor: theme.primary_color }}></div>
+                      <span className="text-[10px] font-bold text-slate-700 text-center line-clamp-1">{theme.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Şablon Düzeni</label>
+                    <select value={templateId} onChange={e => setTemplateId(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50">
+                      <option value="template1">Şablon 1 (Cam Efekti)</option>
+                      <option value="template2">Şablon 2 (Karanlık Neon)</option>
+                      <option value="template3">Şablon 3 (Doğal / Kağıt)</option>
+                      <option value="template4">Şablon 4 (Lüks Çerçeve)</option>
+                      <option value="template5">Şablon 5 (Minimalist)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Yazı Tipi (Font)</label>
+                    <select value={fontFamily} onChange={e => setFontFamily(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50">
+                      <option value="sans">Modern (Sans-serif)</option>
+                      <option value="serif">Zarif (Serif - Tırnaklı)</option>
+                      <option value="mono">Farklı (Monospace)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Özel Renk Seç (Tüm Şablonu Etkiler)</label>
+                  <div className="flex items-center gap-4">
+                    <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
+                    <span className="text-slate-500 font-mono text-sm">{primaryColor}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Arkaplan Görseli</label>
+                  <div className="flex flex-col gap-3">
+                    <div className="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center hover:bg-slate-50 transition-colors">
+                      <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" id="file-upload" disabled={isUploading} />
+                      <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center justify-center gap-1">
+                        <span className="font-bold text-slate-700 text-sm">
+                          {isUploading ? "Yükleniyor..." : "Bilgisayardan Fotoğraf Yükle"}
+                        </span>
+                        <span className="text-[10px] text-slate-400">Telegram Bot ile sınırsız depolama</span>
+                      </label>
+                    </div>
+                    <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="veya manuel URL gir: https://..." className="w-full border p-2 rounded-lg bg-slate-50 text-xs font-mono" />
+                  </div>
+                </div>
+              </div>
+
+              {/* BÖLÜM 3: EKSTRA AYARLAR */}
+              <div className="mt-8 pt-6 border-t border-slate-200 space-y-6">
+                
+                <div>
+                  <h3 className="font-bold text-lg mb-4 text-slate-800">Site Giriş Animasyonu</h3>
+                  <label className="flex items-center justify-between p-4 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                    <div>
+                      <div className="font-bold text-slate-800 text-sm">Zarf Açılış Animasyonu</div>
+                      <div className="text-xs text-slate-500 mt-1">Siteye girildiğinde mühürlü bir zarf animasyonu gösterilsin.</div>
+                    </div>
+                    <div className="relative">
+                      <input type="checkbox" className="sr-only" checked={useEnvelope} onChange={e => setUseEnvelope(e.target.checked)} />
+                      <div className={`block w-12 h-6 rounded-full transition-colors ${useEnvelope ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                      <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${useEnvelope ? 'transform translate-x-6' : ''}`}></div>
+                    </div>
+                  </label>
+                </div>
+
+                <div>
+                  <h3 className="font-bold text-lg mb-4 text-slate-800">Telegram Bildirimleri</h3>
+                  <div className="space-y-3">
+                    <input type="text" value={telegramBotToken} onChange={e => setTelegramBotToken(e.target.value)} placeholder="Bot Token (Örn: 12345:ABC...)" className="w-full border p-2 rounded-lg bg-slate-50 text-sm" />
+                    <input type="text" value={telegramChatId} onChange={e => setTelegramChatId(e.target.value)} placeholder="Chat ID (Örn: -100123...)" className="w-full border p-2 rounded-lg bg-slate-50 text-sm" />
+                    <p className="text-[10px] text-slate-400">Grup veya bireysel Telegram sohbetinize LCV kayıtları düşer.</p>
+                  </div>
+                </div>
+              </div>
+
+              <button onClick={handleSaveDesign} className="mt-8 flex items-center justify-center gap-2 w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition-colors shadow-lg">
+                <Save className="w-5 h-5" /> Değişiklikleri Kaydet & Önizlemeyi Yenile
+              </button>
             </div>
 
-            <div className="h-px bg-slate-200 mb-10 w-full" />
-
-            <h3 className="font-bold text-lg mb-6 text-slate-800">2. İnce Ayarlar (Manuel Tasarım)</h3>
-            <div className="space-y-6 max-w-lg">
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">Ana Şablon Yapısı</label>
-                <select value={templateId} onChange={e => setTemplateId(e.target.value)} className="w-full border p-3 rounded-xl bg-slate-50">
-                  <option value="template1">Şablon 1: Cam Efektli (Soft)</option>
-                  <option value="template2">Şablon 2: Karanlık (Neon Işıklı)</option>
-                  <option value="template3">Şablon 3: Rustik (Doğa Konseptli)</option>
-                  <option value="template4">Şablon 4: Lüks (Kraliyet Tarzı)</option>
-                  <option value="template5">Şablon 5: Minimalist (Modern Vogue)</option>
-                </select>
+            {/* SAĞ KOLON: Canlı Önizleme */}
+            <div className="relative h-[800px] lg:sticky lg:top-8 bg-slate-800 rounded-[3rem] p-4 shadow-2xl hidden lg:block border-4 border-slate-700">
+              {/* Telefon Çentiği */}
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-3xl z-20"></div>
+              <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-hidden relative">
+                <iframe 
+                  key={previewKey} 
+                  src={`/${wedding.slug}?t=${previewKey}`} 
+                  className="w-full h-full border-0"
+                  title="Live Preview"
+                />
               </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Tema Ana Rengi</label>
-                <div className="flex items-center gap-4">
-                  <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} className="w-14 h-14 rounded cursor-pointer" />
-                  <span className="text-slate-500 font-mono">{primaryColor}</span>
-                </div>
-              </div>
-              
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">Yazı Tipi (Font Ailesi)</label>
-                <select value={fontFamily} onChange={e => setFontFamily(e.target.value)} className="w-full border p-3 rounded-xl bg-slate-50">
-                  <option value="sans">Modern (Sans-serif)</option>
-                  <option value="serif">Zarif (Serif - Tırnaklı)</option>
-                  <option value="mono">Farklı (Monospace)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Arkaplan Görseli</label>
-                
-                <div className="flex flex-col gap-4">
-                  <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:bg-slate-50 transition-colors">
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      onChange={handleFileUpload} 
-                      className="hidden" 
-                      id="file-upload" 
-                      disabled={isUploading}
-                    />
-                    <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center justify-center gap-2">
-                      <div className="w-12 h-12 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                        </svg>
-                      </div>
-                      <span className="font-bold text-slate-700">
-                        {isUploading ? "Yükleniyor (Lütfen bekleyin)..." : "Bilgisayardan Fotoğraf Seç (Ücretsiz)"}
-                      </span>
-                      <span className="text-xs text-slate-400">Telegram Bot üzerinden 0 maliyetle sınırsız barındırma</span>
-                    </label>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="h-px bg-slate-200 flex-1"></div>
-                    <span className="text-xs text-slate-400 font-bold uppercase">VEYA MANUEL LİNK GİRİN</span>
-                    <div className="h-px bg-slate-200 flex-1"></div>
-                  </div>
-
-                  <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="https://resim-linki.com/foto.jpg" className="w-full border p-3 rounded-xl bg-slate-50 text-sm font-mono" />
-                </div>
-              </div>
-
-              <div className="pt-6 border-t border-slate-200">
-                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-rose-500" /> Site Giriş Animasyonu
-                </h3>
-                <label className="flex items-center justify-between p-4 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
-                  <div>
-                    <div className="font-bold text-slate-800">Zarf Açılış Animasyonu</div>
-                    <div className="text-xs text-slate-500 mt-1">Siteye girildiğinde mühürlü bir zarf animasyonu gösterilsin.</div>
-                  </div>
-                  <div className="relative">
-                    <input type="checkbox" className="sr-only" checked={useEnvelope} onChange={e => setUseEnvelope(e.target.checked)} />
-                    <div className={`block w-14 h-8 rounded-full transition-colors ${useEnvelope ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
-                    <div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${useEnvelope ? 'transform translate-x-6' : ''}`}></div>
-                  </div>
-                </label>
-              </div>
-
-              <div className="pt-6 border-t border-slate-200">
-                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5 text-blue-500" /> Telegram Bildirimleri (Opsiyonel)
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium mb-2">
-                      Telegram Bot Token 
-                      <a href="https://core.telegram.org/bots/features#botfather" target="_blank" className="w-5 h-5 bg-slate-200 text-slate-600 rounded-full flex items-center justify-center text-xs font-bold hover:bg-slate-300" title="BotFather üzerinden bot oluşturmayı öğrenin">?</a>
-                    </label>
-                    <input type="text" value={telegramBotToken} onChange={e => setTelegramBotToken(e.target.value)} placeholder="123456789:ABCdefGHIjklmNOPqrstUVwxyZ" className="w-full border p-3 rounded-xl bg-slate-50" />
-                  </div>
-                  <div>
-                    <label className="flex items-center gap-2 text-sm font-medium mb-2">
-                      Telegram Grup ID (Chat ID)
-                      <a href="https://stackoverflow.com/questions/32423837/telegram-bot-how-to-get-a-group-chat-id" target="_blank" className="w-5 h-5 bg-slate-200 text-slate-600 rounded-full flex items-center justify-center text-xs font-bold hover:bg-slate-300" title="Grup ID'nizi nasıl bulacağınızı öğrenin">?</a>
-                    </label>
-                    <input type="text" value={telegramChatId} onChange={e => setTelegramChatId(e.target.value)} placeholder="-100123456789" className="w-full border p-3 rounded-xl bg-slate-50" />
-                    <p className="text-xs text-slate-400 mt-2">LCV (Katılım) bildirimlerinin ve fotoğrafların anında kendi Telegram grubunuza düşmesi için doldurun.</p>
-                  </div>
-                </div>
-              </div>
-
-              <button onClick={handleSaveDesign} className="mt-8 flex items-center justify-center gap-2 w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition-colors">
-                <Save className="w-5 h-5" /> Değişiklikleri Kaydet ve Yayınla
-              </button>
+            </div>
+            {/* Mobil için önizleme uyarısı */}
+            <div className="lg:hidden bg-blue-50 text-blue-600 p-4 rounded-xl text-sm font-medium">
+              📱 Canlı önizleme ekranı telefonlarda performans sebebiyle gizlenmiştir. Değişikliklerinizi kaydettikten sonra <a href={`/${wedding.slug}`} target="_blank" className="underline font-bold">buraya tıklayarak</a> sitenize bakabilirsiniz.
             </div>
           </div>
         )}
