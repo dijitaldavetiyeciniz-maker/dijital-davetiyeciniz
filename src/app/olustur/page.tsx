@@ -13,7 +13,14 @@ function CreateForm() {
   const [groomName, setGroomName] = useState('');
   const [slug, setSlug] = useState('');
   const [eventType, setEventType] = useState('Düğün');
+  const [templateId, setTemplateId] = useState(defaultTemplateId);
+  const [venueName, setVenueName] = useState('');
+  const [weddingDate, setWeddingDate] = useState('');
+  const [venueAddress, setVenueAddress] = useState('');
+  const [googleMapsUrl, setGoogleMapsUrl] = useState('');
+  const [customMessage, setCustomMessage] = useState('');
   const [password, setPassword] = useState('');
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [user, setUser] = useState<any>(null);
@@ -45,6 +52,9 @@ function CreateForm() {
       return;
     }
 
+    // Tarih objesine dönüştür (eğer girildiyse)
+    const formattedDate = weddingDate ? new Date(weddingDate).toISOString() : null;
+
     // 2. Insert new wedding
     const { error } = await supabase.from('weddings').insert([
       {
@@ -52,9 +62,14 @@ function CreateForm() {
         bride_name: brideName,
         groom_name: groomName,
         slug: cleanSlug,
-        template_id: defaultTemplateId,
+        template_id: templateId,
         admin_password: password,
         event_type: eventType,
+        venue_name: venueName,
+        wedding_date: formattedDate,
+        venue_address: venueAddress,
+        google_maps_url: googleMapsUrl,
+        custom_message: customMessage,
         is_paid: false
       }
     ]);
@@ -72,7 +87,9 @@ function CreateForm() {
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-slate-800 mb-2">Harika! Şimdi Detaylar...</h2>
+        <h2 className="text-3xl font-bold text-slate-800 mb-2 flex items-center justify-center gap-2">
+          <span className="text-rose-500 text-2xl">+</span> Yeni Çift Oluştur
+        </h2>
         <p className="text-slate-500">Davetiyenizi oluşturmak için aşağıdaki temel bilgileri doldurun.</p>
       </div>
 
@@ -82,56 +99,88 @@ function CreateForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="grid md:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Gelin / Kadın / Bebek Adı</label>
-            <input required type="text" value={brideName} onChange={e=>setBrideName(e.target.value)} placeholder="Örn: Ayşe" className="w-full border border-slate-200 rounded-xl p-3 bg-slate-50 focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+            <label className="block text-sm font-medium text-slate-700 mb-1">Gelin / Gelin Adayı</label>
+            <input required type="text" value={brideName} onChange={e=>setBrideName(e.target.value)} className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Damat / Erkek Adı (Opsiyonel)</label>
-            <input type="text" value={groomName} onChange={e=>setGroomName(e.target.value)} placeholder="Örn: Mehmet" className="w-full border border-slate-200 rounded-xl p-3 bg-slate-50 focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+            <label className="block text-sm font-medium text-slate-700 mb-1">Damat / Damat Adayı</label>
+            <input type="text" value={groomName} onChange={e=>setGroomName(e.target.value)} className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Etkinlik Türü</label>
-            <select value={eventType} onChange={e=>setEventType(e.target.value)} className="w-full border border-slate-200 rounded-xl p-3 bg-slate-50 focus:ring-2 focus:ring-rose-500 focus:outline-none">
+            <label className="block text-sm font-medium text-slate-700 mb-1">Özel URL (Slug)</label>
+            <div className="flex">
+              <span className="bg-slate-100 border border-slate-300 border-r-0 px-3 py-2.5 rounded-l-lg text-slate-400 font-medium text-sm flex items-center justify-center">/</span>
+              <input required type="text" value={slug} onChange={e=>setSlug(e.target.value)} placeholder="ayse-mehmet" className="w-full border border-slate-300 rounded-r-lg p-2.5 focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Etkinlik Türü</label>
+            <select value={eventType} onChange={e=>setEventType(e.target.value)} className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none">
                 <option value="Düğün">Düğün</option>
                 <option value="Nişan">Nişan</option>
                 <option value="Kına">Kına</option>
                 <option value="Söz">Söz</option>
                 <option value="Nikah">Nikah</option>
-                <option value="Baby Shower">Baby Shower</option>
-                <option value="Sünnet">Sünnet</option>
-                <option value="Doğum Günü">Doğum Günü</option>
-                <option value="Mezuniyet">Mezuniyet</option>
-                <option value="Parti">Parti</option>
             </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Yönetim Şifreniz</label>
-            <input required type="text" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Sonra giriş yapmak için" className="w-full border border-slate-200 rounded-xl p-3 bg-slate-50 focus:ring-2 focus:ring-rose-500 focus:outline-none" />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">Davetiye Linkiniz (URL)</label>
-          <div className="flex">
-            <span className="bg-slate-100 border border-slate-200 border-r-0 px-4 py-3 rounded-l-xl text-slate-500 font-medium">dijitaldavetiye.com/</span>
-            <input required type="text" value={slug} onChange={e=>setSlug(e.target.value)} placeholder="ayse-mehmet" className="w-full border border-slate-200 rounded-r-xl p-3 focus:ring-2 focus:ring-rose-500 focus:outline-none" />
-          </div>
-          <p className="text-xs text-slate-400 mt-2">Bu linki misafirlerinize göndereceksiniz. Lütfen Türkçe karakter kullanmayın.</p>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Tasarım Şablonu</label>
+          <select value={templateId} onChange={e=>setTemplateId(e.target.value)} className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none">
+            <option value="template1">Şablon 1 (Cam Efektli & Modern)</option>
+            <option value="template2">Şablon 2 (Neon Işıklı & Karanlık)</option>
+            <option value="template3">Şablon 3 (Rustik & Doğa Konseptli)</option>
+            <option value="template4">Şablon 4 (Kraliyet Tarzı & Lüks)</option>
+            <option value="template5">Şablon 5 (Minimalist & Dergi Tasarımı)</option>
+          </select>
         </div>
 
-        <div className="pt-4">
+        <div className="grid md:grid-cols-2 gap-5">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Mekan Adı</label>
+            <input type="text" value={venueName} onChange={e=>setVenueName(e.target.value)} placeholder="Örn: Çırağan Sarayı" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Tarih ve Saat</label>
+            <input type="datetime-local" value={weddingDate} onChange={e=>setWeddingDate(e.target.value)} className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-5">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Açık Adres</label>
+            <input type="text" value={venueAddress} onChange={e=>setVenueAddress(e.target.value)} placeholder="Beşiktaş, İstanbul" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Google Maps Linki</label>
+            <input type="url" value={googleMapsUrl} onChange={e=>setGoogleMapsUrl(e.target.value)} placeholder="https://maps.app.goo.gl/..." className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Çifte Özel Söz / Davet Metni</label>
+          <textarea rows={3} value={customMessage} onChange={e=>setCustomMessage(e.target.value)} placeholder="Hayatımızın en özel gününde..." className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none resize-none"></textarea>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Çift Yönetim Şifresi</label>
+          <input required type="text" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Giriş yapmaları için şifre" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+        </div>
+
+        <div className="pt-2">
           <button 
             type="submit" 
             disabled={isSubmitting}
-            className="w-full py-4 bg-rose-500 text-white font-bold rounded-xl shadow-lg hover:bg-rose-600 transition-all disabled:opacity-50 text-lg"
+            className="w-full py-3.5 bg-[#0f172a] text-white font-bold rounded-lg hover:bg-slate-800 transition-all disabled:opacity-50 text-lg"
           >
-            {isSubmitting ? 'Oluşturuluyor...' : 'Davetiyemi Oluştur & Tasarıma Geç'}
+            {isSubmitting ? 'Oluşturuluyor...' : 'URL ve Site Üret'}
           </button>
         </div>
       </form>
