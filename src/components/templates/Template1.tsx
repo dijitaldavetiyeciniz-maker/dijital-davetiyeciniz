@@ -1,8 +1,11 @@
 import { Sparkles, Calendar, MapPin, Navigation } from 'lucide-react';
+import { useState } from 'react';
 import CountdownTimer from '../CountdownTimer';
+import RsvpModal from '../RsvpModal';
 
 interface TemplateProps {
   wedding: {
+    id: string;
     bride_name: string;
     groom_name: string;
     wedding_date: string | null;
@@ -23,6 +26,8 @@ export default function Template1({ wedding }: TemplateProps) {
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
   
   const eventTitle = wedding.event_type ? `${wedding.event_type} Töreni` : 'Düğün Töreni';
+  
+  const [isRsvpOpen, setIsRsvpOpen] = useState(false);
   
   // Dinamik Tasarım Değişkenleri
   const primaryColor = wedding.primary_color || '#f43f5e'; // Default Rose-500
@@ -99,12 +104,20 @@ export default function Template1({ wedding }: TemplateProps) {
         </div>
 
         <button 
+          onClick={() => setIsRsvpOpen(true)}
           className="w-full px-8 py-4 text-white rounded-xl font-bold text-lg shadow-lg hover:opacity-90 transition-all hover:-translate-y-1"
           style={{ backgroundColor: primaryColor, boxShadow: `0 10px 15px -3px ${primaryColor}40` }}
         >
           LCV Formunu Doldur
         </button>
       </div>
+
+      <RsvpModal 
+        weddingId={wedding.id} 
+        isOpen={isRsvpOpen} 
+        onClose={() => setIsRsvpOpen(false)} 
+        primaryColor={primaryColor} 
+      />
     </div>
   );
 }
