@@ -98,7 +98,7 @@ export default function RsvpModal({ weddingId, isOpen, onClose, primaryColor = '
                   value={guestName} 
                   onChange={e => setGuestName(e.target.value)} 
                   placeholder="Örn: Ahmet Yılmaz" 
-                  className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 focus:ring-2 focus:outline-none transition-all"
+                  className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:ring-2 focus:outline-none transition-all"
                   style={{ '--tw-ring-color': primaryColor } as React.CSSProperties}
                 />
               </div>
@@ -130,7 +130,7 @@ export default function RsvpModal({ weddingId, isOpen, onClose, primaryColor = '
                   <select 
                     value={guestCount} 
                     onChange={e => setGuestCount(Number(e.target.value))}
-                    className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 focus:outline-none"
+                    className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none"
                   >
                     <option value={1}>1 Kişi</option>
                     <option value={2}>2 Kişi</option>
@@ -148,7 +148,7 @@ export default function RsvpModal({ weddingId, isOpen, onClose, primaryColor = '
                   onChange={e => setMessage(e.target.value)} 
                   placeholder="Çifte iletmek istediğiniz özel bir notunuz var mı?" 
                   rows={3}
-                  className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 focus:outline-none"
+                  className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none"
                 />
               </div>
 

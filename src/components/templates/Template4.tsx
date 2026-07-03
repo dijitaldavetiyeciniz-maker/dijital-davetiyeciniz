@@ -3,6 +3,7 @@ import { Sparkles, Calendar, MapPin, Crown, Navigation } from 'lucide-react';
 import { useState } from 'react';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
+import FloatingActionBar from '../FloatingActionBar';
 
 interface TemplateProps {
   wedding: {
@@ -31,7 +32,7 @@ export default function Template4({ wedding }: TemplateProps) {
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-slate-900 font-serif">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 pb-28 text-slate-900 font-serif">
       <div className="max-w-2xl w-full p-10 text-center relative">
         <div className="absolute inset-0 border-[1px] border-amber-300 m-2 rounded-t-full pointer-events-none" />
         <div className="absolute inset-0 border-[1px] border-amber-300 m-4 rounded-t-full pointer-events-none" />
@@ -94,6 +95,12 @@ export default function Template4({ wedding }: TemplateProps) {
           Katılım Bildirimi (LCV)
         </button>
       </div>
+
+      <FloatingActionBar 
+        onRsvpClick={() => setIsRsvpOpen(true)} 
+        googleMapsUrl={wedding.google_maps_url} 
+        primaryColor="#f59e0b" 
+      />
 
       <RsvpModal 
         weddingId={wedding.id} 

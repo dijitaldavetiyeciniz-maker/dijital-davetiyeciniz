@@ -3,6 +3,7 @@ import { Sparkles, Calendar, MapPin, Heart, Navigation } from 'lucide-react';
 import { useState } from 'react';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
+import FloatingActionBar from '../FloatingActionBar';
 
 interface TemplateProps {
   wedding: {
@@ -31,7 +32,7 @@ export default function Template2({ wedding }: TemplateProps) {
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-white relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 pb-28 text-white relative overflow-hidden font-sans">
       {/* Arkaplan Işıkları */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 blur-[120px] rounded-full pointer-events-none" />
@@ -95,6 +96,12 @@ export default function Template2({ wedding }: TemplateProps) {
           LCV Formunu Doldur
         </button>
       </div>
+
+      <FloatingActionBar 
+        onRsvpClick={() => setIsRsvpOpen(true)} 
+        googleMapsUrl={wedding.google_maps_url} 
+        primaryColor="#6366f1" 
+      />
 
       <RsvpModal 
         weddingId={wedding.id} 

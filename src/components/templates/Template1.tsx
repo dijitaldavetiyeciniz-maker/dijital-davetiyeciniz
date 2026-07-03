@@ -3,6 +3,7 @@ import { Sparkles, Calendar, MapPin, Navigation } from 'lucide-react';
 import { useState } from 'react';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
+import FloatingActionBar from '../FloatingActionBar';
 
 interface TemplateProps {
   wedding: {
@@ -37,7 +38,7 @@ export default function Template1({ wedding }: TemplateProps) {
 
   return (
     <div 
-      className={`min-h-screen flex flex-col items-center justify-center p-6 text-slate-800 ${fontFamilyClass} relative overflow-hidden`}
+      className={`min-h-screen flex flex-col items-center justify-center p-6 pb-28 text-slate-800 ${fontFamilyClass} relative overflow-hidden`}
       style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : `${primaryColor}15` }}
     >
       {/* Koyu Overlay (Sadece arkaplan resmi varsa) */}
@@ -112,6 +113,12 @@ export default function Template1({ wedding }: TemplateProps) {
           LCV Formunu Doldur
         </button>
       </div>
+
+      <FloatingActionBar 
+        onRsvpClick={() => setIsRsvpOpen(true)} 
+        googleMapsUrl={wedding.google_maps_url} 
+        primaryColor={primaryColor} 
+      />
 
       <RsvpModal 
         weddingId={wedding.id} 

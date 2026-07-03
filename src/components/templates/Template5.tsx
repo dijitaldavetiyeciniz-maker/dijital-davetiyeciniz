@@ -3,6 +3,7 @@ import { Calendar, MapPin, ArrowRight, Navigation } from 'lucide-react';
 import { useState } from 'react';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
+import FloatingActionBar from '../FloatingActionBar';
 
 interface TemplateProps {
   wedding: {
@@ -29,7 +30,7 @@ export default function Template5({ wedding }: TemplateProps) {
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex flex-col justify-center p-6 text-zinc-900 font-sans">
+    <div className="min-h-screen bg-zinc-50 flex flex-col justify-center p-6 pb-28 text-zinc-900 font-sans">
       <div className="max-w-4xl mx-auto w-full flex flex-col md:flex-row items-center gap-16">
         
         <div className="flex-1">
@@ -93,6 +94,12 @@ export default function Template5({ wedding }: TemplateProps) {
         </div>
 
       </div>
+
+      <FloatingActionBar 
+        onRsvpClick={() => setIsRsvpOpen(true)} 
+        googleMapsUrl={wedding.google_maps_url} 
+        primaryColor="#18181b" 
+      />
 
       <RsvpModal 
         weddingId={wedding.id} 
