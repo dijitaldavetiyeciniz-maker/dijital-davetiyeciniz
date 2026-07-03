@@ -1,5 +1,6 @@
 'use client';
 import { Calendar, MapPin, Navigation } from 'lucide-react';
+import SparklesEffect from '../effects/SparklesEffect';
 import CountdownTimer from '../CountdownTimer';
 
 interface TemplateProps {
@@ -11,12 +12,14 @@ export default function Template8({ wedding }: TemplateProps) {
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
 
-  const primaryColor = wedding.primary_color || '#d4af37'; // gold
+  const primaryColor = wedding.primary_color || '#d4af37';
+  const textColor = wedding.text_color || '#1e293b'; // gold
   const fontFamilyClass = wedding.font_family === 'serif' ? 'font-serif' : wedding.font_family === 'mono' ? 'font-mono' : 'font-sans';
   const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
 
   return (
     <div className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 pb-28 bg-[#111] text-white ${fontFamilyClass} relative`}>
+      <SparklesEffect color={primaryColor} />
       {wedding.background_image_url && <div className="absolute inset-0 opacity-40" style={bgImageStyle} />}
 
       <div 
@@ -40,7 +43,7 @@ export default function Template8({ wedding }: TemplateProps) {
           
           {wedding.wedding_date && (
             <div className="mb-8 p-4 rounded bg-white/5" style={{ border: `1px solid ${primaryColor}30` }}>
-              <CountdownTimer targetDate={wedding.wedding_date} />
+              <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="elegant" />
             </div>
           )}
           

@@ -1,6 +1,7 @@
 'use client';
 import { Sparkles, Calendar, MapPin, Navigation } from 'lucide-react';
 import { useState } from 'react';
+import BubblesEffect from '../effects/BubblesEffect';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
@@ -34,7 +35,8 @@ export default function Template1({ wedding }: TemplateProps) {
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
   
   // Dinamik Tasarım Değişkenleri
-  const primaryColor = wedding.primary_color || '#f43f5e'; // Default Rose-500
+  const primaryColor = wedding.primary_color || '#f43f5e';
+  const textColor = wedding.text_color || '#1e293b'; // Default Rose-500
   const fontFamilyClass = wedding.font_family === 'serif' ? 'font-serif' : wedding.font_family === 'mono' ? 'font-mono' : 'font-sans';
   const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
 
@@ -45,6 +47,7 @@ export default function Template1({ wedding }: TemplateProps) {
     >
       {/* Koyu Overlay (Sadece arkaplan resmi varsa) */}
       {wedding.background_image_url && <div className="absolute inset-0 bg-black/40" />}
+      <BubblesEffect />
 
       {/* Arkaplan Süslemeleri (Eğer resim yoksa göster) */}
       {!wedding.background_image_url && (
@@ -82,7 +85,7 @@ export default function Template1({ wedding }: TemplateProps) {
         
         {/* Geri Sayım Sayacı */}
         {wedding.wedding_date && (
-          <CountdownTimer targetDate={wedding.wedding_date} />
+          <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="glass" />
         )}
         
         <div className="flex flex-col gap-5 text-lg font-medium text-slate-700 mb-10 mt-6">

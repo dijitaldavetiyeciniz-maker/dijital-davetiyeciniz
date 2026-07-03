@@ -23,6 +23,7 @@ export default function CoupleAdminPage({
   // Tasarım Stüdyosu State
   const [templateId, setTemplateId] = useState('template1');
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
+  const [textColor, setTextColor] = useState('#1e293b'); // Yeni eklenen metin rengi
   const [fontFamily, setFontFamily] = useState('sans');
   const [bgImageUrl, setBgImageUrl] = useState('');
   const [telegramBotToken, setTelegramBotToken] = useState('');
@@ -78,6 +79,7 @@ export default function CoupleAdminPage({
       
       if (weddingData.template_id) setTemplateId(weddingData.template_id);
       if (weddingData.primary_color) setPrimaryColor(weddingData.primary_color);
+      if (weddingData.text_color) setTextColor(weddingData.text_color);
       if (weddingData.font_family) setFontFamily(weddingData.font_family);
       if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
       if (weddingData.telegram_bot_token) setTelegramBotToken(weddingData.telegram_bot_token);
@@ -125,6 +127,7 @@ export default function CoupleAdminPage({
       .update({
         template_id: templateId,
         primary_color: primaryColor,
+        text_color: textColor,
         font_family: fontFamily,
         background_image_url: bgImageUrl,
         telegram_bot_token: telegramBotToken,
@@ -427,11 +430,20 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-2">Özel Renk Seç (Tüm Şablonu Etkiler)</label>
-                  <div className="flex items-center gap-4">
-                    <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
-                    <span className="text-slate-500 font-mono text-sm">{primaryColor}</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Ana Renk (Tasarım)</label>
+                    <div className="flex items-center gap-4">
+                      <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
+                      <span className="text-slate-500 font-mono text-sm">{primaryColor}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Metin Rengi</label>
+                    <div className="flex items-center gap-4">
+                      <input type="color" value={textColor} onChange={e => setTextColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
+                      <span className="text-slate-500 font-mono text-sm">{textColor}</span>
+                    </div>
                   </div>
                 </div>
 

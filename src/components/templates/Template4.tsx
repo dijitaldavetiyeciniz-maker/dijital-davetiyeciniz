@@ -1,6 +1,7 @@
 'use client';
 import { Sparkles, Calendar, MapPin, Crown, Navigation } from 'lucide-react';
 import { useState } from 'react';
+import SparklesEffect from '../effects/SparklesEffect';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
@@ -31,7 +32,8 @@ export default function Template4({ wedding }: TemplateProps) {
   
   const eventTitle = wedding.event_type ? `${wedding.event_type} TÖRENİ` : 'DÜĞÜN TÖRENİ';
   
-  const primaryColor = wedding.primary_color || '#d97706'; // default amber-600
+  const primaryColor = wedding.primary_color || '#d97706';
+  const textColor = wedding.text_color || '#1e293b'; // default amber-600
   const fontFamilyClass = wedding.font_family === 'sans' ? 'font-sans' : wedding.font_family === 'mono' ? 'font-mono' : 'font-serif';
   const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
   
@@ -86,7 +88,7 @@ export default function Template4({ wedding }: TemplateProps) {
         
         {wedding.wedding_date && (
           <div className="mb-8 relative z-10">
-            <CountdownTimer targetDate={wedding.wedding_date} />
+            <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="elegant" />
           </div>
         )}
         

@@ -29,7 +29,8 @@ export default function Template5({ wedding }: TemplateProps) {
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
 
-  const primaryColor = wedding.primary_color || '#000000'; // default black
+  const primaryColor = wedding.primary_color || '#000000';
+  const textColor = wedding.text_color || '#1e293b'; // default black
   const fontFamilyClass = wedding.font_family === 'serif' ? 'font-serif' : wedding.font_family === 'mono' ? 'font-mono' : 'font-sans';
   const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
 
@@ -63,7 +64,7 @@ export default function Template5({ wedding }: TemplateProps) {
           
           {wedding.wedding_date && (
             <div className="mb-10 max-w-xs">
-              <CountdownTimer targetDate={wedding.wedding_date} />
+              <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="minimal" />
             </div>
           )}
           

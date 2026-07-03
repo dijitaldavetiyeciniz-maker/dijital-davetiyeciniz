@@ -1,7 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
 
-export default function CountdownTimer({ targetDate }: { targetDate: string }) {
+export default function CountdownTimer({ 
+  targetDate, 
+  primaryColor = '#f43f5e',
+  styleType = 'glass' 
+}: { 
+  targetDate: string;
+  primaryColor?: string;
+  styleType?: 'glass' | 'minimal' | 'neon' | 'elegant';
+}) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isPast, setIsPast] = useState(false);
 
@@ -29,35 +37,79 @@ export default function CountdownTimer({ targetDate }: { targetDate: string }) {
 
   if (isPast) return null;
 
+  const renderTimerBlock = (value: number, label: string) => {
+    switch (styleType) {
+      case 'minimal':
+        return (
+          <div className="flex flex-col items-center">
+            <div className="text-3xl sm:text-4xl font-light" style={{ color: primaryColor }}>
+              {value.toString().padStart(2, '0')}
+            </div>
+            <span className="text-[10px] mt-1 uppercase tracking-widest opacity-50">{label}</span>
+          </div>
+        );
+      case 'neon':
+        return (
+          <div className="flex flex-col items-center">
+            <div 
+              className="text-2xl sm:text-3xl font-bold font-mono" 
+              style={{ 
+                color: primaryColor,
+                textShadow: `0 0 10px ${primaryColor}, 0 0 20px ${primaryColor}` 
+              }}
+            >
+              {value.toString().padStart(2, '0')}
+            </div>
+            <span className="text-[10px] mt-2 uppercase tracking-widest text-white/50">{label}</span>
+          </div>
+        );
+      case 'elegant':
+        return (
+          <div className="flex flex-col items-center">
+            <div 
+              className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center text-xl sm:text-2xl font-serif"
+              style={{ border: `1px solid ${primaryColor}50`, color: primaryColor }}
+            >
+              {value.toString().padStart(2, '0')}
+            </div>
+            <span className="text-[9px] mt-2 uppercase tracking-widest opacity-70" style={{ color: primaryColor }}>{label}</span>
+          </div>
+        );
+      case 'glass':
+      default:
+        return (
+          <div className="flex flex-col items-center">
+            <div 
+              className="w-14 h-14 sm:w-16 sm:h-16 bg-white/50 backdrop-blur-sm rounded-xl flex items-center justify-center text-xl sm:text-2xl font-bold shadow-sm"
+              style={{ color: primaryColor, border: `1px solid ${primaryColor}20` }}
+            >
+              {value.toString().padStart(2, '0')}
+            </div>
+            <span className="text-[10px] mt-2 uppercase tracking-widest opacity-60">{label}</span>
+          </div>
+        );
+    }
+  };
+
+  const getSeparator = () => {
+    if (styleType === 'elegant' || styleType === 'minimal') {
+      return <div className="text-xl sm:text-2xl font-light opacity-30 pb-4" style={{ color: primaryColor }}>/</div>;
+    }
+    if (styleType === 'neon') {
+      return <div className="text-xl sm:text-2xl font-bold font-mono pb-4" style={{ color: primaryColor, textShadow: `0 0 10px ${primaryColor}` }}>:</div>;
+    }
+    return <div className="text-xl sm:text-2xl font-light pb-6" style={{ color: primaryColor }}>:</div>;
+  };
+
   return (
-    <div className="flex gap-4 justify-center items-center my-8">
-      <div className="flex flex-col items-center">
-        <div className="w-16 h-16 bg-white/50 backdrop-blur-sm rounded-xl flex items-center justify-center text-2xl font-bold text-rose-600 shadow-sm border border-rose-100">
-          {timeLeft.days}
-        </div>
-        <span className="text-xs text-slate-500 mt-2 uppercase tracking-widest">Gün</span>
-      </div>
-      <div className="text-2xl text-rose-300 font-light pb-6">:</div>
-      <div className="flex flex-col items-center">
-        <div className="w-16 h-16 bg-white/50 backdrop-blur-sm rounded-xl flex items-center justify-center text-2xl font-bold text-rose-600 shadow-sm border border-rose-100">
-          {timeLeft.hours}
-        </div>
-        <span className="text-xs text-slate-500 mt-2 uppercase tracking-widest">Saat</span>
-      </div>
-      <div className="text-2xl text-rose-300 font-light pb-6">:</div>
-      <div className="flex flex-col items-center">
-        <div className="w-16 h-16 bg-white/50 backdrop-blur-sm rounded-xl flex items-center justify-center text-2xl font-bold text-rose-600 shadow-sm border border-rose-100">
-          {timeLeft.minutes}
-        </div>
-        <span className="text-xs text-slate-500 mt-2 uppercase tracking-widest">Dakika</span>
-      </div>
-      <div className="text-2xl text-rose-300 font-light pb-6">:</div>
-      <div className="flex flex-col items-center">
-        <div className="w-16 h-16 bg-white/50 backdrop-blur-sm rounded-xl flex items-center justify-center text-2xl font-bold text-rose-600 shadow-sm border border-rose-100">
-          {timeLeft.seconds}
-        </div>
-        <span className="text-xs text-slate-500 mt-2 uppercase tracking-widest">Saniye</span>
-      </div>
+    <div className="flex gap-2 sm:gap-4 justify-center items-center my-4">
+      {renderTimerBlock(timeLeft.days, 'Gün')}
+      {getSeparator()}
+      {renderTimerBlock(timeLeft.hours, 'Saat')}
+      {getSeparator()}
+      {renderTimerBlock(timeLeft.minutes, 'Dakika')}
+      {getSeparator()}
+      {renderTimerBlock(timeLeft.seconds, 'Saniye')}
     </div>
   );
 }

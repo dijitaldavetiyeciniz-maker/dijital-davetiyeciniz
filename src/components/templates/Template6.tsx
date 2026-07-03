@@ -1,5 +1,6 @@
 'use client';
 import { Calendar, MapPin, Navigation } from 'lucide-react';
+import BubblesEffect from '../effects/BubblesEffect';
 import CountdownTimer from '../CountdownTimer';
 
 interface TemplateProps {
@@ -12,6 +13,7 @@ export default function Template6({ wedding }: TemplateProps) {
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
 
   const primaryColor = wedding.primary_color || '#e11d48';
+  const textColor = wedding.text_color || '#1e293b';
   const fontFamilyClass = wedding.font_family === 'serif' ? 'font-serif' : wedding.font_family === 'mono' ? 'font-mono' : 'font-sans';
   const bgImageStyle = wedding.background_image_url ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {};
 
@@ -21,6 +23,7 @@ export default function Template6({ wedding }: TemplateProps) {
       style={{ ...bgImageStyle, backgroundColor: wedding.background_image_url ? 'transparent' : '#fff1f2' }}
     >
       {wedding.background_image_url && <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" />}
+      <BubblesEffect />
 
       <div 
         className="max-w-[420px] mx-auto w-full bg-white/95 backdrop-blur-md rounded-[3rem] shadow-2xl p-8 sm:p-12 text-center relative z-10 my-8 border-4"
@@ -48,7 +51,7 @@ export default function Template6({ wedding }: TemplateProps) {
         
         {wedding.wedding_date && (
           <div className="mb-8">
-            <CountdownTimer targetDate={wedding.wedding_date} />
+            <CountdownTimer targetDate={wedding.wedding_date} primaryColor={primaryColor} styleType="glass" />
           </div>
         )}
         
