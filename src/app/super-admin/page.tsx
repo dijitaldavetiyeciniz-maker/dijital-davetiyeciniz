@@ -36,7 +36,7 @@ export default function SuperAdminPage() {
     setLoading(false);
   }
 
-  async function togglePaymentStatus(id: string, currentStatus: boolean) {
+  async function togglePaymentStatus(id: string, currentStatus: boolean, slug: string) {
     // Önce UI'ı hızlıca güncelleyelim (Optimistic Update)
     setWeddings(prevWeddings => 
       prevWeddings.map(w => w.id === id ? { ...w, is_paid: !currentStatus } : w)
@@ -53,6 +53,9 @@ export default function SuperAdminPage() {
         prevWeddings.map(w => w.id === id ? { ...w, is_paid: currentStatus } : w)
       );
       alert("Hata: " + error.message);
+    } else if (!currentStatus) {
+      // Ödeme YENİ onaylandıysa (false -> true), siteyi yeni sekmede aç
+      window.open(`/${slug}`, '_blank');
     }
   }
 
@@ -244,7 +247,7 @@ export default function SuperAdminPage() {
                         Siteye Git <ExternalLink className="w-4 h-4" />
                       </a>
                       <button 
-                        onClick={() => togglePaymentStatus(w.id, w.is_paid)}
+                        onClick={() => togglePaymentStatus(w.id, w.is_paid, w.slug)}
                         className={`text-sm font-bold px-3 py-1 rounded border transition-colors ${w.is_paid ? 'border-orange-500 text-orange-500 hover:bg-orange-50' : 'bg-emerald-500 text-white hover:bg-emerald-600'}`}
                       >
                         {w.is_paid ? 'Ödemeyi İptal Et' : 'Ödemeyi Onayla (Yayına Al)'}
