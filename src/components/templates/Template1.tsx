@@ -1,3 +1,4 @@
+'use client';
 import { Sparkles, Calendar, MapPin, Navigation } from 'lucide-react';
 import { useState } from 'react';
 import CountdownTimer from '../CountdownTimer';
