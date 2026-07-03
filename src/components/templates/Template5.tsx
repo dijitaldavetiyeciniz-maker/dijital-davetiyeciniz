@@ -10,6 +10,8 @@ interface TemplateProps {
     id: string;
     bride_name: string;
     groom_name: string;
+    bride_parents: string | null;
+    groom_parents: string | null;
     wedding_date: string | null;
     event_type: string | null;
     venue_name: string | null;
@@ -44,9 +46,16 @@ export default function Template5({ wedding }: TemplateProps) {
       <div className="max-w-4xl mx-auto w-full flex flex-col md:flex-row items-center gap-16 relative z-10">
         
         <div className="flex-1">
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-4" style={{ color: primaryColor }}>
-            {wedding.bride_name}.<br/>
-            {wedding.groom_name}.
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-4 flex items-center justify-center w-full" style={{ color: primaryColor }}>
+            <div className="flex flex-col items-start gap-1">
+              {wedding.bride_parents && <span className="text-xl md:text-3xl tracking-widest opacity-60 font-light block mb-2">{wedding.bride_parents}</span>}
+              <span>{wedding.bride_name}</span>
+            </div>
+            <span className="text-slate-300 mx-8">&</span>
+            <div className="flex flex-col items-end gap-1">
+              <span>{wedding.groom_name}</span>
+              {wedding.groom_parents && <span className="text-xl md:text-3xl tracking-widest opacity-60 font-light block mt-2">{wedding.groom_parents}</span>}
+            </div>
           </h1>
           <p className="text-xl text-zinc-600 font-medium mb-10 max-w-sm">
             {wedding.custom_message || 'Hayatımızın en özel gününde sizleri de aramızda görmekten mutluluk duyarız.'}

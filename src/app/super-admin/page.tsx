@@ -13,6 +13,8 @@ export default function SuperAdminPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [brideName, setBrideName] = useState('');
   const [groomName, setGroomName] = useState('');
+  const [brideParents, setBrideParents] = useState('');
+  const [groomParents, setGroomParents] = useState('');
   const [slug, setSlug] = useState('');
   const [templateId, setTemplateId] = useState('template1');
   const [password, setPassword] = useState('');
@@ -73,6 +75,8 @@ export default function SuperAdminPage() {
     setEditingId(w.id);
     setBrideName(w.bride_name || '');
     setGroomName(w.groom_name || '');
+    setBrideParents(w.bride_parents || '');
+    setGroomParents(w.groom_parents || '');
     setSlug(w.slug || '');
     setTemplateId(w.template_id || 'template1');
     setPassword(w.admin_password || '');
@@ -86,7 +90,7 @@ export default function SuperAdminPage() {
 
   function handleCancelEdit() {
     setEditingId(null);
-    setBrideName(''); setGroomName(''); setSlug(''); setPassword('');
+    setBrideName(''); setGroomName(''); setBrideParents(''); setGroomParents(''); setSlug(''); setPassword('');
     setWeddingDate(''); setVenueName(''); setVenueAddress(''); setGoogleMapsUrl(''); setCustomMessage('');
   }
 
@@ -96,6 +100,8 @@ export default function SuperAdminPage() {
     const payload = {
       bride_name: brideName,
       groom_name: groomName,
+      bride_parents: brideParents,
+      groom_parents: groomParents,
       slug: slug,
       template_id: templateId,
       admin_password: password,
@@ -205,6 +211,17 @@ export default function SuperAdminPage() {
                 <div>
                   <label className="block text-sm font-medium mb-1">Damat / Damat Adayı</label>
                   <input required value={groomName} onChange={e=>setGroomName(e.target.value)} type="text" className="w-full border p-2 rounded-lg" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Gelin Anne & Baba</label>
+                  <input value={brideParents} onChange={e=>setBrideParents(e.target.value)} type="text" placeholder="Fatma & Ali Yılmaz" className="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Damat Anne & Baba</label>
+                  <input value={groomParents} onChange={e=>setGroomParents(e.target.value)} type="text" placeholder="Ayşe & Veli Kaya" className="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
               

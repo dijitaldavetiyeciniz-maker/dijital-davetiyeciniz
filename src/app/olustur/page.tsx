@@ -11,6 +11,8 @@ function CreateForm() {
 
   const [brideName, setBrideName] = useState('');
   const [groomName, setGroomName] = useState('');
+  const [brideParents, setBrideParents] = useState('');
+  const [groomParents, setGroomParents] = useState('');
   const [slug, setSlug] = useState('');
   const [eventType, setEventType] = useState('Düğün');
   const [templateId, setTemplateId] = useState(defaultTemplateId);
@@ -28,7 +30,6 @@ function CreateForm() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
-        // Oturum yoksa kayıt olmaya veya girişe yönlendir
         router.push('/kayit-ol');
       } else {
         setUser(session.user);
@@ -41,10 +42,8 @@ function CreateForm() {
     setIsSubmitting(true);
     setErrorMsg('');
 
-    // Formatted slug to ensure no spaces and lowercase
     const cleanSlug = slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
 
-    // 1. Check if slug exists
     const { data: existingData } = await supabase.from('weddings').select('id').eq('slug', cleanSlug).single();
     if (existingData) {
       setErrorMsg('Bu URL (Link) maalesef başkası tarafından alınmış. Lütfen başka bir URL deneyin.');
@@ -52,15 +51,15 @@ function CreateForm() {
       return;
     }
 
-    // Tarih objesine dönüştür (eğer girildiyse)
     const formattedDate = weddingDate ? new Date(weddingDate).toISOString() : null;
 
-    // 2. Insert new wedding
     const { error } = await supabase.from('weddings').insert([
       {
         user_id: user?.id,
         bride_name: brideName,
         groom_name: groomName,
+        bride_parents: brideParents,
+        groom_parents: groomParents,
         slug: cleanSlug,
         template_id: templateId,
         admin_password: password,
@@ -77,7 +76,6 @@ function CreateForm() {
     setIsSubmitting(false);
 
     if (!error) {
-      // Başarılıysa müşteriyi kendi admin paneline yönlendir
       router.push(`/${cleanSlug}/admin`);
     } else {
       setErrorMsg('Kayıt oluşturulurken bir hata oluştu: ' + error.message);
@@ -103,11 +101,22 @@ function CreateForm() {
         <div className="grid md:grid-cols-2 gap-5">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Gelin / Gelin Adayı</label>
-            <input required type="text" value={brideName} onChange={e=>setBrideName(e.target.value)} className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+            <input required type="text" value={brideName} onChange={e=>setBrideName(e.target.value)} placeholder="Örn: Ayşe" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Damat / Damat Adayı</label>
-            <input type="text" value={groomName} onChange={e=>setGroomName(e.target.value)} className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+            <input type="text" value={groomName} onChange={e=>setGroomName(e.target.value)} placeholder="Örn: Mehmet" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-5">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Gelin Anne & Baba Adı</label>
+            <input type="text" value={brideParents} onChange={e=>setBrideParents(e.target.value)} placeholder="Örn: Fatma & Ali Yılmaz" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Damat Anne & Baba Adı</label>
+            <input type="text" value={groomParents} onChange={e=>setGroomParents(e.target.value)} placeholder="Örn: Ayşe & Veli Kaya" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
           </div>
         </div>
 

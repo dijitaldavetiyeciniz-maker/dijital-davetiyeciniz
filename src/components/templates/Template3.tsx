@@ -10,6 +10,8 @@ interface TemplateProps {
     id: string;
     bride_name: string;
     groom_name: string;
+    bride_parents: string | null;
+    groom_parents: string | null;
     wedding_date: string | null;
     event_type: string | null;
     venue_name: string | null;
@@ -52,7 +54,15 @@ export default function Template3({ wedding }: TemplateProps) {
         </h3>
         
         <h1 className="text-6xl md:text-8xl text-[#4A3B32] mb-10 tracking-widest leading-tight">
-          {wedding.bride_name} <br/> <span className="text-4xl py-2 inline-block" style={{ color: primaryColor }}>&</span> <br/> {wedding.groom_name}
+          <div className="flex flex-col items-center">
+            {wedding.bride_parents && <span className="text-sm md:text-xl tracking-widest opacity-80 font-light mb-2">{wedding.bride_parents}</span>}
+            <span>{wedding.bride_name}</span>
+          </div>
+          <span className="text-3xl my-2 mx-auto block text-center" style={{ color: primaryColor }}>&</span>
+          <div className="flex flex-col items-center">
+            <span>{wedding.groom_name}</span>
+            {wedding.groom_parents && <span className="text-sm md:text-xl tracking-widest opacity-80 font-light mt-2">{wedding.groom_parents}</span>}
+          </div>
         </h1>
         
         {wedding.wedding_date && (
