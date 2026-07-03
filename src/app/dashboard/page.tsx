@@ -54,7 +54,7 @@ export default function DashboardPage() {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-xl font-bold font-serif text-slate-800">
             <Sparkles className="w-5 h-5 text-rose-500" />
-            Özel Gün
+            Dijital <span className="text-rose-500">Davetiyeciniz</span>
           </Link>
           <div className="flex items-center gap-4">
             <span className="text-sm text-slate-500 hidden md:block">{user?.email}</span>
@@ -112,7 +112,7 @@ export default function DashboardPage() {
                     href={`/${wedding.slug}/admin`}
                     className="flex-1 bg-slate-100 text-slate-700 py-3 rounded-xl font-bold text-sm text-center hover:bg-slate-200 transition-colors flex items-center justify-center gap-2"
                   >
-                    <Settings className="w-4 h-4" /> Yönet
+                    <Settings className="w-4 h-4" /> Oluştur / Düzenle
                   </Link>
                   <a 
                     href={`/${wedding.slug}`}

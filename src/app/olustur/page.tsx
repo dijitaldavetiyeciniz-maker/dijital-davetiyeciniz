@@ -98,11 +98,16 @@ function CreateForm() {
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">Etkinlik Türü</label>
             <select value={eventType} onChange={e=>setEventType(e.target.value)} className="w-full border border-slate-200 rounded-xl p-3 bg-slate-50 focus:ring-2 focus:ring-rose-500 focus:outline-none">
-              <option value="Düğün">Düğün</option>
-              <option value="Nişan">Nişan</option>
-              <option value="Kına">Kına</option>
-              <option value="Baby Shower">Baby Shower</option>
-              <option value="Doğum Günü">Doğum Günü</option>
+                <option value="Düğün">Düğün</option>
+                <option value="Nişan">Nişan</option>
+                <option value="Kına">Kına</option>
+                <option value="Söz">Söz</option>
+                <option value="Nikah">Nikah</option>
+                <option value="Baby Shower">Baby Shower</option>
+                <option value="Sünnet">Sünnet</option>
+                <option value="Doğum Günü">Doğum Günü</option>
+                <option value="Mezuniyet">Mezuniyet</option>
+                <option value="Parti">Parti</option>
             </select>
           </div>
           <div>

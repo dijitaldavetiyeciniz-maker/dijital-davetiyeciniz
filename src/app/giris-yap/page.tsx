@@ -35,7 +35,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-6">
       <Link href="/" className="flex items-center gap-2 text-2xl font-bold font-serif text-slate-800 mb-8 hover:opacity-80 transition-opacity">
         <Sparkles className="w-6 h-6 text-rose-500" />
-        Özel Gün <span className="text-rose-500">Davetiyesi</span>
+        Dijital <span className="text-rose-500">Davetiyeciniz</span>
       </Link>
 
       <div className="bg-white rounded-3xl shadow-xl w-full max-w-md p-8 border border-slate-100">

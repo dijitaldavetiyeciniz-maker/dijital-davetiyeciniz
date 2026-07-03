@@ -24,6 +24,8 @@ export default function CoupleAdminPage({
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
   const [fontFamily, setFontFamily] = useState('sans');
   const [bgImageUrl, setBgImageUrl] = useState('');
+  const [telegramBotToken, setTelegramBotToken] = useState('');
+  const [telegramChatId, setTelegramChatId] = useState('');
   const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
@@ -54,6 +56,8 @@ export default function CoupleAdminPage({
       if (weddingData.primary_color) setPrimaryColor(weddingData.primary_color);
       if (weddingData.font_family) setFontFamily(weddingData.font_family);
       if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
+      if (weddingData.telegram_bot_token) setTelegramBotToken(weddingData.telegram_bot_token);
+      if (weddingData.telegram_chat_id) setTelegramChatId(weddingData.telegram_chat_id);
       
       setLoading(false);
     }
@@ -85,7 +89,9 @@ export default function CoupleAdminPage({
       .update({
         primary_color: primaryColor,
         font_family: fontFamily,
-        background_image_url: bgImageUrl
+        background_image_url: bgImageUrl,
+        telegram_bot_token: telegramBotToken,
+        telegram_chat_id: telegramChatId
       })
       .eq('id', wedding.id);
       
@@ -107,7 +113,7 @@ export default function CoupleAdminPage({
             <Lock className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold text-slate-800 mb-2">Tasarım Paneli</h1>
-          <p className="text-slate-500 mb-8">Davetiyenizi düzenlemek için şifrenizi girin. (Veya <a href="/giris-yap" className="text-rose-500 hover:underline font-bold">Giriş Yaparak</a> şifresiz erişin).</p>
+          <p className="text-slate-500 mb-8">Oluşturduğunuz davetiyeyi düzenlemek için şifrenizi girin. (Veya <a href="/giris-yap" className="text-rose-500 hover:underline font-bold">Giriş Yaparak</a> şifresiz erişin).</p>
           
           <form onSubmit={handleLogin}>
             <input 
@@ -136,7 +142,7 @@ export default function CoupleAdminPage({
         <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold mb-2">{wedding.bride_name} & {wedding.groom_name}</h1>
-            <p className="text-slate-500">Müşteri Yönetim Paneli</p>
+            <p className="text-slate-500">Müşteri Oluşturma ve Yönetim Paneli</p>
           </div>
           <button onClick={() => setIsAuthenticated(false)} className="text-sm font-medium text-slate-500 hover:text-slate-800">Çıkış Yap</button>
         </header>
@@ -250,6 +256,29 @@ export default function CoupleAdminPage({
                 <label className="block text-sm font-medium mb-2">Arkaplan Görsel Linki (Opsiyonel)</label>
                 <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="https://resim-linki.com/foto.jpg" className="w-full border p-3 rounded-xl bg-slate-50" />
                 <p className="text-xs text-slate-400 mt-2">Düz renk yerine kendi fotoğrafınızı arkaplan yapmak için resminizin internet linkini buraya yapıştırın.</p>
+              </div>
+
+              <div className="pt-6 border-t border-slate-200">
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 text-blue-500" /> Telegram Bildirimleri (Opsiyonel)
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="flex items-center gap-2 text-sm font-medium mb-2">
+                      Telegram Bot Token 
+                      <a href="https://core.telegram.org/bots/features#botfather" target="_blank" className="w-5 h-5 bg-slate-200 text-slate-600 rounded-full flex items-center justify-center text-xs font-bold hover:bg-slate-300" title="BotFather üzerinden bot oluşturmayı öğrenin">?</a>
+                    </label>
+                    <input type="text" value={telegramBotToken} onChange={e => setTelegramBotToken(e.target.value)} placeholder="123456789:ABCdefGHIjklmNOPqrstUVwxyZ" className="w-full border p-3 rounded-xl bg-slate-50" />
+                  </div>
+                  <div>
+                    <label className="flex items-center gap-2 text-sm font-medium mb-2">
+                      Telegram Grup ID (Chat ID)
+                      <a href="https://stackoverflow.com/questions/32423837/telegram-bot-how-to-get-a-group-chat-id" target="_blank" className="w-5 h-5 bg-slate-200 text-slate-600 rounded-full flex items-center justify-center text-xs font-bold hover:bg-slate-300" title="Grup ID'nizi nasıl bulacağınızı öğrenin">?</a>
+                    </label>
+                    <input type="text" value={telegramChatId} onChange={e => setTelegramChatId(e.target.value)} placeholder="-100123456789" className="w-full border p-3 rounded-xl bg-slate-50" />
+                    <p className="text-xs text-slate-400 mt-2">LCV (Katılım) bildirimlerinin ve fotoğrafların anında kendi Telegram grubunuza düşmesi için doldurun.</p>
+                  </div>
+                </div>
               </div>
 
               <button onClick={handleSaveDesign} className="mt-8 flex items-center justify-center gap-2 w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition-colors">

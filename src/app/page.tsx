@@ -8,9 +8,9 @@ export default function Home() {
       {/* Navbar */}
       <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="text-2xl font-serif font-bold text-slate-900 flex items-center gap-2">
+          <div className="flex items-center gap-2 text-2xl font-bold font-serif text-slate-800">
             <Sparkles className="w-6 h-6 text-rose-500" />
-            Özel Gün <span className="text-rose-500">Davetiyesi</span>
+            Dijital <span className="text-rose-500">Davetiyeciniz</span>
           </div>
           <div className="hidden md:flex gap-8 text-sm font-medium text-slate-600">
             <a href="#nasil-calisir" className="hover:text-rose-500 transition-colors">Nasıl Çalışır?</a>
