@@ -37,14 +37,21 @@ export default function SuperAdminPage() {
   }
 
   async function togglePaymentStatus(id: string, currentStatus: boolean) {
+    // Önce UI'ı hızlıca güncelleyelim (Optimistic Update)
+    setWeddings(prevWeddings => 
+      prevWeddings.map(w => w.id === id ? { ...w, is_paid: !currentStatus } : w)
+    );
+
     const { error } = await supabase
       .from('weddings')
       .update({ is_paid: !currentStatus })
       .eq('id', id);
     
-    if (!error) {
-      fetchWeddings(); // Listeyi yenile
-    } else {
+    if (error) {
+      // Eğer hata olursa eski haline geri döndür
+      setWeddings(prevWeddings => 
+        prevWeddings.map(w => w.id === id ? { ...w, is_paid: currentStatus } : w)
+      );
       alert("Hata: " + error.message);
     }
   }
