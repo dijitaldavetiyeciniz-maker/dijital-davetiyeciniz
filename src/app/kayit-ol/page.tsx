@@ -57,6 +57,9 @@ export default function RegisterPage() {
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-slate-800 mb-2">Aramıza Katıl</h1>
           <p className="text-slate-500 text-sm">Ücretsiz hesabını oluştur ve davetiyeni tasarlamaya başla.</p>
+          <div className="text-[10px] text-slate-300 mt-2">
+            URL: {process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Yüklü' : 'EKSİK'} | KEY: {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? 'Yüklü' : 'EKSİK'}
+          </div>
         </div>
 
         {errorMsg && (
