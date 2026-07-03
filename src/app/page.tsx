@@ -17,9 +17,14 @@ export default function Home() {
             <a href="#etkinlikler" className="hover:text-rose-500 transition-colors">Etkinlikler</a>
             <a href="#demo" className="hover:text-rose-500 transition-colors">Örnek (Demo)</a>
           </div>
-          <Link href="/super-admin" className="text-sm font-bold bg-slate-900 text-white px-5 py-2.5 rounded-full hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200">
-            Yönetim Paneli
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/giris-yap" className="text-sm font-bold text-slate-600 hover:text-rose-500 transition-colors">
+              Giriş Yap
+            </Link>
+            <Link href="/kayit-ol" className="text-sm font-bold bg-slate-900 text-white px-5 py-2.5 rounded-full hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200">
+              Ücretsiz Başla
+            </Link>
+          </div>
         </div>
       </nav>
 

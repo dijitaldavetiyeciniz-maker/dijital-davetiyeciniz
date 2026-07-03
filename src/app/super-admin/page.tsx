@@ -6,6 +6,8 @@ import { Sparkles, Plus, ExternalLink, Settings } from 'lucide-react';
 export default function SuperAdminPage() {
   const [weddings, setWeddings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [adminPasswordInput, setAdminPasswordInput] = useState('');
 
   // Form State
   const [brideName, setBrideName] = useState('');
@@ -23,8 +25,10 @@ export default function SuperAdminPage() {
   const [customMessage, setCustomMessage] = useState('');
 
   useEffect(() => {
-    fetchWeddings();
-  }, []);
+    if (isAuthenticated) {
+      fetchWeddings();
+    }
+  }, [isAuthenticated]);
 
   async function fetchWeddings() {
     const { data, error } = await supabase.from('weddings').select('*').order('created_at', { ascending: false });
@@ -72,6 +76,38 @@ export default function SuperAdminPage() {
     } else {
       alert('Hata: ' + error.message);
     }
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-xl w-full max-w-md p-8 text-center border border-slate-100">
+          <div className="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6 text-white">
+            <Settings className="w-8 h-8" />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-800 mb-2">Süper Admin Girişi</h1>
+          <p className="text-slate-500 mb-8">Devam etmek için yönetici şifresini girin.</p>
+          
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            if (adminPasswordInput === 'admin123') setIsAuthenticated(true);
+            else alert('Hatalı şifre!');
+          }}>
+            <input 
+              type="password" 
+              value={adminPasswordInput}
+              onChange={e => setAdminPasswordInput(e.target.value)}
+              placeholder="Şifre"
+              className="w-full border p-3 rounded-xl mb-4 text-center text-lg tracking-widest"
+              autoFocus
+            />
+            <button className="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition-colors">
+              Giriş Yap
+            </button>
+          </form>
+        </div>
+      </div>
+    );
   }
 
   return (
