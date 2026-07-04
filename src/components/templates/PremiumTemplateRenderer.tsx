@@ -136,7 +136,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const dateObj = wedding.wedding_date ? new Date(wedding.wedding_date) : new Date();
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-  const eventTitle = wedding.event_type ? `${wedding.event_type} Töreni` : 'Düğün Töreni';
+  const eventTitle = wedding.event_type || 'Düğün Töreni';
 
   const primaryColor = wedding.primary_color || '#f43f5e';
   const textColor = wedding.text_color || (config.textColorMode === 'light' ? '#f8fafc' : '#1e293b');
