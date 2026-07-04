@@ -2,11 +2,10 @@
 import { useState } from 'react';
 import { 
   Sparkles, Calendar, MapPin, Navigation, 
-  Heart, Crown, Feather, Infinity, Leaf 
+  Heart, Crown, Feather, Infinity, Leaf, Camera, Loader2 
 } from 'lucide-react';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
-import FloatingActionBar from '../FloatingActionBar';
 import { isColorLight } from '@/lib/colorUtils';
 import { getBackgroundStyle } from '@/lib/backgrounds';
 
@@ -132,6 +131,7 @@ interface TemplateProps {
 export default function PremiumTemplateRenderer({ wedding, templateId }: TemplateProps) {
   const config = getTemplateConfig(templateId);
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const dateObj = wedding.wedding_date ? new Date(wedding.wedding_date) : new Date();
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -141,6 +141,41 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const primaryColor = wedding.primary_color || '#f43f5e';
   const textColor = wedding.text_color || (config.textColorMode === 'light' ? '#f8fafc' : '#1e293b');
   const textIsLight = isColorLight(textColor);
+
+  const handleGuestPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    setIsUploading(true);
+
+    const formData = new FormData();
+    formData.append('photo', file);
+    formData.append('wedding_id', wedding.id);
+
+    try {
+      const res = await fetch('/api/telegram/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert("Fotoğrafınız gelin ve damadın ortak albümüne başarıyla gönderildi! 📸❤️");
+      } else {
+        alert("Fotoğraf gönderilemedi: " + data.error);
+      }
+    } catch (err) {
+      alert("Yükleme sırasında hata oluştu.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleMapClick = () => {
+    if (wedding.google_maps_url) {
+      window.open(wedding.google_maps_url, '_blank');
+    } else {
+      alert("Harita konumu henüz eklenmedi.");
+    }
+  };
 
   // Dynamic Google Font
   const fontFamily = wedding.font_family || 'Montserrat';
@@ -334,20 +369,119 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     </div>
   );
 
-  const renderRsvpButton = () => (
-    <button 
-      onClick={() => setIsRsvpOpen(true)}
-      className="w-full px-8 py-3.5 text-white rounded-xl font-bold text-base shadow-lg hover:opacity-90 transition-all hover:-translate-y-0.5 active:translate-y-0 relative z-10 font-sans"
-      style={{ 
-        backgroundColor: primaryColor, 
-        boxShadow: config.textColorMode === 'light' 
-          ? `0 0 15px ${primaryColor}80` 
-          : `0 8px 20px -4px ${primaryColor}40` 
-      }}
-    >
-      LCV Formunu Doldur
-    </button>
-  );
+  const renderRsvpButton = () => {
+    return (
+      <div className="w-full mt-10 mb-6 flex flex-col items-center gap-6 relative z-10 font-sans">
+        {/* LÜTFEN KATILIM DURUMUNUZU BİLDİRİNİZ */}
+        <div 
+          className="px-6 py-2.5 rounded-full border text-[11px] font-bold tracking-[0.2em] uppercase max-w-sm text-center select-none"
+          style={{ 
+            borderColor: `${primaryColor}30`, 
+            color: textIsLight ? '#f3f4f6' : '#4b5563',
+            backgroundColor: textIsLight ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)'
+          }}
+        >
+          LÜTFEN KATILIM DURUMUNUZU BİLDİRİNİZ
+        </div>
+
+        {/* 3 Buttons Grid */}
+        <div className="flex justify-center items-start gap-8 md:gap-12 mt-2">
+          {/* Button 1: KONUM */}
+          <button 
+            onClick={handleMapClick}
+            className="flex flex-col items-center gap-2 group transition-transform active:scale-95"
+          >
+            <div 
+              className="w-16 h-16 rounded-full flex items-center justify-center border shadow-md bg-white hover:bg-slate-50 transition-colors"
+              style={{ borderColor: `${primaryColor}20`, color: primaryColor }}
+            >
+              <MapPin className="w-6 h-6" />
+            </div>
+            <span 
+              className="text-[10px] font-bold tracking-[0.15em] uppercase"
+              style={{ color: textIsLight ? '#d1d5db' : '#4b5563' }}
+            >
+              KONUM
+            </span>
+          </button>
+
+          {/* Button 2: LCV/KATILIM */}
+          <button 
+            onClick={() => setIsRsvpOpen(true)}
+            className="flex flex-col items-center gap-2 group transition-transform active:scale-95"
+          >
+            <div 
+              className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg text-white transition-opacity hover:opacity-90"
+              style={{ backgroundColor: primaryColor }}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <span 
+              className="text-[10px] font-bold tracking-[0.15em] uppercase animate-pulse"
+              style={{ color: textIsLight ? '#d1d5db' : '#4b5563' }}
+            >
+              LCV/KATILIM
+            </span>
+          </button>
+
+          {/* Button 3: FOTOĞRAF YÜKLE / HİKAYEMİZ */}
+          {telegramConfigured ? (
+            <div className="flex flex-col items-center">
+              <input 
+                type="file" 
+                accept="image/*" 
+                id="inline-photo-upload" 
+                className="hidden" 
+                onChange={handleGuestPhotoUpload} 
+                disabled={isUploading}
+              />
+              <label 
+                htmlFor="inline-photo-upload" 
+                className="flex flex-col items-center gap-2 group cursor-pointer transition-transform active:scale-95"
+              >
+                <div 
+                  className="w-16 h-16 rounded-full flex items-center justify-center border shadow-md bg-white hover:bg-slate-50 transition-colors"
+                  style={{ borderColor: `${primaryColor}20`, color: primaryColor }}
+                >
+                  {isUploading ? (
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                  ) : (
+                    <Camera className="w-6 h-6" />
+                  )}
+                </div>
+                <span 
+                  className="text-[10px] font-bold tracking-[0.15em] uppercase text-center max-w-[80px]"
+                  style={{ color: textIsLight ? '#d1d5db' : '#4b5563' }}
+                >
+                  FOTOĞRAF YÜKLE
+                </span>
+              </label>
+            </div>
+          ) : (
+            <button 
+              onClick={scrollToTop}
+              className="flex flex-col items-center gap-2 group transition-transform active:scale-95"
+            >
+              <div 
+                className="w-16 h-16 rounded-full flex items-center justify-center border shadow-md bg-white hover:bg-slate-50 transition-colors"
+                style={{ borderColor: `${primaryColor}20`, color: primaryColor }}
+              >
+                <Heart className="w-6 h-6 group-hover:fill-current" />
+              </div>
+              <span 
+                className="text-[10px] font-bold tracking-[0.15em] uppercase"
+                style={{ color: textIsLight ? '#d1d5db' : '#4b5563' }}
+              >
+                HİKAYEMİZ
+              </span>
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   // 1. LAYOUT: CLASSIC CARD (Ortalanmış Kart)
   const renderClassicCardLayout = () => (
@@ -527,18 +661,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
       {/* Render selected Layout */}
       {layoutComponent}
 
-      {/* Action Bars and Modals */}
-      {!isRsvpOpen && (
-        <FloatingActionBar 
-          onRsvpClick={() => setIsRsvpOpen(true)} 
-          googleMapsUrl={wedding.google_maps_url} 
-          primaryColor={primaryColor} 
-          styleType={config.textColorMode === 'light' ? 'neon' : 'orbs'}
-          weddingId={wedding.id}
-          telegramConfigured={!!wedding.telegram_bot_token && !!wedding.telegram_chat_id}
-        />
-      )}
-
+      {/* Modals */}
       <RsvpModal 
         weddingId={wedding.id} 
         isOpen={isRsvpOpen} 
