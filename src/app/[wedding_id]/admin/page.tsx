@@ -248,7 +248,7 @@ export default function CoupleAdminPage({
   const totalGuests = rsvps.filter(r => r.is_attending).reduce((sum, curr) => sum + curr.guest_count, 0);
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="min-h-screen bg-slate-50 p-8 text-slate-800">
       <div className="max-w-4xl mx-auto">
         <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -429,24 +429,29 @@ export default function CoupleAdminPage({
                   <div>
                     <label className="block text-sm font-medium mb-2">Şablon Düzeni</label>
                     <select value={templateId} onChange={e => setTemplateId(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50">
-                      <option value="template1">Şablon 1 (Cam Efekti)</option>
-                      <option value="template2">Şablon 2 (Karanlık Neon)</option>
-                      <option value="template3">Şablon 3 (Doğal / Kağıt)</option>
-                      <option value="template4">Şablon 4 (Lüks Çerçeve)</option>
-                      <option value="template5">Şablon 5 (Minimalist)</option>
-                      <option value="template6">Şablon 6 (Romantik Çiçekli)</option>
-                      <option value="template7">Şablon 7 (Vintage Polaroid)</option>
-                      <option value="template8">Şablon 8 (Altın Varaklı Lüks)</option>
-                      <option value="template9">Şablon 9 (Modern Geometrik)</option>
-                      <option value="template10">Şablon 10 (Klasik Mektup)</option>
+                      {Array.from({ length: 50 }, (_, i) => {
+                        const num = i + 1;
+                        let label = `Şablon ${num}`;
+                        if (num <= 8) label += ' (Royal Gold - Lüks)';
+                        else if (num <= 16) label += ' (Watercolor - Çiçekli)';
+                        else if (num <= 24) label += ' (Minimalist - Modern)';
+                        else if (num <= 32) label += ' (Galactic - Neon)';
+                        else if (num <= 40) label += ' (Vintage - Polaroid)';
+                        else label += ' (Art Deco - Geometrik)';
+                        return (
+                          <option key={num} value={`template${num}`}>
+                            {label}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Yazı Tipi (Font)</label>
                     <select value={fontFamily} onChange={e => setFontFamily(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50">
-                      <option value="sans">Modern (Sans-serif)</option>
-                      <option value="serif">Zarif (Serif - Tırnaklı)</option>
-                      <option value="mono">Farklı (Monospace)</option>
+                      <option value="sans">Sade & Modern (Montserrat)</option>
+                      <option value="serif">Zarif & Şık (Cormorant Garamond)</option>
+                      <option value="mono">Romantik Kaligrafi (Great Vibes)</option>
                     </select>
                   </div>
                 </div>

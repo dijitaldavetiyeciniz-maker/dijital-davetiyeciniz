@@ -1,6 +1,6 @@
 export const weddingQuotes = [
   "Birbirimiz için yaratıldığımızı anladığımız o ilk andan beri, hayatımızın geri kalanını birlikte geçirmek için sabırsızlanıyoruz. Bu özel günümüzde sizleri de aramızda görmekten mutluluk duyarız.",
-  "Biz, hayatı birlikte paylaşmaya, aynı yolda omuz omuza yürümeye ve sonsuz bir sevgiyle birbirimize bağlanmaya evet diyoruz. Gelin bu en güzel "Evet"imize şahitlik edin.",
+  "Biz, hayatı birlikte paylaşmaya, aynı yolda omuz omuza yürümeye ve sonsuz bir sevgiyle birbirimize bağlanmaya evet diyoruz. Gelin bu en güzel 'Evet'imize şahitlik edin.",
   "İyi günde, kötü günde, hastalıkta ve sağlıkta birbirimize destek olmaya söz verdiğimiz bu anlamlı günde, sevdiklerimizle birlikte olmak en büyük dileğimiz.",
   "Gözlerimizin ilk karşılaştığı o an, kalbimizde başlayan bu eşsiz hikayenin sonsuzluğa uzanacağı gündeyiz. En mutlu günümüzü birlikte kutlayalım.",
   "Hayatımızın en önemli imzasını atarken, sevgiyle ördüğümüz bu yuvada ilk adımlarımızı atarken siz kıymetli dostlarımızı da yanımızda istiyoruz.",

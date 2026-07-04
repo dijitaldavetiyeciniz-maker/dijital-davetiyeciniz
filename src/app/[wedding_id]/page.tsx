@@ -1,16 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import Template1 from '@/components/templates/Template1';
-import Template2 from '@/components/templates/Template2';
-import Template3 from '@/components/templates/Template3';
-import Template4 from '@/components/templates/Template4';
-import Template5 from '@/components/templates/Template5';
-import Template6 from '@/components/templates/Template6';
-import Template7 from '@/components/templates/Template7';
-import Template8 from '@/components/templates/Template8';
-import Template9 from '@/components/templates/Template9';
-import Template10 from '@/components/templates/Template10';
+import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
 import Envelope from '@/components/Envelope';
 import BubblesEffect from '@/components/effects/BubblesEffect';
 import SparklesEffect from '@/components/effects/SparklesEffect';
@@ -56,20 +47,12 @@ export default async function WeddingPage({
   }
 
   // Veritabanından gelen template_id değerine göre uygun şablonu render et.
-  let templateComponent;
-  switch (wedding.template_id) {
-    case 'template1': templateComponent = <Template1 wedding={wedding} />; break;
-    case 'template2': templateComponent = <Template2 wedding={wedding} />; break;
-    case 'template3': templateComponent = <Template3 wedding={wedding} />; break;
-    case 'template4': templateComponent = <Template4 wedding={wedding} />; break;
-    case 'template5': templateComponent = <Template5 wedding={wedding} />; break;
-    case 'template6': templateComponent = <Template6 wedding={wedding} />; break;
-    case 'template7': templateComponent = <Template7 wedding={wedding} />; break;
-    case 'template8': templateComponent = <Template8 wedding={wedding} />; break;
-    case 'template9': templateComponent = <Template9 wedding={wedding} />; break;
-    case 'template10': templateComponent = <Template10 wedding={wedding} />; break;
-    default: templateComponent = <Template1 wedding={wedding} />;
-  }
+  const templateComponent = (
+    <PremiumTemplateRenderer 
+      wedding={wedding} 
+      templateId={wedding.template_id || 'template1'} 
+    />
+  );
 
   // Zarf kullanımı kontrolü (use_envelope sütunu true ise veya null/undefined ise varsayılan true)
   const useEnvelope = wedding.use_envelope !== false;
