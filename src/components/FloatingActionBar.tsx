@@ -67,7 +67,7 @@ export default function FloatingActionBar({
   // 1. STYLE: ORBS (Floating circular buttons at bottom center with labels)
   if (styleType === 'orbs') {
     return (
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] flex items-end gap-5 bg-white/95 backdrop-blur-md px-6 py-3.5 rounded-[2rem] shadow-2xl border border-slate-200/50">
+      <div className="fixed bottom-6 left-0 right-0 mx-auto w-fit z-[90] flex items-end gap-5 bg-white/95 backdrop-blur-md px-6 py-3.5 rounded-[2rem] shadow-2xl border border-slate-200/50">
         <button onClick={scrollToTop} className="flex flex-col items-center gap-1.5 group hover:scale-105 active:scale-95 transition-all">
           <div className="w-12 h-12 rounded-full shadow-md flex items-center justify-center bg-slate-50 hover:bg-slate-100 transition-colors" style={{ color: primaryColor }}>
             <Heart className="w-5 h-5 group-hover:fill-current" />
@@ -118,7 +118,7 @@ export default function FloatingActionBar({
   // 2. STYLE: NEON (Black/Neon layout at bottom center with neon glow labels)
   if (styleType === 'neon') {
     return (
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] flex items-end gap-5 bg-black/85 backdrop-blur-md px-6 py-3.5 rounded-[2rem] shadow-2xl border border-white/10" style={{ boxShadow: `0 10px 30px ${primaryColor}15` }}>
+      <div className="fixed bottom-6 left-0 right-0 mx-auto w-fit z-[90] flex items-end gap-5 bg-black/85 backdrop-blur-md px-6 py-3.5 rounded-[2rem] shadow-2xl border border-white/10" style={{ boxShadow: `0 10px 30px ${primaryColor}15` }}>
         <button onClick={scrollToTop} className="flex flex-col items-center gap-1.5 group hover:scale-105 active:scale-95 transition-all">
           <div className="w-12 h-12 rounded-full border-2 bg-black/50 backdrop-blur flex items-center justify-center transition-all" style={{ borderColor: primaryColor, color: primaryColor, boxShadow: `0 0 10px ${primaryColor}30` }}>
             <Heart className="w-5 h-5 group-hover:fill-current" />
@@ -213,7 +213,7 @@ export default function FloatingActionBar({
 
   // 4. STYLE: PILL (Default Pill container)
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] w-[90%] max-w-sm">
+    <div className="fixed bottom-6 left-0 right-0 mx-auto z-[90] w-[90%] max-w-sm">
       <div className="bg-white/95 backdrop-blur-md shadow-2xl rounded-full border border-slate-200/50 flex items-center justify-between px-6 py-3">
         <button onClick={scrollToTop} className="flex flex-col items-center gap-1 group transition-transform hover:scale-105 active:scale-95">
           <div className="w-10 h-10 rounded-full flex items-center justify-center transition-colors" style={{ backgroundColor: `${primaryColor}15`, color: primaryColor }}>
