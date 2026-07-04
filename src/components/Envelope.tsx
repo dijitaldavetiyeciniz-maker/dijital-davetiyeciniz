@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Heart, Crown, Leaf } from 'lucide-react';
+import { getBackgroundStyle } from '@/lib/backgrounds';
 
 interface EnvelopeProps {
   children: React.ReactNode;
@@ -23,7 +24,7 @@ export default function Envelope({
   groomName, 
   primaryColor = '#9f1239', 
   envelopeColor = '#e6d5c3',
-  envelopeBgColor = 'slate',
+  envelopeBgColor = 'solid-ivory',
   envelopeFlapType = 'triangle',
   sealType = 'sparkles',
   sealColor,
@@ -33,20 +34,34 @@ export default function Envelope({
   const [isOpened, setIsOpened] = useState(false);
   const [showContent, setShowContent] = useState(false);
   const [ribbonUntied, setRibbonUntied] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+  const [isShattered, setIsShattered] = useState(false);
 
   const handleOpen = () => {
     if (entranceType === 'ribbon' && !ribbonUntied) {
       setRibbonUntied(true);
-      // Untie ribbon first, then open envelope 0.6 seconds later
       setTimeout(() => {
         setIsOpened(true);
         setTimeout(() => {
           setShowContent(true);
         }, 1500);
       }, 600);
+    } else if (entranceType === 'wax-seal-press') {
+      setIsPressed(true);
+      setTimeout(() => {
+        setIsOpened(true);
+        setTimeout(() => {
+          setShowContent(true);
+        }, 1200);
+      }, 1000);
+    } else if (entranceType === 'glass-shatter') {
+      setIsShattered(true);
+      setTimeout(() => {
+        setShowContent(true);
+      }, 800);
     } else {
       setIsOpened(true);
-      const delay = entranceType === 'card' ? 800 : entranceType === 'heart-fade' ? 1000 : 1500;
+      const delay = entranceType === 'card' || entranceType === 'flower-bloom' ? 800 : entranceType === 'heart-fade' ? 1000 : 1500;
       setTimeout(() => {
         setShowContent(true);
       }, delay);
@@ -65,49 +80,8 @@ export default function Envelope({
   const groomInitial = groomName ? groomName.trim().charAt(0).toUpperCase() : 'D';
   const monogramText = `${brideInitial} & ${groomInitial}`;
 
-  // Envelope/Viewport background rendering style
-  let bgClass = 'bg-slate-900';
-  let bgStyle: React.CSSProperties = {};
-  
-  if (envelopeBgColor.startsWith('#')) {
-    bgStyle = { backgroundColor: envelopeBgColor };
-  } else {
-    switch (envelopeBgColor) {
-      case 'wood':
-        bgStyle = {
-          backgroundColor: '#5c3e21',
-          backgroundImage: 'radial-gradient(circle, #6f4c2c 0%, #3d2510 100%)',
-          boxShadow: 'inset 0 0 100px rgba(0,0,0,0.6)'
-        };
-        break;
-      case 'linen':
-        bgStyle = {
-          backgroundColor: '#eae6df',
-          backgroundImage: 'radial-gradient(rgba(0,0,0,0.03) 1px, transparent 0), radial-gradient(rgba(0,0,0,0.03) 1px, transparent 0)',
-          backgroundSize: '12px 12px',
-          backgroundPosition: '0 0, 6px 6px',
-          boxShadow: 'inset 0 0 80px rgba(0,0,0,0.15)'
-        };
-        break;
-      case 'marble':
-        bgStyle = {
-          backgroundColor: '#fafafc',
-          backgroundImage: 'radial-gradient(circle at 0% 0%, rgba(0,0,0,0.02) 0%, transparent 70%), radial-gradient(circle at 100% 100%, rgba(212,175,55,0.04) 0%, transparent 60%)',
-          boxShadow: 'inset 0 0 100px rgba(0,0,0,0.05)'
-        };
-        break;
-      case 'concrete':
-        bgStyle = {
-          backgroundColor: '#8e9099',
-          backgroundImage: 'radial-gradient(circle, #a1a3ac 0%, #6e7077 100%)',
-          boxShadow: 'inset 0 0 100px rgba(0,0,0,0.4)'
-        };
-        break;
-      default:
-        bgStyle = { backgroundColor: '#0f172a' };
-        break;
-    }
-  }
+  // Get shared background styles from helper
+  const bgStyle = getBackgroundStyle(envelopeBgColor);
 
   // Wax seal rendering icon/component
   const currentSealColor = sealColor || primaryColor;
@@ -144,27 +118,80 @@ export default function Envelope({
     let flapStyle: React.CSSProperties = { backgroundColor: envelopeColor };
     let flapClass = 'absolute top-0 left-0 right-0 origin-top z-20 drop-shadow-xl';
 
-    if (envelopeFlapType === 'rounded') {
-      flapStyle = { 
-        ...flapStyle, 
-        height: '55%', 
-        borderRadius: '0 0 180px 180px / 0 0 100px 100px', 
-        border: '1px solid rgba(255,255,255,0.1)'
-      };
-    } else if (envelopeFlapType === 'square') {
-      flapStyle = { 
-        ...flapStyle, 
-        height: '45%', 
-        borderRadius: '0 0 8px 8px', 
-        border: '1px solid rgba(255,255,255,0.1)'
-      };
-    } else {
-      flapStyle = { 
-        ...flapStyle, 
-        height: '100%', 
-        clipPath: 'polygon(0 0, 50% 55%, 100% 0)',
-        borderTop: '1px solid rgba(255,255,255,0.5)'
-      };
+    // 9 envelope flap shapes:
+    switch (envelopeFlapType) {
+      case 'rounded':
+        flapStyle = { 
+          ...flapStyle, 
+          height: '55%', 
+          borderRadius: '0 0 180px 180px / 0 0 100px 100px', 
+          borderBottom: '1px solid rgba(255,255,255,0.1)'
+        };
+        break;
+      case 'square':
+        flapStyle = { 
+          ...flapStyle, 
+          height: '45%', 
+          borderRadius: '0 0 8px 8px', 
+          borderBottom: '1px solid rgba(255,255,255,0.1)'
+        };
+        break;
+      case 'trapezoid':
+        flapStyle = { 
+          ...flapStyle, 
+          height: '45%', 
+          clipPath: 'polygon(0 0, 100% 0, 80% 100%, 20% 100%)',
+          borderBottom: '1px solid rgba(255,255,255,0.1)'
+        };
+        break;
+      case 'asymmetric':
+        flapStyle = { 
+          ...flapStyle, 
+          height: '60%', 
+          clipPath: 'polygon(0 0, 100% 0, 75% 100%)',
+          borderBottom: '1px solid rgba(255,255,255,0.1)'
+        };
+        break;
+      case 'wavy':
+        flapStyle = { 
+          ...flapStyle, 
+          height: '50%', 
+          clipPath: 'polygon(0 0, 100% 0, 100% 70%, 85% 100%, 70% 70%, 50% 100%, 30% 70%, 15% 100%, 0 70%)',
+          borderBottom: '1px solid rgba(255,255,255,0.1)'
+        };
+        break;
+      case 'pointed-oval':
+        flapStyle = { 
+          ...flapStyle, 
+          height: '58%', 
+          borderRadius: '0 0 50% 50% / 0 0 100% 100%',
+          borderBottom: '1px solid rgba(255,255,255,0.1)'
+        };
+        break;
+      case 'double-curve':
+        flapStyle = { 
+          ...flapStyle, 
+          height: '50%', 
+          clipPath: 'polygon(0 0, 100% 0, 100% 50%, 80% 90%, 50% 60%, 20% 90%, 0 50%)',
+          borderBottom: '1px solid rgba(255,255,255,0.1)'
+        };
+        break;
+      case 'heart':
+        flapStyle = { 
+          ...flapStyle, 
+          height: '55%', 
+          clipPath: 'polygon(0 0, 100% 0, 100% 30%, 75% 70%, 50% 100%, 25% 70%, 0 30%)',
+          borderBottom: '1px solid rgba(255,255,255,0.1)'
+        };
+        break;
+      default: // triangle
+        flapStyle = { 
+          ...flapStyle, 
+          height: '100%', 
+          clipPath: 'polygon(0 0, 50% 55%, 100% 0)',
+          borderTop: '1px solid rgba(255,255,255,0.5)'
+        };
+        break;
     }
 
     return (
@@ -197,17 +224,15 @@ export default function Envelope({
 
         <motion.div className={flapClass} style={flapStyle} initial={{ rotateX: 0 }} animate={isOpened ? { rotateX: 180 } : { rotateX: 0 }} transition={{ duration: 0.8, ease: "easeInOut" }} />
 
-        {/* Kurdele (Ribbon) Görünümü */}
+        {/* Ribbon layer */}
         {hasRibbon && (
           <>
-            {/* Sol Kurdele Bağı */}
             <motion.div 
               className="absolute left-0 top-1/2 -translate-y-1/2 h-8 z-25 pointer-events-none" 
               style={{ width: '50%', backgroundColor: currentSealColor, boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}
               animate={ribbonUntied ? { x: -200, opacity: 0 } : { x: 0, opacity: 1 }}
               transition={{ duration: 0.6, ease: "easeIn" }}
             />
-            {/* Sağ Kurdele Bağı */}
             <motion.div 
               className="absolute right-0 top-1/2 -translate-y-1/2 h-8 z-25 pointer-events-none" 
               style={{ width: '50%', backgroundColor: currentSealColor, boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}
@@ -237,7 +262,7 @@ export default function Envelope({
     );
   };
 
-  // 2. ANIMATION: BOX (Lüks Kutu)
+  // 2. ANIMATION: BOX
   const renderBox = () => {
     return (
       <motion.div 
@@ -285,11 +310,10 @@ export default function Envelope({
     );
   };
 
-  // 3. ANIMATION: CURTAIN (İpek Sahne Perdesi)
+  // 3. ANIMATION: CURTAIN
   const renderCurtain = () => {
     return (
       <div className="absolute inset-0 flex overflow-hidden cursor-pointer" onClick={!isOpened ? handleOpen : undefined}>
-        {/* Sol Perde */}
         <motion.div 
           className="w-1/2 h-full bg-[#800020] relative z-20 shadow-2xl flex items-center justify-end"
           animate={isOpened ? { x: '-100%' } : { x: 0 }}
@@ -302,7 +326,6 @@ export default function Envelope({
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px)] bg-[size:24px_100%] opacity-40 pointer-events-none" />
         </motion.div>
 
-        {/* Sağ Perde */}
         <motion.div 
           className="w-1/2 h-full bg-[#800020] relative z-20 shadow-2xl flex items-center justify-start"
           animate={isOpened ? { x: '100%' } : { x: 0 }}
@@ -315,7 +338,6 @@ export default function Envelope({
           <div className="absolute inset-0 bg-[linear-gradient(to_left,rgba(0,0,0,0.15)_1px,transparent_1px)] bg-[size:24px_100%] opacity-40 pointer-events-none" />
         </motion.div>
 
-        {/* Lüks Mühür Plakası */}
         <AnimatePresence>
           {!isOpened && (
             <motion.div 
@@ -331,7 +353,6 @@ export default function Envelope({
                   boxShadow: 'inset 0 0 15px rgba(0,0,0,0.6), 0 10px 30px rgba(0,0,0,0.5)'
                 }}
               >
-                {/* Asılı duran altın tassel/ip püskülü */}
                 <div className="absolute -bottom-8 w-2 h-8 bg-amber-500 rounded-b-md shadow-md" />
                 <span className="text-white text-xl md:text-2xl font-bold tracking-widest mb-1" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{monogramText}</span>
                 <span className="text-[7px] text-[#dfc384] tracking-[0.2em] uppercase font-bold mt-1">Perdeyi Aç</span>
@@ -343,7 +364,7 @@ export default function Envelope({
     );
   };
 
-  // 4. ANIMATION: GATE (Saray Kapısı)
+  // 4. ANIMATION: GATE
   const renderGate = () => {
     return (
       <div 
@@ -408,7 +429,7 @@ export default function Envelope({
     );
   };
 
-  // 5. ANIMATION: CARD (Sade Kart Girişi)
+  // 5. ANIMATION: CARD
   const renderCard = () => {
     return (
       <motion.div 
@@ -448,11 +469,10 @@ export default function Envelope({
     );
   };
 
-  // 6. ANIMATION: HEART-FADE (Büyük Kalp Patlaması)
+  // 6. ANIMATION: HEART-FADE
   const renderHeartFade = () => {
     return (
       <div className="absolute inset-0 flex items-center justify-center cursor-pointer overflow-hidden z-50 bg-[#0c0a09]" onClick={!isOpened ? handleOpen : undefined}>
-        {/* Particle bursts background when opened */}
         <AnimatePresence>
           {!isOpened ? (
             <motion.div 
@@ -492,6 +512,111 @@ export default function Envelope({
     );
   };
 
+  // 7. ANIMATION: FLOWER-BLOOM (Çiçek Açma)
+  const renderFlowerBloom = () => {
+    return (
+      <div 
+        className="absolute inset-0 flex items-center justify-center cursor-pointer overflow-hidden z-50 bg-[#faf8f5]"
+        onClick={!isOpened ? handleOpen : undefined}
+      >
+        <AnimatePresence>
+          {!isOpened && (
+            <motion.div 
+              className="text-center p-8 max-w-sm border-2 border-double border-emerald-800/20 rounded-full w-80 h-80 flex flex-col items-center justify-center relative bg-white shadow-xl"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 1.2, opacity: 0, rotate: 10, filter: 'blur(8px)' }}
+              transition={{ duration: 0.8 }}
+            >
+              {/* Watercolor flower outline SVGs */}
+              <div className="absolute top-2 w-full text-center text-xl opacity-60">🌸 🌺 🌸</div>
+              <div className="absolute bottom-2 w-full text-center text-xl opacity-60">🌸 🌺 🌸</div>
+              
+              <span className="text-emerald-800 font-serif text-[10px] tracking-[0.2em] uppercase mb-4">Gül Bahçesi Davet</span>
+              <h2 className="text-2xl text-slate-800 font-normal my-2" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{monogramText}</h2>
+              <div className="w-12 h-px bg-emerald-700/30 my-3"></div>
+              <p className="text-[8px] text-slate-400 tracking-widest uppercase font-bold">Davetiyeyi Açmak İçin Dokunun</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
+  // 8. ANIMATION: WAX-SEAL-PRESS (Mühür Basımı)
+  const renderWaxSealPress = () => {
+    return (
+      <div 
+        className="absolute inset-0 flex items-center justify-center cursor-pointer overflow-hidden z-50 bg-[#151210]"
+        onClick={!isOpened ? handleOpen : undefined}
+      >
+        {/* Sliding background container */}
+        <motion.div 
+          className="w-full h-full flex flex-col items-center justify-center text-center relative"
+          animate={isOpened ? { y: '-100%', opacity: 0 } : { y: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: [0.77, 0, 0.175, 1] }}
+        >
+          {/* Ornate Gold Border */}
+          <div className="absolute inset-10 border border-double border-[#dfc384]/40 rounded-xl" />
+          
+          <div className="max-w-sm px-6">
+            <span className="text-[10px] text-[#dfc384] tracking-[0.3em] uppercase block mb-4">Kraliyet Mektubu</span>
+            <h2 className="text-3xl text-white tracking-wide" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{brideInitial} & {groomInitial}</h2>
+            <div className="w-16 h-px bg-[#dfc384]/35 mx-auto my-6" />
+            <p className="text-xs text-white/50 mb-10 italic">Düğün Töreni Resmi Davetiyesi</p>
+          </div>
+
+          {/* Stamping Wax Seal */}
+          <motion.div 
+            className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 flex items-center justify-center shadow-2xl relative"
+            style={{ 
+              backgroundColor: currentSealColor,
+              borderColor: '#dfc384',
+              boxShadow: 'inset 0 0 20px rgba(0,0,0,0.6)'
+            }}
+            animate={isPressed ? { scale: [1, 0.85, 1.05, 1], rotate: [0, 5, -5, 0] } : { scale: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            {sealIcon}
+            <div className="absolute -bottom-6 w-32 text-[#dfc384] text-[8px] font-bold tracking-widest uppercase text-center">
+              {isPressed ? 'Mühürleniyor...' : 'Mühürle ve Aç'}
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
+    );
+  };
+
+  // 9. ANIMATION: GLASS-SHATTER (Buzlu Cam Kırılması)
+  const renderGlassShatter = () => {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center cursor-pointer overflow-hidden z-50 bg-slate-900/50">
+        <AnimatePresence>
+          {!isShattered ? (
+            <motion.div 
+              className="absolute inset-0 backdrop-blur-2xl bg-white/10 flex flex-col items-center justify-center p-8 text-center"
+              exit={{ opacity: 0, scale: 1.1, filter: 'blur(15px)' }}
+              transition={{ duration: 0.7 }}
+              onClick={handleOpen}
+            >
+              <div className="absolute inset-8 border border-white/20 rounded-2xl" />
+              <div className="z-10 max-w-sm">
+                <Sparkles className="w-10 h-10 text-white/80 mx-auto mb-6 animate-pulse" />
+                <h1 className="text-3xl text-white font-light tracking-wider" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{brideName} & {groomName}</h1>
+                <div className="w-12 h-px bg-white/20 mx-auto my-6" />
+                <p className="text-[9px] text-white/60 tracking-[0.25em] uppercase font-bold">Ekranı Kırmak İçin Dokunun</p>
+              </div>
+            </motion.div>
+          ) : (
+            <div className="absolute inset-0 pointer-events-none flex items-center justify-center bg-transparent">
+              <Sparkles className="w-16 h-16 text-[#dfc384] animate-ping" />
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
   // Switch animation components based on entranceType
   let entranceComponent = renderEnvelope();
   
@@ -514,12 +639,22 @@ export default function Envelope({
     case 'heart-fade':
       entranceComponent = renderHeartFade();
       break;
+    case 'flower-bloom':
+      entranceComponent = renderFlowerBloom();
+      break;
+    case 'wax-seal-press':
+      entranceComponent = renderWaxSealPress();
+      break;
+    case 'glass-shatter':
+      entranceComponent = renderGlassShatter();
+      break;
   }
 
   // Viewport background wrapper
   const renderBackground = () => {
-    // Curtain, Gate and Heart-fade are full-screen by default
-    if (entranceType === 'curtain' || entranceType === 'gate' || entranceType === 'heart-fade') {
+    // Fullscreen backdrops
+    const fsAnimations = ['curtain', 'gate', 'heart-fade', 'flower-bloom', 'wax-seal-press', 'glass-shatter'];
+    if (fsAnimations.includes(entranceType)) {
       return (
         <>
           <link href={fontUrl} rel="stylesheet" />
@@ -529,7 +664,7 @@ export default function Envelope({
     }
 
     return (
-      <div className={`fixed inset-0 flex items-center justify-center overflow-hidden z-50 ${bgClass}`} style={bgStyle}>
+      <div className="fixed inset-0 flex items-center justify-center overflow-hidden z-50" style={bgStyle}>
         <link href={fontUrl} rel="stylesheet" />
         <AnimatePresence>
           {!showContent && entranceComponent}

@@ -595,14 +595,72 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
+                {/* Birleşik Arka Plan (Zemin Tasarımı) */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Arka Plan (Zemin Tasarımı)</label>
+                  <select value={envelopeBgColor} onChange={e => setEnvelopeBgColor(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50 text-sm">
+                    <optgroup label="Mermer Desenler">
+                      <option value="marble-white">Beyaz Altın Damarlı Mermer</option>
+                      <option value="marble-black">Siyah Nero Marquina Mermer</option>
+                      <option value="marble-green">Zümrüt Yeşil Orman Mermer</option>
+                      <option value="marble-rose">Pembe Oniks Saray Mermeri</option>
+                    </optgroup>
+                    <optgroup label="Kumaş & Dokular">
+                      <option value="linen-cream">Krem Rengi Doğal Keten</option>
+                      <option value="linen-sage">Adaçayı Yeşili Premium Keten</option>
+                      <option value="linen-rose">Gül Kurusu Dokulu Keten</option>
+                      <option value="velvet-navy">Gece Mavisi Lüks Kadife</option>
+                      <option value="velvet-burgundy">Bordo Lüks Saray Kadifesi</option>
+                      <option value="silk-ivory">Fildişi İpek Parıltısı</option>
+                    </optgroup>
+                    <optgroup label="Sanatsal Kağıtlar">
+                      <option value="paper-kraft">Doğal Kraft Ambalaj Kağıdı</option>
+                      <option value="paper-parchment">Eskitilmiş Vintage Parşömen</option>
+                      <option value="paper-cotton">El Yapımı Dokulu Pamuk Kağıt</option>
+                      <option value="paper-pressed">Yaprak Baskılı Özel Davet Kağıdı</option>
+                    </optgroup>
+                    <optgroup label="Taş & Ahşap">
+                      <option value="terrazzo-beige">İtalyan Mozaik (Terrazzo) Krem</option>
+                      <option value="concrete-grey">Endüstriyel Ham Gri Beton</option>
+                      <option value="concrete-dark">Antrasit Koyu Beton zemin</option>
+                      <option value="wood-rustic">Ahşap Masa (Rustik)</option>
+                      <option value="wood-walnut">Ceviz Ağacı Masa (Koyu)</option>
+                      <option value="wood-oak">Meşe Masa (Doğal)</option>
+                    </optgroup>
+                    <optgroup label="Pastel Renkler">
+                      <option value="solid-champagne">Şampanya Pastel</option>
+                      <option value="solid-sage">Adaçayı Pastel</option>
+                      <option value="solid-dustyrose">Gül Kurusu Pastel</option>
+                      <option value="solid-terracotta">Kiremit Terracotta Pastel</option>
+                      <option value="solid-midnight">Gece Mavisi Pastel</option>
+                      <option value="solid-darkslate">Antrasit Koyu</option>
+                      <option value="solid-ivory">Fildişi Sade</option>
+                      <option value="solid-blush">Narin Pembe Pastel</option>
+                      <option value="solid-mint">Nane Yeşili Pastel</option>
+                      <option value="solid-lavender">Zarif Lavanta Pastel</option>
+                      <option value="solid-gold">Mat Klasik Altın</option>
+                      <option value="solid-crimson">Koyu Kan Kırmızı</option>
+                      <option value="solid-teal">Derin Okyanus Yeşili</option>
+                      <option value="solid-plum">Koyu Mürdüm / Erik</option>
+                      <option value="solid-sand">Çöl Kumu Pastel</option>
+                    </optgroup>
+                  </select>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium mb-2">Arkaplan Animasyonu</label>
                   <select value={effectType} onChange={e => setEffectType(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50">
                     <option value="">Yok (Sade)</option>
-                    <option value="bubbles">Uçan Baloncuklar</option>
-                    <option value="sparkles">Altın/Gümüş Işıltılar</option>
-                    <option value="hearts">Uçan Kalpler</option>
-                    <option value="snow">Kar Taneleri</option>
+                    <option value="sakura">🌸 Uçan Kiraz Çiçekleri (Sakura)</option>
+                    <option value="leaves">🍁 Dökülen Sonbahar Yaprakları</option>
+                    <option value="stars">✨ Parlayan Gece Yıldızları</option>
+                    <option value="fireflies">💡 Işıldayan Ateş Böcekleri</option>
+                    <option value="rain">🌧️ Romantik Yağmur Damlaları</option>
+                    <option value="confetti">🎉 Altın Konfeti Yağmuru</option>
+                    <option value="bubbles">🫧 Uçan Baloncuklar</option>
+                    <option value="sparkles">✨ Altın/Gümüş Işıltılar</option>
+                    <option value="hearts">❤️ Uçan Kalpler</option>
+                    <option value="snow">❄️ Kar Taneleri</option>
                   </select>
                   <p className="text-xs text-slate-400 mt-1">Sitenin en arkasında sürekli hareket eden zarif animasyonlar.</p>
                 </div>
@@ -638,6 +696,9 @@ export default function CoupleAdminPage({
                           <option value="gate">🏰 Saray / Bahçe Kapısı</option>
                           <option value="card">🎴 Sade Tebrik Kartı (Süzülme)</option>
                           <option value="heart-fade">❤️ Büyük Kalp Patlaması</option>
+                          <option value="flower-bloom">🌸 Çiçek Bahçesi (Açılış)</option>
+                          <option value="wax-seal-press">🏷️ Kraliyet Mühür Basımı</option>
+                          <option value="glass-shatter">💎 Elmas Cam Kırılması</option>
                         </select>
                       </div>
 
@@ -651,37 +712,19 @@ export default function CoupleAdminPage({
                         </div>
                       </div>
 
-                      {/* Zarf Arkası Arkaplan */}
-                      <div>
-                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf Arkası Zemin (Arkaplan)</label>
-                        <select value={envelopeBgColor} onChange={e => setEnvelopeBgColor(e.target.value)} className="w-full border p-2 rounded-lg bg-white mb-2 text-sm">
-                          <option value="slate">Sade Koyu Gri (Slate)</option>
-                          <option value="wood">Doğal Ahşap Masası</option>
-                          <option value="linen">Minimalist Keten Kumaş</option>
-                          <option value="marble">Lüks Beyaz Mermer</option>
-                          <option value="concrete">Modern Gri Beton</option>
-                          <option value="custom">Özel Renk Seçimi...</option>
-                        </select>
-                        {(envelopeBgColor === 'custom' || envelopeBgColor.startsWith('#')) && (
-                          <div className="flex items-center gap-4 mt-2">
-                            <input 
-                              type="color" 
-                              value={envelopeBgColor.startsWith('#') ? envelopeBgColor : '#0f172a'} 
-                              onChange={e => setEnvelopeBgColor(e.target.value)} 
-                              className="w-10 h-10 rounded cursor-pointer" 
-                            />
-                            <span className="text-slate-500 font-mono text-xs">{envelopeBgColor.startsWith('#') ? envelopeBgColor : '#0f172a'}</span>
-                          </div>
-                        )}
-                      </div>
-
                       {/* Kapak Şekli */}
                       <div>
                         <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf Kapak Şekli</label>
                         <select value={envelopeFlapType} onChange={e => setEnvelopeFlapType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
-                          <option value="triangle">Klasik Üçgen Kapak</option>
-                          <option value="rounded">Modern Yuvarlak (Curved) Kapak</option>
-                          <option value="square">Modern Düz Kesim Kapak</option>
+                          <option value="triangle">📐 Klasik Üçgen Kapak</option>
+                          <option value="rounded">🟢 Modern Yuvarlak (Curved) Kapak</option>
+                          <option value="square">➖ Modern Düz Kesim Kapak</option>
+                          <option value="trapezoid">⬡ Yamuk Kesim Kapak</option>
+                          <option value="wavy">🌊 Dalgalı Dalga Kesim</option>
+                          <option value="pointed-oval">🌰 Badem Oval Kapak</option>
+                          <option value="asymmetric">📐 Asimetrik Modern Kesim</option>
+                          <option value="double-curve">⚜️ Barok Çift Kavis</option>
+                          <option value="heart">❤️ Zarif Kalp Kesimi</option>
                         </select>
                       </div>
 

@@ -8,6 +8,7 @@ import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import FloatingActionBar from '../FloatingActionBar';
 import { isColorLight } from '@/lib/colorUtils';
+import { getBackgroundStyle } from '@/lib/backgrounds';
 
 // Template configuration model
 interface TemplateConfig {
@@ -173,55 +174,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   }
 
   // Background Textures
-  let bgStyle: React.CSSProperties = {};
-  switch (config.bgTexture) {
-    case 'none':
-      bgStyle = wedding.background_image_url 
-        ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }
-        : { backgroundColor: `${primaryColor}08` };
-      break;
-    case 'marble':
-      bgStyle = wedding.background_image_url
-        ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' }
-        : {
-            backgroundColor: '#f5f5f7',
-            backgroundImage: 'radial-gradient(circle at 0% 0%, rgba(212,175,55,0.06) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(0,0,0,0.03) 0%, transparent 50%)'
-          };
-      break;
-    case 'watercolor-pink':
-      bgStyle = wedding.background_image_url
-        ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover' }
-        : { backgroundImage: 'linear-gradient(135deg, #fff5f5 0%, #ffe4e6 50%, #fecdd3 100%)' };
-      break;
-    case 'watercolor-blue':
-      bgStyle = wedding.background_image_url
-        ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover' }
-        : { backgroundImage: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%)' };
-      break;
-    case 'watercolor-emerald':
-      bgStyle = wedding.background_image_url
-        ? { backgroundImage: `url(${wedding.background_image_url})`, backgroundSize: 'cover' }
-        : { backgroundImage: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)' };
-      break;
-    case 'aged-paper':
-      bgStyle = {
-        backgroundColor: '#faf6eb',
-        backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(139,92,26,0.04) 0%, transparent 100%)'
-      };
-      break;
-    case 'geometric-lines':
-      bgStyle = {
-        backgroundColor: '#fafafa',
-        backgroundImage: `radial-gradient(circle at 100% 150%, transparent 24%, #eedfa9 24%, #eedfa9 28%, transparent 28%, transparent),
-                          radial-gradient(circle at 0% 150%, transparent 24%, #eedfa9 24%, #eedfa9 28%, transparent 28%, transparent)`
-      };
-      break;
-    case 'starry-sky':
-      bgStyle = {
-        background: 'linear-gradient(to bottom, #020617, #0f172a, #1e293b)'
-      };
-      break;
-  }
+  const bgStyle = getBackgroundStyle(wedding.envelope_bg_color, wedding.background_image_url, primaryColor);
 
   // Accent SVGs and Icons
   let accentComponent = null;
