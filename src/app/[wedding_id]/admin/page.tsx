@@ -26,6 +26,10 @@ export default function CoupleAdminPage({
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
   const [textColor, setTextColor] = useState('#1e293b'); // Yeni eklenen metin rengi
   const [envelopeColor, setEnvelopeColor] = useState('#e6d5c3');
+  const [envelopeBgColor, setEnvelopeBgColor] = useState('slate');
+  const [envelopeFlapType, setEnvelopeFlapType] = useState('triangle');
+  const [sealType, setSealType] = useState('sparkles');
+  const [sealColor, setSealColor] = useState('#9f1239');
   const [effectType, setEffectType] = useState('');
   const [fontFamily, setFontFamily] = useState('sans');
   const [bgImageUrl, setBgImageUrl] = useState('');
@@ -84,6 +88,11 @@ export default function CoupleAdminPage({
       if (weddingData.primary_color) setPrimaryColor(weddingData.primary_color);
       if (weddingData.text_color) setTextColor(weddingData.text_color);
       if (weddingData.envelope_color) setEnvelopeColor(weddingData.envelope_color);
+      if (weddingData.envelope_bg_color) setEnvelopeBgColor(weddingData.envelope_bg_color);
+      if (weddingData.envelope_flap_type) setEnvelopeFlapType(weddingData.envelope_flap_type);
+      if (weddingData.seal_type) setSealType(weddingData.seal_type);
+      if (weddingData.seal_color) setSealColor(weddingData.seal_color);
+      else if (weddingData.primary_color) setSealColor(weddingData.primary_color);
       if (weddingData.effect_type) setEffectType(weddingData.effect_type);
       if (weddingData.font_family) setFontFamily(weddingData.font_family);
       if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
@@ -134,6 +143,10 @@ export default function CoupleAdminPage({
         primary_color: primaryColor,
         text_color: textColor,
         envelope_color: envelopeColor,
+        envelope_bg_color: envelopeBgColor,
+        envelope_flap_type: envelopeFlapType,
+        seal_type: sealType,
+        seal_color: sealColor,
         effect_type: effectType,
         font_family: fontFamily,
         background_image_url: bgImageUrl,
@@ -520,12 +533,72 @@ export default function CoupleAdminPage({
                   </label>
                   
                   {useEnvelope && (
-                    <div className="mt-4 p-4 bg-slate-50 border rounded-xl">
-                      <label className="block text-sm font-medium mb-2">Zarf Gövde Rengi</label>
-                      <div className="flex items-center gap-4">
-                        <input type="color" value={envelopeColor} onChange={e => setEnvelopeColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
-                        <span className="text-slate-500 font-mono text-sm">{envelopeColor}</span>
-                        <span className="text-xs text-slate-400 ml-2">(Mühür rengi "Ana Renk" olarak ayarlanmıştır)</span>
+                    <div className="mt-4 p-4 bg-slate-50 border rounded-xl space-y-4 text-left">
+                      {/* Zarf Gövde Rengi */}
+                      <div>
+                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf Gövde Rengi</label>
+                        <div className="flex items-center gap-4">
+                          <input type="color" value={envelopeColor} onChange={e => setEnvelopeColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
+                          <span className="text-slate-500 font-mono text-sm">{envelopeColor}</span>
+                          <span className="text-xs text-slate-400 ml-2">(Zarfın dış karton rengi)</span>
+                        </div>
+                      </div>
+
+                      {/* Zarf Arkası Arkaplan */}
+                      <div>
+                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf Arkası Zemin (Arkaplan)</label>
+                        <select value={envelopeBgColor} onChange={e => setEnvelopeBgColor(e.target.value)} className="w-full border p-2 rounded-lg bg-white mb-2 text-sm">
+                          <option value="slate">Sade Koyu Gri (Slate)</option>
+                          <option value="wood">Doğal Ahşap Masası</option>
+                          <option value="linen">Minimalist Keten Kumaş</option>
+                          <option value="marble">Lüks Beyaz Mermer</option>
+                          <option value="concrete">Modern Gri Beton</option>
+                          <option value="custom">Özel Renk Seçimi...</option>
+                        </select>
+                        {(envelopeBgColor === 'custom' || envelopeBgColor.startsWith('#')) && (
+                          <div className="flex items-center gap-4 mt-2">
+                            <input 
+                              type="color" 
+                              value={envelopeBgColor.startsWith('#') ? envelopeBgColor : '#0f172a'} 
+                              onChange={e => setEnvelopeBgColor(e.target.value)} 
+                              className="w-10 h-10 rounded cursor-pointer" 
+                            />
+                            <span className="text-slate-500 font-mono text-xs">{envelopeBgColor.startsWith('#') ? envelopeBgColor : '#0f172a'}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Kapak Şekli */}
+                      <div>
+                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf Kapak Şekli</label>
+                        <select value={envelopeFlapType} onChange={e => setEnvelopeFlapType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
+                          <option value="triangle">Klasik Üçgen Kapak</option>
+                          <option value="rounded">Modern Yuvarlak (Curved) Kapak</option>
+                          <option value="square">Modern Düz Kesim Kapak</option>
+                        </select>
+                      </div>
+
+                      {/* Mühür Damgası */}
+                      <div>
+                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Mühür Damgası (Motif)</label>
+                        <select value={sealType} onChange={e => setSealType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
+                          <option value="sparkles">✨ Işıltı Damgası</option>
+                          <option value="heart">❤️ Romantik Kalp Damgası</option>
+                          <option value="rose">🌹 Gül Damgası</option>
+                          <option value="monogram">🔠 Baş Harfler (Monogram - {brideName.charAt(0) || 'G'}&{groomName.charAt(0) || 'D'})</option>
+                          <option value="crown">👑 Kraliyet Tacı Damgası</option>
+                          <option value="leaf">🌿 Zarif Yaprak Damgası</option>
+                        </select>
+                      </div>
+
+                      {/* Mühür Rengi */}
+                      <div>
+                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Mühür Rengi</label>
+                        <div className="flex items-center gap-4">
+                          <input type="color" value={sealColor} onChange={e => setSealColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
+                          <span className="text-slate-500 font-mono text-sm">{sealColor}</span>
+                          <span className="text-xs text-slate-400 ml-2">(Mühürün 3D mum rengi)</span>
+                        </div>
                       </div>
                     </div>
                   )}
