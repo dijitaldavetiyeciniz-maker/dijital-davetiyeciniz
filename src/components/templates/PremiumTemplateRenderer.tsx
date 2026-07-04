@@ -533,6 +533,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         googleMapsUrl={wedding.google_maps_url} 
         primaryColor={primaryColor} 
         styleType={config.textColorMode === 'light' ? 'neon' : 'orbs'}
+        weddingId={wedding.id}
+        telegramConfigured={!!wedding.telegram_bot_token && !!wedding.telegram_chat_id}
       />
 
       <RsvpModal 
