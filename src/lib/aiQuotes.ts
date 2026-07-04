@@ -19,3 +19,34 @@ export const weddingQuotes = [
 export const getRandomQuote = () => {
   return weddingQuotes[Math.floor(Math.random() * weddingQuotes.length)];
 };
+
+export const guestAttendingMessages = [
+  "Canım arkadaşlarım {bride} & {groom}, hayatınızın bu en mutlu gününde yanınızda olmaktan çok büyük gurur ve mutluluk duyuyorum. Sevginiz hep bugünkü gibi taze kalsın, bir ömür boyu mutluluklar!",
+  "Bu harika aşk masalının en güzel sayfasına şahitlik etmek için sabırsızlanıyorum. Bir ömür boyu birbirinize sevgiyle bakmanız dileğiyle!",
+  "Yolunuz hep çiçeklerle, sevgiyle ve kahkahalarla dolu olsun. Evliliğinizin size sağlık, huzur ve bolca şans getirmesini dilerim. Sonsuz mutluluklar!",
+  "İki güzel kalbin bir araya gelmesiyle başlayan bu yolculukta her şey gönlünüzce olsun. Bu özel günde yanınızda olmak benim için harika bir his. Tebrik ederim!",
+  "Bir ömür boyu sürecek ortaklığınızın ilk gününde yanınızda olmaktan çok mutluyum. Aşkınız daim, yuvanız huzur dolsun.",
+  "Sevginizin ömür boyu bir bahar gibi taze ve çiçekli kalması dileğiyle. Tebrik ederim, mutluluğunuz sonsuz olsun! {guest}",
+  "Hayatın tüm güzelliklerini, neşesini ve huzurunu birlikte paylaşacağınız harika bir evlilik dilerim. Ömür boyu mutluluklar!",
+  "Gözlerinizdeki bu güzel ışığın hiç sönmemesi dileğiyle. Evliliğinizi en içten dileklerimle tebrik eder, sonsuz mutluluklar dilerim.",
+  "Bir ömür aynı yastıkta, sevgiyle ve saygıyla kocaman bir hayat yaşamanız dileğiyle. Tebrikler, her şey gönlünüzce olsun!",
+  "Aşkınızın büyüklüğüne ve bu güzel birleşime şahit olmak harika olacak. Yuvanız neşeyle dolsun, sonsuz sevgiler!"
+];
+
+export const guestNotAttendingMessages = [
+  "Çok istememe rağmen bu özel günde yanınızda olamayacağım için üzgünüm. Ancak kalbim sizinle. {bride} & {groom}, bir ömür boyu sonsuz mutluluklar dilerim!",
+  "Fiziken orada olamasam da, bu mutlu gününüzün coşkusunu yürekten paylaşıyorum. Sevginiz bir ömür boyu eksilmesin, her şey gönlünüzce olsun!",
+  "Bu anlamlı güne katılamadığım için üzgünüm. Yuvanızın hep neşeyle ve sevgiyle dolmasını dilerim. Tebrikler, sonsuz mutluluklar!",
+  "Yeni hayatınızın başlangıcında yanınızda olamasam da en içten dileklerimi gönderiyorum. Her gününüz birbirinizi daha çok severek geçsin.",
+  "Özel nedenlerden ötürü düğün töreninizde bulunamayacağım, ancak sevgimin ve dualarımın sizinle olduğunu bilmenizi isterim. Ömür boyu mutluluklar!",
+  "Bu eşsiz başlangıçta yanınızda olamadığım için üzgünüm. Bir ömür boyu huzur, neşe ve sevgi dolu bir yaşam dilerim. Tebrikler! {guest}"
+];
+
+export const getRandomGuestMessage = (isAttending: boolean, guestName: string, brideName: string, groomName: string) => {
+  const pool = isAttending ? guestAttendingMessages : guestNotAttendingMessages;
+  const raw = pool[Math.floor(Math.random() * pool.length)];
+  return raw
+    .replace(/{bride}/g, brideName || 'Gelin')
+    .replace(/{groom}/g, groomName || 'Damat')
+    .replace(/{guest}/g, guestName ? `- ${guestName}` : '');
+};

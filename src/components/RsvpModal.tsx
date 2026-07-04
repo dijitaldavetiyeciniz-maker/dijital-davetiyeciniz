@@ -1,16 +1,26 @@
 'use client';
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { X } from 'lucide-react';
+import { X, Wand2 } from 'lucide-react';
+import { getRandomGuestMessage } from '@/lib/aiQuotes';
 
 interface RsvpModalProps {
   weddingId: string;
   isOpen: boolean;
   onClose: () => void;
   primaryColor?: string;
+  brideName?: string;
+  groomName?: string;
 }
 
-export default function RsvpModal({ weddingId, isOpen, onClose, primaryColor = '#f43f5e' }: RsvpModalProps) {
+export default function RsvpModal({ 
+  weddingId, 
+  isOpen, 
+  onClose, 
+  primaryColor = '#f43f5e',
+  brideName = 'Gelin',
+  groomName = 'Damat'
+}: RsvpModalProps) {
   const [guestName, setGuestName] = useState('');
   const [isAttending, setIsAttending] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState<number>(1);
@@ -142,13 +152,35 @@ export default function RsvpModal({ weddingId, isOpen, onClose, primaryColor = '
               )}
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Mesajınız (Opsiyonel)</label>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-sm font-medium text-slate-700">Mesajınız (Opsiyonel)</label>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      const randomMessage = getRandomGuestMessage(
+                        isAttending === null ? true : isAttending, 
+                        guestName, 
+                        brideName, 
+                        groomName
+                      );
+                      setMessage(randomMessage);
+                    }}
+                    className="text-xs font-bold transition-all flex items-center gap-1 px-2.5 py-1.5 rounded-lg border shadow-sm active:scale-95"
+                    style={{ 
+                      color: primaryColor, 
+                      backgroundColor: `${primaryColor}08`, 
+                      borderColor: `${primaryColor}15` 
+                    }}
+                  >
+                    <Wand2 className="w-3.5 h-3.5 animate-pulse" /> Yapay Zeka Yazsın
+                  </button>
+                </div>
                 <textarea 
                   value={message} 
                   onChange={e => setMessage(e.target.value)} 
                   placeholder="Çifte iletmek istediğiniz özel bir notunuz var mı?" 
                   rows={3}
-                  className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none"
+                  className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none text-sm"
                 />
               </div>
 

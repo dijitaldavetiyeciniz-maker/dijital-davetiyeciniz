@@ -667,6 +667,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         isOpen={isRsvpOpen} 
         onClose={() => setIsRsvpOpen(false)} 
         primaryColor={primaryColor} 
+        brideName={wedding.bride_name}
+        groomName={wedding.groom_name}
       />
     </div>
   );
