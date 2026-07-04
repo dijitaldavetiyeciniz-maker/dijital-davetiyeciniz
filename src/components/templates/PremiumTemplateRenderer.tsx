@@ -34,7 +34,7 @@ const getTemplateConfig = (id: string): TemplateConfig => {
       id,
       name,
       category: 'Royal Gold',
-      layout: num % 2 === 0 ? 'full-screen' : 'classic-card',
+      layout: 'classic-card',
       cardBg: num % 3 === 0 ? 'paper' : 'gold-border',
       bgTexture: textures[num % textures.length],
       borderStyle: 'double-gold',
@@ -52,7 +52,7 @@ const getTemplateConfig = (id: string): TemplateConfig => {
       id,
       name,
       category: 'Watercolor Floral',
-      layout: num % 2 === 0 ? 'full-screen' : 'classic-card',
+      layout: 'classic-card',
       cardBg: 'floral-frame',
       bgTexture: textures[num % textures.length],
       borderStyle: 'floral',
@@ -67,8 +67,8 @@ const getTemplateConfig = (id: string): TemplateConfig => {
       id,
       name,
       category: 'Minimalist Modern',
-      layout: 'minimalist',
-      cardBg: 'clear',
+      layout: 'classic-card',
+      cardBg: 'glass',
       bgTexture: 'none',
       borderStyle: 'none',
       accentIcon: 'infinity',
@@ -78,12 +78,11 @@ const getTemplateConfig = (id: string): TemplateConfig => {
 
   // 25-32: Galactic Neon (Karanlık Mod & Neon) - classic-card ve full-screen
   if (num <= 32) {
-    const layout = num % 2 === 0 ? 'full-screen' : 'classic-card';
     return {
       id,
       name,
       category: 'Galactic Neon',
-      layout,
+      layout: 'classic-card',
       cardBg: 'dark',
       bgTexture: 'starry-sky',
       borderStyle: 'neon',
@@ -94,12 +93,11 @@ const getTemplateConfig = (id: string): TemplateConfig => {
 
   // 33-40: Vintage Retro (Vintage & Nostaljik) - polaroid ve classic-card
   if (num <= 40) {
-    const layout = num % 2 === 0 ? 'polaroid' : 'classic-card';
     return {
       id,
       name,
       category: 'Vintage Retro',
-      layout,
+      layout: 'classic-card',
       cardBg: 'paper',
       bgTexture: 'aged-paper',
       borderStyle: 'stitch',
@@ -114,7 +112,7 @@ const getTemplateConfig = (id: string): TemplateConfig => {
     id,
     name,
     category: 'Art Deco',
-    layout: num % 2 === 0 ? 'split-screen' : 'classic-card',
+    layout: 'classic-card',
     cardBg: 'gold-border',
     bgTexture: 'geometric-lines',
     borderStyle: 'deco-corners',

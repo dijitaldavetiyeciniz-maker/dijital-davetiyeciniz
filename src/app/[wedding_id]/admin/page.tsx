@@ -4,6 +4,112 @@ import { supabase } from '@/lib/supabase';
 import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music } from 'lucide-react';
 import { getRandomQuote } from '@/lib/aiQuotes';
 
+function getTemplatePreset(id: string) {
+  const num = parseInt(id.replace('template', '')) || 1;
+  const base = {
+    template_id: id,
+    background_image_url: null,
+  };
+  
+  if (num <= 8) {
+    // Royal Gold
+    return {
+      ...base,
+      primary_color: '#dfc384',
+      text_color: '#064e3b',
+      font_family: 'Cormorant Garamond',
+      envelope_bg_color: 'marble-white',
+      use_envelope: true,
+      envelope_color: '#064e3b',
+      envelope_flap_type: 'rounded',
+      seal_type: 'crown',
+      seal_color: '#dfc384',
+      entrance_type: 'gate',
+      effect_type: 'sparkles'
+    };
+  } else if (num <= 16) {
+    // Watercolor Floral
+    return {
+      ...base,
+      primary_color: '#be123c',
+      text_color: '#334155',
+      font_family: 'Great Vibes',
+      envelope_bg_color: 'solid-blush',
+      use_envelope: true,
+      envelope_color: '#ffe4e6',
+      envelope_flap_type: 'rounded',
+      seal_type: 'rose',
+      seal_color: '#be123c',
+      entrance_type: 'envelope',
+      effect_type: 'hearts'
+    };
+  } else if (num <= 24) {
+    // Minimalist Modern
+    return {
+      ...base,
+      primary_color: '#0f172a',
+      text_color: '#1e293b',
+      font_family: 'Outfit',
+      envelope_bg_color: 'solid-ivory',
+      use_envelope: true,
+      envelope_color: '#ffffff',
+      envelope_flap_type: 'square',
+      seal_type: 'monogram',
+      seal_color: '#0f172a',
+      entrance_type: 'card',
+      effect_type: ''
+    };
+  } else if (num <= 32) {
+    // Galactic Neon
+    return {
+      ...base,
+      primary_color: '#a855f7',
+      text_color: '#f8fafc',
+      font_family: 'Montserrat',
+      envelope_bg_color: 'solid-midnight',
+      use_envelope: true,
+      envelope_color: '#0f172a',
+      envelope_flap_type: 'triangle',
+      seal_type: 'sparkles',
+      seal_color: '#a855f7',
+      entrance_type: 'heart-fade',
+      effect_type: 'sparkles'
+    };
+  } else if (num <= 40) {
+    // Vintage Retro
+    return {
+      ...base,
+      primary_color: '#b45309',
+      text_color: '#451a03',
+      font_family: 'Playfair Display',
+      envelope_bg_color: 'paper-kraft',
+      use_envelope: true,
+      envelope_color: '#fef3c7',
+      envelope_flap_type: 'triangle',
+      seal_type: 'leaf',
+      seal_color: '#b45309',
+      entrance_type: 'ribbon',
+      effect_type: 'bubbles'
+    };
+  } else {
+    // Art Deco / Royal
+    return {
+      ...base,
+      primary_color: '#dfc384',
+      text_color: '#1e3a8a',
+      font_family: 'Cinzel',
+      envelope_bg_color: 'marble-black',
+      use_envelope: true,
+      envelope_color: '#1e3a8a',
+      envelope_flap_type: 'square',
+      seal_type: 'crown',
+      seal_color: '#dfc384',
+      entrance_type: 'box',
+      effect_type: 'sparkles'
+    };
+  }
+}
+
 export default function CoupleAdminPage({
   params,
 }: {
@@ -558,7 +664,16 @@ export default function CoupleAdminPage({
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Şablon Düzeni</label>
-                    <select value={templateId} onChange={e => setTemplateId(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50">
+                    <select 
+                      value={templateId} 
+                      onChange={e => {
+                        const newId = e.target.value;
+                        setTemplateId(newId);
+                        const preset = getTemplatePreset(newId);
+                        applyPreset(preset);
+                      }} 
+                      className="w-full border p-2 rounded-lg bg-slate-50"
+                    >
                       {Array.from({ length: 50 }, (_, i) => {
                         const num = i + 1;
                         const templateNames = [
