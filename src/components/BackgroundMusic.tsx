@@ -18,40 +18,20 @@ export default function BackgroundMusic({
 }: BackgroundMusicProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  useEffect(() => {
-    if (!url) return;
-
-    // Instantiate HTML5 audio
-    const audio = new Audio(url);
-    audio.loop = true;
-    audio.volume = 0.5; // Moderate volume
-    audioRef.current = audio;
-
-    return () => {
-      audio.pause();
-      audioRef.current = null;
-    };
-  }, [url]);
 
   // Handle autoplay when envelope opens
   useEffect(() => {
     if (!audioRef.current || !url) return;
 
     if (isEnvelopeOpened && autoplay && !isMuted && !isPlaying) {
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-            setHasInteracted(true);
-          })
-          .catch(error => {
-            console.log('Autoplay was blocked by the browser. Waiting for interaction.', error);
-          });
-      }
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(error => {
+          console.log('Autoplay was blocked by the browser. Waiting for interaction.', error);
+        });
     }
   }, [isEnvelopeOpened, autoplay, url]);
 
@@ -60,14 +40,11 @@ export default function BackgroundMusic({
 
     if (isPlaying) {
       audioRef.current.pause();
-      setIsPlaying(false);
       setIsMuted(true);
     } else {
       audioRef.current.play()
         .then(() => {
-          setIsPlaying(true);
           setIsMuted(false);
-          setHasInteracted(true);
         })
         .catch(err => console.log('Playback error:', err));
     }
@@ -78,6 +55,16 @@ export default function BackgroundMusic({
 
   return (
     <div className="fixed bottom-6 left-6 z-40">
+      <audio 
+        id="bg-audio"
+        ref={audioRef}
+        src={url}
+        loop
+        preload="auto"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      />
+
       <AnimatePresence>
         {isEnvelopeOpened && (
           <motion.button

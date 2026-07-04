@@ -7,7 +7,7 @@ import {
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import { isColorLight } from '@/lib/colorUtils';
-import { getBackgroundStyle } from '@/lib/backgrounds';
+import { getBackgroundStyle, isBackgroundLight } from '@/lib/backgrounds';
 
 // Template configuration model
 interface TemplateConfig {
@@ -139,7 +139,9 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const eventTitle = wedding.event_type || 'Düğün Töreni';
 
   const primaryColor = wedding.primary_color || '#f43f5e';
-  const textColor = wedding.text_color || (config.textColorMode === 'light' ? '#f8fafc' : '#1e293b');
+  const bgType = wedding.background_image_url || config.bgTexture || 'solid-ivory';
+  const bgIsLight = isBackgroundLight(bgType);
+  const textColor = wedding.text_color || (bgIsLight ? '#1e293b' : '#f8fafc');
   const textIsLight = isColorLight(textColor);
 
   const handleGuestPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

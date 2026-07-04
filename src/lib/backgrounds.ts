@@ -239,3 +239,24 @@ export function getBackgroundStyle(
       return { backgroundColor: '#fafaf9' };
   }
 }
+
+export function isBackgroundLight(bgId: string): boolean {
+  if (!bgId) return true;
+  
+  const darkBackgrounds = [
+    'solid-midnight',
+    'solid-darkslate',
+    'solid-crimson',
+    'solid-teal',
+    'solid-plum',
+    'marble-black',
+    'marble-green',
+    'velvet-navy',
+    'velvet-burgundy',
+    'concrete-dark',
+    'wood-rustic',
+    'wood-walnut'
+  ];
+  
+  return !darkBackgrounds.includes(bgId);
+}

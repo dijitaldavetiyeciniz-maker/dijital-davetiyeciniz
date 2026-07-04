@@ -55,6 +55,14 @@ export default function Envelope({
   const [isShattered, setIsShattered] = useState(false);
 
   const handleOpen = () => {
+    // Play music immediately on user click to bypass browser autoplay restrictions
+    if (typeof document !== 'undefined') {
+      const audio = document.getElementById('bg-audio') as HTMLAudioElement;
+      if (audio) {
+        audio.play().catch(err => console.log('Autoplay play error:', err));
+      }
+    }
+
     const isPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
     
     if (entranceType === 'ribbon' && !ribbonUntied) {
