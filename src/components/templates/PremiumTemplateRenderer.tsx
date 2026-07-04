@@ -292,23 +292,32 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderNames = () => (
-    <h1 className="text-4xl md:text-5xl lg:text-6xl mb-6 mt-4 leading-tight font-normal select-none">
+    <h1 
+      className="text-4xl md:text-5xl lg:text-6xl mb-6 mt-4 leading-tight font-normal select-none"
+      style={{ color: textColor }}
+    >
       {wedding.bride_parents && (
-        <span className="text-[10px] tracking-[0.25em] uppercase font-light opacity-50 mb-2 block font-sans">
+        <span 
+          className="text-[10px] tracking-[0.25em] uppercase font-light mb-2 block font-sans"
+          style={{ color: textColor, opacity: 0.6 }}
+        >
           {wedding.bride_parents}
         </span>
       )}
-      <span className="block px-2">
+      <span className="block px-2" style={{ fontFamily: `"${fontFamily}", cursive` }}>
         {wedding.bride_name}
       </span>
       <span className="text-xl my-2 block" style={{ color: primaryColor }}>
         &
       </span>
-      <span className="block px-2">
+      <span className="block px-2" style={{ fontFamily: `"${fontFamily}", cursive` }}>
         {wedding.groom_name}
       </span>
       {wedding.groom_parents && (
-        <span className="text-[10px] tracking-[0.25em] uppercase font-light opacity-50 mt-2 block font-sans">
+        <span 
+          className="text-[10px] tracking-[0.25em] uppercase font-light mt-2 block font-sans"
+          style={{ color: textColor, opacity: 0.6 }}
+        >
           {wedding.groom_parents}
         </span>
       )}
@@ -316,7 +325,10 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderQuote = () => wedding.custom_message && (
-    <p className="text-sm font-light italic mb-8 px-4 leading-relaxed opacity-85">
+    <p 
+      className="text-sm font-light italic mb-8 px-4 leading-relaxed"
+      style={{ color: textColor, opacity: 0.85 }}
+    >
       "{wedding.custom_message}"
     </p>
   );
@@ -332,12 +344,13 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderDetails = () => (
-    <div className="flex flex-col gap-4 text-sm font-medium mb-10 mt-6 relative z-10 font-sans">
+    <div className="flex flex-col gap-4 text-sm font-medium mb-10 mt-6 relative z-10 font-sans" style={{ color: textColor }}>
       <div 
         className="flex items-center justify-center gap-3 py-3 px-4 rounded-xl border shadow-sm" 
         style={{ 
           borderColor: `${primaryColor}20`, 
-          backgroundColor: textIsLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.7)' 
+          backgroundColor: textIsLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.7)',
+          color: textColor
         }}
       >
         <Calendar className="w-4 h-4" style={{ color: primaryColor }} />
@@ -348,15 +361,16 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border shadow-sm animate-fade-in" 
         style={{ 
           borderColor: `${primaryColor}20`, 
-          backgroundColor: textIsLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.7)' 
+          backgroundColor: textIsLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.7)',
+          color: textColor
         }}
       >
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4" style={{ color: primaryColor }} />
-          <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
+          <span className="font-bold" style={{ color: textColor }}>{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
         </div>
         {wedding.venue_address && (
-          <span className="text-xs font-light px-4 opacity-75">{wedding.venue_address}</span>
+          <span className="text-xs font-light px-4 opacity-75" style={{ color: textColor }}>{wedding.venue_address}</span>
         )}
         
         {wedding.google_maps_url && (
