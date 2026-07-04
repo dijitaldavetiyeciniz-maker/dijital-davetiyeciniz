@@ -177,6 +177,12 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     }
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const telegramConfigured = !!wedding.telegram_bot_token && !!wedding.telegram_chat_id;
+
   // Dynamic Google Font
   const fontFamily = wedding.font_family || 'Montserrat';
   const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
