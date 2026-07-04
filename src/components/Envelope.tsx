@@ -14,6 +14,7 @@ interface EnvelopeProps {
   sealType?: string;
   sealColor?: string;
   entranceType?: string;
+  fontFamily?: string;
 }
 
 export default function Envelope({ 
@@ -26,23 +27,38 @@ export default function Envelope({
   envelopeFlapType = 'triangle',
   sealType = 'sparkles',
   sealColor,
-  entranceType = 'envelope'
+  entranceType = 'envelope',
+  fontFamily = 'Montserrat'
 }: EnvelopeProps) {
   const [isOpened, setIsOpened] = useState(false);
   const [showContent, setShowContent] = useState(false);
+  const [ribbonUntied, setRibbonUntied] = useState(false);
 
   const handleOpen = () => {
-    setIsOpened(true);
-    // Animasyon süresine göre içeriği gösterme zamanlamasını ayarlıyoruz
-    const delay = entranceType === 'card' ? 800 : 1500;
-    setTimeout(() => {
-      setShowContent(true);
-    }, delay);
+    if (entranceType === 'ribbon' && !ribbonUntied) {
+      setRibbonUntied(true);
+      // Untie ribbon first, then open envelope 0.6 seconds later
+      setTimeout(() => {
+        setIsOpened(true);
+        setTimeout(() => {
+          setShowContent(true);
+        }, 1500);
+      }, 600);
+    } else {
+      setIsOpened(true);
+      const delay = entranceType === 'card' ? 800 : entranceType === 'heart-fade' ? 1000 : 1500;
+      setTimeout(() => {
+        setShowContent(true);
+      }, delay);
+    }
   };
 
   if (showContent) {
     return <>{children}</>;
   }
+
+  // Dynamic Google Font Injection
+  const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
 
   // Get initials for Monogram
   const brideInitial = brideName ? brideName.trim().charAt(0).toUpperCase() : 'G';
@@ -124,7 +140,7 @@ export default function Envelope({
   }
 
   // 1. ANIMATION: ENVELOPE (Zarf)
-  const renderEnvelope = () => {
+  const renderEnvelope = (hasRibbon = false) => {
     let flapStyle: React.CSSProperties = { backgroundColor: envelopeColor };
     let flapClass = 'absolute top-0 left-0 right-0 origin-top z-20 drop-shadow-xl';
 
@@ -158,7 +174,7 @@ export default function Envelope({
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
         transition={{ duration: 1, ease: "easeOut" }}
-        onClick={!isOpened ? handleOpen : undefined}
+        onClick={(!isOpened && (!hasRibbon || ribbonUntied)) ? handleOpen : (hasRibbon && !ribbonUntied) ? handleOpen : undefined}
       >
         <div className="absolute inset-0 rounded-sm shadow-2xl overflow-hidden border border-black/10" style={{ backgroundColor: envelopeColor }}>
           <motion.div 
@@ -168,7 +184,7 @@ export default function Envelope({
             transition={{ duration: 1, delay: 0.5, ease: "easeInOut" }}
           >
             <div className="text-center">
-              <div className="text-xl md:text-3xl font-serif text-slate-800 mb-2">{brideName} & {groomName}</div>
+              <div className="text-xl md:text-3xl text-slate-800 mb-2" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{brideName} & {groomName}</div>
               <div className="w-16 h-[1px] bg-rose-300 mx-auto mb-2"></div>
               <div className="text-xs text-slate-400 uppercase tracking-widest">Davetiyeniz</div>
             </div>
@@ -181,9 +197,29 @@ export default function Envelope({
 
         <motion.div className={flapClass} style={flapStyle} initial={{ rotateX: 0 }} animate={isOpened ? { rotateX: 180 } : { rotateX: 0 }} transition={{ duration: 0.8, ease: "easeInOut" }} />
 
+        {/* Kurdele (Ribbon) Görünümü */}
+        {hasRibbon && (
+          <>
+            {/* Sol Kurdele Bağı */}
+            <motion.div 
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-8 z-25 pointer-events-none" 
+              style={{ width: '50%', backgroundColor: currentSealColor, boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}
+              animate={ribbonUntied ? { x: -200, opacity: 0 } : { x: 0, opacity: 1 }}
+              transition={{ duration: 0.6, ease: "easeIn" }}
+            />
+            {/* Sağ Kurdele Bağı */}
+            <motion.div 
+              className="absolute right-0 top-1/2 -translate-y-1/2 h-8 z-25 pointer-events-none" 
+              style={{ width: '50%', backgroundColor: currentSealColor, boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}
+              animate={ribbonUntied ? { x: 200, opacity: 0 } : { x: 0, opacity: 1 }}
+              transition={{ duration: 0.6, ease: "easeIn" }}
+            />
+          </>
+        )}
+
         <motion.div 
           className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-lg cursor-pointer border-2"
-          style={{ backgroundColor: currentSealColor, borderColor: 'rgba(0,0,0,0.2)', boxShadow: 'inset 0 0 12px rgba(0,0,0,0.6), 0 5px 15px rgba(0,0,0,0.4)' }}
+          style={{ backgroundColor: currentSealColor, borderColor: 'rgba(255,255,255,0.2)', boxShadow: 'inset 0 0 12px rgba(0,0,0,0.6), 0 5px 15px rgba(0,0,0,0.4)' }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           initial={{ opacity: 1, scale: 1 }}
@@ -193,7 +229,9 @@ export default function Envelope({
           <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border flex items-center justify-center" style={{ borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(0,0,0,0.15)' }}>
             {sealIcon}
           </div>
-          <div className="absolute -bottom-6 w-32 text-center text-white/50 text-[10px] font-semibold tracking-widest uppercase">Dokun ve Aç</div>
+          <div className="absolute -bottom-6 w-32 text-center text-white/50 text-[10px] font-semibold tracking-widest uppercase">
+            {hasRibbon && !ribbonUntied ? 'Kurdeleyi Çöz' : 'Dokun ve Aç'}
+          </div>
         </motion.div>
       </motion.div>
     );
@@ -210,17 +248,15 @@ export default function Envelope({
         transition={{ duration: 1, ease: "easeOut" }}
         onClick={!isOpened ? handleOpen : undefined}
       >
-        {/* Kutu Gövdesi (İç Kısım) */}
         <div className="absolute inset-4 bg-[#fbfaf8] border-8 border-[#dfc384] shadow-2xl rounded-lg flex flex-col items-center justify-center p-6 text-center">
           <div className="w-full h-full border border-[#dfc384]/30 flex flex-col items-center justify-center p-4">
             <span className="text-amber-600 font-serif tracking-[0.2em] text-xs uppercase mb-2">Özel Davet</span>
-            <h2 className="font-serif text-2xl md:text-3xl text-slate-800 my-4 leading-relaxed">{brideName} & {groomName}</h2>
+            <h2 className="text-2xl md:text-3xl text-slate-800 my-4 leading-relaxed" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{brideName} & {groomName}</h2>
             <div className="w-12 h-[1px] bg-amber-500 my-2"></div>
             <p className="text-[10px] text-slate-400 tracking-widest uppercase">Düğün Törenimize Davetlisiniz</p>
           </div>
         </div>
 
-        {/* Kutu Kapağı (Lid - Kayarak Açılan Kısım) */}
         <motion.div 
           className="absolute inset-0 bg-slate-900 border-8 border-slate-950 rounded-lg shadow-2xl flex flex-col items-center justify-center z-20"
           animate={isOpened ? { y: -500, opacity: 0, rotate: -5 } : { y: 0, opacity: 1, rotate: 0 }}
@@ -230,18 +266,16 @@ export default function Envelope({
             backgroundColor: envelopeColor
           }}
         >
-          {/* Kutunun Altın Çerçeve Süslemeleri */}
           <div className="absolute inset-3 border border-double border-[#dfc384]/40 rounded-md pointer-events-none" />
           
           <div className="text-center z-10 px-8">
             <Crown className="w-10 h-10 mx-auto mb-4 text-[#dfc384] filter drop-shadow-md" />
-            <h3 className="font-serif text-white/90 text-xl md:text-2xl tracking-wide mb-1">{brideName.charAt(0)} & {groomName.charAt(0)}</h3>
+            <h3 className="text-xl md:text-2xl tracking-wide mb-1 text-white" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{brideName.charAt(0)} & {groomName.charAt(0)}</h3>
             <p className="text-[9px] text-[#dfc384] tracking-[0.3em] uppercase">Kutuyu Açmak İçin Dokunun</p>
           </div>
 
-          {/* Kutu Mührü */}
           <div 
-            className="absolute -bottom-6 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center border shadow-lg"
+            className="absolute -bottom-6 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center border shadow-lg cursor-pointer"
             style={{ backgroundColor: currentSealColor, borderColor: 'rgba(255,255,255,0.2)', boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)' }}
           >
             {sealIcon}
@@ -265,7 +299,6 @@ export default function Envelope({
             boxShadow: '5px 0 25px rgba(0,0,0,0.5)'
           }}
         >
-          {/* Perde pile çizgisi efekti */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px)] bg-[size:24px_100%] opacity-40 pointer-events-none" />
         </motion.div>
 
@@ -279,11 +312,10 @@ export default function Envelope({
             boxShadow: '-5px 0 25px rgba(0,0,0,0.5)'
           }}
         >
-          {/* Perde pile çizgisi efekti */}
           <div className="absolute inset-0 bg-[linear-gradient(to_left,rgba(0,0,0,0.15)_1px,transparent_1px)] bg-[size:24px_100%] opacity-40 pointer-events-none" />
         </motion.div>
 
-        {/* Ortadaki Baş Harfler & Mühür Kilidi */}
+        {/* Lüks Mühür Plakası */}
         <AnimatePresence>
           {!isOpened && (
             <motion.div 
@@ -292,20 +324,18 @@ export default function Envelope({
               transition={{ duration: 0.5 }}
             >
               <div 
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full flex flex-col items-center justify-center border-4 shadow-2xl"
+                className="w-24 h-24 md:w-32 md:h-32 rounded-full flex flex-col items-center justify-center border-4 shadow-2xl relative"
                 style={{ 
                   backgroundColor: currentSealColor,
                   borderColor: '#dfc384',
                   boxShadow: 'inset 0 0 15px rgba(0,0,0,0.6), 0 10px 30px rgba(0,0,0,0.5)'
                 }}
               >
-                <span className="font-serif text-white text-2xl md:text-3xl font-extrabold tracking-widest mb-1">{monogramText}</span>
-                <div className="w-10 h-[1px] bg-white/40 my-1"></div>
-                <span className="text-[8px] text-[#dfc384] tracking-[0.2em] uppercase font-bold">AÇMAK İÇİN DOKUN</span>
+                {/* Asılı duran altın tassel/ip püskülü */}
+                <div className="absolute -bottom-8 w-2 h-8 bg-amber-500 rounded-b-md shadow-md" />
+                <span className="text-white text-xl md:text-2xl font-bold tracking-widest mb-1" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{monogramText}</span>
+                <span className="text-[7px] text-[#dfc384] tracking-[0.2em] uppercase font-bold mt-1">Perdeyi Aç</span>
               </div>
-              
-              {/* Perde Altın Kordon İpi */}
-              <div className="w-1 h-32 bg-gradient-to-b from-[#dfc384] to-transparent shadow-lg" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -320,7 +350,6 @@ export default function Envelope({
         className="fixed inset-0 flex items-center justify-center perspective-2000 cursor-pointer overflow-hidden" 
         onClick={!isOpened ? handleOpen : undefined}
       >
-        {/* Sol Kapı Kanadı */}
         <motion.div 
           className="w-1/2 h-full bg-[#1b212c] border-r-4 border-[#dfc384] relative z-20 shadow-2xl flex items-center justify-end"
           style={{
@@ -331,7 +360,6 @@ export default function Envelope({
           animate={isOpened ? { rotateY: -105, opacity: 0 } : { rotateY: 0, opacity: 1 }}
           transition={{ duration: 1.6, ease: [0.6, 0.01, -0.05, 0.95] }}
         >
-          {/* Kapı işlemeleri */}
           <div className="absolute inset-6 border border-[#dfc384]/30 rounded-l-2xl pointer-events-none" />
           <div className="absolute inset-10 border-2 border-double border-[#dfc384]/20 rounded-l-xl pointer-events-none" />
           <div className="mr-6 text-right select-none opacity-40">
@@ -339,7 +367,6 @@ export default function Envelope({
           </div>
         </motion.div>
 
-        {/* Sağ Kapı Kanadı */}
         <motion.div 
           className="w-1/2 h-full bg-[#1b212c] border-l-4 border-[#dfc384] relative z-20 shadow-2xl flex items-center justify-start"
           style={{
@@ -350,7 +377,6 @@ export default function Envelope({
           animate={isOpened ? { rotateY: 105, opacity: 0 } : { rotateY: 0, opacity: 1 }}
           transition={{ duration: 1.6, ease: [0.6, 0.01, -0.05, 0.95] }}
         >
-          {/* Kapı işlemeleri */}
           <div className="absolute inset-6 border border-[#dfc384]/30 rounded-r-2xl pointer-events-none" />
           <div className="absolute inset-10 border-2 border-double border-[#dfc384]/20 rounded-r-xl pointer-events-none" />
           <div className="ml-6 text-left select-none opacity-40">
@@ -358,11 +384,10 @@ export default function Envelope({
           </div>
         </motion.div>
 
-        {/* Ortadaki Kapı Tokmağı & Kilit Monogram */}
         <AnimatePresence>
           {!isOpened && (
             <motion.div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-full border-4 shadow-2xl"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-full border-4 shadow-2xl cursor-pointer"
               exit={{ opacity: 0, scale: 0.5, filter: 'blur(5px)' }}
               transition={{ duration: 0.6 }}
               style={{
@@ -373,7 +398,7 @@ export default function Envelope({
             >
               <div className="text-center">
                 <Crown className="w-5 h-5 mx-auto text-[#dfc384] mb-1" />
-                <span className="font-serif text-white text-base md:text-xl font-bold tracking-widest">{monogramText}</span>
+                <span className="text-white text-base md:text-xl font-bold tracking-widest" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{monogramText}</span>
                 <span className="text-[7px] text-[#dfc384] tracking-[0.25em] block uppercase mt-1 font-bold">Kapıyı Aç</span>
               </div>
             </motion.div>
@@ -397,13 +422,12 @@ export default function Envelope({
           boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25), 0 0 40px rgba(223,195,132,0.1)'
         }}
       >
-        {/* Altın Süsleme Detayları */}
         <div className="absolute inset-3 border border-double border-[#dfc384]/35 rounded-xl pointer-events-none" />
         
         <div className="py-6 px-4">
           <span className="text-[10px] text-amber-600 font-serif tracking-[0.25em] uppercase mb-4 block">Özel Davet</span>
           
-          <h2 className="font-serif text-3xl md:text-4xl text-slate-800 my-6 font-normal tracking-wide">
+          <h2 className="text-3xl md:text-4xl text-slate-800 my-6 font-normal tracking-wide" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>
             {brideName} <span className="text-amber-500 block my-2">&</span> {groomName}
           </h2>
           
@@ -424,6 +448,50 @@ export default function Envelope({
     );
   };
 
+  // 6. ANIMATION: HEART-FADE (Büyük Kalp Patlaması)
+  const renderHeartFade = () => {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center cursor-pointer overflow-hidden z-50 bg-[#0c0a09]" onClick={!isOpened ? handleOpen : undefined}>
+        {/* Particle bursts background when opened */}
+        <AnimatePresence>
+          {!isOpened ? (
+            <motion.div 
+              className="flex flex-col items-center relative"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 1.5, opacity: 0, filter: 'blur(12px)' }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+            >
+              <motion.div 
+                className="w-48 h-48 md:w-60 md:h-60 rounded-full flex flex-col items-center justify-center relative shadow-2xl"
+                style={{ 
+                  backgroundColor: currentSealColor,
+                  boxShadow: `0 0 60px ${currentSealColor}80, inset 0 0 30px rgba(0,0,0,0.5)`,
+                  border: '3px solid #dfc384'
+                }}
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <Heart className="w-12 h-12 text-[#dfc384] mb-2 fill-[#dfc384]/20" />
+                <span className="text-white text-lg font-bold tracking-widest" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{monogramText}</span>
+                <span className="text-[8px] text-[#dfc384] tracking-[0.2em] uppercase font-bold mt-2">DOKUN VE GİR</span>
+              </motion.div>
+            </motion.div>
+          ) : (
+            <motion.div 
+              className="absolute inset-0 bg-[#0c0a09] pointer-events-none flex items-center justify-center"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <Sparkles className="w-24 h-24 text-[#dfc384] animate-ping" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
   // Switch animation components based on entranceType
   let entranceComponent = renderEnvelope();
   
@@ -440,22 +508,29 @@ export default function Envelope({
     case 'card':
       entranceComponent = renderCard();
       break;
+    case 'ribbon':
+      entranceComponent = renderEnvelope(true);
+      break;
+    case 'heart-fade':
+      entranceComponent = renderHeartFade();
+      break;
   }
 
   // Viewport background wrapper
   const renderBackground = () => {
-    // If curtain or gate is active and closed, let curtain render its own full-screen backdrop
-    // Curtain and Gate are always full-screen by default, so we wrap them directly.
-    if (entranceType === 'curtain' || entranceType === 'gate') {
+    // Curtain, Gate and Heart-fade are full-screen by default
+    if (entranceType === 'curtain' || entranceType === 'gate' || entranceType === 'heart-fade') {
       return (
-        <div className={`fixed inset-0 flex items-center justify-center overflow-hidden z-50 ${bgClass}`} style={bgStyle}>
+        <>
+          <link href={fontUrl} rel="stylesheet" />
           {entranceComponent}
-        </div>
+        </>
       );
     }
 
     return (
       <div className={`fixed inset-0 flex items-center justify-center overflow-hidden z-50 ${bgClass}`} style={bgStyle}>
+        <link href={fontUrl} rel="stylesheet" />
         <AnimatePresence>
           {!showContent && entranceComponent}
         </AnimatePresence>

@@ -22,12 +22,11 @@ interface TemplateConfig {
   textColorMode: 'dark' | 'light' | 'auto';
 }
 
-// Generate the 50 unique configurations
 const getTemplateConfig = (id: string): TemplateConfig => {
   const num = parseInt(id.replace('template', '')) || 1;
-  const name = `Premium Davetiye #${num}`;
+  const name = `Tasarım #${num}`;
 
-  // 1-8: Royal Gold (Lüks & Altın)
+  // 1-8: Royal Gold (Lüks & Altın) - classic-card ve full-screen
   if (num <= 8) {
     const accents: ('crown'|'rings'|'sparkles')[] = ['crown', 'rings', 'sparkles'];
     const textures: ('marble'|'geometric-lines')[] = ['marble', 'geometric-lines'];
@@ -44,7 +43,7 @@ const getTemplateConfig = (id: string): TemplateConfig => {
     };
   }
 
-  // 9-16: Watercolor Floral (Suluboya & Çiçekli)
+  // 9-16: Watercolor Floral (Suluboya & Çiçekli) - classic-card ve full-screen
   if (num <= 16) {
     const textures: ('watercolor-pink'|'watercolor-blue'|'watercolor-emerald')[] = [
       'watercolor-pink', 'watercolor-blue', 'watercolor-emerald'
@@ -62,7 +61,7 @@ const getTemplateConfig = (id: string): TemplateConfig => {
     };
   }
 
-  // 17-24: Minimalist Modern (Sade & Modern)
+  // 17-24: Minimalist Modern (Sade & Modern) - minimalist
   if (num <= 24) {
     return {
       id,
@@ -77,7 +76,7 @@ const getTemplateConfig = (id: string): TemplateConfig => {
     };
   }
 
-  // 25-32: Galactic Neon (Karanlık Mod & Neon)
+  // 25-32: Galactic Neon (Karanlık Mod & Neon) - classic-card ve full-screen
   if (num <= 32) {
     const layout = num % 2 === 0 ? 'full-screen' : 'classic-card';
     return {
@@ -93,7 +92,7 @@ const getTemplateConfig = (id: string): TemplateConfig => {
     };
   }
 
-  // 33-40: Vintage Retro (Vintage & Nostaljik)
+  // 33-40: Vintage Retro (Vintage & Nostaljik) - polaroid ve classic-card
   if (num <= 40) {
     const layout = num % 2 === 0 ? 'polaroid' : 'classic-card';
     return {
@@ -109,7 +108,7 @@ const getTemplateConfig = (id: string): TemplateConfig => {
     };
   }
 
-  // 41-50: Art Deco (Sanatsal & Avant-Garde)
+  // 41-50: Art Deco (Sanatsal & Avant-Garde) - split-screen ve classic-card
   const accents: ('crown'|'sparkles'|'infinity')[] = ['crown', 'sparkles', 'infinity'];
   return {
     id,
@@ -142,10 +141,13 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const textColor = wedding.text_color || (config.textColorMode === 'light' ? '#f8fafc' : '#1e293b');
   const textIsLight = isColorLight(textColor);
 
-  // Set typography based on wedding selection
-  // sans: Montserrat, serif: Cormorant Garamond, mono: Great Vibes
-  const bodyFontClass = wedding.font_family === 'serif' ? 'font-serif' : 'font-sans';
-  const nameFontClass = wedding.font_family === 'mono' ? 'font-mono font-normal tracking-normal' : wedding.font_family === 'serif' ? 'font-serif italic font-medium' : 'font-sans font-extrabold tracking-tight';
+  // Dynamic Google Font
+  const fontFamily = wedding.font_family || 'Montserrat';
+  const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
+
+  // Couple names monogram
+  const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'G';
+  const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : 'D';
 
   // Card Background definitions
   let cardClass = '';
@@ -227,13 +229,13 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   
   switch (config.accentIcon) {
     case 'crown':
-      accentComponent = <Crown className="w-8 h-8 mx-auto mb-6" style={iconStyle} />;
+      accentComponent = <Crown className="w-8 h-8 mx-auto mb-6 animate-bounce" style={iconStyle} />;
       break;
     case 'heart':
-      accentComponent = <Heart className="w-8 h-8 mx-auto mb-6 animate-pulse" style={iconStyle} />;
+      accentComponent = <Heart className="w-8 h-8 mx-auto mb-6 animate-pulse fill-rose-500/20" style={iconStyle} />;
       break;
     case 'sparkles':
-      accentComponent = <Sparkles className="w-8 h-8 mx-auto mb-6" style={iconStyle} />;
+      accentComponent = <Sparkles className="w-8 h-8 mx-auto mb-6 animate-spin" style={iconStyle} />;
       break;
     case 'infinity':
       accentComponent = <Infinity className="w-8 h-8 mx-auto mb-6" style={iconStyle} />;
@@ -272,14 +274,13 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   // Floral borders SVG helper
   const renderFloralBorder = () => (
     <div className="absolute inset-0 pointer-events-none z-0 opacity-20">
-      <div className="absolute top-2 left-2 rotate-0">🌿</div>
+      <div className="absolute top-2 left-2">🌿</div>
       <div className="absolute top-2 right-2 scale-x-[-1]">🌿</div>
       <div className="absolute bottom-2 left-2 scale-y-[-1]">🌿</div>
       <div className="absolute bottom-2 right-2 scale-x-[-1] scale-y-[-1]">🌿</div>
     </div>
   );
 
-  // Custom Neon box-shadow
   const getNeonShadow = () => {
     if (config.borderStyle !== 'neon') return {};
     return {
@@ -289,20 +290,119 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     };
   };
 
-  return (
-    <div 
-      className={`min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 pb-28 ${bodyFontClass} relative overflow-hidden`}
-      style={{ ...bgStyle, color: textColor }}
-    >
-      {/* Background Image dark overlay */}
-      {wedding.background_image_url && <div className="absolute inset-0 bg-black/40 z-0" />}
+  // Shared inner components
+  const renderHeader = () => (
+    <h3 className="font-semibold tracking-[0.25em] uppercase mb-4 text-xs" style={{ color: primaryColor }}>
+      {eventTitle}
+    </h3>
+  );
 
-      {/* Main card wrapper */}
+  const renderNames = () => (
+    <h1 className="text-4xl md:text-5xl lg:text-6xl mb-6 mt-4 leading-tight font-normal select-none">
+      {wedding.bride_parents && (
+        <span className="text-[10px] tracking-[0.25em] uppercase font-light opacity-50 mb-2 block font-sans">
+          {wedding.bride_parents}
+        </span>
+      )}
+      <span className="block px-2">
+        {wedding.bride_name}
+      </span>
+      <span className="text-xl my-2 block" style={{ color: primaryColor }}>
+        &
+      </span>
+      <span className="block px-2">
+        {wedding.groom_name}
+      </span>
+      {wedding.groom_parents && (
+        <span className="text-[10px] tracking-[0.25em] uppercase font-light opacity-50 mt-2 block font-sans">
+          {wedding.groom_parents}
+        </span>
+      )}
+    </h1>
+  );
+
+  const renderQuote = () => wedding.custom_message && (
+    <p className="text-sm font-light italic mb-8 px-4 leading-relaxed opacity-85">
+      "{wedding.custom_message}"
+    </p>
+  );
+
+  const renderTimer = () => wedding.wedding_date && (
+    <div className="my-6">
+      <CountdownTimer 
+        targetDate={wedding.wedding_date} 
+        primaryColor={primaryColor} 
+        styleType={config.textColorMode === 'light' ? 'neon' : 'glass'} 
+      />
+    </div>
+  );
+
+  const renderDetails = () => (
+    <div className="flex flex-col gap-4 text-sm font-medium mb-10 mt-6 relative z-10 font-sans">
+      <div 
+        className="flex items-center justify-center gap-3 py-3 px-4 rounded-xl border shadow-sm" 
+        style={{ 
+          borderColor: `${primaryColor}20`, 
+          backgroundColor: textIsLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.7)' 
+        }}
+      >
+        <Calendar className="w-4 h-4" style={{ color: primaryColor }} />
+        <span>{dateStr} <span className="mx-2" style={{ color: primaryColor }}>|</span> {timeStr}</span>
+      </div>
+
+      <div 
+        className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border shadow-sm animate-fade-in" 
+        style={{ 
+          borderColor: `${primaryColor}20`, 
+          backgroundColor: textIsLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.7)' 
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <MapPin className="w-4 h-4" style={{ color: primaryColor }} />
+          <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
+        </div>
+        {wedding.venue_address && (
+          <span className="text-xs font-light px-4 opacity-75">{wedding.venue_address}</span>
+        )}
+        
+        {wedding.google_maps_url && (
+          <a 
+            href={wedding.google_maps_url} 
+            target="_blank" 
+            rel="noreferrer"
+            className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold hover:underline"
+            style={{ color: primaryColor }}
+          >
+            <Navigation className="w-3.5 h-3.5" />
+            Haritada Gör
+          </a>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderRsvpButton = () => (
+    <button 
+      onClick={() => setIsRsvpOpen(true)}
+      className="w-full px-8 py-3.5 text-white rounded-xl font-bold text-base shadow-lg hover:opacity-90 transition-all hover:-translate-y-0.5 active:translate-y-0 relative z-10 font-sans"
+      style={{ 
+        backgroundColor: primaryColor, 
+        boxShadow: config.textColorMode === 'light' 
+          ? `0 0 15px ${primaryColor}80` 
+          : `0 8px 20px -4px ${primaryColor}40` 
+      }}
+    >
+      LCV Formunu Doldur
+    </button>
+  );
+
+  // 1. LAYOUT: CLASSIC CARD (Ortalanmış Kart)
+  const renderClassicCardLayout = () => (
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 pb-28 relative z-10 w-full">
       <div 
         className={`max-w-[460px] mx-auto w-full rounded-3xl p-8 sm:p-10 text-center relative z-10 border transition-colors ${cardClass} my-8`}
         style={getNeonShadow()}
       >
-        {/* Custom borders */}
         {config.borderStyle === 'double-gold' && renderDoubleGoldBorder()}
         {config.borderStyle === 'deco-corners' && renderDecoCorners()}
         {config.borderStyle === 'floral' && renderFloralBorder()}
@@ -310,110 +410,169 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
           <div className="absolute inset-3 border border-dashed rounded-2xl pointer-events-none z-0 opacity-30" style={{ borderColor: textColor }} />
         )}
 
-        {/* Decorative Top Accent */}
         {accentComponent}
+        {renderHeader()}
+        {renderNames()}
+        {renderQuote()}
+        {renderTimer()}
+        {renderDetails()}
+        {renderRsvpButton()}
+      </div>
+    </div>
+  );
 
-        {/* Event category header */}
-        <h3 className="font-semibold tracking-[0.25em] uppercase mb-4 text-xs" style={{ color: primaryColor }}>
-          {eventTitle}
-        </h3>
-
-        {/* Couple Names */}
-        <h1 className="text-4xl md:text-5xl lg:text-6xl mb-8 mt-6 leading-tight flex flex-col items-center gap-1">
-          {wedding.bride_parents && (
-            <span className="text-[11px] tracking-[0.2em] uppercase font-light opacity-50 mb-2">
-              {wedding.bride_parents}
-            </span>
-          )}
-          <span className={`${nameFontClass} block px-4 py-2`}>
-            {wedding.bride_name}
-          </span>
-          <span className="text-2xl my-1 block" style={{ color: primaryColor }}>
-            &
-          </span>
-          <span className={`${nameFontClass} block px-4 py-2`}>
-            {wedding.groom_name}
-          </span>
-          {wedding.groom_parents && (
-            <span className="text-[11px] tracking-[0.2em] uppercase font-light opacity-50 mt-2">
-              {wedding.groom_parents}
-            </span>
-          )}
-        </h1>
-
-        {/* Custom Love Quote */}
-        {wedding.custom_message && (
-          <p className="text-base font-light italic mb-8 px-4 leading-relaxed opacity-85">
-            "{wedding.custom_message}"
-          </p>
-        )}
-
-        {/* Event Countdown */}
-        {wedding.wedding_date && (
-          <CountdownTimer 
-            targetDate={wedding.wedding_date} 
-            primaryColor={primaryColor} 
-            styleType={config.textColorMode === 'light' ? 'neon' : 'glass'} 
-          />
-        )}
-
-        {/* Date and Location Details */}
-        <div className="flex flex-col gap-4 text-sm font-medium mb-10 mt-8 relative z-10">
-          <div 
-            className="flex items-center justify-center gap-3 py-3 px-4 rounded-xl border shadow-sm" 
-            style={{ 
-              borderColor: `${primaryColor}20`, 
-              backgroundColor: textIsLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.7)' 
-            }}
-          >
-            <Calendar className="w-4 h-4" style={{ color: primaryColor }} />
-            <span>{dateStr} <span className="mx-2" style={{ color: primaryColor }}>|</span> {timeStr}</span>
-          </div>
-
-          <div 
-            className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border shadow-sm" 
-            style={{ 
-              borderColor: `${primaryColor}20`, 
-              backgroundColor: textIsLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.7)' 
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4" style={{ color: primaryColor }} />
-              <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
-            </div>
-            {wedding.venue_address && (
-              <span className="text-xs font-light px-4 opacity-75">{wedding.venue_address}</span>
-            )}
-            
-            {wedding.google_maps_url && (
-              <a 
-                href={wedding.google_maps_url} 
-                target="_blank" 
-                rel="noreferrer"
-                className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold hover:underline"
-                style={{ color: primaryColor }}
-              >
-                <Navigation className="w-3.5 h-3.5" />
-                Haritada Gör
-              </a>
-            )}
-          </div>
+  // 2. LAYOUT: SPLIT SCREEN (İkiye Bölünmüş Ekran)
+  const renderSplitScreenLayout = () => (
+    <div className="min-h-screen flex flex-col lg:flex-row relative z-10 w-full">
+      {/* Sol Resim/Tasarım Kolonu */}
+      <div 
+        className="w-full lg:w-1/2 min-h-[40vh] lg:min-h-screen flex flex-col items-center justify-center p-8 text-center relative overflow-hidden"
+        style={{
+          backgroundImage: wedding.background_image_url ? `url(${wedding.background_image_url})` : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundColor: `${primaryColor}15`
+        }}
+      >
+        {wedding.background_image_url && <div className="absolute inset-0 bg-black/30 z-0" />}
+        <div className="relative z-10 text-white p-6 backdrop-blur-sm bg-black/20 rounded-2xl border border-white/10 max-w-sm">
+          <Crown className="w-10 h-10 mx-auto text-[#dfc384] mb-4" />
+          <h1 className="text-4xl md:text-5xl font-normal leading-tight">
+            {wedding.bride_name} <span className="block text-2xl my-1 text-[#dfc384]">&</span> {wedding.groom_name}
+          </h1>
+          <p className="text-xs uppercase tracking-widest text-white/70 mt-3 font-sans">Biz Evleniyoruz</p>
         </div>
+      </div>
 
-        {/* RSVP button */}
-        <button 
-          onClick={() => setIsRsvpOpen(true)}
-          className="w-full px-8 py-3.5 text-white rounded-xl font-bold text-base shadow-lg hover:opacity-90 transition-all hover:-translate-y-0.5 active:translate-y-0 relative z-10"
-          style={{ 
-            backgroundColor: primaryColor, 
-            boxShadow: config.textColorMode === 'light' 
-              ? `0 0 15px ${primaryColor}80` 
-              : `0 8px 20px -4px ${primaryColor}40` 
+      {/* Sağ Detaylar Kolonu */}
+      <div className="w-full lg:w-1/2 min-h-screen bg-white/95 flex flex-col items-center justify-center p-8 sm:p-12 lg:p-16 pb-28 text-center">
+        <div className="max-w-[420px] w-full text-slate-800">
+          {accentComponent}
+          {renderHeader()}
+          {renderQuote()}
+          {renderTimer()}
+          {renderDetails()}
+          {renderRsvpButton()}
+        </div>
+      </div>
+    </div>
+  );
+
+  // 3. LAYOUT: FULL SCREEN (Kart Sınırı Olmadan)
+  const renderFullScreenLayout = () => (
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 sm:p-12 pb-28 text-center relative z-10 w-full max-w-[500px] mx-auto">
+      {config.borderStyle === 'deco-corners' && renderDecoCorners()}
+      {config.borderStyle === 'double-gold' && (
+        <div className="absolute inset-4 border-2 border-double rounded-3xl pointer-events-none z-0 opacity-25" style={{ borderColor: '#dfc384' }} />
+      )}
+      
+      <div className="relative z-10 py-10 w-full">
+        {accentComponent}
+        {renderHeader()}
+        {renderNames()}
+        {renderQuote()}
+        {renderTimer()}
+        {renderDetails()}
+        {renderRsvpButton()}
+      </div>
+    </div>
+  );
+
+  // 4. LAYOUT: MINIMALIST (Fashion / Asil Dikey Çizgiler)
+  const renderMinimalistLayout = () => (
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 sm:p-10 pb-28 text-center relative z-10 w-full max-w-[480px] mx-auto">
+      {/* Minimal monogram badge at the top */}
+      <div className="border border-slate-300 w-16 h-16 rounded-full flex items-center justify-center mb-8 mx-auto font-serif text-slate-800 text-lg font-light">
+        {brideInitial}{groomInitial}
+      </div>
+
+      <div className="w-full flex flex-col text-slate-800">
+        <span className="text-[10px] tracking-[0.3em] uppercase text-slate-400 font-light mb-4 block font-sans">
+          Mektup Davet
+        </span>
+        
+        {renderNames()}
+        <div className="w-8 h-[1px] bg-slate-400 mx-auto my-6"></div>
+        {renderQuote()}
+        {renderTimer()}
+
+        <div className="w-full h-px bg-slate-200 my-8"></div>
+
+        {renderDetails()}
+        {renderRsvpButton()}
+      </div>
+    </div>
+  );
+
+  // 5. LAYOUT: POLAROID (Fotoğraf Kartı)
+  const renderPolaroidLayout = () => (
+    <div className="min-h-screen flex flex-col items-center p-4 sm:p-8 pb-28 relative z-10 w-full max-w-[480px] mx-auto">
+      {/* Polaroid Photo Frame */}
+      <div className="bg-white p-4 sm:p-5 pb-8 sm:pb-12 shadow-2xl rounded-sm border border-slate-200 rotate-1 max-w-[360px] w-full my-8 transform hover:rotate-0 transition-transform duration-300">
+        <div 
+          className="w-full aspect-square bg-slate-200 rounded-sm mb-4 relative overflow-hidden flex items-center justify-center"
+          style={{
+            backgroundImage: wedding.background_image_url ? `url(${wedding.background_image_url})` : undefined,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
           }}
         >
-          LCV Formunu Doldur
-        </button>
+          {!wedding.background_image_url && (
+            <div className="text-center p-6 text-slate-400">
+              <Heart className="w-12 h-12 mx-auto mb-2 opacity-30 text-rose-400 fill-rose-100" />
+              <span className="text-xs tracking-wider font-sans">Düğün Fotoğrafı</span>
+            </div>
+          )}
+        </div>
+        <div className="text-center">
+          <h2 className="text-2xl md:text-3xl text-slate-800" style={{ fontFamily: `"${fontFamily}", cursive` }}>
+            {wedding.bride_name} & {wedding.groom_name}
+          </h2>
+          <span className="text-[10px] text-slate-400 tracking-widest block mt-1 font-sans">{dateStr}</span>
+        </div>
       </div>
+
+      {/* Details Box */}
+      <div className="w-full bg-white/80 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-200/50 text-center text-slate-800">
+        {renderQuote()}
+        {renderTimer()}
+        {renderDetails()}
+        {renderRsvpButton()}
+      </div>
+    </div>
+  );
+
+  // Route layouts
+  let layoutComponent = renderClassicCardLayout();
+  switch (config.layout) {
+    case 'split-screen':
+      layoutComponent = renderSplitScreenLayout();
+      break;
+    case 'full-screen':
+      layoutComponent = renderFullScreenLayout();
+      break;
+    case 'minimalist':
+      layoutComponent = renderMinimalistLayout();
+      break;
+    case 'polaroid':
+      layoutComponent = renderPolaroidLayout();
+      break;
+  }
+
+  return (
+    <div 
+      className="min-h-screen w-full relative overflow-x-hidden"
+      style={{ ...bgStyle, fontFamily: `"${fontFamily}", sans-serif` }}
+    >
+      {/* Dynamically inject the stylesheet of selected Google Font */}
+      <link href={fontUrl} rel="stylesheet" />
+
+      {wedding.background_image_url && config.layout !== 'split-screen' && (
+        <div className="absolute inset-0 bg-black/45 z-0 pointer-events-none" />
+      )}
+
+      {/* Render selected Layout */}
+      {layoutComponent}
 
       {/* Action Bars and Modals */}
       <FloatingActionBar 

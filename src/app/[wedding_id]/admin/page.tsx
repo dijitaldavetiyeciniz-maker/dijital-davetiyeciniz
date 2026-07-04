@@ -118,6 +118,39 @@ export default function CoupleAdminPage({
     loadData();
   }, [wedding_id]);
 
+  // Gerçek Zamanlı Auto-Save Motoru (Debounce)
+  useEffect(() => {
+    if (loading || !wedding?.id) return;
+
+    const timer = setTimeout(async () => {
+      await supabase
+        .from('weddings')
+        .update({
+          template_id: templateId,
+          primary_color: primaryColor,
+          text_color: textColor,
+          envelope_color: envelopeColor,
+          envelope_bg_color: envelopeBgColor,
+          envelope_flap_type: envelopeFlapType,
+          seal_type: sealType,
+          seal_color: sealColor,
+          entrance_type: entranceType,
+          effect_type: effectType,
+          font_family: fontFamily,
+          use_envelope: useEnvelope
+        })
+        .eq('id', wedding.id);
+
+      setPreviewKey(Date.now()); // Canlı Önizleme İframe'ini Tazele
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [
+    templateId, primaryColor, textColor, envelopeColor, 
+    envelopeBgColor, envelopeFlapType, sealType, sealColor, 
+    entranceType, effectType, fontFamily, useEnvelope
+  ]);
+
   async function fetchRsvps(weddingId: string) {
     const { data } = await supabase
       .from('rsvps')
@@ -482,10 +515,49 @@ export default function CoupleAdminPage({
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Yazı Tipi (Font)</label>
-                    <select value={fontFamily} onChange={e => setFontFamily(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50">
-                      <option value="sans">Sade & Modern (Montserrat)</option>
-                      <option value="serif">Zarif & Şık (Cormorant Garamond)</option>
-                      <option value="mono">Romantik Kaligrafi (Great Vibes)</option>
+                    <select value={fontFamily} onChange={e => setFontFamily(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50 text-sm">
+                      <optgroup label="Romantik El Yazısı (Kaligrafi)">
+                        <option value="Great Vibes">Great Vibes</option>
+                        <option value="Parisienne">Parisienne</option>
+                        <option value="Alex Brush">Alex Brush</option>
+                        <option value="Dancing Script">Dancing Script</option>
+                        <option value="Allura">Allura</option>
+                        <option value="Arizonia">Arizonia</option>
+                        <option value="Pinyon Script">Pinyon Script</option>
+                        <option value="Sacramento">Sacramento</option>
+                        <option value="Tangerine">Tangerine</option>
+                        <option value="Yellowtail">Yellowtail</option>
+                        <option value="Yesteryear">Yesteryear</option>
+                        <option value="Playball">Playball</option>
+                        <option value="Clicker Script">Clicker Script</option>
+                        <option value="Italianno">Italianno</option>
+                        <option value="Herr Von Muellerhoff">Herr Von Muellerhoff</option>
+                        <option value="Monsieur La Doulaise">Monsieur La Doulaise</option>
+                        <option value="Niconne">Niconne</option>
+                        <option value="Marck Script">Marck Script</option>
+                      </optgroup>
+                      <optgroup label="Zarif & Şık (Serif)">
+                        <option value="Cormorant Garamond">Cormorant Garamond</option>
+                        <option value="Playfair Display">Playfair Display</option>
+                        <option value="Cinzel">Cinzel</option>
+                        <option value="Italiana">Italiana</option>
+                        <option value="Bodoni Moda">Bodoni Moda</option>
+                        <option value="Prata">Prata</option>
+                        <option value="Cardo">Cardo</option>
+                        <option value="Oranienbaum">Oranienbaum</option>
+                        <option value="Cinzel Decorative">Cinzel Decorative</option>
+                      </optgroup>
+                      <optgroup label="Modern & Sade (Sans-serif)">
+                        <option value="Montserrat">Montserrat</option>
+                        <option value="Inter">Inter</option>
+                        <option value="Outfit">Outfit</option>
+                        <option value="League Spartan">League Spartan</option>
+                        <option value="Lato">Lato</option>
+                        <option value="Raleway">Raleway</option>
+                        <option value="Quicksand">Quicksand</option>
+                        <option value="Josefin Sans">Josefin Sans</option>
+                        <option value="Poppins">Poppins</option>
+                      </optgroup>
                     </select>
                   </div>
                 </div>
@@ -560,10 +632,12 @@ export default function CoupleAdminPage({
                         <label className="block text-sm font-semibold mb-1.5 text-slate-700">Açılış Animasyonu Türü</label>
                         <select value={entranceType} onChange={e => setEntranceType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
                           <option value="envelope">✉️ 3D Mühürlü Zarf</option>
+                          <option value="ribbon">🎀 Kurdeleli Premium Zarf</option>
                           <option value="box">🎁 Lüks Hediye Kutusu</option>
                           <option value="curtain">🎭 İpek Sahne Perdesi</option>
                           <option value="gate">🏰 Saray / Bahçe Kapısı</option>
                           <option value="card">🎴 Sade Tebrik Kartı (Süzülme)</option>
+                          <option value="heart-fade">❤️ Büyük Kalp Patlaması</option>
                         </select>
                       </div>
 

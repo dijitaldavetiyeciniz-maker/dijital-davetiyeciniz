@@ -5,7 +5,7 @@ export interface ThemePreset {
   template_id: string;
   primary_color: string;
   text_color?: string;
-  font_family: 'sans' | 'serif' | 'mono';
+  font_family: string; // Storing actual Google Font name
   background_image_url: string | null;
   use_envelope?: boolean;
   envelope_color?: string;
@@ -13,35 +13,37 @@ export interface ThemePreset {
   envelope_flap_type?: string;
   seal_type?: string;
   seal_color?: string;
+  entrance_type?: string;
   effect_type?: string;
 }
 
 export const predefinedThemes: ThemePreset[] = [
   {
     id: 'theme-1',
-    name: 'Kraliyet Zümrüdü (Zarif & Lüks)',
+    name: 'Kraliyet Zümrüdü (Lüks & Asil)',
     category: 'Lüks',
-    template_id: 'template1',
-    primary_color: '#d4af37', // Gold
+    template_id: 'template1', // Royal classic-card
+    primary_color: '#dfc384', // Gold
     text_color: '#064e3b', // Deep Emerald
-    font_family: 'serif',
+    font_family: 'Cormorant Garamond',
     background_image_url: null,
     use_envelope: true,
-    envelope_color: '#064e3b', // Emerald Envelope
+    envelope_color: '#064e3b',
     envelope_bg_color: 'marble',
     envelope_flap_type: 'rounded',
     seal_type: 'crown',
-    seal_color: '#d4af37',
+    seal_color: '#dfc384',
+    entrance_type: 'gate',
     effect_type: 'sparkles'
   },
   {
     id: 'theme-2',
     name: 'Gül Rüyası (Romantik Kaligrafi)',
     category: 'Doğal',
-    template_id: 'template9', // Floral template
+    template_id: 'template9', // Watercolor floral
     primary_color: '#be123c', // Deep Rose Red
     text_color: '#334155',
-    font_family: 'mono', // Calligraphy
+    font_family: 'Great Vibes',
     background_image_url: null,
     use_envelope: true,
     envelope_color: '#ffe4e6', // Soft blush pink
@@ -49,84 +51,89 @@ export const predefinedThemes: ThemePreset[] = [
     envelope_flap_type: 'rounded',
     seal_type: 'rose',
     seal_color: '#be123c',
+    entrance_type: 'envelope',
     effect_type: 'hearts'
   },
   {
     id: 'theme-3',
-    name: 'Gece Yıldızları (Karanlık Neon)',
+    name: 'Gece Yıldızları (Karanlık Galaksi)',
     category: 'Karanlık',
     template_id: 'template25', // Neon template
     primary_color: '#a855f7', // Electric Violet
     text_color: '#f8fafc',
-    font_family: 'sans',
+    font_family: 'Montserrat',
     background_image_url: null,
     use_envelope: true,
-    envelope_color: '#0f172a', // Midnight slate
+    envelope_color: '#0f172a',
     envelope_bg_color: 'slate',
     envelope_flap_type: 'triangle',
     seal_type: 'sparkles',
     seal_color: '#a855f7',
+    entrance_type: 'heart-fade',
     effect_type: 'sparkles'
   },
   {
     id: 'theme-4',
-    name: 'Sessiz Lüks (Monokrom Minimal)',
+    name: 'Sessiz Lüks (Monokrom Minimalist)',
     category: 'Minimalist',
-    template_id: 'template17', // Minimalist template
+    template_id: 'template17', // Minimalist layout
     primary_color: '#0f172a', // Midnight Black
     text_color: '#1e293b',
-    font_family: 'sans',
+    font_family: 'Outfit',
     background_image_url: null,
     use_envelope: true,
-    envelope_color: '#ffffff', // Pure white envelope
+    envelope_color: '#ffffff',
     envelope_bg_color: 'linen',
     envelope_flap_type: 'square',
     seal_type: 'monogram',
     seal_color: '#0f172a',
+    entrance_type: 'card',
     effect_type: ''
   },
   {
     id: 'theme-5',
-    name: 'Toskana Güneşi (Organik & Sıcak)',
+    name: 'Toskana Güneşi (Vintage & Ahşap)',
     category: 'Doğal',
-    template_id: 'template33', // Vintage paper layout
+    template_id: 'template33', // Vintage template
     primary_color: '#b45309', // Terracotta Amber
     text_color: '#451a03',
-    font_family: 'serif',
+    font_family: 'Playfair Display',
     background_image_url: null,
     use_envelope: true,
-    envelope_color: '#fef3c7', // Soft Sand
+    envelope_color: '#fef3c7', // Sand color
     envelope_bg_color: 'wood',
     envelope_flap_type: 'triangle',
     seal_type: 'leaf',
     seal_color: '#b45309',
+    entrance_type: 'ribbon',
     effect_type: 'bubbles'
   },
   {
     id: 'theme-6',
-    name: 'Safir Asaleti (Royal Blue)',
+    name: 'Safir Asaleti (Lüks Kadife)',
     category: 'Lüks',
     template_id: 'template41', // Art Deco split-screen
-    primary_color: '#dfc384', // Pale gold
-    text_color: '#1e3a8a', // Deep sapphire blue
-    font_family: 'serif',
+    primary_color: '#dfc384',
+    text_color: '#1e3a8a',
+    font_family: 'Cinzel',
     background_image_url: null,
     use_envelope: true,
-    envelope_color: '#1e3a8a',
+    envelope_color: '#1e3a8a', // Sapphire blue envelope
     envelope_bg_color: 'marble',
     envelope_flap_type: 'square',
     seal_type: 'crown',
     seal_color: '#dfc384',
+    entrance_type: 'box',
     effect_type: 'sparkles'
   },
   {
     id: 'theme-7',
-    name: 'Bahar Bahçesi (Soft Pastel)',
+    name: 'Bahar Esintisi (Zarif Cursive)',
     category: 'Modern',
-    template_id: 'template10', // Floral letter
+    template_id: 'template10',
     primary_color: '#db2777', // Soft Magenta Pink
     text_color: '#1e293b',
-    font_family: 'mono',
+    font_family: 'Parisienne',
     background_image_url: null,
     use_envelope: true,
     envelope_color: '#fdf2f8',
@@ -134,152 +141,17 @@ export const predefinedThemes: ThemePreset[] = [
     envelope_flap_type: 'rounded',
     seal_type: 'rose',
     seal_color: '#db2777',
+    entrance_type: 'envelope',
     effect_type: 'bubbles'
   },
   {
     id: 'theme-8',
-    name: 'Bohem Esintisi (Sage & Sand)',
+    name: 'Ege Dalgaları (Sahil & Keten)',
     category: 'Doğal',
-    template_id: 'template34', // Polaroid layout
-    primary_color: '#065f46', // Sage Green
-    text_color: '#2d3748',
-    font_family: 'serif',
-    background_image_url: null,
-    use_envelope: true,
-    envelope_color: '#eae6df',
-    envelope_bg_color: 'wood',
-    envelope_flap_type: 'rounded',
-    seal_type: 'leaf',
-    seal_color: '#065f46',
-    effect_type: ''
-  },
-  {
-    id: 'theme-9',
-    name: 'Lavanta Düşü (Zarif Kaligrafi)',
-    category: 'Klasik',
-    template_id: 'template6',
-    primary_color: '#7c3aed', // Lavender Violet
-    text_color: '#2e1065',
-    font_family: 'mono',
-    background_image_url: null,
-    use_envelope: true,
-    envelope_color: '#f5f3ff',
-    envelope_bg_color: 'linen',
-    envelope_flap_type: 'rounded',
-    seal_type: 'heart',
-    seal_color: '#7c3aed',
-    effect_type: 'bubbles'
-  },
-  {
-    id: 'theme-10',
-    name: 'Kardelen Beyazı (Minimalist White)',
-    category: 'Minimalist',
-    template_id: 'template18',
-    primary_color: '#1e293b',
-    text_color: '#334155',
-    font_family: 'sans',
-    background_image_url: null,
-    use_envelope: true,
-    envelope_color: '#f8fafc',
-    envelope_bg_color: 'marble',
-    envelope_flap_type: 'square',
-    seal_type: 'monogram',
-    seal_color: '#475569',
-    effect_type: 'snow'
-  },
-  {
-    id: 'theme-11',
-    name: 'Eskiz Defteri (Kraft & Çömlek)',
-    category: 'Doğal',
-    template_id: 'template35',
-    primary_color: '#9a3412', // Terracotta
-    text_color: '#431407',
-    font_family: 'serif',
-    background_image_url: null,
-    use_envelope: true,
-    envelope_color: '#fed7aa', // Kraft paper beige
-    envelope_bg_color: 'wood',
-    envelope_flap_type: 'triangle',
-    seal_type: 'leaf',
-    seal_color: '#9a3412',
-    effect_type: ''
-  },
-  {
-    id: 'theme-12',
-    name: 'Bordo Aşkı (Lüks Kadife)',
-    category: 'Lüks',
-    template_id: 'template2',
-    primary_color: '#dfc384',
-    text_color: '#f8fafc',
-    font_family: 'serif',
-    background_image_url: null,
-    use_envelope: true,
-    envelope_color: '#881337', // Deep burgundy
-    envelope_bg_color: 'marble',
-    envelope_flap_type: 'rounded',
-    seal_type: 'crown',
-    seal_color: '#dfc384',
-    effect_type: 'sparkles'
-  },
-  {
-    id: 'theme-13',
-    name: 'Nordik Gri (Clean Slate)',
-    category: 'Modern',
-    template_id: 'template19',
-    primary_color: '#0f172a',
-    text_color: '#334155',
-    font_family: 'sans',
-    background_image_url: null,
-    use_envelope: true,
-    envelope_color: '#e2e8f0',
-    envelope_bg_color: 'concrete',
-    envelope_flap_type: 'square',
-    seal_type: 'sparkles',
-    seal_color: '#475569',
-    effect_type: ''
-  },
-  {
-    id: 'theme-14',
-    name: 'Büyülü Bahçe (Zümrüt & Gül)',
-    category: 'Doğal',
-    template_id: 'template11',
-    primary_color: '#be123c',
-    text_color: '#064e3b',
-    font_family: 'mono',
-    background_image_url: null,
-    use_envelope: true,
-    envelope_color: '#fdf2f8',
-    envelope_bg_color: 'linen',
-    envelope_flap_type: 'rounded',
-    seal_type: 'rose',
-    seal_color: '#be123c',
-    effect_type: 'hearts'
-  },
-  {
-    id: 'theme-15',
-    name: 'Altın Varak (Luxury Gatsby)',
-    category: 'Lüks',
-    template_id: 'template8',
-    primary_color: '#d4af37',
-    text_color: '#1e293b',
-    font_family: 'serif',
-    background_image_url: null,
-    use_envelope: true,
-    envelope_color: '#1e293b', // Black gold theme
-    envelope_bg_color: 'marble',
-    envelope_flap_type: 'rounded',
-    seal_type: 'crown',
-    seal_color: '#d4af37',
-    effect_type: 'sparkles'
-  },
-  {
-    id: 'theme-16',
-    name: 'Ege Esintisi (Mavi & Beyaz)',
-    category: 'Klasik',
     template_id: 'template12',
     primary_color: '#0284c7', // Aegean Blue
     text_color: '#0f172a',
-    font_family: 'sans',
+    font_family: 'Dancing Script',
     background_image_url: null,
     use_envelope: true,
     envelope_color: '#e0f2fe',
@@ -287,74 +159,43 @@ export const predefinedThemes: ThemePreset[] = [
     envelope_flap_type: 'rounded',
     seal_type: 'leaf',
     seal_color: '#0284c7',
+    entrance_type: 'curtain',
     effect_type: 'bubbles'
   },
   {
-    id: 'theme-17',
-    name: 'Vintage Parşömen (Klasik Mektup)',
+    id: 'theme-9',
+    name: 'İpek Perde Klasik (Bordo Kadife)',
     category: 'Klasik',
     template_id: 'template36',
-    primary_color: '#7c2d12', // Sepia
-    text_color: '#431407',
-    font_family: 'serif',
-    background_image_url: null,
-    use_envelope: true,
-    envelope_color: '#fed7aa',
-    envelope_bg_color: 'wood',
-    envelope_flap_type: 'triangle',
-    seal_type: 'feather',
-    seal_color: '#7c2d12',
-    effect_type: ''
-  },
-  {
-    id: 'theme-18',
-    name: 'Kozmik Gece (Aşkın Işıltısı)',
-    category: 'Karanlık',
-    template_id: 'template26',
-    primary_color: '#ec4899', // Pink neon
+    primary_color: '#dfc384',
     text_color: '#f8fafc',
-    font_family: 'mono',
+    font_family: 'Prata',
     background_image_url: null,
     use_envelope: true,
-    envelope_color: '#030712',
-    envelope_bg_color: 'slate',
-    envelope_flap_type: 'triangle',
-    seal_type: 'heart',
-    seal_color: '#ec4899',
-    effect_type: 'hearts'
+    envelope_color: '#881337', // Velvet Burgundy
+    envelope_bg_color: 'marble',
+    envelope_flap_type: 'rounded',
+    seal_type: 'crown',
+    seal_color: '#dfc384',
+    entrance_type: 'curtain',
+    effect_type: 'sparkles'
   },
   {
-    id: 'theme-19',
-    name: 'Çöl Güneşi (Sıcak & Minimal)',
-    category: 'Minimalist',
-    template_id: 'template20',
-    primary_color: '#ea580c', // Orange
-    text_color: '#27272a',
-    font_family: 'sans',
+    id: 'theme-10',
+    name: 'Bohem Kır Düğünü (Eucalyptus)',
+    category: 'Doğal',
+    template_id: 'template34', // Polaroid
+    primary_color: '#065f46', // Sage Green
+    text_color: '#2d3748',
+    font_family: 'Alex Brush',
     background_image_url: null,
     use_envelope: true,
-    envelope_color: '#ffedd5',
+    envelope_color: '#eae6df',
     envelope_bg_color: 'wood',
-    envelope_flap_type: 'square',
-    seal_type: 'monogram',
-    seal_color: '#ea580c',
+    envelope_flap_type: 'rounded',
+    seal_type: 'leaf',
+    seal_color: '#065f46',
+    entrance_type: 'ribbon',
     effect_type: ''
-  },
-  {
-    id: 'theme-20',
-    name: 'Kış Masalı (Silver & Snow)',
-    category: 'Lüks',
-    template_id: 'template42',
-    primary_color: '#94a3b8', // Silver
-    text_color: '#1e293b',
-    font_family: 'serif',
-    background_image_url: null,
-    use_envelope: true,
-    envelope_color: '#f1f5f9',
-    envelope_bg_color: 'concrete',
-    envelope_flap_type: 'square',
-    seal_type: 'sparkles',
-    seal_color: '#475569',
-    effect_type: 'snow'
   }
 ];
