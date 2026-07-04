@@ -150,6 +150,7 @@ export default function CoupleAdminPage({
   const [musicAutoplay, setMusicAutoplay] = useState(true);
   
   // Genel Bilgiler State
+  const [eventType, setEventType] = useState('Düğün');
   const [brideName, setBrideName] = useState('');
   const [groomName, setGroomName] = useState('');
   const [brideParents, setBrideParents] = useState('');
@@ -215,6 +216,7 @@ export default function CoupleAdminPage({
       if (weddingData.music_autoplay !== undefined && weddingData.music_autoplay !== null) setMusicAutoplay(weddingData.music_autoplay);
       
       // Genel Bilgileri Doldur
+      if (weddingData.event_type) setEventType(weddingData.event_type);
       if (weddingData.bride_name) setBrideName(weddingData.bride_name);
       if (weddingData.groom_name) setGroomName(weddingData.groom_name);
       if (weddingData.bride_parents) setBrideParents(weddingData.bride_parents);
@@ -301,6 +303,7 @@ export default function CoupleAdminPage({
         telegram_bot_token: telegramBotToken,
         telegram_chat_id: telegramChatId,
         use_envelope: useEnvelope,
+        event_type: eventType,
         bride_name: brideName,
         groom_name: groomName,
         bride_parents: brideParents,
@@ -586,6 +589,25 @@ export default function CoupleAdminPage({
               {/* BÖLÜM 1: GENEL BİLGİLER */}
               <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">1. Genel Bilgiler</h3>
               <div className="space-y-4 mb-10">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Davet / Etkinlik Türü</label>
+                  <select 
+                    value={eventType} 
+                    onChange={e => setEventType(e.target.value)}
+                    className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white text-sm"
+                  >
+                    <option value="Düğün">Düğün Daveti</option>
+                    <option value="Kına">Kına Daveti</option>
+                    <option value="Nişan">Nişan Daveti</option>
+                    <option value="Nikah">Nikah Daveti</option>
+                    <option value="Sünnet">Sünnet Daveti</option>
+                    <option value="Baby Shower">Baby Shower Daveti</option>
+                    <option value="Bekarlığa Veda">Bekarlığa Veda Daveti</option>
+                    <option value="Doğum Günü">Doğum Günü Daveti</option>
+                    <option value="Özel Davet">Özel Davet</option>
+                  </select>
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">Gelin / Gelin Adayı</label>
