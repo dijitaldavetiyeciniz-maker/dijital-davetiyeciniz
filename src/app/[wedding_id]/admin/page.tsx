@@ -160,6 +160,8 @@ export default function CoupleAdminPage({
   const [venueAddress, setVenueAddress] = useState('');
   const [googleMapsUrl, setGoogleMapsUrl] = useState('');
   const [customMessage, setCustomMessage] = useState('');
+  const [quoteFontFamily, setQuoteFontFamily] = useState('');
+  const [quoteFontSize, setQuoteFontSize] = useState('text-sm');
   
 
   const [isUploading, setIsUploading] = useState(false);
@@ -226,6 +228,8 @@ export default function CoupleAdminPage({
       if (weddingData.venue_address) setVenueAddress(weddingData.venue_address);
       if (weddingData.google_maps_url) setGoogleMapsUrl(weddingData.google_maps_url);
       if (weddingData.custom_message) setCustomMessage(weddingData.custom_message);
+      if (weddingData.quote_font_family) setQuoteFontFamily(weddingData.quote_font_family);
+      if (weddingData.quote_font_size) setQuoteFontSize(weddingData.quote_font_size);
       
       setLoading(false);
     }
@@ -251,6 +255,8 @@ export default function CoupleAdminPage({
           entrance_type: entranceType,
           effect_type: effectType,
           font_family: fontFamily,
+          quote_font_family: quoteFontFamily,
+          quote_font_size: quoteFontSize,
           use_envelope: useEnvelope
         })
         .eq('id', wedding.id);
@@ -262,7 +268,8 @@ export default function CoupleAdminPage({
   }, [
     templateId, primaryColor, textColor, envelopeColor, 
     envelopeBgColor, envelopeFlapType, sealType, sealColor, 
-    entranceType, effectType, fontFamily, useEnvelope
+    entranceType, effectType, fontFamily, useEnvelope,
+    quoteFontFamily, quoteFontSize
   ]);
 
   async function fetchRsvps(weddingId: string) {
@@ -313,6 +320,8 @@ export default function CoupleAdminPage({
         venue_address: venueAddress,
         google_maps_url: googleMapsUrl,
         custom_message: customMessage,
+        quote_font_family: quoteFontFamily,
+        quote_font_size: quoteFontSize,
         music_url: musicUrl,
         music_autoplay: musicAutoplay
       })
@@ -660,6 +669,53 @@ export default function CoupleAdminPage({
                     </button>
                   </div>
                   <textarea value={customMessage} onChange={e=>setCustomMessage(e.target.value)} rows={3} className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white resize-none" />
+                </div>
+
+                {/* Davet Metni Font Ayrıntıları */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-medium text-slate-500 mb-1">Davet Metni Yazı Tipi (Font)</label>
+                    <select 
+                      value={quoteFontFamily} 
+                      onChange={e => setQuoteFontFamily(e.target.value)} 
+                      className="w-full border p-2 rounded-lg bg-slate-50 text-xs focus:bg-white"
+                    >
+                      <option value="">Şablon Yazı Tipi (Varsayılan)</option>
+                      <optgroup label="Romantik El Yazısı (Kaligrafi)">
+                        <option value="Great Vibes">Great Vibes</option>
+                        <option value="Parisienne">Parisienne</option>
+                        <option value="Alex Brush">Alex Brush</option>
+                        <option value="Dancing Script">Dancing Script</option>
+                        <option value="Arizonia">Arizonia</option>
+                        <option value="Pinyon Script">Pinyon Script</option>
+                      </optgroup>
+                      <optgroup label="Zarif & Şık (Serif)">
+                        <option value="Cormorant Garamond">Cormorant Garamond</option>
+                        <option value="Playfair Display">Playfair Display</option>
+                        <option value="Cinzel">Cinzel</option>
+                        <option value="Italiana">Italiana</option>
+                      </optgroup>
+                      <optgroup label="Modern & Sade (Sans-serif)">
+                        <option value="Montserrat">Montserrat</option>
+                        <option value="Outfit">Outfit</option>
+                        <option value="Inter">Inter</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-medium text-slate-500 mb-1">Davet Metni Büyüklüğü (Boyut)</label>
+                    <select 
+                      value={quoteFontSize} 
+                      onChange={e => setQuoteFontSize(e.target.value)} 
+                      className="w-full border p-2 rounded-lg bg-slate-50 text-xs focus:bg-white"
+                    >
+                      <option value="text-xs">Küçük (12px)</option>
+                      <option value="text-sm">Orta (14px - Varsayılan)</option>
+                      <option value="text-base">Standart (16px)</option>
+                      <option value="text-lg">Büyük (18px)</option>
+                      <option value="text-xl">Çok Büyük (20px)</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 

@@ -187,6 +187,9 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const fontFamily = wedding.font_family || 'Montserrat';
   const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
 
+  const quoteFontFamily = wedding.quote_font_family || fontFamily;
+  const quoteFontUrl = `https://fonts.googleapis.com/css2?family=${quoteFontFamily.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
+
   // Couple names monogram
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'G';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : 'D';
@@ -326,8 +329,12 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
 
   const renderQuote = () => wedding.custom_message && (
     <p 
-      className="text-sm font-light italic mb-8 px-4 leading-relaxed"
-      style={{ color: textColor, opacity: 0.85 }}
+      className={`font-light italic mb-8 px-4 leading-relaxed ${wedding.quote_font_size || 'text-sm'}`}
+      style={{ 
+        color: textColor, 
+        opacity: 0.85,
+        fontFamily: wedding.quote_font_family ? `"${wedding.quote_font_family}", sans-serif` : undefined
+      }}
     >
       "{wedding.custom_message}"
     </p>
@@ -653,6 +660,9 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     >
       {/* Dynamically inject the stylesheet of selected Google Font */}
       <link href={fontUrl} rel="stylesheet" />
+      {wedding.quote_font_family && (
+        <link href={quoteFontUrl} rel="stylesheet" />
+      )}
 
       {wedding.background_image_url && config.layout !== 'split-screen' && (
         <div className="absolute inset-0 bg-black/45 z-0 pointer-events-none" />
