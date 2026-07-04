@@ -432,58 +432,38 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
             </span>
           </button>
 
-          {/* Button 3: FOTOĞRAF YÜKLE / HİKAYEMİZ */}
-          {telegramConfigured ? (
-            <div className="flex flex-col items-center">
-              <input 
-                type="file" 
-                accept="image/*" 
-                id="inline-photo-upload" 
-                className="hidden" 
-                onChange={handleGuestPhotoUpload} 
-                disabled={isUploading}
-              />
-              <label 
-                htmlFor="inline-photo-upload" 
-                className="flex flex-col items-center gap-2 group cursor-pointer transition-transform active:scale-95"
-              >
-                <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center border shadow-md bg-white hover:bg-slate-50 transition-colors"
-                  style={{ borderColor: `${primaryColor}20`, color: primaryColor }}
-                >
-                  {isUploading ? (
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                  ) : (
-                    <Camera className="w-6 h-6" />
-                  )}
-                </div>
-                <span 
-                  className="text-[10px] font-bold tracking-[0.15em] uppercase text-center max-w-[80px] opacity-80"
-                  style={{ color: textColor }}
-                >
-                  FOTOĞRAF YÜKLE
-                </span>
-              </label>
-            </div>
-          ) : (
-            <button 
-              onClick={scrollToTop}
-              className="flex flex-col items-center gap-2 group transition-transform active:scale-95"
+          {/* Button 3: FOTOĞRAF YÜKLE */}
+          <div className="flex flex-col items-center">
+            <input 
+              type="file" 
+              accept="image/*" 
+              id="inline-photo-upload" 
+              className="hidden" 
+              onChange={handleGuestPhotoUpload} 
+              disabled={isUploading}
+            />
+            <label 
+              htmlFor="inline-photo-upload" 
+              className="flex flex-col items-center gap-2 group cursor-pointer transition-transform active:scale-95"
             >
               <div 
                 className="w-16 h-16 rounded-full flex items-center justify-center border shadow-md bg-white hover:bg-slate-50 transition-colors"
                 style={{ borderColor: `${primaryColor}20`, color: primaryColor }}
               >
-                <Heart className="w-6 h-6 group-hover:fill-current" />
+                {isUploading ? (
+                  <Loader2 className="w-6 h-6 animate-spin" />
+                ) : (
+                  <Camera className="w-6 h-6" />
+                )}
               </div>
               <span 
-                className="text-[10px] font-bold tracking-[0.15em] uppercase opacity-80"
+                className="text-[10px] font-bold tracking-[0.15em] uppercase text-center max-w-[80px] opacity-80"
                 style={{ color: textColor }}
               >
-                HİKAYEMİZ
+                FOTOĞRAF YÜKLE
               </span>
-            </button>
-          )}
+            </label>
+          </div>
         </div>
       </div>
     );

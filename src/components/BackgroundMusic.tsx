@@ -24,16 +24,41 @@ export default function BackgroundMusic({
   useEffect(() => {
     if (!audioRef.current || !url) return;
 
+    const handleFirstInteraction = () => {
+      if (audioRef.current && isEnvelopeOpened && autoplay && !isPlaying && !isMuted) {
+        audioRef.current.play()
+          .then(() => {
+            setIsPlaying(true);
+            removeListeners();
+          })
+          .catch(error => {
+            console.log('Autoplay was blocked by the browser. Waiting for interaction.', error);
+          });
+      }
+    };
+
+    const removeListeners = () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+    };
+
+    // Try to play immediately if already interacted
     if (isEnvelopeOpened && autoplay && !isMuted && !isPlaying) {
       audioRef.current.play()
         .then(() => {
           setIsPlaying(true);
         })
-        .catch(error => {
-          console.log('Autoplay was blocked by the browser. Waiting for interaction.', error);
+        .catch(() => {
+          // Add fallback listeners for first touch/click
+          document.addEventListener('click', handleFirstInteraction);
+          document.addEventListener('touchstart', handleFirstInteraction);
         });
     }
-  }, [isEnvelopeOpened, autoplay, url]);
+
+    return () => {
+      removeListeners();
+    };
+  }, [isEnvelopeOpened, autoplay, url, isPlaying, isMuted]);
 
   const togglePlayback = () => {
     if (!audioRef.current) return;
