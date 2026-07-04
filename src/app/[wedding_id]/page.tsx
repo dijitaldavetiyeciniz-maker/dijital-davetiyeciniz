@@ -83,6 +83,7 @@ export default async function WeddingPage({
       sealType={wedding.seal_type || 'sparkles'}
       sealColor={wedding.seal_color}
       entranceType={wedding.entrance_type || 'envelope'}
+      fontFamily={wedding.font_family || 'Montserrat'}
     >
       {contentWithEffect}
     </Envelope>

@@ -20,6 +20,9 @@ export default function CoupleAdminPage({
   const [errorMsg, setErrorMsg] = useState('');
   
   const [activeTab, setActiveTab] = useState<'rsvps' | 'design' | 'payment'>('rsvps');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'attending' | 'not-attending'>('all');
+  const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
   
   // Tasarım Stüdyosu State
   const [templateId, setTemplateId] = useState('template1');
@@ -49,7 +52,6 @@ export default function CoupleAdminPage({
   const [googleMapsUrl, setGoogleMapsUrl] = useState('');
   const [customMessage, setCustomMessage] = useState('');
   
-  const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
 
   const [isUploading, setIsUploading] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
@@ -225,6 +227,42 @@ export default function CoupleAdminPage({
     if (theme.effect_type !== undefined) setEffectType(theme.effect_type || '');
   }
 
+  function handleReplayAnimation() {
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.removeItem('preview_envelope_opened');
+    }
+    setPreviewKey(Date.now());
+  }
+
+  const handleExportCSV = () => {
+    if (rsvps.length === 0) return;
+    const BOM = '\uFEFF';
+    const headers = 'Davetli Adı,Durum,Kişi Sayısı,Özel Mesaj\n';
+    const csvContent = rsvps.map(r => 
+      `"${(r.guest_name || '').replace(/"/g, '""')}","${r.is_attending ? 'Katılıyor' : 'Katılamıyor'}",${r.is_attending ? r.guest_count : 0},"${(r.message || '').replace(/"/g, '""')}"`
+    ).join('\n');
+    
+    const blob = new Blob([BOM + headers + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${wedding?.slug || 'davetli'}-lcv-listesi.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const filteredRsvps = rsvps.filter(rsvp => {
+    const name = rsvp.guest_name || '';
+    const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = filterStatus === 'all' 
+      ? true 
+      : filterStatus === 'attending' 
+        ? rsvp.is_attending 
+        : !rsvp.is_attending;
+    return matchesSearch && matchesStatus;
+  });
+
   function handleAIGenerate() {
     let newQuote = getRandomQuote();
     // Aynı söz gelmesin diye basit bir kontrol
@@ -363,6 +401,34 @@ export default function CoupleAdminPage({
               </div>
             </div>
 
+            {/* LCV guest list search & filters */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
+              <div className="flex gap-2 w-full sm:w-auto">
+                <input 
+                  type="text" 
+                  value={searchTerm} 
+                  onChange={e => setSearchTerm(e.target.value)} 
+                  placeholder="Davetli ara..." 
+                  className="border px-4 py-2 rounded-xl text-sm w-full sm:w-64 bg-white"
+                />
+                <select 
+                  value={filterStatus} 
+                  onChange={e => setFilterStatus(e.target.value as any)} 
+                  className="border px-4 py-2 rounded-xl text-sm bg-white"
+                >
+                  <option value="all">Tüm Liste</option>
+                  <option value="attending">Katılanlar</option>
+                  <option value="not-attending">Katılamayanlar</option>
+                </select>
+              </div>
+              <button 
+                onClick={handleExportCSV} 
+                className="w-full sm:w-auto px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white text-sm font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
+              >
+                <Save className="w-4 h-4" /> Excel / CSV İndir
+              </button>
+            </div>
+
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
               <table className="w-full text-left">
                 <thead className="bg-slate-50 border-b border-slate-200">
@@ -374,10 +440,10 @@ export default function CoupleAdminPage({
                   </tr>
                 </thead>
                 <tbody>
-                  {rsvps.length === 0 && (
-                    <tr><td colSpan={4} className="p-8 text-center text-slate-500">Henüz LCV yanıtı yok.</td></tr>
+                  {filteredRsvps.length === 0 && (
+                    <tr><td colSpan={4} className="p-8 text-center text-slate-500">Eşleşen LCV yanıtı bulunamadı.</td></tr>
                   )}
-                  {rsvps.map(rsvp => (
+                  {filteredRsvps.map(rsvp => (
                     <tr key={rsvp.id} className="border-b border-slate-100 last:border-0">
                       <td className="p-4 font-medium">{rsvp.guest_name}</td>
                       <td className="p-4">
@@ -770,16 +836,27 @@ export default function CoupleAdminPage({
             </div>
 
             {/* SAĞ KOLON: Canlı Önizleme */}
-            <div className="relative h-[800px] lg:sticky lg:top-8 bg-slate-800 rounded-[3rem] p-4 shadow-2xl hidden lg:block border-4 border-slate-700">
-              {/* Telefon Çentiği */}
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-3xl z-20"></div>
-              <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-hidden relative">
-                <iframe 
-                  key={previewKey} 
-                  src={`/${wedding.slug}?t=${previewKey}`} 
-                  className="w-full h-full border-0"
-                  title="Live Preview"
-                />
+            <div className="relative h-[850px] lg:sticky lg:top-8 flex flex-col gap-3 hidden lg:flex">
+              <div className="flex justify-between items-center bg-slate-800 text-white px-6 py-2.5 rounded-2xl shadow-md border border-slate-700">
+                <span className="text-xs font-bold tracking-wider text-slate-300">📱 Canlı Telefon Önizlemesi</span>
+                <button 
+                  onClick={handleReplayAnimation}
+                  className="bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors"
+                >
+                  <Wand2 className="w-3.5 h-3.5" /> Giriş Animasyonunu Oynat
+                </button>
+              </div>
+              <div className="relative h-[800px] w-full bg-slate-800 rounded-[3rem] p-4 shadow-2xl border-4 border-slate-700">
+                {/* Telefon Çentiği */}
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-3xl z-20"></div>
+                <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-hidden relative">
+                  <iframe 
+                    key={previewKey} 
+                    src={`/${wedding.slug}?preview=true&t=${previewKey}`} 
+                    className="w-full h-full border-0"
+                    title="Live Preview"
+                  />
+                </div>
               </div>
             </div>
             {/* Mobil için önizleme uyarısı */}
