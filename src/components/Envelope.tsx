@@ -337,59 +337,7 @@ export default function Envelope({
     );
   };
 
-  // 3. ANIMATION: CURTAIN
-  const renderCurtain = () => {
-    return (
-      <div className="absolute inset-0 flex overflow-hidden cursor-pointer" onClick={!isOpened ? handleOpen : undefined}>
-        <motion.div 
-          className="w-1/2 h-full bg-[#800020] relative z-20 shadow-2xl flex items-center justify-end"
-          animate={isOpened ? { x: '-100%' } : { x: 0 }}
-          transition={{ duration: 1.5, ease: [0.77, 0, 0.175, 1] }}
-          style={{
-            backgroundImage: 'linear-gradient(to right, #4a0012, #800020 70%, #9a0028 95%, #3a000d 100%)',
-            boxShadow: '5px 0 25px rgba(0,0,0,0.5)'
-          }}
-        >
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px)] bg-[size:24px_100%] opacity-40 pointer-events-none" />
-        </motion.div>
-
-        <motion.div 
-          className="w-1/2 h-full bg-[#800020] relative z-20 shadow-2xl flex items-center justify-start"
-          animate={isOpened ? { x: '100%' } : { x: 0 }}
-          transition={{ duration: 1.5, ease: [0.77, 0, 0.175, 1] }}
-          style={{
-            backgroundImage: 'linear-gradient(to left, #4a0012, #800020 70%, #9a0028 95%, #3a000d 100%)',
-            boxShadow: '-5px 0 25px rgba(0,0,0,0.5)'
-          }}
-        >
-          <div className="absolute inset-0 bg-[linear-gradient(to_left,rgba(0,0,0,0.15)_1px,transparent_1px)] bg-[size:24px_100%] opacity-40 pointer-events-none" />
-        </motion.div>
-
-        <AnimatePresence>
-          {!isOpened && (
-            <motion.div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center"
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div 
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full flex flex-col items-center justify-center border-4 shadow-2xl relative"
-                style={{ 
-                  backgroundColor: currentSealColor,
-                  borderColor: '#dfc384',
-                  boxShadow: 'inset 0 0 15px rgba(0,0,0,0.6), 0 10px 30px rgba(0,0,0,0.5)'
-                }}
-              >
-                <div className="absolute -bottom-8 w-2 h-8 bg-amber-500 rounded-b-md shadow-md" />
-                <span className="text-white text-xl md:text-2xl font-bold tracking-widest mb-1" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{monogramText}</span>
-                <span className="text-[7px] text-[#dfc384] tracking-[0.2em] uppercase font-bold mt-1">Perdeyi Aç</span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    );
-  };
+  // 3. ANIMATION: CURTAIN (Implementation moved below)
 
   // 4. ANIMATION: GATE
   const renderGate = () => {
@@ -569,11 +517,77 @@ export default function Envelope({
     );
   };
 
-  // 8. ANIMATION: WAX-SEAL-PRESS
+  const renderCurtain = () => {
+    return (
+      <div className="absolute inset-0 flex overflow-hidden cursor-pointer" onClick={!isOpened ? handleOpen : undefined}>
+        <motion.div 
+          className="w-1/2 h-full bg-[#800020] relative z-20 shadow-2xl flex items-center justify-end"
+          animate={isOpened ? { x: '-100%' } : { x: 0 }}
+          transition={{ duration: 1.5, ease: [0.77, 0, 0.175, 1] }}
+          style={{
+            backgroundImage: 'linear-gradient(to right, #4a0012, #800020 70%, #9a0028 95%, #3a000d 100%)',
+            boxShadow: '5px 0 25px rgba(0,0,0,0.5)'
+          }}
+        >
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px)] bg-[size:24px_100%] opacity-40 pointer-events-none" />
+        </motion.div>
+
+        <motion.div 
+          className="w-1/2 h-full bg-[#800020] relative z-20 shadow-2xl flex items-center justify-start"
+          animate={isOpened ? { x: '100%' } : { x: 0 }}
+          transition={{ duration: 1.5, ease: [0.77, 0, 0.175, 1] }}
+          style={{
+            backgroundImage: 'linear-gradient(to left, #4a0012, #800020 70%, #9a0028 95%, #3a000d 100%)',
+            boxShadow: '-5px 0 25px rgba(0,0,0,0.5)'
+          }}
+        >
+          <div className="absolute inset-0 bg-[linear-gradient(to_left,rgba(0,0,0,0.15)_1px,transparent_1px)] bg-[size:24px_100%] opacity-40 pointer-events-none" />
+        </motion.div>
+
+        <AnimatePresence>
+          {!isOpened && (
+            <motion.div 
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center"
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div 
+                className="mb-4 px-6 py-2 rounded-full border text-[10px] font-bold tracking-[0.2em] uppercase bg-white/90 shadow-md select-none text-center"
+                style={{ borderColor: `${primaryColor}40`, color: '#6b5a3e' }}
+              >
+                DAVETİYEYİ AÇMAK İÇİN
+              </div>
+              <div 
+                className="w-20 h-20 md:w-24 md:h-24 rounded-full border flex items-center justify-center shadow-2xl relative select-none"
+                style={{ 
+                  backgroundColor: currentSealColor,
+                  borderColor: '#dfc384',
+                  borderWidth: '3px',
+                  boxShadow: 'inset 0 0 15px rgba(0,0,0,0.5), 0 10px 25px rgba(0,0,0,0.3)'
+                }}
+              >
+                <span className="font-serif font-bold text-white text-base md:text-lg tracking-widest">
+                  {monogramText}
+                </span>
+              </div>
+              <div 
+                className="mt-4 px-6 py-2 rounded-full border text-[10px] font-bold tracking-[0.2em] uppercase bg-white/90 shadow-md select-none text-center"
+                style={{ borderColor: `${primaryColor}40`, color: '#6b5a3e' }}
+              >
+                BURAYA TIKLAYINIZ.
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
   const renderWaxSealPress = () => {
     return (
       <div 
-        className="absolute inset-0 flex items-center justify-center cursor-pointer overflow-hidden z-50 bg-[#151210]"
+        className="absolute inset-0 flex items-center justify-center cursor-pointer overflow-hidden z-50"
+        style={bgStyle}
         onClick={!isOpened ? handleOpen : undefined}
       >
         <motion.div 
@@ -581,30 +595,48 @@ export default function Envelope({
           animate={isOpened ? { y: '-100%', opacity: 0 } : { y: 0, opacity: 1 }}
           transition={{ duration: 1, ease: [0.77, 0, 0.175, 1] }}
         >
-          <div className="absolute inset-10 border border-double border-[#dfc384]/40 rounded-xl" />
-          
-          <div className="max-w-sm px-6">
-            <span className="text-[10px] text-[#dfc384] tracking-[0.3em] uppercase block mb-4">Kraliyet Mektubu</span>
-            <h2 className="text-3xl text-white tracking-wide" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{brideInitial} & {groomInitial}</h2>
-            <div className="w-16 h-px bg-[#dfc384]/35 mx-auto my-6" />
-            <p className="text-xs text-white/50 mb-10 italic">Düğün Töreni Resmi Davetiyesi</p>
-          </div>
-
-          <motion.div 
-            className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 flex items-center justify-center shadow-2xl relative"
-            style={{ 
-              backgroundColor: currentSealColor,
-              borderColor: '#dfc384',
-              boxShadow: 'inset 0 0 20px rgba(0,0,0,0.6)'
-            }}
-            animate={isPressed ? { scale: [1, 0.85, 1.05, 1], rotate: [0, 5, -5, 0] } : { scale: 1 }}
-            transition={{ duration: 0.8 }}
+          <div 
+            className="mb-4 px-6 py-2 rounded-full border text-[10px] font-bold tracking-[0.2em] uppercase bg-white/90 shadow-md select-none text-center"
+            style={{ borderColor: `${primaryColor}40`, color: '#6b5a3e' }}
           >
-            {sealIcon}
-            <div className="absolute -bottom-6 w-32 text-[#dfc384] text-[8px] font-bold tracking-widest uppercase text-center">
-              {isPressed ? 'Mühürleniyor...' : 'Mühürle ve Aç'}
+            DAVETİYEYİ AÇMAK İÇİN
+          </div>
+          <div 
+            className="w-full bg-white/80 backdrop-blur-sm py-8 border-y flex items-center justify-center gap-10 md:gap-14 relative"
+            style={{ borderColor: `${primaryColor}20` }}
+          >
+            <div className="flex items-center gap-1.5 text-2xl font-light opacity-50 select-none" style={{ color: '#c5a870' }}>
+              <span>&gt;</span>
+              <span>&gt;</span>
+              <span>&gt;</span>
             </div>
-          </motion.div>
+            <motion.div 
+              className="w-20 h-20 md:w-24 md:h-24 rounded-full border flex items-center justify-center shadow-2xl relative select-none"
+              style={{ 
+                backgroundColor: currentSealColor,
+                borderColor: '#dfc384',
+                borderWidth: '3px',
+                boxShadow: 'inset 0 0 15px rgba(0,0,0,0.5), 0 10px 25px rgba(0,0,0,0.15)'
+              }}
+              animate={isPressed ? { scale: [1, 0.85, 1.05, 1], rotate: [0, 5, -5, 0] } : { scale: 1 }}
+              transition={{ duration: 0.8 }}
+            >
+              <span className="font-serif font-bold text-white text-base md:text-lg tracking-widest">
+                {monogramText}
+              </span>
+            </motion.div>
+            <div className="flex items-center gap-1.5 text-2xl font-light opacity-50 select-none" style={{ color: '#c5a870' }}>
+              <span>&lt;</span>
+              <span>&lt;</span>
+              <span>&lt;</span>
+            </div>
+          </div>
+          <div 
+            className="mt-4 px-6 py-2 rounded-full border text-[10px] font-bold tracking-[0.2em] uppercase bg-white/90 shadow-md select-none text-center"
+            style={{ borderColor: `${primaryColor}40`, color: '#6b5a3e' }}
+          >
+            BURAYA TIKLAYINIZ.
+          </div>
         </motion.div>
       </div>
     );

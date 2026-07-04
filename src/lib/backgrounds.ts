@@ -95,21 +95,24 @@ export function getBackgroundStyle(
     // MERMER DESENLER
     case 'marble-white':
       return {
-        backgroundColor: '#fafafc',
-        backgroundImage: 'linear-gradient(135deg, rgba(0,0,0,0.02) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(212,175,55,0.05) 0%, transparent 60%)',
-        boxShadow: 'inset 0 0 120px rgba(0,0,0,0.03)'
+        backgroundImage: 'url(/backgrounds/marble-gold-light.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
       };
     case 'marble-black':
       return {
-        backgroundColor: '#111215',
-        backgroundImage: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%), radial-gradient(circle at 0% 100%, rgba(212,175,55,0.08) 0%, transparent 60%)',
-        boxShadow: 'inset 0 0 150px rgba(0,0,0,0.8)'
+        backgroundImage: 'url(/backgrounds/marble-gold-dark.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
       };
     case 'marble-green':
       return {
-        backgroundColor: '#042d1e',
-        backgroundImage: 'linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 60%), radial-gradient(circle at 100% 0%, rgba(212,175,55,0.09) 0%, transparent 60%)',
-        boxShadow: 'inset 0 0 150px rgba(0,0,0,0.8)'
+        backgroundImage: 'url(/backgrounds/marble-gold-sage.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
       };
     case 'marble-rose':
       return {

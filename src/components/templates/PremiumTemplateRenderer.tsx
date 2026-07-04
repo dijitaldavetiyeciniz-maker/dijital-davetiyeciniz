@@ -382,8 +382,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         <div 
           className="px-6 py-2.5 rounded-full border text-[11px] font-bold tracking-[0.2em] uppercase max-w-sm text-center select-none"
           style={{ 
-            borderColor: `${primaryColor}30`, 
-            color: textIsLight ? '#f3f4f6' : '#4b5563',
+            borderColor: `${primaryColor}60`, 
+            color: textColor,
             backgroundColor: textIsLight ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)'
           }}
         >
@@ -404,8 +404,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
               <MapPin className="w-6 h-6" />
             </div>
             <span 
-              className="text-[10px] font-bold tracking-[0.15em] uppercase"
-              style={{ color: textIsLight ? '#d1d5db' : '#4b5563' }}
+              className="text-[10px] font-bold tracking-[0.15em] uppercase opacity-80"
+              style={{ color: textColor }}
             >
               KONUM
             </span>
@@ -425,8 +425,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
               </svg>
             </div>
             <span 
-              className="text-[10px] font-bold tracking-[0.15em] uppercase animate-pulse"
-              style={{ color: textIsLight ? '#d1d5db' : '#4b5563' }}
+              className="text-[10px] font-bold tracking-[0.15em] uppercase animate-pulse opacity-80"
+              style={{ color: textColor }}
             >
               LCV/KATILIM
             </span>
@@ -458,8 +458,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
                   )}
                 </div>
                 <span 
-                  className="text-[10px] font-bold tracking-[0.15em] uppercase text-center max-w-[80px]"
-                  style={{ color: textIsLight ? '#d1d5db' : '#4b5563' }}
+                  className="text-[10px] font-bold tracking-[0.15em] uppercase text-center max-w-[80px] opacity-80"
+                  style={{ color: textColor }}
                 >
                   FOTOĞRAF YÜKLE
                 </span>
@@ -477,8 +477,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
                 <Heart className="w-6 h-6 group-hover:fill-current" />
               </div>
               <span 
-                className="text-[10px] font-bold tracking-[0.15em] uppercase"
-                style={{ color: textIsLight ? '#d1d5db' : '#4b5563' }}
+                className="text-[10px] font-bold tracking-[0.15em] uppercase opacity-80"
+                style={{ color: textColor }}
               >
                 HİKAYEMİZ
               </span>
