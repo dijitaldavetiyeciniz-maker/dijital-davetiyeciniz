@@ -8,6 +8,8 @@ import SparklesEffect from '@/components/effects/SparklesEffect';
 import HeartsEffect from '@/components/effects/HeartsEffect';
 import SnowEffect from '@/components/effects/SnowEffect';
 
+import BackgroundMusic from '@/components/BackgroundMusic';
+
 // Next.js App Router Page
 export default async function WeddingPage({
   params,
@@ -84,10 +86,20 @@ export default async function WeddingPage({
       sealColor={wedding.seal_color}
       entranceType={wedding.entrance_type || 'envelope'}
       fontFamily={wedding.font_family || 'Montserrat'}
+      musicUrl={wedding.music_url}
+      musicAutoplay={wedding.music_autoplay !== false}
     >
       {contentWithEffect}
     </Envelope>
   ) : (
-    contentWithEffect
+    <>
+      {contentWithEffect}
+      <BackgroundMusic 
+        url={wedding.music_url} 
+        isEnvelopeOpened={true} 
+        autoplay={wedding.music_autoplay !== false}
+        primaryColor={wedding.primary_color}
+      />
+    </>
   );
 }

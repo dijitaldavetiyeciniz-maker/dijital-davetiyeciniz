@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, use } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2 } from 'lucide-react';
+import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music } from 'lucide-react';
 import { getRandomQuote } from '@/lib/aiQuotes';
 
 export default function CoupleAdminPage({
@@ -40,6 +40,8 @@ export default function CoupleAdminPage({
   const [telegramBotToken, setTelegramBotToken] = useState('');
   const [telegramChatId, setTelegramChatId] = useState('');
   const [useEnvelope, setUseEnvelope] = useState(true);
+  const [musicUrl, setMusicUrl] = useState('');
+  const [musicAutoplay, setMusicAutoplay] = useState(true);
   
   // Genel Bilgiler State
   const [brideName, setBrideName] = useState('');
@@ -103,6 +105,8 @@ export default function CoupleAdminPage({
       if (weddingData.telegram_bot_token) setTelegramBotToken(weddingData.telegram_bot_token);
       if (weddingData.telegram_chat_id) setTelegramChatId(weddingData.telegram_chat_id);
       if (weddingData.use_envelope !== undefined && weddingData.use_envelope !== null) setUseEnvelope(weddingData.use_envelope);
+      if (weddingData.music_url) setMusicUrl(weddingData.music_url);
+      if (weddingData.music_autoplay !== undefined && weddingData.music_autoplay !== null) setMusicAutoplay(weddingData.music_autoplay);
       
       // Genel Bilgileri Doldur
       if (weddingData.bride_name) setBrideName(weddingData.bride_name);
@@ -199,7 +203,9 @@ export default function CoupleAdminPage({
         venue_name: venueName,
         venue_address: venueAddress,
         google_maps_url: googleMapsUrl,
-        custom_message: customMessage
+        custom_message: customMessage,
+        music_url: musicUrl,
+        music_autoplay: musicAutoplay
       })
       .eq('id', wedding.id);
       
@@ -818,6 +824,57 @@ export default function CoupleAdminPage({
                       </div>
                     </div>
                   )}
+                </div>
+
+                {/* BÖLÜM 2.5: ARKA PLAN MÜZİK AYARLARI */}
+                <div className="pt-6 border-t border-slate-200">
+                  <h3 className="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
+                    <Music className="w-5 h-5 text-rose-500" /> Arka Plan Müzik Ayarları
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold mb-1.5 text-slate-700">Müzik Şarkısı / Melodi Seçimi</label>
+                      <select 
+                        value={musicUrl} 
+                        onChange={e => setMusicUrl(e.target.value)} 
+                        className="w-full border p-2 rounded-lg bg-white text-sm"
+                      >
+                        <option value="">Müzik Yok (Sessiz)</option>
+                        <option value="https://assets.mixkit.co/music/preview/mixkit-romantic-campaign-237.mp3">🎵 Aşk Hikayesi (Lüks Romantik Piyano)</option>
+                        <option value="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-248.mp3">🎻 Bulutların Üstünde (Duygusal Keman & Piyano)</option>
+                        <option value="https://assets.mixkit.co/music/preview/mixkit-tender-love-252.mp3">🎸 Sonsuz Sevgilim (Soft Akustik Gitar)</option>
+                        <option value="https://assets.mixkit.co/music/preview/mixkit-wedding-waltz-262.mp3">🏛️ Masalsı Düğün Valsi (Klasik Orkestral)</option>
+                        <option value="https://assets.mixkit.co/music/preview/mixkit-happy-moment-272.mp3">✨ Mutlu Yarınlar (Neşeli & Mutlu Akustik)</option>
+                        <option value="custom">🔗 Özel MP3 Bağlantısı (URL)...</option>
+                      </select>
+                    </div>
+
+                    {(musicUrl === 'custom' || (musicUrl !== '' && !musicUrl.includes('mixkit.co'))) && (
+                      <div>
+                        <label className="block text-sm font-semibold mb-1 text-slate-700">Özel MP3 Bağlantısı (Direct MP3 URL)</label>
+                        <input 
+                          type="text" 
+                          value={musicUrl === 'custom' ? '' : musicUrl} 
+                          onChange={e => setMusicUrl(e.target.value)} 
+                          placeholder="https://örnek.com/muzik.mp3" 
+                          className="w-full border p-2 rounded-lg bg-slate-50 text-xs font-mono" 
+                        />
+                        <p className="text-[10px] text-slate-400 mt-1">Gireceğiniz bağlantının doğrudan bir .mp3 dosyasına gitmesi gerekir.</p>
+                      </div>
+                    )}
+
+                    <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100 mt-2">
+                      <div>
+                        <div className="font-bold text-slate-800 text-xs">Müziği Otomatik Başlat</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5">Zarf veya kapı açıldığı anda melodi otomatik çalsın.</div>
+                      </div>
+                      <div className="relative">
+                        <input type="checkbox" className="sr-only" checked={musicAutoplay} onChange={e => setMusicAutoplay(e.target.checked)} />
+                        <div className={`block w-10 h-5 rounded-full transition-colors ${musicAutoplay ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                        <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${musicAutoplay ? 'transform translate-x-5' : ''}`}></div>
+                      </div>
+                    </label>
+                  </div>
                 </div>
 
                 <div>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Heart, Crown, Leaf } from 'lucide-react';
 import { getBackgroundStyle } from '@/lib/backgrounds';
+import BackgroundMusic from './BackgroundMusic';
 
 interface EnvelopeProps {
   children: React.ReactNode;
@@ -16,6 +17,8 @@ interface EnvelopeProps {
   sealColor?: string;
   entranceType?: string;
   fontFamily?: string;
+  musicUrl?: string | null;
+  musicAutoplay?: boolean;
 }
 
 export default function Envelope({ 
@@ -29,19 +32,38 @@ export default function Envelope({
   sealType = 'sparkles',
   sealColor,
   entranceType = 'envelope',
-  fontFamily = 'Montserrat'
+  fontFamily = 'Montserrat',
+  musicUrl,
+  musicAutoplay = true
 }: EnvelopeProps) {
-  const [isOpened, setIsOpened] = useState(false);
-  const [showContent, setShowContent] = useState(false);
+  const [isOpened, setIsOpened] = useState(() => {
+    const isPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
+    if (isPreview && typeof window !== 'undefined' && window.sessionStorage.getItem('preview_envelope_opened') === 'true') {
+      return true;
+    }
+    return false;
+  });
+  const [showContent, setShowContent] = useState(() => {
+    const isPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
+    if (isPreview && typeof window !== 'undefined' && window.sessionStorage.getItem('preview_envelope_opened') === 'true') {
+      return true;
+    }
+    return false;
+  });
   const [ribbonUntied, setRibbonUntied] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const [isShattered, setIsShattered] = useState(false);
 
   const handleOpen = () => {
+    const isPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
+    
     if (entranceType === 'ribbon' && !ribbonUntied) {
       setRibbonUntied(true);
       setTimeout(() => {
         setIsOpened(true);
+        if (isPreview && typeof window !== 'undefined') {
+          window.sessionStorage.setItem('preview_envelope_opened', 'true');
+        }
         setTimeout(() => {
           setShowContent(true);
         }, 1500);
@@ -50,27 +72,32 @@ export default function Envelope({
       setIsPressed(true);
       setTimeout(() => {
         setIsOpened(true);
+        if (isPreview && typeof window !== 'undefined') {
+          window.sessionStorage.setItem('preview_envelope_opened', 'true');
+        }
         setTimeout(() => {
           setShowContent(true);
         }, 1200);
       }, 1000);
     } else if (entranceType === 'glass-shatter') {
       setIsShattered(true);
+      if (isPreview && typeof window !== 'undefined') {
+        window.sessionStorage.setItem('preview_envelope_opened', 'true');
+      }
       setTimeout(() => {
         setShowContent(true);
       }, 800);
     } else {
       setIsOpened(true);
+      if (isPreview && typeof window !== 'undefined') {
+        window.sessionStorage.setItem('preview_envelope_opened', 'true');
+      }
       const delay = entranceType === 'card' || entranceType === 'flower-bloom' ? 800 : entranceType === 'heart-fade' ? 1000 : 1500;
       setTimeout(() => {
         setShowContent(true);
       }, delay);
     }
   };
-
-  if (showContent) {
-    return <>{children}</>;
-  }
 
   // Dynamic Google Font Injection
   const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
@@ -295,7 +322,7 @@ export default function Envelope({
           
           <div className="text-center z-10 px-8">
             <Crown className="w-10 h-10 mx-auto mb-4 text-[#dfc384] filter drop-shadow-md" />
-            <h3 className="text-xl md:text-2xl tracking-wide mb-1 text-white" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{brideName.charAt(0)} & {groomName.charAt(0)}</h3>
+            <h3 className="text-xl md:text-2xl tracking-wide mb-1 text-white" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{brideName.charAt(0) || 'G'} & {groomName.charAt(0) || 'D'}</h3>
             <p className="text-[9px] text-[#dfc384] tracking-[0.3em] uppercase">Kutuyu Açmak İçin Dokunun</p>
           </div>
 
@@ -512,7 +539,7 @@ export default function Envelope({
     );
   };
 
-  // 7. ANIMATION: FLOWER-BLOOM (Çiçek Açma)
+  // 7. ANIMATION: FLOWER-BLOOM
   const renderFlowerBloom = () => {
     return (
       <div 
@@ -528,7 +555,6 @@ export default function Envelope({
               exit={{ scale: 1.2, opacity: 0, rotate: 10, filter: 'blur(8px)' }}
               transition={{ duration: 0.8 }}
             >
-              {/* Watercolor flower outline SVGs */}
               <div className="absolute top-2 w-full text-center text-xl opacity-60">🌸 🌺 🌸</div>
               <div className="absolute bottom-2 w-full text-center text-xl opacity-60">🌸 🌺 🌸</div>
               
@@ -543,20 +569,18 @@ export default function Envelope({
     );
   };
 
-  // 8. ANIMATION: WAX-SEAL-PRESS (Mühür Basımı)
+  // 8. ANIMATION: WAX-SEAL-PRESS
   const renderWaxSealPress = () => {
     return (
       <div 
         className="absolute inset-0 flex items-center justify-center cursor-pointer overflow-hidden z-50 bg-[#151210]"
         onClick={!isOpened ? handleOpen : undefined}
       >
-        {/* Sliding background container */}
         <motion.div 
           className="w-full h-full flex flex-col items-center justify-center text-center relative"
           animate={isOpened ? { y: '-100%', opacity: 0 } : { y: 0, opacity: 1 }}
           transition={{ duration: 1, ease: [0.77, 0, 0.175, 1] }}
         >
-          {/* Ornate Gold Border */}
           <div className="absolute inset-10 border border-double border-[#dfc384]/40 rounded-xl" />
           
           <div className="max-w-sm px-6">
@@ -566,7 +590,6 @@ export default function Envelope({
             <p className="text-xs text-white/50 mb-10 italic">Düğün Töreni Resmi Davetiyesi</p>
           </div>
 
-          {/* Stamping Wax Seal */}
           <motion.div 
             className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 flex items-center justify-center shadow-2xl relative"
             style={{ 
@@ -587,7 +610,7 @@ export default function Envelope({
     );
   };
 
-  // 9. ANIMATION: GLASS-SHATTER (Buzlu Cam Kırılması)
+  // 9. ANIMATION: GLASS-SHATTER
   const renderGlassShatter = () => {
     return (
       <div className="absolute inset-0 flex items-center justify-center cursor-pointer overflow-hidden z-50 bg-slate-900/50">
@@ -650,28 +673,37 @@ export default function Envelope({
       break;
   }
 
-  // Viewport background wrapper
-  const renderBackground = () => {
-    // Fullscreen backdrops
-    const fsAnimations = ['curtain', 'gate', 'heart-fade', 'flower-bloom', 'wax-seal-press', 'glass-shatter'];
-    if (fsAnimations.includes(entranceType)) {
-      return (
-        <>
-          <link href={fontUrl} rel="stylesheet" />
-          {entranceComponent}
-        </>
-      );
-    }
-
-    return (
-      <div className="fixed inset-0 flex items-center justify-center overflow-hidden z-50" style={bgStyle}>
-        <link href={fontUrl} rel="stylesheet" />
-        <AnimatePresence>
-          {!showContent && entranceComponent}
-        </AnimatePresence>
+  // Viewport background wrapper & music placement
+  return (
+    <>
+      <link href={fontUrl} rel="stylesheet" />
+      
+      {/* 1. Invitation Content (rendered underneath or directly) */}
+      <div className="w-full min-h-screen">
+        {children}
       </div>
-    );
-  };
 
-  return renderBackground();
+      {/* 2. Entrance Animation Overlay (fades out on open) */}
+      <AnimatePresence>
+        {!showContent && (
+          <motion.div 
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden" 
+            style={bgStyle}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            {entranceComponent}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 3. Background Music Player (never unmounts!) */}
+      <BackgroundMusic 
+        url={musicUrl} 
+        isEnvelopeOpened={isOpened} 
+        autoplay={musicAutoplay}
+        primaryColor={primaryColor}
+      />
+    </>
+  );
 }
