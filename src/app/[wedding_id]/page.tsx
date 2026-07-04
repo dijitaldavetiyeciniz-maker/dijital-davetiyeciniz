@@ -82,6 +82,7 @@ export default async function WeddingPage({
       envelopeFlapType={wedding.envelope_flap_type || 'triangle'}
       sealType={wedding.seal_type || 'sparkles'}
       sealColor={wedding.seal_color}
+      entranceType={wedding.entrance_type || 'envelope'}
     >
       {contentWithEffect}
     </Envelope>

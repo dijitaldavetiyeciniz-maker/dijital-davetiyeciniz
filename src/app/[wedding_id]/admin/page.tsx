@@ -30,6 +30,7 @@ export default function CoupleAdminPage({
   const [envelopeFlapType, setEnvelopeFlapType] = useState('triangle');
   const [sealType, setSealType] = useState('sparkles');
   const [sealColor, setSealColor] = useState('#9f1239');
+  const [entranceType, setEntranceType] = useState('envelope');
   const [effectType, setEffectType] = useState('');
   const [fontFamily, setFontFamily] = useState('sans');
   const [bgImageUrl, setBgImageUrl] = useState('');
@@ -93,6 +94,7 @@ export default function CoupleAdminPage({
       if (weddingData.seal_type) setSealType(weddingData.seal_type);
       if (weddingData.seal_color) setSealColor(weddingData.seal_color);
       else if (weddingData.primary_color) setSealColor(weddingData.primary_color);
+      if (weddingData.entrance_type) setEntranceType(weddingData.entrance_type);
       if (weddingData.effect_type) setEffectType(weddingData.effect_type);
       if (weddingData.font_family) setFontFamily(weddingData.font_family);
       if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
@@ -147,6 +149,7 @@ export default function CoupleAdminPage({
         envelope_flap_type: envelopeFlapType,
         seal_type: sealType,
         seal_color: sealColor,
+        entrance_type: entranceType,
         effect_type: effectType,
         font_family: fontFamily,
         background_image_url: bgImageUrl,
@@ -176,8 +179,17 @@ export default function CoupleAdminPage({
   function applyPreset(theme: any) {
     setTemplateId(theme.template_id);
     setPrimaryColor(theme.primary_color);
+    if (theme.text_color) setTextColor(theme.text_color);
     setFontFamily(theme.font_family);
     setBgImageUrl(theme.background_image_url || '');
+    if (theme.use_envelope !== undefined) setUseEnvelope(theme.use_envelope);
+    if (theme.envelope_color) setEnvelopeColor(theme.envelope_color);
+    if (theme.envelope_bg_color) setEnvelopeBgColor(theme.envelope_bg_color);
+    if (theme.envelope_flap_type) setEnvelopeFlapType(theme.envelope_flap_type);
+    if (theme.seal_type) setSealType(theme.seal_type);
+    if (theme.seal_color) setSealColor(theme.seal_color);
+    if (theme.entrance_type) setEntranceType(theme.entrance_type);
+    if (theme.effect_type !== undefined) setEffectType(theme.effect_type || '');
   }
 
   function handleAIGenerate() {
@@ -444,13 +456,22 @@ export default function CoupleAdminPage({
                     <select value={templateId} onChange={e => setTemplateId(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50">
                       {Array.from({ length: 50 }, (_, i) => {
                         const num = i + 1;
-                        let label = `Şablon ${num}`;
-                        if (num <= 8) label += ' (Royal Gold - Lüks)';
-                        else if (num <= 16) label += ' (Watercolor - Çiçekli)';
-                        else if (num <= 24) label += ' (Minimalist - Modern)';
-                        else if (num <= 32) label += ' (Galactic - Neon)';
-                        else if (num <= 40) label += ' (Vintage - Polaroid)';
-                        else label += ' (Art Deco - Geometrik)';
+                        const templateNames = [
+                          "Altın Saray (Royal Gold)", "Neon Gece (Karanlık Neon)", "Organik Keten (Doğal Kağıt)", "Kraliyet Aynası (Lüks Çerçeve)", 
+                          "Sessiz Şıklık (Minimalist)", "Suluboya Bahçesi (Çiçekli)", "Retro Polaroid (Vintage)", "Gatsby Işıltısı (Altın Gatsby)", 
+                          "Geometrik Aşk (Modern)", "Mühürlü Mektup (Klasik)", "Zümrüt Şiiri (Royal)", "Gül Yaprağı (Romantik)",
+                          "Toskana Esintisi (Bohem)", "Deniz Masalı (Sahil)", "Safir Büyüsü (Art Deco)", "Lavanta Bahçesi (Zarif)",
+                          "Fildişi Zarafet (Monokrom)", "Kraft Defter (Eskiz)", "Kuzey Işıkları (Karanlık)", "Çöl Sıcağı (Minimal)",
+                          "Kardelen Beyazı (Sade)", "Dantel Düşü (Nostaljik)", "Modern Kübist (Brütalist)", "Ege Rüzgarı (Klasik)",
+                          "Işıltılı Gece (Galaktik)", "Eskimiş Parşömen (Mektup)", "Asil Kadife (Bordo)", "Temiz Levha (Nordik)",
+                          "Bahçe Kemeri (Floral)", "Platin Lüks (Gümüş)", "İnci Tanesi (Zarif)", "Sonsuz Aşk (Minimalist)",
+                          "Zeytin Dalı (Ekolojik)", "Güz Yaprakları (Retro)", "Gizemli Orman (Koyu Zümrüt)", "Yakamoz Işıltısı (Gece)",
+                          "Monogram Şıklık (Kişiye Özel)", "Daktilo Şiiri (Vintage)", "Cam Fanus (Şeffaf)", "Altın Çerçeve (Kraliyet)",
+                          "Rustik Kütük (Doğal)", "Gül Suyu (Soft)", "Retro Disk (Eğlenceli)", "Yıldız Tozu (Galaksi)",
+                          "Monokrom Çizgiler (Modern)", "Eski Mektup (Nostaljik)", "Lüks Mermer (Art Deco)", "Kır Düğünü (Bohem)",
+                          "Minimal Çizgi (Sade)", "Asil Bordo (Gatsby)"
+                        ];
+                        const label = `Tasarım ${num}: ${templateNames[num - 1] || 'Premium Stil'}`;
                         return (
                           <option key={num} value={`template${num}`}>
                             {label}
@@ -534,13 +555,25 @@ export default function CoupleAdminPage({
                   
                   {useEnvelope && (
                     <div className="mt-4 p-4 bg-slate-50 border rounded-xl space-y-4 text-left">
+                      {/* Giriş Animasyonu Türü */}
+                      <div>
+                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Açılış Animasyonu Türü</label>
+                        <select value={entranceType} onChange={e => setEntranceType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
+                          <option value="envelope">✉️ 3D Mühürlü Zarf</option>
+                          <option value="box">🎁 Lüks Hediye Kutusu</option>
+                          <option value="curtain">🎭 İpek Sahne Perdesi</option>
+                          <option value="gate">🏰 Saray / Bahçe Kapısı</option>
+                          <option value="card">🎴 Sade Tebrik Kartı (Süzülme)</option>
+                        </select>
+                      </div>
+
                       {/* Zarf Gövde Rengi */}
                       <div>
-                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf Gövde Rengi</label>
+                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf / Kutu Gövde Rengi</label>
                         <div className="flex items-center gap-4">
                           <input type="color" value={envelopeColor} onChange={e => setEnvelopeColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
                           <span className="text-slate-500 font-mono text-sm">{envelopeColor}</span>
-                          <span className="text-xs text-slate-400 ml-2">(Zarfın dış karton rengi)</span>
+                          <span className="text-xs text-slate-400 ml-2">(Zarf veya kutunun dış kapak rengi)</span>
                         </div>
                       </div>
 
