@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { Sparkles, Palette, Crown, Leaf, Moon } from 'lucide-react';
 
 export default function TemplatesGallery() {
@@ -46,18 +48,18 @@ export default function TemplatesGallery() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-        
-        <div className="text-center mb-16">
-          <Link href="/" className="text-sm font-bold text-slate-500 hover:text-rose-500 transition-colors mb-4 inline-block">
-            &larr; Ana Sayfaya Dön
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">Şablonunuzu Seçin</h1>
-          <p className="text-xl text-slate-500 max-w-2xl mx-auto">
-            Davetiyenizin temelini oluşturacak konsepti seçin. Merak etmeyin, seçtikten sonra renkleri ve yazıları tamamen değiştirebileceksiniz.
-          </p>
-        </div>
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-rose-200">
+      <Navbar />
+
+      <main className="pt-32 pb-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4 font-serif">Şablonunuzu Seçin</h1>
+            <p className="text-xl text-slate-500 max-w-2xl mx-auto">
+              Davetiyenizin temelini oluşturacak konsepti seçin. Merak etmeyin, seçtikten sonra renkleri ve yazıları tamamen değiştirebileceksiniz.
+            </p>
+          </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {templates.map((tpl) => (
@@ -90,8 +92,10 @@ export default function TemplatesGallery() {
             </div>
           ))}
         </div>
-
       </div>
+      </main>
+      
+      <Footer />
     </div>
   );
 }
