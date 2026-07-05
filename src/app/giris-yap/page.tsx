@@ -63,7 +63,7 @@ export default function LoginPage() {
                 type="email" 
                 value={email} 
                 onChange={e => setEmail(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-100 focus:outline-none transition-all duration-200 text-sm autofill:shadow-[0_0_0_30px_white_inset]"
+                className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-100 focus:outline-none transition-all duration-200 text-sm autofill:bg-white autofill:text-slate-800 autofill:shadow-[0_0_0_30px_white_inset] [&:-webkit-autofill]:bg-white [&:-webkit-autofill]:text-slate-800"
                 placeholder="ornek@mail.com"
               />
             </div>
@@ -78,7 +78,7 @@ export default function LoginPage() {
                 type="password" 
                 value={password} 
                 onChange={e => setPassword(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-100 focus:outline-none transition-all duration-200 text-sm autofill:shadow-[0_0_0_30px_white_inset]"
+                className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 placeholder:text-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-100 focus:outline-none transition-all duration-200 text-sm autofill:bg-white autofill:text-slate-800 autofill:shadow-[0_0_0_30px_white_inset] [&:-webkit-autofill]:bg-white [&:-webkit-autofill]:text-slate-800"
                 placeholder="Şifreniz"
               />
             </div>

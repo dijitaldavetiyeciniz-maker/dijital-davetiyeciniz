@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState, useEffect, use } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2, Smartphone, Tablet, Trash2, Check, RefreshCw, Volume2, VolumeX, Eye } from 'lucide-react';
@@ -1909,7 +1909,7 @@ export default function CoupleAdminPage({
                   <h3 className="font-serif font-bold text-lg text-slate-800 mb-1 flex items-center gap-2">
                     <span>📨</span> Telegram Bildirimlerini Bağla
                   </h3>
-                  <p className="text-xs text-slate-500 mb-5 leading-relaxed">
+                  <p className="text-sm text-slate-600 mb-5 leading-relaxed">
                     Misafirleriniz LCV formunu doldurduğunda telefonunuza anlık Telegram bildirimi gelsin.
                   </p>
 
@@ -1992,14 +1992,14 @@ export default function CoupleAdminPage({
                       <button
                         type="button"
                         onClick={() => setShowManualTelegram(!showManualTelegram)}
-                        className="text-slate-400 hover:text-slate-500 text-[10px] font-bold tracking-wider uppercase transition-colors text-left"
+                        className="text-slate-400 hover:text-slate-500 text-sm font-bold tracking-wider uppercase transition-colors text-left"
                       >
                         {showManualTelegram ? '❌ Manuel Girişi Kapat' : '🔧 Alternatif Yöntem: Manuel Chat ID Gir'}
                       </button>
 
                       {showManualTelegram && (
                         <div className="bg-white p-4 rounded-xl border border-slate-200/60 space-y-3 shadow-xs">
-                          <p className="text-[10px] text-slate-500 leading-relaxed">
+                          <p className="text-sm text-slate-600 leading-relaxed">
                             Bot bağlantısı kuramadıysanız veya yerel ortamda test ediyorsanız:
                             <br />
                             1. Telegram'da <strong>@userinfobot</strong> botuna herhangi bir mesaj gönderin ve size yanıt olarak döneceği <strong>Id</strong> numarasını kopyalayın.
