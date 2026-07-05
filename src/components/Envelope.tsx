@@ -119,38 +119,181 @@ export default function Envelope({
   const bgStyle = getBackgroundStyle(envelopeBgColor);
 
   // Wax seal rendering icon/component
-  const currentSealColor = sealColor || primaryColor;
+  let currentSealColor = sealColor || primaryColor;
   let sealIcon = <Sparkles className="w-6 h-6 text-white/80" />;
-  
+  let sealBgStyle: React.CSSProperties = {};
+
+  // For preset metallic wax colors:
+  if (sealType === 'gold') {
+    currentSealColor = '#d4af37';
+    sealBgStyle = {
+      background: 'radial-gradient(circle, #f5e0a3 0%, #d4af37 60%, #aa7c11 100%)',
+      boxShadow: 'inset 0 0 10px rgba(255,255,255,0.7), 0 4px 10px rgba(0,0,0,0.35)'
+    };
+  } else if (sealType === 'silver') {
+    currentSealColor = '#c0c0c0';
+    sealBgStyle = {
+      background: 'radial-gradient(circle, #f0f0f0 0%, #c0c0c0 60%, #8c8c8c 100%)',
+      boxShadow: 'inset 0 0 10px rgba(255,255,255,0.7), 0 4px 10px rgba(0,0,0,0.35)'
+    };
+  } else if (sealType === 'rose-gold') {
+    currentSealColor = '#b76e79';
+    sealBgStyle = {
+      background: 'radial-gradient(circle, #eecbc2 0%, #b76e79 60%, #8c4c54 100%)',
+      boxShadow: 'inset 0 0 10px rgba(255,255,255,0.7), 0 4px 10px rgba(0,0,0,0.35)'
+    };
+  } else if (sealType === 'burgundy' || sealType === 'bordo-wax') {
+    currentSealColor = '#600519';
+    sealBgStyle = {
+      background: 'radial-gradient(circle, #991b1b 0%, #600519 75%, #450a0a 100%)',
+      boxShadow: 'inset 0 0 10px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.35)'
+    };
+  }
+
   switch (sealType) {
-    case 'heart':
-      sealIcon = <Heart className="w-6 h-6 text-white/90 fill-white/20" />;
+    case 'gold':
+      sealIcon = <Crown className="w-6 h-6 text-white/95 filter drop-shadow" />;
       break;
-    case 'crown':
-      sealIcon = <Crown className="w-6 h-6 text-white/90" />;
+    case 'silver':
+      sealIcon = <Sparkles className="w-6 h-6 text-white/95 filter drop-shadow" />;
       break;
-    case 'leaf':
-      sealIcon = <Leaf className="w-6 h-6 text-white/90" />;
+    case 'rose-gold':
+      sealIcon = <Heart className="w-6 h-6 text-white/95 fill-white/15 filter drop-shadow" />;
       break;
-    case 'rose':
+    case 'burgundy':
+    case 'bordo-wax':
       sealIcon = (
-        <svg className="w-7 h-7 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <svg className="w-7 h-7 text-white/95 filter drop-shadow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582" />
         </svg>
       );
       break;
     case 'monogram':
+    case 'double-initials':
       sealIcon = (
-        <span className="font-serif text-white/90 font-bold text-xs tracking-wider md:text-sm select-none">
+        <span className="font-serif text-white/95 font-bold text-xs tracking-wider md:text-sm select-none filter drop-shadow">
           {monogramText}
         </span>
       );
       break;
+    case 'minimal-monogram':
+      sealIcon = (
+        <span className="font-sans text-white/95 font-light text-sm tracking-widest select-none filter drop-shadow">
+          {brideInitial}{groomInitial}
+        </span>
+      );
+      break;
+    case 'heart':
+    case 'heart-icon':
+      sealIcon = <Heart className="w-6 h-6 text-white/90 fill-white/20 filter drop-shadow" />;
+      break;
+    case 'ring':
+    case 'ring-icon':
+      sealIcon = (
+        <svg className="w-7 h-7 text-white/95 filter drop-shadow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <circle cx="8.5" cy="12" r="4.5" />
+          <circle cx="15.5" cy="12" r="4.5" />
+        </svg>
+      );
+      break;
+    case 'flower':
+    case 'flower-icon':
+      sealIcon = (
+        <svg className="w-7 h-7 text-white/95 filter drop-shadow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+        </svg>
+      );
+      break;
+    case 'royal-crest':
+    case 'crown':
+      sealIcon = <Crown className="w-6 h-6 text-white/95 filter drop-shadow" />;
+      break;
   }
+
+  const getEnvelopeStyle = (colorOrPreset: string): { body: React.CSSProperties, flap: React.CSSProperties, extraBody?: React.ReactNode, extraFlap?: React.ReactNode } => {
+    const isHex = colorOrPreset && colorOrPreset.startsWith('#');
+    const type = isHex ? 'classic' : colorOrPreset;
+    const fallbackColor = isHex ? colorOrPreset : '#e6d5c3';
+
+    switch (type) {
+      case 'gold-edge':
+        return {
+          body: { backgroundColor: '#1e293b', border: '3px solid #d4af37' },
+          flap: { backgroundColor: '#1e293b', borderBottom: '3px solid #d4af37' },
+          extraBody: <div className="absolute inset-2 border border-[#d4af37]/40 pointer-events-none" />,
+          extraFlap: <div className="absolute inset-1 border-b border-[#d4af37]/40 pointer-events-none" />
+        };
+      case 'marble-texture':
+        return {
+          body: { 
+            backgroundImage: 'url(/backgrounds/marble-gold-light.png)',
+            backgroundSize: 'cover',
+            backgroundColor: '#fafafa'
+          },
+          flap: { 
+            backgroundImage: 'url(/backgrounds/marble-gold-light.png)',
+            backgroundSize: 'cover',
+            backgroundColor: '#fafafa'
+          }
+        };
+      case 'minimal-white':
+        return {
+          body: { backgroundColor: '#ffffff', border: '1px solid #e2e8f0' },
+          flap: { backgroundColor: '#ffffff', borderBottom: '1px solid #e2e8f0' }
+        };
+      case 'black-premium':
+        return {
+          body: { backgroundColor: '#111111', border: '1px solid #333333' },
+          flap: { backgroundColor: '#111111', borderBottom: '1px solid #333333' },
+          extraBody: <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent pointer-events-none" />
+        };
+      case 'kraft-natural':
+        return {
+          body: { backgroundColor: '#cbb593', backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.05) 0%, transparent 100%)' },
+          flap: { backgroundColor: '#cbb593' }
+        };
+      case 'romantic-flowers':
+        return {
+          body: { 
+            backgroundColor: '#fff1f2',
+            backgroundImage: 'radial-gradient(rgba(244,63,94,0.1) 1px, transparent 0), radial-gradient(rgba(244,63,94,0.1) 1px, transparent 0)',
+            backgroundSize: '20px 20px',
+            backgroundPosition: '0 0, 10px 10px'
+          },
+          flap: { 
+            backgroundColor: '#fff1f2',
+            backgroundImage: 'radial-gradient(rgba(244,63,94,0.1) 1px, transparent 0)',
+            backgroundSize: '20px 20px'
+          }
+        };
+      case 'velvet-burgundy':
+        return {
+          body: { backgroundColor: '#5c0618', backgroundImage: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.2) 100%)' },
+          flap: { backgroundColor: '#5c0618' }
+        };
+      case 'glass-effect':
+        return {
+          body: { backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.25)' },
+          flap: { backgroundColor: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.25)' }
+        };
+      case 'modern-gradient':
+        return {
+          body: { backgroundImage: 'linear-gradient(135deg, #f43f5e 0%, #6366f1 100%)' },
+          flap: { backgroundImage: 'linear-gradient(135deg, #f43f5e 0%, #6366f1 100%)' }
+        };
+      case 'classic':
+      default:
+        return {
+          body: { backgroundColor: fallbackColor },
+          flap: { backgroundColor: fallbackColor }
+        };
+    }
+  };
 
   // 1. ANIMATION: ENVELOPE (Zarf)
   const renderEnvelope = (hasRibbon = false) => {
-    let flapStyle: React.CSSProperties = { backgroundColor: envelopeColor };
+    const envStyle = getEnvelopeStyle(envelopeColor);
+    let flapStyle: React.CSSProperties = { ...envStyle.flap };
     let flapClass = 'absolute top-0 left-0 right-0 origin-top z-20 drop-shadow-xl';
 
     // 9 envelope flap shapes:
@@ -238,7 +381,8 @@ export default function Envelope({
         transition={{ duration: 1, ease: "easeOut" }}
         onClick={(!isOpened && (!hasRibbon || ribbonUntied)) ? handleOpen : (hasRibbon && !ribbonUntied) ? handleOpen : undefined}
       >
-        <div className="absolute inset-0 rounded-sm shadow-2xl overflow-hidden border border-black/10" style={{ backgroundColor: envelopeColor }}>
+        <div className="absolute inset-0 rounded-sm shadow-2xl overflow-hidden border border-black/10" style={envStyle.body}>
+          {envStyle.extraBody}
           <motion.div 
             className="absolute inset-4 bg-white rounded-sm shadow-inner flex flex-col items-center justify-center p-4 border border-slate-100"
             initial={{ y: 20 }}
@@ -257,7 +401,9 @@ export default function Envelope({
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to bottom left, transparent 49%, rgba(0,0,0,0.1) 50%)', clipPath: 'polygon(100% 0, 50% 55%, 100% 100%)' }} />
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: 'rgba(255,255,255,0.08)', clipPath: 'polygon(0 100%, 50% 55%, 100% 100%)' }} />
 
-        <motion.div className={flapClass} style={flapStyle} initial={{ rotateX: 0 }} animate={isOpened ? { rotateX: 180 } : { rotateX: 0 }} transition={{ duration: 0.8, ease: "easeInOut" }} />
+        <motion.div className={flapClass} style={flapStyle} initial={{ rotateX: 0 }} animate={isOpened ? { rotateX: 180 } : { rotateX: 0 }} transition={{ duration: 0.8, ease: "easeInOut" }}>
+          {envStyle.extraFlap}
+        </motion.div>
 
         {/* Ribbon layer */}
         {hasRibbon && (
@@ -279,7 +425,7 @@ export default function Envelope({
 
         <motion.div 
           className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-lg cursor-pointer border-2"
-          style={{ backgroundColor: currentSealColor, borderColor: 'rgba(255,255,255,0.2)', boxShadow: 'inset 0 0 12px rgba(0,0,0,0.6), 0 5px 15px rgba(0,0,0,0.4)' }}
+          style={{ backgroundColor: currentSealColor, borderColor: 'rgba(255,255,255,0.2)', boxShadow: 'inset 0 0 12px rgba(0,0,0,0.6), 0 5px 15px rgba(0,0,0,0.4)', ...sealBgStyle }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           initial={{ opacity: 1, scale: 1 }}
@@ -299,6 +445,7 @@ export default function Envelope({
 
   // 2. ANIMATION: BOX
   const renderBox = () => {
+    const envStyle = getEnvelopeStyle(envelopeColor);
     return (
       <motion.div 
         className="relative w-[340px] h-[340px] md:w-[450px] md:h-[450px] cursor-pointer"
@@ -322,10 +469,12 @@ export default function Envelope({
           animate={isOpened ? { y: -500, opacity: 0, rotate: -5 } : { y: 0, opacity: 1, rotate: 0 }}
           transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
           style={{ 
-            backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 100%), linear-gradient(135deg, ${envelopeColor} 0%, rgba(0,0,0,0.1) 100%)`,
-            backgroundColor: envelopeColor
+            backgroundImage: envStyle.body.backgroundImage || `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 100%), linear-gradient(135deg, ${envStyle.body.backgroundColor || envelopeColor} 0%, rgba(0,0,0,0.1) 100%)`,
+            backgroundColor: envStyle.body.backgroundColor || envelopeColor,
+            border: envStyle.body.border || undefined
           }}
         >
+          {envStyle.extraBody}
           <div className="absolute inset-3 border border-double border-[#dfc384]/40 rounded-md pointer-events-none" />
           
           <div className="text-center z-10 px-8">
@@ -336,7 +485,7 @@ export default function Envelope({
 
           <div 
             className="absolute -bottom-6 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center border shadow-lg cursor-pointer"
-            style={{ backgroundColor: currentSealColor, borderColor: 'rgba(255,255,255,0.2)', boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)' }}
+            style={{ backgroundColor: currentSealColor, borderColor: 'rgba(255,255,255,0.2)', boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)', ...sealBgStyle }}
           >
             {sealIcon}
           </div>
@@ -349,6 +498,7 @@ export default function Envelope({
 
   // 4. ANIMATION: GATE
   const renderGate = () => {
+    const envStyle = getEnvelopeStyle(envelopeColor);
     return (
       <div 
         className="fixed inset-0 flex items-center justify-center perspective-2000 cursor-pointer overflow-hidden" 
@@ -358,12 +508,14 @@ export default function Envelope({
           className="w-1/2 h-full bg-[#1b212c] border-r-4 border-[#dfc384] relative z-20 shadow-2xl flex items-center justify-end"
           style={{
             originX: 0,
-            backgroundImage: `radial-gradient(circle at 100% 50%, rgba(255,255,255,0.02) 0%, transparent 100%), linear-gradient(135deg, ${envelopeColor} 0%, rgba(0,0,0,0.2) 100%)`,
-            backgroundColor: envelopeColor
+            backgroundImage: envStyle.body.backgroundImage || `radial-gradient(circle at 100% 50%, rgba(255,255,255,0.02) 0%, transparent 100%), linear-gradient(135deg, ${envStyle.body.backgroundColor || envelopeColor} 0%, rgba(0,0,0,0.2) 100%)`,
+            backgroundColor: envStyle.body.backgroundColor || envelopeColor,
+            border: envStyle.body.border || undefined
           }}
           animate={isOpened ? { rotateY: -105, opacity: 0 } : { rotateY: 0, opacity: 1 }}
           transition={{ duration: 1.6, ease: [0.6, 0.01, -0.05, 0.95] }}
         >
+          {envStyle.extraBody}
           <div className="absolute inset-6 border border-[#dfc384]/30 rounded-l-2xl pointer-events-none" />
           <div className="absolute inset-10 border-2 border-double border-[#dfc384]/20 rounded-l-xl pointer-events-none" />
           <div className="mr-6 text-right select-none opacity-40">
@@ -375,12 +527,14 @@ export default function Envelope({
           className="w-1/2 h-full bg-[#1b212c] border-l-4 border-[#dfc384] relative z-20 shadow-2xl flex items-center justify-start"
           style={{
             originX: 1,
-            backgroundImage: `radial-gradient(circle at 0% 50%, rgba(255,255,255,0.02) 0%, transparent 100%), linear-gradient(225deg, ${envelopeColor} 0%, rgba(0,0,0,0.2) 100%)`,
-            backgroundColor: envelopeColor
+            backgroundImage: envStyle.body.backgroundImage || `radial-gradient(circle at 0% 50%, rgba(255,255,255,0.02) 0%, transparent 100%), linear-gradient(225deg, ${envStyle.body.backgroundColor || envelopeColor} 0%, rgba(0,0,0,0.2) 100%)`,
+            backgroundColor: envStyle.body.backgroundColor || envelopeColor,
+            border: envStyle.body.border || undefined
           }}
           animate={isOpened ? { rotateY: 105, opacity: 0 } : { rotateY: 0, opacity: 1 }}
           transition={{ duration: 1.6, ease: [0.6, 0.01, -0.05, 0.95] }}
         >
+          {envStyle.extraBody}
           <div className="absolute inset-6 border border-[#dfc384]/30 rounded-r-2xl pointer-events-none" />
           <div className="absolute inset-10 border-2 border-double border-[#dfc384]/20 rounded-r-xl pointer-events-none" />
           <div className="ml-6 text-left select-none opacity-40">
@@ -397,7 +551,8 @@ export default function Envelope({
               style={{
                 backgroundColor: currentSealColor,
                 borderColor: '#dfc384',
-                boxShadow: 'inset 0 0 20px rgba(0,0,0,0.7), 0 5px 25px rgba(0,0,0,0.5)'
+                boxShadow: 'inset 0 0 20px rgba(0,0,0,0.7), 0 5px 25px rgba(0,0,0,0.5)',
+                ...sealBgStyle
               }}
             >
               <div className="text-center">
@@ -443,7 +598,7 @@ export default function Envelope({
 
           <span 
             className="inline-block px-8 py-3 text-xs font-bold tracking-[0.2em] uppercase text-white rounded-lg shadow-md transition-all hover:scale-105"
-            style={{ backgroundColor: currentSealColor }}
+            style={{ backgroundColor: currentSealColor, ...sealBgStyle }}
           >
             Giriş Yap
           </span>
@@ -470,7 +625,8 @@ export default function Envelope({
                 style={{ 
                   backgroundColor: currentSealColor,
                   boxShadow: `0 0 60px ${currentSealColor}80, inset 0 0 30px rgba(0,0,0,0.5)`,
-                  border: '3px solid #dfc384'
+                  border: '3px solid #dfc384',
+                  ...sealBgStyle
                 }}
                 animate={{ scale: [1, 1.05, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -571,12 +727,13 @@ export default function Envelope({
                   backgroundColor: currentSealColor,
                   borderColor: '#dfc384',
                   borderWidth: '3px',
-                  boxShadow: 'inset 0 0 15px rgba(0,0,0,0.5), 0 10px 25px rgba(0,0,0,0.3)'
+                  boxShadow: 'inset 0 0 15px rgba(0,0,0,0.5), 0 10px 25px rgba(0,0,0,0.3)',
+                  ...sealBgStyle
                 }}
               >
-                <span className="font-serif font-bold text-white text-base md:text-lg tracking-widest">
-                  {monogramText}
-                </span>
+                <div className="w-14 h-14 md:w-18 md:h-18 rounded-full border flex items-center justify-center" style={{ borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(0,0,0,0.15)' }}>
+                  {sealIcon}
+                </div>
               </div>
               <div 
                 className="mt-4 px-6 py-2 rounded-full border text-[10px] font-bold tracking-[0.2em] uppercase bg-white/90 shadow-md select-none text-center"
@@ -624,14 +781,15 @@ export default function Envelope({
                 backgroundColor: currentSealColor,
                 borderColor: '#dfc384',
                 borderWidth: '3px',
-                boxShadow: 'inset 0 0 15px rgba(0,0,0,0.5), 0 10px 25px rgba(0,0,0,0.15)'
+                boxShadow: 'inset 0 0 15px rgba(0,0,0,0.5), 0 10px 25px rgba(0,0,0,0.15)',
+                ...sealBgStyle
               }}
               animate={isPressed ? { scale: [1, 0.85, 1.05, 1], rotate: [0, 5, -5, 0] } : { scale: 1 }}
               transition={{ duration: 0.8 }}
             >
-              <span className="font-serif font-bold text-white text-base md:text-lg tracking-widest">
-                {monogramText}
-              </span>
+              <div className="w-14 h-14 md:w-18 md:h-18 rounded-full border flex items-center justify-center" style={{ borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(0,0,0,0.15)' }}>
+                {sealIcon}
+              </div>
             </motion.div>
             <div className="flex items-center gap-1.5 text-2xl font-light opacity-50 select-none" style={{ color: '#c5a870' }}>
               <span>&lt;</span>

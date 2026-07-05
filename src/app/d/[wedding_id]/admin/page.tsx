@@ -265,6 +265,9 @@ export default function CoupleAdminPage({
         })
         .eq('id', wedding.id);
 
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.removeItem('preview_envelope_opened');
+      }
       setPreviewKey(Date.now()); // Canlı Önizleme İframe'ini Tazele
     }, 800);
 
@@ -1141,15 +1144,44 @@ export default function CoupleAdminPage({
                         </select>
                       </div>
 
-                      {/* Zarf Gövde Rengi */}
+                      {/* Zarf Tasarımı / Stili */}
                       <div>
-                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf / Kutu Gövde Rengi</label>
-                        <div className="flex items-center gap-4">
-                          <input type="color" value={envelopeColor} onChange={e => setEnvelopeColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
-                          <span className="text-slate-500 font-mono text-sm">{envelopeColor}</span>
-                          <span className="text-xs text-slate-400 ml-2">(Zarf veya kutunun dış kapak rengi)</span>
-                        </div>
+                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf Tasarımı / Stili</label>
+                        <select 
+                          value={envelopeColor && !envelopeColor.startsWith('#') ? envelopeColor : 'classic'} 
+                          onChange={e => {
+                            if (e.target.value === 'classic') {
+                              setEnvelopeColor('#e6d5c3');
+                            } else {
+                              setEnvelopeColor(e.target.value);
+                            }
+                          }} 
+                          className="w-full border p-2 rounded-lg bg-white text-sm"
+                        >
+                          <option value="classic">🎨 Klasik (Özel Düz Renk)</option>
+                          <option value="gold-edge">👑 Lüks Altın Kenarlı</option>
+                          <option value="marble-texture">🏛️ Mermer Dokulu</option>
+                          <option value="minimal-white">⬜ Minimal Beyaz</option>
+                          <option value="black-premium">🖤 Siyah Premium</option>
+                          <option value="kraft-natural">📦 Kraft Doğal</option>
+                          <option value="romantic-flowers">🌸 Çiçekli Romantik</option>
+                          <option value="velvet-burgundy">🍷 Kadife Bordo</option>
+                          <option value="glass-effect">💎 Şeffaf Cam Efekti</option>
+                          <option value="modern-gradient">🌈 Modern Gradient Zarf</option>
+                        </select>
                       </div>
+
+                      {/* Zarf Gövde Rengi (Sadece Klasik stilde gösterilir) */}
+                      {(!envelopeColor || envelopeColor.startsWith('#')) && (
+                        <div>
+                          <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf / Kutu Gövde Rengi</label>
+                          <div className="flex items-center gap-4">
+                            <input type="color" value={envelopeColor} onChange={e => setEnvelopeColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
+                            <span className="text-slate-500 font-mono text-sm">{envelopeColor}</span>
+                            <span className="text-xs text-slate-400 ml-2">(Zarf veya kutunun dış kapak rengi)</span>
+                          </div>
+                        </div>
+                      )}
 
                       {/* Kapak Şekli */}
                       <div>
@@ -1167,28 +1199,34 @@ export default function CoupleAdminPage({
                         </select>
                       </div>
 
-                      {/* Mühür Damgası */}
+                      {/* Mühür Damgası / Seçeneği */}
                       <div>
-                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Mühür Damgası (Motif)</label>
+                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Mühür Seçeneği / Motif</label>
                         <select value={sealType} onChange={e => setSealType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
-                          <option value="sparkles">✨ Işıltı Damgası</option>
-                          <option value="heart">❤️ Romantik Kalp Damgası</option>
-                          <option value="rose">🌹 Gül Damgası</option>
-                          <option value="monogram">🔠 Baş Harfler (Monogram - {brideName.charAt(0) || 'G'}&{groomName.charAt(0) || 'D'})</option>
-                          <option value="crown">👑 Kraliyet Tacı Damgası</option>
-                          <option value="leaf">🌿 Zarif Yaprak Damgası</option>
+                          <option value="gold">🟡 Altın Mühür</option>
+                          <option value="burgundy">🍷 Bordo Wax Mühür</option>
+                          <option value="silver">⚪ Gümüş Mühür</option>
+                          <option value="rose-gold">🌸 Rose Gold Mühür</option>
+                          <option value="double-initials">🔠 Çift Baş Harfli (Monogram - {brideName.charAt(0) || 'G'}&{groomName.charAt(0) || 'D'})</option>
+                          <option value="heart-icon">❤️ Kalp İkonlu</option>
+                          <option value="ring-icon">💍 Yüzük İkonlu</option>
+                          <option value="flower-icon">🌹 Çiçek İkonlu</option>
+                          <option value="minimal-monogram">✍️ Minimal Monogram ({brideName.charAt(0) || 'G'}{groomName.charAt(0) || 'D'})</option>
+                          <option value="royal-crest">👑 Premium Kraliyet Mühürü</option>
                         </select>
                       </div>
 
-                      {/* Mühür Rengi */}
-                      <div>
-                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Mühür Rengi</label>
-                        <div className="flex items-center gap-4">
-                          <input type="color" value={sealColor} onChange={e => setSealColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
-                          <span className="text-slate-500 font-mono text-sm">{sealColor}</span>
-                          <span className="text-xs text-slate-400 ml-2">(Mühürün 3D mum rengi)</span>
+                      {/* Mühür Rengi (Sadece özel mum/ikon tiplerinde gösterilir) */}
+                      {!['gold', 'silver', 'rose-gold', 'burgundy'].includes(sealType) && (
+                        <div>
+                          <label className="block text-sm font-semibold mb-1.5 text-slate-700">Mühür Mum Rengi</label>
+                          <div className="flex items-center gap-4">
+                            <input type="color" value={sealColor} onChange={e => setSealColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
+                            <span className="text-slate-500 font-mono text-sm">{sealColor}</span>
+                            <span className="text-xs text-slate-400 ml-2">(Mühürün 3D mum rengi)</span>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   )}
                 </div>
