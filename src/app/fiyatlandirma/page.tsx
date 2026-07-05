@@ -30,10 +30,10 @@ export default function FiyatlandirmaPage() {
                   Tüm Özellikler Dahil Paketi
                 </div>
                 <h3 className="text-4xl font-bold mb-2">Her Şey Dahil Tek Ücret</h3>
-                <p className="text-slate-500 mb-8">Etkinlik gününüze kadar ve sonrasında sınırsız kullanım hakkı. Yüzlerce kişiye tek tıkla gönderin.</p>
+                <p className="text-slate-500 mb-8">Aylık ödeme yok. Davetiyenizi oluşturun, ücretsiz önizleyin, yalnızca yayına almak istediğinizde ödeme yapın.</p>
                 
                 <div className="flex items-baseline justify-center md:justify-start gap-2 mb-8">
-                  <span className="text-6xl font-black text-slate-800">₺499</span>
+                  <span className="text-6xl font-black text-slate-800">₺1.999</span>
                   <span className="text-slate-400 font-medium">/ Tek Seferlik</span>
                 </div>
 
