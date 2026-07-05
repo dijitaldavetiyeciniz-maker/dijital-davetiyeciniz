@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Sparkles, Calendar, MapPin, Navigation, 
   Heart, Crown, Feather, Infinity, Leaf, Camera, Loader2 
@@ -8,6 +8,7 @@ import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
 import { isColorLight } from '@/lib/colorUtils';
 import { getBackgroundStyle, isBackgroundLight } from '@/lib/backgrounds';
+import { supabase } from '@/lib/supabase';
 
 // Template configuration model
 interface TemplateConfig {
@@ -130,6 +131,27 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const config = getTemplateConfig(templateId);
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [guestMessages, setGuestMessages] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function fetchGuestMessages() {
+      if (wedding.show_comments !== false) {
+        const { data, error } = await supabase
+          .from('rsvps')
+          .select('guest_name, message, created_at')
+          .eq('wedding_id', wedding.id)
+          .eq('is_attending', true)
+          .not('message', 'is', null)
+          .neq('message', '')
+          .order('created_at', { ascending: false });
+
+        if (data && !error) {
+          setGuestMessages(data);
+        }
+      }
+    }
+    fetchGuestMessages();
+  }, [wedding.id, wedding.show_comments]);
 
   const dateObj = wedding.wedding_date ? new Date(wedding.wedding_date) : new Date();
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -343,7 +365,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     </p>
   );
 
-  const renderTimer = () => wedding.wedding_date && (
+  const renderTimer = () => wedding.wedding_date && wedding.show_countdown !== false && (
     <div className="my-6">
       <CountdownTimer 
         targetDate={wedding.wedding_date} 
@@ -400,21 +422,27 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderRsvpButton = () => {
+    const showRsvp = wedding.show_rsvp !== false;
+    const showPhotos = wedding.show_photos !== false;
+
+    // If both RSVP and Photo sharing are disabled, we might only show location, and if not even that, we show nothing.
     return (
       <div className="w-full mt-10 mb-6 flex flex-col items-center gap-6 relative z-10 font-sans">
         {/* LÜTFEN KATILIM DURUMUNUZU BİLDİRİNİZ */}
-        <div 
-          className="px-6 py-2.5 rounded-full border text-[11px] font-bold tracking-[0.2em] uppercase max-w-sm text-center select-none"
-          style={{ 
-            borderColor: `${primaryColor}60`, 
-            color: textColor,
-            backgroundColor: textIsLight ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)'
-          }}
-        >
-          LÜTFEN KATILIM DURUMUNUZU BİLDİRİNİZ
-        </div>
+        {showRsvp && (
+          <div 
+            className="px-6 py-2.5 rounded-full border text-[11px] font-bold tracking-[0.2em] uppercase max-w-sm text-center select-none"
+            style={{ 
+              borderColor: `${primaryColor}60`, 
+              color: textColor,
+              backgroundColor: textIsLight ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)'
+            }}
+          >
+            LÜTFEN KATILIM DURUMUNUZU BİLDİRİNİZ
+          </div>
+        )}
 
-        {/* 3 Buttons Grid */}
+        {/* Buttons Grid */}
         <div className="flex justify-center items-start gap-8 md:gap-12 mt-2">
           {/* Button 1: KONUM */}
           <button 
@@ -436,58 +464,96 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
           </button>
 
           {/* Button 2: LCV/KATILIM */}
-          <button 
-            onClick={() => setIsRsvpOpen(true)}
-            className="flex flex-col items-center gap-2 group transition-transform active:scale-95"
-          >
-            <div 
-              className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg text-white transition-opacity hover:opacity-90"
-              style={{ backgroundColor: primaryColor }}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <span 
-              className="text-[10px] font-bold tracking-[0.15em] uppercase animate-pulse opacity-80"
-              style={{ color: textColor }}
-            >
-              LCV/KATILIM
-            </span>
-          </button>
-
-          {/* Button 3: FOTOĞRAF YÜKLE */}
-          <div className="flex flex-col items-center">
-            <input 
-              type="file" 
-              accept="image/*" 
-              id="inline-photo-upload" 
-              className="hidden" 
-              onChange={handleGuestPhotoUpload} 
-              disabled={isUploading}
-            />
-            <label 
-              htmlFor="inline-photo-upload" 
-              className="flex flex-col items-center gap-2 group cursor-pointer transition-transform active:scale-95"
+          {showRsvp && (
+            <button 
+              onClick={() => setIsRsvpOpen(true)}
+              className="flex flex-col items-center gap-2 group transition-transform active:scale-95"
             >
               <div 
-                className="w-16 h-16 rounded-full flex items-center justify-center border shadow-md bg-white hover:bg-slate-50 transition-colors"
-                style={{ borderColor: `${primaryColor}20`, color: primaryColor }}
+                className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: primaryColor }}
               >
-                {isUploading ? (
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                ) : (
-                  <Camera className="w-6 h-6" />
-                )}
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
               </div>
               <span 
-                className="text-[10px] font-bold tracking-[0.15em] uppercase text-center max-w-[80px] opacity-80"
+                className="text-[10px] font-bold tracking-[0.15em] uppercase animate-pulse opacity-80"
                 style={{ color: textColor }}
               >
-                FOTOĞRAF YÜKLE
+                LCV/KATILIM
               </span>
-            </label>
-          </div>
+            </button>
+          )}
+
+          {/* Button 3: FOTOĞRAF YÜKLE */}
+          {showPhotos && (
+            <div className="flex flex-col items-center">
+              <input 
+                type="file" 
+                accept="image/*" 
+                id="inline-photo-upload" 
+                className="hidden" 
+                onChange={handleGuestPhotoUpload} 
+                disabled={isUploading}
+              />
+              <label 
+                htmlFor="inline-photo-upload" 
+                className="flex flex-col items-center gap-2 group cursor-pointer transition-transform active:scale-95"
+              >
+                <div 
+                  className="w-16 h-16 rounded-full flex items-center justify-center border shadow-md bg-white hover:bg-slate-50 transition-colors"
+                  style={{ borderColor: `${primaryColor}20`, color: primaryColor }}
+                >
+                  {isUploading ? (
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                  ) : (
+                    <Camera className="w-6 h-6" />
+                  )}
+                </div>
+                <span 
+                  className="text-[10px] font-bold tracking-[0.15em] uppercase text-center max-w-[80px] opacity-80"
+                  style={{ color: textColor }}
+                >
+                  FOTOĞRAF YÜKLE
+                </span>
+              </label>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Guest Book Section (Anı Defteri)
+  const renderGuestBook = () => {
+    if (wedding.show_comments === false || guestMessages.length === 0) return null;
+    
+    return (
+      <div className="w-full mt-10 mb-6 relative z-10 font-sans text-left px-2">
+        <div className="w-12 h-[1px] bg-rose-300 mx-auto mb-6"></div>
+        <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-center mb-6" style={{ color: textColor }}>
+          ✍️ ANI DEFTERİ
+        </h3>
+        
+        <div className="space-y-4 max-h-[220px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-rose-200">
+          {guestMessages.map((msg, idx) => (
+            <div 
+              key={idx} 
+              className="p-4 rounded-2xl border bg-white/50 backdrop-blur-sm shadow-sm transition-all hover:bg-white/70"
+              style={{ borderColor: `${primaryColor}20` }}
+            >
+              <div className="flex justify-between items-center mb-1.5">
+                <span className="font-bold text-xs" style={{ color: textColor }}>{msg.guest_name}</span>
+                <span className="text-[9px] text-slate-400">
+                  {new Date(msg.created_at).toLocaleDateString('tr-TR')}
+                </span>
+              </div>
+              <p className="text-xs italic text-slate-600 leading-relaxed">
+                "{msg.message}"
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -514,6 +580,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         {renderTimer()}
         {renderDetails()}
         {renderRsvpButton()}
+        {renderGuestBook()}
       </div>
     </div>
   );
@@ -550,6 +617,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
           {renderTimer()}
           {renderDetails()}
           {renderRsvpButton()}
+          {renderGuestBook()}
         </div>
       </div>
     </div>
@@ -571,6 +639,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         {renderTimer()}
         {renderDetails()}
         {renderRsvpButton()}
+        {renderGuestBook()}
       </div>
     </div>
   );
@@ -597,47 +666,62 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
 
         {renderDetails()}
         {renderRsvpButton()}
+        {renderGuestBook()}
       </div>
     </div>
   );
 
   // 5. LAYOUT: POLAROID (Fotoğraf Kartı)
-  const renderPolaroidLayout = () => (
-    <div className="min-h-screen flex flex-col items-center p-4 sm:p-8 pb-28 relative z-10 w-full max-w-[480px] mx-auto">
-      {/* Polaroid Photo Frame */}
-      <div className="bg-white p-4 sm:p-5 pb-8 sm:pb-12 shadow-2xl rounded-sm border border-slate-200 rotate-1 max-w-[360px] w-full my-8 transform hover:rotate-0 transition-transform duration-300">
-        <div 
-          className="w-full aspect-square bg-slate-200 rounded-sm mb-4 relative overflow-hidden flex items-center justify-center"
-          style={{
-            backgroundImage: wedding.background_image_url ? `url(${wedding.background_image_url})` : undefined,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        >
-          {!wedding.background_image_url && (
-            <div className="text-center p-6 text-slate-400">
-              <Heart className="w-12 h-12 mx-auto mb-2 opacity-30 text-rose-400 fill-rose-100" />
-              <span className="text-xs tracking-wider font-sans">Düğün Fotoğrafı</span>
+  const renderPolaroidLayout = () => {
+    const showPhotos = wedding.show_photos !== false;
+    return (
+      <div className="min-h-screen flex flex-col items-center p-4 sm:p-8 pb-28 relative z-10 w-full max-w-[480px] mx-auto">
+        {/* Polaroid Photo Frame */}
+        {showPhotos && (
+          <div className="bg-white p-4 sm:p-5 pb-8 sm:pb-12 shadow-2xl rounded-sm border border-slate-200 rotate-1 max-w-[360px] w-full my-8 transform hover:rotate-0 transition-transform duration-300">
+            <div 
+              className="w-full aspect-square bg-slate-200 rounded-sm mb-4 relative overflow-hidden flex items-center justify-center"
+              style={{
+                backgroundImage: wedding.background_image_url ? `url(${wedding.background_image_url})` : undefined,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            >
+              {!wedding.background_image_url && (
+                <div className="text-center p-6 text-slate-400">
+                  <Heart className="w-12 h-12 mx-auto mb-2 opacity-30 text-rose-400 fill-rose-100" />
+                  <span className="text-xs tracking-wider font-sans">Düğün Fotoğrafı</span>
+                </div>
+              )}
+            </div>
+            <div className="text-center">
+              <h2 className="text-2xl md:text-3xl text-slate-800" style={{ fontFamily: `"${fontFamily}", cursive` }}>
+                {wedding.bride_name} & {wedding.groom_name}
+              </h2>
+              <span className="text-[10px] text-slate-400 tracking-widest block mt-1 font-sans">{dateStr}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Details Box */}
+        <div className="w-full bg-white/80 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-200/50 text-center text-slate-800">
+          {!showPhotos && (
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-4xl text-slate-800 font-normal tracking-wide" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>
+                {wedding.bride_name} & {wedding.groom_name}
+              </h2>
+              <div className="w-12 h-[1px] bg-rose-300 mx-auto my-4"></div>
+              <span className="text-xs text-slate-400 tracking-widest block mt-1 font-sans">{dateStr}</span>
             </div>
           )}
-        </div>
-        <div className="text-center">
-          <h2 className="text-2xl md:text-3xl text-slate-800" style={{ fontFamily: `"${fontFamily}", cursive` }}>
-            {wedding.bride_name} & {wedding.groom_name}
-          </h2>
-          <span className="text-[10px] text-slate-400 tracking-widest block mt-1 font-sans">{dateStr}</span>
+          {renderQuote()}
+          {renderTimer()}
+          {renderDetails()}
+          {renderRsvpButton()}
         </div>
       </div>
-
-      {/* Details Box */}
-      <div className="w-full bg-white/80 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-xl border border-slate-200/50 text-center text-slate-800">
-        {renderQuote()}
-        {renderTimer()}
-        {renderDetails()}
-        {renderRsvpButton()}
-      </div>
-    </div>
-  );
+    );
+  };
 
   // Route layouts
   let layoutComponent = renderClassicCardLayout();

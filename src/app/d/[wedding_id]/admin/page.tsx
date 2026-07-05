@@ -150,6 +150,12 @@ export default function CoupleAdminPage({
   const [musicUrl, setMusicUrl] = useState('');
   const [musicAutoplay, setMusicAutoplay] = useState(true);
   
+  // Modüller & Bileşen Yönetimi (Aç/Kapat) State
+  const [showPhotos, setShowPhotos] = useState(true);
+  const [showRsvp, setShowRsvp] = useState(true);
+  const [showComments, setShowComments] = useState(true);
+  const [showCountdown, setShowCountdown] = useState(true);
+  
   // Genel Bilgiler State
   const [eventType, setEventType] = useState('Düğün');
   const [brideName, setBrideName] = useState('');
@@ -220,6 +226,12 @@ export default function CoupleAdminPage({
       if (weddingData.music_url) setMusicUrl(weddingData.music_url);
       if (weddingData.music_autoplay !== undefined && weddingData.music_autoplay !== null) setMusicAutoplay(weddingData.music_autoplay);
       
+      // Modüller & Bileşen Yönetimi (Aç/Kapat) Yükleme
+      if (weddingData.show_photos !== undefined && weddingData.show_photos !== null) setShowPhotos(weddingData.show_photos);
+      if (weddingData.show_rsvp !== undefined && weddingData.show_rsvp !== null) setShowRsvp(weddingData.show_rsvp);
+      if (weddingData.show_comments !== undefined && weddingData.show_comments !== null) setShowComments(weddingData.show_comments);
+      if (weddingData.show_countdown !== undefined && weddingData.show_countdown !== null) setShowCountdown(weddingData.show_countdown);
+      
       // Genel Bilgileri Doldur
       if (weddingData.event_type) setEventType(weddingData.event_type);
       if (weddingData.bride_name) setBrideName(weddingData.bride_name);
@@ -261,7 +273,11 @@ export default function CoupleAdminPage({
           names_font_family: namesFontFamily,
           quote_font_family: quoteFontFamily,
           quote_font_size: quoteFontSize,
-          use_envelope: useEnvelope
+          use_envelope: useEnvelope,
+          show_photos: showPhotos,
+          show_rsvp: showRsvp,
+          show_comments: showComments,
+          show_countdown: showCountdown
         })
         .eq('id', wedding.id);
 
@@ -276,7 +292,7 @@ export default function CoupleAdminPage({
     templateId, primaryColor, textColor, envelopeColor, 
     envelopeBgColor, envelopeFlapType, sealType, sealColor, 
     entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
-    quoteFontFamily, quoteFontSize
+    quoteFontFamily, quoteFontSize, showPhotos, showRsvp, showComments, showCountdown
   ]);
 
   async function fetchRsvps(weddingId: string) {
@@ -331,7 +347,11 @@ export default function CoupleAdminPage({
         quote_font_family: quoteFontFamily,
         quote_font_size: quoteFontSize,
         music_url: musicUrl,
-        music_autoplay: musicAutoplay
+        music_autoplay: musicAutoplay,
+        show_photos: showPhotos,
+        show_rsvp: showRsvp,
+        show_comments: showComments,
+        show_countdown: showCountdown
       })
       .eq('id', wedding.id);
       
@@ -1282,6 +1302,70 @@ export default function CoupleAdminPage({
                         <input type="checkbox" className="sr-only" checked={musicAutoplay} onChange={e => setMusicAutoplay(e.target.checked)} />
                         <div className={`block w-10 h-5 rounded-full transition-colors ${musicAutoplay ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
                         <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${musicAutoplay ? 'transform translate-x-5' : ''}`}></div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* BÖLÜM 2.6: MODÜLLER VE BİLEŞEN YÖNETİMİ (AÇ/KAPAT) */}
+                <div className="pt-6 border-t border-slate-200">
+                  <h3 className="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
+                    <span>⚙️</span> Modüller ve Bileşen Yönetimi
+                  </h3>
+                  <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+                    Davetiyenizde görünmesini istediğiniz bölümleri açıp kapatabilirsiniz. Değişiklikler anında önizlemeye yansır.
+                  </p>
+                  
+                  <div className="space-y-3">
+                    {/* Fotoğraf Alanı */}
+                    <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                      <div>
+                        <div className="font-bold text-slate-800 text-xs">Fotoğraf Alanı & Albüm</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5">Misafirlerin fotoğraf yüklemesi ve polaroid albüm görünümü.</div>
+                      </div>
+                      <div className="relative shrink-0">
+                        <input type="checkbox" className="sr-only" checked={showPhotos} onChange={e => setShowPhotos(e.target.checked)} />
+                        <div className={`block w-10 h-5 rounded-full transition-colors ${showPhotos ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                        <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${showPhotos ? 'transform translate-x-5' : ''}`}></div>
+                      </div>
+                    </label>
+
+                    {/* LCV Formu */}
+                    <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                      <div>
+                        <div className="font-bold text-slate-800 text-xs">LCV / Katılım Formu</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5">Misafirlerin katılım durumlarını (geliyor/gelmiyor) bildirme alanı.</div>
+                      </div>
+                      <div className="relative shrink-0">
+                        <input type="checkbox" className="sr-only" checked={showRsvp} onChange={e => setShowRsvp(e.target.checked)} />
+                        <div className={`block w-10 h-5 rounded-full transition-colors ${showRsvp ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                        <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${showRsvp ? 'transform translate-x-5' : ''}`}></div>
+                      </div>
+                    </label>
+
+                    {/* Anı Defteri */}
+                    <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                      <div>
+                        <div className="font-bold text-slate-800 text-xs">Anı Defteri</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5">Misafirlerinizin bıraktığı iyi dilek mesajlarının sergilenmesi.</div>
+                      </div>
+                      <div className="relative shrink-0">
+                        <input type="checkbox" className="sr-only" checked={showComments} onChange={e => setShowComments(e.target.checked)} />
+                        <div className={`block w-10 h-5 rounded-full transition-colors ${showComments ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                        <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${showComments ? 'transform translate-x-5' : ''}`}></div>
+                      </div>
+                    </label>
+
+                    {/* Geri Sayım Sayacı */}
+                    <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                      <div>
+                        <div className="font-bold text-slate-800 text-xs">Geri Sayım Sayacı</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5">Etkinlik gününe ve saatine kalan süreyi gösteren geri sayım.</div>
+                      </div>
+                      <div className="relative shrink-0">
+                        <input type="checkbox" className="sr-only" checked={showCountdown} onChange={e => setShowCountdown(e.target.checked)} />
+                        <div className={`block w-10 h-5 rounded-full transition-colors ${showCountdown ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                        <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${showCountdown ? 'transform translate-x-5' : ''}`}></div>
                       </div>
                     </label>
                   </div>
