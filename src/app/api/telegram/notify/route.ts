@@ -24,8 +24,12 @@ export async function POST(request: Request) {
     const botToken = isCustomBot ? wedding.telegram_bot_token : process.env.TELEGRAM_BOT_TOKEN;
 
     // Eğer Telegram ayarları yoksa işlemi iptal et
-    if (!botToken || !wedding.telegram_chat_id) {
-      return NextResponse.json({ success: true, message: 'Telegram ayarları yok, bildirim atlanıldı.' });
+    if (!wedding.telegram_chat_id) {
+      return NextResponse.json({ success: true, message: 'Telegram chat ID tanımlanmamış, bildirim atlanıldı.' });
+    }
+
+    if (!botToken) {
+      return NextResponse.json({ success: false, error: 'Telegram Bot Token (TELEGRAM_BOT_TOKEN env değişkeni) sunucuda veya .env.local dosyasında tanımlı değil!' }, { status: 400 });
     }
 
     // 2. Telegram Mesajını Hazırla
