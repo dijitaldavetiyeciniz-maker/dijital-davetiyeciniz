@@ -1606,6 +1606,7 @@ export default function CoupleAdminPage({
                       <div>
                         <label className="block text-sm font-semibold mb-1.5 text-slate-700">Açılış Animasyonu Türü</label>
                         <select value={entranceType} onChange={e => setEntranceType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
+                          <option value="embossed-envelope">🌸 Premium Kabartmalı Dikey Zarf</option>
                           <option value="envelope">✉️ 3D Mühürlü Zarf</option>
                           <option value="ribbon">🎀 Kurdeleli Premium Zarf</option>
                           <option value="royal-seal-premium">👑 Royal Seal Premium (5 Faz Sinematik)</option>

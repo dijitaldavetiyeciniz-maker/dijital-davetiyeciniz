@@ -1058,14 +1058,6 @@ export default function Envelope({
                     >
                       {groomName}
                     </motion.h2>
-                    <motion.p
-                      className="text-[9px] tracking-widest uppercase mt-4 text-slate-400"
-                      initial={{ opacity: 0 }}
-                      animate={phase >= 5 ? { opacity: 1 } : { opacity: 0 }}
-                      transition={{ duration: 1, delay: 1.2 }}
-                    >
-                      Düğün Törenimize Davetlisiniz
-                    </motion.p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -1076,10 +1068,199 @@ export default function Envelope({
     );
   };
 
+  const renderEmbossedEnvelope = () => {
+    const envStyle = getEnvelopeStyle(envelopeColor);
+    const goldColor = '#d4af37';
+    
+    // We want a gorgeous ivory/cream paper color by default for the embossed style
+    const paperBg = envelopeColor && envelopeColor.startsWith('#') ? envelopeColor : '#fcfbf7';
+    
+    return (
+      <motion.div 
+        className="relative w-[320px] h-[460px] md:w-[400px] md:h-[560px] cursor-pointer perspective-2000"
+        initial={{ scale: 0.85, opacity: 0, y: 60 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 1.05, filter: "blur(12px)" }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        onClick={!isOpened ? handleOpen : undefined}
+      >
+        {/* ENVELOPE BACKPLATE (Pocket back) */}
+        <div 
+          className="absolute inset-0 rounded-2xl shadow-2xl overflow-hidden border border-black/5"
+          style={{ 
+            backgroundColor: paperBg,
+            backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.6) 0%, rgba(0,0,0,0.03) 100%)',
+            boxShadow: '0 25px 60px -15px rgba(0,0,0,0.3), inset 0 0 40px rgba(0,0,0,0.05)'
+          }}
+        >
+          {/* Inner pocket shadow */}
+          <div className="absolute inset-x-2 top-2 bottom-2 bg-black/[0.02] rounded-xl pointer-events-none" />
+          
+          {/* INVITATION CARD (Sliding Upwards) */}
+          <motion.div 
+            className="absolute inset-x-4 top-4 bottom-4 bg-[#fcfbf9] rounded-xl shadow-lg border border-[#e8dfc7] flex flex-col items-center justify-between p-6 z-10"
+            initial={{ y: 20, scale: 0.95 }}
+            animate={isOpened ? { y: -240, scale: 1, boxShadow: '0 20px 40px rgba(0,0,0,0.15)' } : { y: 20, scale: 0.95 }}
+            transition={{ duration: 1.2, delay: 0.4, ease: [0.25, 1, 0.5, 1] }}
+          >
+            {/* Elegant invitation design inside the card */}
+            <div className="w-full h-full border border-[#dfc384]/30 rounded-lg flex flex-col items-center justify-between py-6 px-4 relative">
+              {/* Gold corners */}
+              <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-[#dfc384]/60" />
+              <div className="absolute top-2 right-2 w-4 h-4 border-t border-r border-[#dfc384]/60" />
+              <div className="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-[#dfc384]/60" />
+              <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-[#dfc384]/60" />
+              
+              <div className="text-center mt-4">
+                <Crown className="w-6 h-6 mx-auto mb-2 text-[#dfc384]/80" />
+                <span className="text-[9px] tracking-[0.25em] text-[#b0945a] uppercase font-semibold">Düğün Davetiyesi</span>
+              </div>
+              
+              <div className="text-center my-auto">
+                <h3 className="text-2xl md:text-3xl text-slate-800 font-serif leading-relaxed" style={{ fontFamily: `"${fontFamily}", serif` }}>
+                  {brideName}
+                </h3>
+                <div className="text-slate-400 font-serif text-lg my-1">&</div>
+                <h3 className="text-2xl md:text-3xl text-slate-800 font-serif leading-relaxed" style={{ fontFamily: `"${fontFamily}", serif` }}>
+                  {groomName}
+                </h3>
+              </div>
+              
+              <div className="text-center mb-4">
+                <div className="w-8 h-[1px] bg-[#dfc384]/50 mx-auto mb-2" />
+                <span className="text-[8px] text-slate-400 tracking-[0.3em] uppercase">Sizi de Aramızda Görmekten Mutluluk Duyarız</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* LEFT FLAP */}
+        <div 
+          className="absolute inset-0 z-20 pointer-events-none"
+          style={{
+            clipPath: 'polygon(0 0, 50% 50%, 0 100%)',
+            backgroundColor: paperBg,
+            backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0.02), rgba(255,255,255,0.05))',
+            filter: 'drop-shadow(2px 0 5px rgba(0,0,0,0.05))'
+          }}
+        >
+          {/* Floral Embossing Left */}
+          <div className="absolute left-2 top-1/4 w-12 h-1/2 opacity-35">
+            <svg viewBox="0 0 100 200" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-500">
+              <path d="M10 10 Q 50 50 10 90 T 10 170" />
+              <path d="M25 40 Q 60 60 30 80" />
+              <circle cx="30" cy="80" r="3" fill="currentColor" />
+              <path d="M20 120 Q 50 130 15 150" />
+              <circle cx="15" cy="150" r="3" fill="currentColor" />
+            </svg>
+          </div>
+        </div>
+
+        {/* RIGHT FLAP */}
+        <div 
+          className="absolute inset-0 z-20 pointer-events-none"
+          style={{
+            clipPath: 'polygon(100% 0, 50% 50%, 100% 100%)',
+            backgroundColor: paperBg,
+            backgroundImage: 'linear-gradient(to left, rgba(0,0,0,0.02), rgba(255,255,255,0.05))',
+            filter: 'drop-shadow(-2px 0 5px rgba(0,0,0,0.05))'
+          }}
+        >
+          {/* Floral Embossing Right */}
+          <div className="absolute right-2 top-1/4 w-12 h-1/2 opacity-35">
+            <svg viewBox="0 0 100 200" fill="none" stroke="currentColor" strokeWidth="2" className="text-slate-500 transform scale-x-[-1]">
+              <path d="M10 10 Q 50 50 10 90 T 10 170" />
+              <path d="M25 40 Q 60 60 30 80" />
+              <circle cx="30" cy="80" r="3" fill="currentColor" />
+              <path d="M20 120 Q 50 130 15 150" />
+              <circle cx="15" cy="150" r="3" fill="currentColor" />
+            </svg>
+          </div>
+        </div>
+
+        {/* BOTTOM FLAP */}
+        <div 
+          className="absolute inset-0 z-20 pointer-events-none"
+          style={{
+            clipPath: 'polygon(0 100%, 50% 50%, 100% 100%)',
+            backgroundColor: paperBg,
+            backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0.02), rgba(255,255,255,0.05))',
+            filter: 'drop-shadow(0 -2px 5px rgba(0,0,0,0.05))'
+          }}
+        />
+
+        {/* TOP FLAP (OPENING) */}
+        <motion.div 
+          className="absolute inset-0 z-30 origin-top pointer-events-none"
+          style={{
+            clipPath: 'polygon(0 0, 50% 50%, 100% 0)',
+            backgroundColor: paperBg,
+            backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.04) 100%)',
+            boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+          }}
+          initial={{ rotateX: 0 }}
+          animate={isOpened ? { rotateX: 180, zIndex: 10 } : { rotateX: 0, zIndex: 30 }}
+          transition={{ duration: 1, ease: "easeInOut" }}
+        >
+          {/* Floral Embossing on Flap Edges */}
+          <div className="absolute inset-0 flex items-start justify-center p-6">
+            <svg viewBox="0 0 200 100" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-slate-700/25 w-4/5 mt-2">
+              {/* Left Branch */}
+              <path d="M20 10 Q 50 35 100 50" />
+              <path d="M40 20 Q 60 10 70 25" />
+              <circle cx="70" cy="25" r="2.5" fill="currentColor" />
+              <path d="M65 30 Q 80 20 85 35" />
+              <circle cx="85" cy="35" r="2.5" fill="currentColor" />
+
+              {/* Right Branch */}
+              <path d="M180 10 Q 150 35 100 50" />
+              <path d="M160 20 Q 140 10 130 25" />
+              <circle cx="130" cy="25" r="2.5" fill="currentColor" />
+              <path d="M135 30 Q 120 20 115 35" />
+              <circle cx="115" cy="35" r="2.5" fill="currentColor" />
+            </svg>
+          </div>
+        </motion.div>
+
+        {/* WAX SEAL (STYLISH 3D SEAL IN THE CENTER) */}
+        <motion.div 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center shadow-xl cursor-pointer"
+          style={{ 
+            background: 'radial-gradient(circle at 35% 35%, #e07d6c 0%, #b85a4c 50%, #7d3328 100%)',
+            boxShadow: 'inset 0 0 15px rgba(255,255,255,0.4), 0 10px 25px rgba(0,0,0,0.35)',
+            border: '2px solid rgba(255,255,255,0.1)'
+          }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          initial={{ opacity: 1, scale: 1 }}
+          animate={isOpened ? { opacity: 0, scale: 0, y: -50 } : { opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          {/* Inner ring & stamp */}
+          <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/20 flex items-center justify-center bg-black/5">
+            <span className="font-serif text-white/95 font-bold text-base md:text-lg tracking-widest select-none filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
+              {monogramText}
+            </span>
+          </div>
+          
+          {/* Wax outer irregular melt shape */}
+          <div className="absolute inset-0 -m-1 rounded-[40%_60%_50%_50%/_50%_40%_60%_50%] border-4 border-[#b85a4c]/30 pointer-events-none opacity-80" />
+          
+          <div className="absolute -bottom-6 w-32 text-center text-slate-400 text-[9px] font-bold tracking-[0.2em] uppercase select-none">
+            AÇMAK İÇİN DOKUNUN
+          </div>
+        </motion.div>
+      </motion.div>
+    );
+  };
+
   // Switch animation components based on entranceType
   let entranceComponent = renderEnvelope();
   
   switch (entranceType) {
+    case 'embossed-envelope':
+      entranceComponent = renderEmbossedEnvelope();
+      break;
     case 'box':
       entranceComponent = renderBox();
       break;
