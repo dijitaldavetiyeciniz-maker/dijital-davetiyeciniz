@@ -1,9 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Heart, Crown, Leaf } from 'lucide-react';
 import { getBackgroundStyle } from '@/lib/backgrounds';
 import BackgroundMusic from './BackgroundMusic';
+import BackgroundParticles from './BackgroundParticles';
 
 interface EnvelopeProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ interface EnvelopeProps {
   fontFamily?: string;
   musicUrl?: string | null;
   musicAutoplay?: boolean;
+  backgroundAnimation?: string;
 }
 
 export default function Envelope({ 
@@ -34,7 +36,8 @@ export default function Envelope({
   entranceType = 'envelope',
   fontFamily = 'Montserrat',
   musicUrl,
-  musicAutoplay = true
+  musicAutoplay = true,
+  backgroundAnimation = 'none'
 }: EnvelopeProps) {
   const [isOpened, setIsOpened] = useState(() => {
     const isPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
@@ -53,6 +56,8 @@ export default function Envelope({
   const [ribbonUntied, setRibbonUntied] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const [isShattered, setIsShattered] = useState(false);
+  // Royal Seal Premium phase states (0=waiting, 1=seal glow, 2=ribbon untie, 3=flap open, 4=card rise, 5=names appear)
+  const [royalPhase, setRoyalPhase] = useState(0);
 
   const handleOpen = () => {
     // Play music immediately on user click to bypass browser autoplay restrictions
@@ -95,6 +100,20 @@ export default function Envelope({
       setTimeout(() => {
         setShowContent(true);
       }, 800);
+    } else if (entranceType === 'royal-seal-premium') {
+      // 5-phase royal sequence
+      if (isPreview && typeof window !== 'undefined') {
+        window.sessionStorage.setItem('preview_envelope_opened', 'true');
+      }
+      setRoyalPhase(1); // Seal glow
+      setTimeout(() => setRoyalPhase(2), 1800); // Ribbon untie
+      setTimeout(() => {
+        setRoyalPhase(3); // Flap open
+        setIsOpened(true);
+      }, 3200);
+      setTimeout(() => setRoyalPhase(4), 4800); // Card rise + gold dust
+      setTimeout(() => setRoyalPhase(5), 6000); // Names cinematic reveal
+      setTimeout(() => setShowContent(true), 7500); // Full content
     } else {
       setIsOpened(true);
       if (isPreview && typeof window !== 'undefined') {
@@ -838,6 +857,225 @@ export default function Envelope({
     );
   };
 
+  // ==========================================
+  // ROYAL SEAL PREMIUM — 5-Phase Cinematic Opening
+  // ==========================================
+  const renderRoyalSealPremium = () => {
+    const goldColor = '#d4af37';
+    const phase = royalPhase;
+    
+    return (
+      <div
+        className="absolute inset-0 flex items-center justify-center overflow-hidden z-50 cursor-pointer"
+        style={{ background: 'radial-gradient(ellipse at 50% 40%, #1a1208 0%, #0a0805 100%)' }}
+        onClick={phase === 0 ? handleOpen : undefined}
+      >
+        {/* Gold dust particles always visible in royal mode */}
+        <BackgroundParticles animationType="gold-dust" primaryColor={goldColor} />
+
+        {/* Phase 0: Initial invitation prompt */}
+        <AnimatePresence>
+          {phase === 0 && (
+            <motion.div
+              className="flex flex-col items-center gap-6 text-center px-8"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 1, ease: 'easeOut' }}
+            >
+              <motion.div
+                className="w-2 h-2 rounded-full bg-amber-400"
+                animate={{ opacity: [0.3, 1, 0.3] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              <p className="text-[10px] tracking-[0.4em] uppercase text-amber-400/60 font-semibold">Özel Davetiyeniz</p>
+              <motion.div
+                className="w-28 h-28 md:w-36 md:h-36 rounded-full border-2 flex items-center justify-center relative"
+                style={{
+                  borderColor: goldColor,
+                  background: `radial-gradient(circle, rgba(212,175,55,0.15) 0%, rgba(0,0,0,0.8) 100%)`,
+                  boxShadow: `0 0 40px ${goldColor}40, inset 0 0 20px rgba(0,0,0,0.6)`,
+                  ...sealBgStyle
+                }}
+                animate={{ boxShadow: [`0 0 20px ${goldColor}30`, `0 0 50px ${goldColor}60`, `0 0 20px ${goldColor}30`] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+              >
+                <div className="w-20 h-20 md:w-28 md:h-28 rounded-full border flex items-center justify-center" style={{ borderColor: 'rgba(212,175,55,0.3)' }}>
+                  {sealIcon}
+                </div>
+                {/* Rotating ring */}
+                <motion.div
+                  className="absolute inset-0 rounded-full border"
+                  style={{ borderColor: `${goldColor}40`, borderStyle: 'dashed' }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+                />
+              </motion.div>
+              <p className="text-xs text-amber-300/50 tracking-widest uppercase">Dokunun</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Phase 1+: The envelope appears and seal glows */}
+        <AnimatePresence>
+          {phase >= 1 && (
+            <motion.div
+              className="relative flex flex-col items-center"
+              initial={{ opacity: 0, scale: 0.85, y: 40 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {/* Envelope body */}
+              <motion.div
+                className="relative w-[300px] h-[210px] md:w-[460px] md:h-[320px] rounded-sm shadow-2xl"
+                style={{
+                  backgroundColor: '#1c1208',
+                  border: `2px solid ${goldColor}`,
+                  boxShadow: `0 30px 80px rgba(0,0,0,0.7), 0 0 40px ${goldColor}20`
+                }}
+              >
+                {/* Inner gold border */}
+                <div className="absolute inset-3 border pointer-events-none" style={{ borderColor: `${goldColor}30` }} />
+
+                {/* Envelope flap */}
+                <motion.div
+                  className="absolute top-0 left-0 right-0 origin-top z-20"
+                  style={{
+                    height: '55%',
+                    clipPath: 'polygon(0 0, 50% 60%, 100% 0)',
+                    backgroundColor: '#24180a',
+                    borderBottom: `1px solid ${goldColor}60`
+                  }}
+                  animate={phase >= 3 ? { rotateX: 180, opacity: 0 } : { rotateX: 0, opacity: 1 }}
+                  transition={{ duration: 1, ease: 'easeInOut' }}
+                />
+
+                {/* Names inside envelope (rises up when opened) */}
+                <motion.div
+                  className="absolute inset-4 bg-[#f5f0e8] flex flex-col items-center justify-center text-center"
+                  animate={phase >= 3 ? { y: -180, opacity: 0 } : { y: 20 }}
+                  transition={{ duration: 1.2, delay: 0.5, ease: 'easeInOut' }}
+                >
+                  <div className="text-slate-800 text-lg md:text-2xl" style={{ fontFamily: `"${fontFamily}", serif` }}>
+                    {brideName} & {groomName}
+                  </div>
+                  <div className="w-12 h-px mx-auto my-2" style={{ backgroundColor: goldColor }} />
+                  <div className="text-[9px] text-slate-400 tracking-widest uppercase">Düğün Davetiyesi</div>
+                </motion.div>
+
+                {/* Side shadows */}
+                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to bottom right, transparent 49%, rgba(0,0,0,0.1) 50%)', clipPath: 'polygon(0 0, 50% 60%, 0 100%)' }} />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to bottom left, transparent 49%, rgba(0,0,0,0.15) 50%)', clipPath: 'polygon(100% 0, 50% 60%, 100% 100%)' }} />
+              </motion.div>
+
+              {/* RIBBON — Phase 1: visible, Phase 2: slides out */}
+              <motion.div
+                className="absolute left-0 top-1/2 -translate-y-1/2 h-7 z-30 pointer-events-none"
+                style={{ width: '50%', background: `linear-gradient(to right, ${goldColor}cc, ${goldColor})`, boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
+                animate={phase >= 2 ? { x: '-110%', opacity: 0 } : { x: 0, opacity: 1 }}
+                transition={{ duration: 0.8, ease: 'easeIn' }}
+              />
+              <motion.div
+                className="absolute right-0 top-1/2 -translate-y-1/2 h-7 z-30 pointer-events-none"
+                style={{ width: '50%', background: `linear-gradient(to left, ${goldColor}cc, ${goldColor})`, boxShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
+                animate={phase >= 2 ? { x: '110%', opacity: 0 } : { x: 0, opacity: 1 }}
+                transition={{ duration: 0.8, ease: 'easeIn' }}
+              />
+
+              {/* SEAL — glows in phase 1, fades in phase 2 */}
+              <motion.div
+                className="absolute top-[55%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center border-2"
+                style={{
+                  backgroundColor: currentSealColor,
+                  borderColor: goldColor,
+                  boxShadow: phase >= 1
+                    ? `inset 0 0 12px rgba(0,0,0,0.6), 0 5px 15px rgba(0,0,0,0.4), 0 0 30px ${goldColor}80`
+                    : 'inset 0 0 12px rgba(0,0,0,0.6), 0 5px 15px rgba(0,0,0,0.4)',
+                  ...sealBgStyle
+                }}
+                animate={phase >= 2
+                  ? { opacity: 0, scale: 0, y: -20 }
+                  : phase === 1
+                    ? { scale: [1, 1.08, 1], boxShadow: [`0 0 20px ${goldColor}50`, `0 0 50px ${goldColor}99`, `0 0 20px ${goldColor}50`] }
+                    : { scale: 1 }
+                }
+                transition={phase === 1 ? { duration: 1.5, repeat: 1 } : { duration: 0.5 }}
+              >
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border flex items-center justify-center" style={{ borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(0,0,0,0.15)' }}>
+                  {sealIcon}
+                </div>
+              </motion.div>
+
+              {/* PHASE 4+: Invitation card rises up from envelope */}
+              <AnimatePresence>
+                {phase >= 4 && (
+                  <motion.div
+                    className="absolute -top-48 md:-top-60 w-[280px] md:w-[420px] bg-[#faf6ee] rounded-xl shadow-2xl p-6 md:p-8 text-center border z-50"
+                    style={{ borderColor: `${goldColor}40`, boxShadow: `0 -20px 60px rgba(0,0,0,0.4), 0 0 40px ${goldColor}20` }}
+                    initial={{ y: 80, opacity: 0, scale: 0.95 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <div className="absolute inset-3 border pointer-events-none rounded-lg" style={{ borderColor: `${goldColor}30` }} />
+                    <Crown className="w-6 h-6 mx-auto mb-3" style={{ color: goldColor }} />
+                    <p className="text-[9px] tracking-[0.3em] uppercase mb-4" style={{ color: goldColor }}>Özel Davet</p>
+                    {/* Phase 5: Names appear letter by letter */}
+                    <motion.h2
+                      className="text-2xl md:text-3xl text-slate-800 font-normal"
+                      style={{ fontFamily: `"${fontFamily}", serif` }}
+                      initial={{ opacity: 0, letterSpacing: '0.5em' }}
+                      animate={phase >= 5 ? { opacity: 1, letterSpacing: '0.05em' } : { opacity: 0 }}
+                      transition={{ duration: 1.5, ease: 'easeOut' }}
+                    >
+                      {brideName}
+                    </motion.h2>
+                    <motion.div
+                      className="w-8 h-px mx-auto my-2"
+                      style={{ backgroundColor: goldColor }}
+                      initial={{ scaleX: 0 }}
+                      animate={phase >= 5 ? { scaleX: 1 } : { scaleX: 0 }}
+                      transition={{ duration: 0.8, delay: 0.5 }}
+                    />
+                    <motion.div
+                      className="text-lg md:text-xl text-slate-500 font-light"
+                      initial={{ opacity: 0 }}
+                      animate={phase >= 5 ? { opacity: 1 } : { opacity: 0 }}
+                      transition={{ duration: 0.8, delay: 0.3 }}
+                    >&</motion.div>
+                    <motion.div
+                      className="w-8 h-px mx-auto my-2"
+                      style={{ backgroundColor: goldColor }}
+                      initial={{ scaleX: 0 }}
+                      animate={phase >= 5 ? { scaleX: 1 } : { scaleX: 0 }}
+                      transition={{ duration: 0.8, delay: 0.8 }}
+                    />
+                    <motion.h2
+                      className="text-2xl md:text-3xl text-slate-800 font-normal"
+                      style={{ fontFamily: `"${fontFamily}", serif` }}
+                      initial={{ opacity: 0, letterSpacing: '0.5em' }}
+                      animate={phase >= 5 ? { opacity: 1, letterSpacing: '0.05em' } : { opacity: 0 }}
+                      transition={{ duration: 1.5, delay: 0.4, ease: 'easeOut' }}
+                    >
+                      {groomName}
+                    </motion.h2>
+                    <motion.p
+                      className="text-[9px] tracking-widest uppercase mt-4 text-slate-400"
+                      initial={{ opacity: 0 }}
+                      animate={phase >= 5 ? { opacity: 1 } : { opacity: 0 }}
+                      transition={{ duration: 1, delay: 1.2 }}
+                    >
+                      Düğün Törenimize Davetlisiniz
+                    </motion.p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
   // Switch animation components based on entranceType
   let entranceComponent = renderEnvelope();
   
@@ -869,6 +1107,9 @@ export default function Envelope({
     case 'glass-shatter':
       entranceComponent = renderGlassShatter();
       break;
+    case 'royal-seal-premium':
+      entranceComponent = renderRoyalSealPremium();
+      break;
   }
 
   // Viewport background wrapper & music placement
@@ -877,7 +1118,11 @@ export default function Envelope({
       <link href={fontUrl} rel="stylesheet" />
       
       {/* 1. Invitation Content (rendered underneath or directly) */}
-      <div className="w-full min-h-screen">
+      <div className="w-full min-h-screen relative">
+        {/* Background particles on the invitation itself */}
+        {showContent && backgroundAnimation && backgroundAnimation !== 'none' && (
+          <BackgroundParticles animationType={backgroundAnimation} primaryColor={primaryColor} />
+        )}
         {children}
       </div>
 
@@ -886,7 +1131,7 @@ export default function Envelope({
         {!showContent && (
           <motion.div 
             className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden" 
-            style={bgStyle}
+            style={entranceType === 'royal-seal-premium' ? {} : bgStyle}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8 }}
           >

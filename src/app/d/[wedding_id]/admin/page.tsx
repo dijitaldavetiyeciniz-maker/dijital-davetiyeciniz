@@ -155,6 +155,7 @@ export default function CoupleAdminPage({
   const [showRsvp, setShowRsvp] = useState(true);
   const [showComments, setShowComments] = useState(true);
   const [showCountdown, setShowCountdown] = useState(true);
+  const [backgroundAnimation, setBackgroundAnimation] = useState('none');
   
   // Genel Bilgiler State
   const [eventType, setEventType] = useState('Düğün');
@@ -231,6 +232,7 @@ export default function CoupleAdminPage({
       if (weddingData.show_rsvp !== undefined && weddingData.show_rsvp !== null) setShowRsvp(weddingData.show_rsvp);
       if (weddingData.show_comments !== undefined && weddingData.show_comments !== null) setShowComments(weddingData.show_comments);
       if (weddingData.show_countdown !== undefined && weddingData.show_countdown !== null) setShowCountdown(weddingData.show_countdown);
+      if (weddingData.background_animation) setBackgroundAnimation(weddingData.background_animation);
       
       // Genel Bilgileri Doldur
       if (weddingData.event_type) setEventType(weddingData.event_type);
@@ -277,7 +279,8 @@ export default function CoupleAdminPage({
           show_photos: showPhotos,
           show_rsvp: showRsvp,
           show_comments: showComments,
-          show_countdown: showCountdown
+          show_countdown: showCountdown,
+          background_animation: backgroundAnimation
         })
         .eq('id', wedding.id);
 
@@ -292,7 +295,8 @@ export default function CoupleAdminPage({
     templateId, primaryColor, textColor, envelopeColor, 
     envelopeBgColor, envelopeFlapType, sealType, sealColor, 
     entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
-    quoteFontFamily, quoteFontSize, showPhotos, showRsvp, showComments, showCountdown
+    quoteFontFamily, quoteFontSize, showPhotos, showRsvp, showComments, showCountdown,
+    backgroundAnimation
   ]);
 
   async function fetchRsvps(weddingId: string) {
@@ -351,7 +355,8 @@ export default function CoupleAdminPage({
         show_photos: showPhotos,
         show_rsvp: showRsvp,
         show_comments: showComments,
-        show_countdown: showCountdown
+        show_countdown: showCountdown,
+        background_animation: backgroundAnimation
       })
       .eq('id', wedding.id);
       
@@ -1153,6 +1158,7 @@ export default function CoupleAdminPage({
                         <select value={entranceType} onChange={e => setEntranceType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
                           <option value="envelope">✉️ 3D Mühürlü Zarf</option>
                           <option value="ribbon">🎀 Kurdeleli Premium Zarf</option>
+                          <option value="royal-seal-premium">👑 Royal Seal Premium (5 Faz Sinematik)</option>
                           <option value="box">🎁 Lüks Hediye Kutusu</option>
                           <option value="curtain">🎭 İpek Sahne Perdesi</option>
                           <option value="gate">🏰 Saray / Bahçe Kapısı</option>
@@ -1161,6 +1167,33 @@ export default function CoupleAdminPage({
                           <option value="flower-bloom">🌸 Çiçek Bahçesi (Açılış)</option>
                           <option value="wax-seal-press">🏷️ Kraliyet Mühür Basımı</option>
                           <option value="glass-shatter">💎 Elmas Cam Kırılması</option>
+                        </select>
+                      </div>
+
+                      {/* Arka Plan Animasyonu */}
+                      <div>
+                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">✨ Arka Plan Animasyonu</label>
+                        <p className="text-[10px] text-slate-400 mb-2">Davetiye açıldıktan sonra arka planda görünür. Mobilde performanslı CSS animasyonları kullanılır.</p>
+                        <select value={backgroundAnimation} onChange={e => setBackgroundAnimation(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
+                          <option value="none">— Animasyon Yok</option>
+                          <option value="gold-dust">✨ Altın Toz Parçacıkları</option>
+                          <option value="rose-petals">🌹 Gül Yaprakları</option>
+                          <option value="sakura">🌸 Sakura Yaprakları</option>
+                          <option value="light-orbs">💫 Yavaş Uçan Işık Parçaları</option>
+                          <option value="bokeh">🔆 Bokeh Işıklar</option>
+                          <option value="hearts">❤️ Romantik Kalpler</option>
+                          <option value="starry-night">🌌 Yıldızlı Gece</option>
+                          <option value="soft-mist">🌫️ Hafif Sis Efekti</option>
+                          <option value="pearl-shimmer">🪙 İnci Parıltısı</option>
+                          <option value="confetti">🎊 Konfeti</option>
+                          <option value="snowflakes">❄️ Kar Taneleri</option>
+                          <option value="ocean-wave">🌊 Deniz Dalgası</option>
+                          <option value="silk-wave">🎀 İpek Kumaş Dalgalanması</option>
+                          <option value="leaf-fall">🍂 Yaprak Süzülmesi</option>
+                          <option value="candlelight">🕯️ Mum Işığı Titreşimi</option>
+                          <option value="neon-gradient">💜 Neon Gradient Hareketi</option>
+                          <option value="marble-reflection">🏛️ Mermer Işık Yansıması</option>
+                          <option value="spotlight">🔦 Lüks Spotlight Efekti</option>
                         </select>
                       </div>
 

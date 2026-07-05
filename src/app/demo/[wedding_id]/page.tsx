@@ -71,6 +71,7 @@ export default async function DemoWeddingPage({
       fontFamily={wedding.font_family || 'Montserrat'}
       musicUrl={wedding.music_url}
       musicAutoplay={wedding.music_autoplay !== false}
+      backgroundAnimation={wedding.background_animation || 'none'}
     >
       {contentWithEffect}
     </Envelope>
