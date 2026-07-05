@@ -142,6 +142,7 @@ export default function CoupleAdminPage({
   const [entranceType, setEntranceType] = useState('envelope');
   const [effectType, setEffectType] = useState('');
   const [fontFamily, setFontFamily] = useState('sans');
+  const [namesFontFamily, setNamesFontFamily] = useState('');
   const [bgImageUrl, setBgImageUrl] = useState('');
   const [telegramBotToken, setTelegramBotToken] = useState('');
   const [telegramChatId, setTelegramChatId] = useState('');
@@ -210,6 +211,7 @@ export default function CoupleAdminPage({
       if (weddingData.entrance_type) setEntranceType(weddingData.entrance_type);
       if (weddingData.effect_type) setEffectType(weddingData.effect_type);
       if (weddingData.font_family) setFontFamily(weddingData.font_family);
+      if (weddingData.names_font_family) setNamesFontFamily(weddingData.names_font_family);
       if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
       if (weddingData.telegram_bot_token) setTelegramBotToken(weddingData.telegram_bot_token);
       if (weddingData.telegram_chat_id) setTelegramChatId(weddingData.telegram_chat_id);
@@ -255,6 +257,7 @@ export default function CoupleAdminPage({
           entrance_type: entranceType,
           effect_type: effectType,
           font_family: fontFamily,
+          names_font_family: namesFontFamily,
           quote_font_family: quoteFontFamily,
           quote_font_size: quoteFontSize,
           use_envelope: useEnvelope
@@ -268,7 +271,7 @@ export default function CoupleAdminPage({
   }, [
     templateId, primaryColor, textColor, envelopeColor, 
     envelopeBgColor, envelopeFlapType, sealType, sealColor, 
-    entranceType, effectType, fontFamily, useEnvelope,
+    entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
     quoteFontFamily, quoteFontSize
   ]);
 
@@ -306,6 +309,7 @@ export default function CoupleAdminPage({
         entrance_type: entranceType,
         effect_type: effectType,
         font_family: fontFamily,
+        names_font_family: namesFontFamily,
         background_image_url: bgImageUrl,
         telegram_bot_token: telegramBotToken,
         telegram_chat_id: telegramChatId,
@@ -778,8 +782,48 @@ export default function CoupleAdminPage({
                       })}
                     </select>
                   </div>
+                   <div>
+                    <label className="block text-sm font-medium mb-2">
+                      ✍️ İsimler Yazı Tipi 
+                      <span className="text-slate-400 font-normal ml-1 text-xs">(Gelin & Damat)</span>
+                    </label>
+                    <select value={namesFontFamily || fontFamily} onChange={e => setNamesFontFamily(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50 text-sm">
+                      <optgroup label="Romantik El Yazısı (Kaligrafi)">
+                        <option value="Great Vibes">Great Vibes</option>
+                        <option value="Parisienne">Parisienne</option>
+                        <option value="Alex Brush">Alex Brush</option>
+                        <option value="Dancing Script">Dancing Script</option>
+                        <option value="Allura">Allura</option>
+                        <option value="Arizonia">Arizonia</option>
+                        <option value="Pinyon Script">Pinyon Script</option>
+                        <option value="Sacramento">Sacramento</option>
+                        <option value="Tangerine">Tangerine</option>
+                        <option value="Yellowtail">Yellowtail</option>
+                        <option value="Italianno">Italianno</option>
+                        <option value="Monsieur La Doulaise">Monsieur La Doulaise</option>
+                      </optgroup>
+                      <optgroup label="Zarif & Şık (Serif)">
+                        <option value="Cormorant Garamond">Cormorant Garamond</option>
+                        <option value="Playfair Display">Playfair Display</option>
+                        <option value="Cinzel">Cinzel</option>
+                        <option value="Italiana">Italiana</option>
+                        <option value="Bodoni Moda">Bodoni Moda</option>
+                        <option value="Cinzel Decorative">Cinzel Decorative</option>
+                      </optgroup>
+                      <optgroup label="Modern & Sade (Sans-serif)">
+                        <option value="Montserrat">Montserrat</option>
+                        <option value="Inter">Inter</option>
+                        <option value="Outfit">Outfit</option>
+                        <option value="Raleway">Raleway</option>
+                        <option value="Poppins">Poppins</option>
+                      </optgroup>
+                    </select>
+                  </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Yazı Tipi (Font)</label>
+                    <label className="block text-sm font-medium mb-2">
+                      📝 Genel Yazı Tipi
+                      <span className="text-slate-400 font-normal ml-1 text-xs">(Tarih, Mekan, Detaylar)</span>
+                    </label>
                     <select value={fontFamily} onChange={e => setFontFamily(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50 text-sm">
                       <optgroup label="Romantik El Yazısı (Kaligrafi)">
                         <option value="Great Vibes">Great Vibes</option>
@@ -1071,11 +1115,63 @@ export default function CoupleAdminPage({
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-lg mb-4 text-slate-800">Telegram Bildirimleri</h3>
+                  <h3 className="font-bold text-lg mb-1 text-slate-800">📨 Telegram Bildirimleri</h3>
+                  <p className="text-xs text-slate-500 mb-4">LCV bildirimleri ve fotoğraf yüklemeleri Telegram grubunuza iletilir.</p>
+
+                  {/* Step-by-step guide */}
+                  <div className="mb-4 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 text-sm text-slate-700">
+                    <p className="font-bold text-blue-700 mb-3 flex items-center gap-2">
+                      <span>🤖</span> Telegram Bot Nasıl Kurulur?
+                    </p>
+                    <ol className="space-y-2 text-xs leading-relaxed">
+                      <li className="flex gap-2">
+                        <span className="font-bold text-blue-600 shrink-0">1.</span>
+                        <span>Telegram uygulamasını açın, arama çubuğuna <strong>BotFather</strong> yazıp girin.</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="font-bold text-blue-600 shrink-0">2.</span>
+                        <span>Mesaj alanına <code className="bg-white border border-blue-200 rounded px-1">/newbot</code> yazın ve gönderin.</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="font-bold text-blue-600 shrink-0">3.</span>
+                        <span>Botunuza bir isim verin (Örn: <em>AyşenurAlperenBot</em>). İsim mutlaka <strong>bot</strong> ile bitmeli.</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="font-bold text-blue-600 shrink-0">4.</span>
+                        <span>BotFather'ın gönderdiği mesajdaki <strong>HTTP API token</strong> kodunu kopyalayıp aşağıdaki <em>Bot Token</em> alanına yapıştırın.</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="font-bold text-blue-600 shrink-0">5.</span>
+                        <span>Telegram ana sayfasına dönün, yeni bir <strong>Grup</strong> oluşturun ve oluşturduğunuz botu gruba ekleyin.</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="font-bold text-blue-600 shrink-0">6.</span>
+                        <span>Gruba herhangi bir mesaj atın. Ardından tarayıcıdan şu adrese gidin:</span>
+                      </li>
+                    </ol>
+                    <div className="mt-3 bg-slate-900 text-green-400 font-mono text-[10px] rounded-lg p-3 break-all leading-relaxed">
+                      https://api.telegram.org/bot<span className="text-yellow-300">[BOT_TOKEN]</span>/getUpdates
+                    </div>
+                    <ol className="space-y-2 text-xs leading-relaxed mt-3" start={7}>
+                      <li className="flex gap-2">
+                        <span className="font-bold text-blue-600 shrink-0">7.</span>
+                        <span>Açılan JSON içinde <code className="bg-white border border-blue-200 rounded px-1">"chat":{"{"}"id": <strong>-100XXXXXXX</strong>{"}"}</code> değerini bulun ve aşağıdaki <em>Chat ID</em> alanına yapıştırın.</span>
+                      </li>
+                    </ol>
+                    <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-2 text-xs text-amber-700">
+                      ⚠️ Chat ID genellikle <strong>-100</strong> ile başlar (eksi işareti dahil!). Bota <strong>admin yetkisi</strong> vermeyi unutmayın.
+                    </div>
+                  </div>
+
                   <div className="space-y-3">
-                    <input type="text" value={telegramBotToken} onChange={e => setTelegramBotToken(e.target.value)} placeholder="Bot Token (Örn: 12345:ABC...)" className="w-full border p-2 rounded-lg bg-slate-50 text-sm" />
-                    <input type="text" value={telegramChatId} onChange={e => setTelegramChatId(e.target.value)} placeholder="Chat ID (Örn: -100123...)" className="w-full border p-2 rounded-lg bg-slate-50 text-sm" />
-                    <p className="text-[10px] text-slate-400">Grup veya bireysel Telegram sohbetinize LCV kayıtları düşer.</p>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1">🔑 Bot Token</label>
+                      <input type="text" value={telegramBotToken} onChange={e => setTelegramBotToken(e.target.value)} placeholder="Örn: 7123456789:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw" className="w-full border p-2 rounded-lg bg-slate-50 text-sm font-mono" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1">💬 Chat ID</label>
+                      <input type="text" value={telegramChatId} onChange={e => setTelegramChatId(e.target.value)} placeholder="Örn: -1001234567890" className="w-full border p-2 rounded-lg bg-slate-50 text-sm font-mono" />
+                    </div>
                   </div>
                 </div>
               </div>

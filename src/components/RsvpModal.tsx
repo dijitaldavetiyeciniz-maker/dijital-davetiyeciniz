@@ -75,7 +75,7 @@ export default function RsvpModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm font-sans" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative animate-in fade-in zoom-in duration-300">
         
         {/* Header */}

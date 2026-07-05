@@ -187,6 +187,9 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const fontFamily = wedding.font_family || 'Montserrat';
   const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
 
+  const namesFontFamily = wedding.names_font_family || fontFamily;
+  const namesFontUrl = `https://fonts.googleapis.com/css2?family=${namesFontFamily.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
+
   const quoteFontFamily = wedding.quote_font_family || fontFamily;
   const quoteFontUrl = `https://fonts.googleapis.com/css2?family=${quoteFontFamily.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
 
@@ -297,29 +300,29 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const renderNames = () => (
     <h1 
       className="text-4xl md:text-5xl lg:text-6xl mb-6 mt-4 leading-tight font-normal select-none"
-      style={{ color: textColor }}
+      style={{ color: textColor, fontFamily: `"${namesFontFamily}", cursive, serif` }}
     >
       {wedding.bride_parents && (
         <span 
-          className="text-[10px] tracking-[0.25em] uppercase font-light mb-2 block font-sans"
-          style={{ color: textColor, opacity: 0.6 }}
+          className="text-[10px] tracking-[0.25em] uppercase font-light mb-2 block"
+          style={{ color: textColor, opacity: 0.6, fontFamily: 'Inter, system-ui, sans-serif' }}
         >
           {wedding.bride_parents}
         </span>
       )}
-      <span className="block px-2" style={{ fontFamily: `"${fontFamily}", cursive` }}>
+      <span className="block px-2">
         {wedding.bride_name}
       </span>
-      <span className="text-xl my-2 block" style={{ color: primaryColor }}>
+      <span className="text-xl my-2 block" style={{ color: primaryColor, fontFamily: 'Inter, system-ui, sans-serif' }}>
         &
       </span>
-      <span className="block px-2" style={{ fontFamily: `"${fontFamily}", cursive` }}>
+      <span className="block px-2">
         {wedding.groom_name}
       </span>
       {wedding.groom_parents && (
         <span 
-          className="text-[10px] tracking-[0.25em] uppercase font-light mt-2 block font-sans"
-          style={{ color: textColor, opacity: 0.6 }}
+          className="text-[10px] tracking-[0.25em] uppercase font-light mt-2 block"
+          style={{ color: textColor, opacity: 0.6, fontFamily: 'Inter, system-ui, sans-serif' }}
         >
           {wedding.groom_parents}
         </span>
@@ -660,6 +663,9 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     >
       {/* Dynamically inject the stylesheet of selected Google Font */}
       <link href={fontUrl} rel="stylesheet" />
+      {wedding.names_font_family && (
+        <link href={namesFontUrl} rel="stylesheet" />
+      )}
       {wedding.quote_font_family && (
         <link href={quoteFontUrl} rel="stylesheet" />
       )}
