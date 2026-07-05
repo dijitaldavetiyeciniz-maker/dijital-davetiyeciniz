@@ -158,7 +158,7 @@ export default function SuperAdminPage() {
               value={adminPasswordInput}
               onChange={e => setAdminPasswordInput(e.target.value)}
               placeholder="Şifre"
-              className="w-full border p-3 rounded-xl mb-4 text-center text-lg tracking-widest"
+              className="w-full border border-slate-300 p-3 rounded-xl mb-4 text-center text-lg tracking-widest bg-white text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-slate-900 focus:outline-none"
               autoFocus
             />
             <button className="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition-colors">
