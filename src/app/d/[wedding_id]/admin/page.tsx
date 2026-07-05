@@ -1683,8 +1683,8 @@ export default function CoupleAdminPage({
                   <h3 className="font-bold text-lg mb-4 text-slate-800">Site Giriş Animasyonu</h3>
                   <label className="flex items-center justify-between p-4 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
                     <div>
-                      <div className="font-bold text-slate-800 text-sm">Zarf Açılış Animasyonu</div>
-                      <div className="text-xs text-slate-500 mt-1">Siteye girildiğinde mühürlü bir zarf animasyonu gösterilsin.</div>
+                      <div className="font-bold text-slate-800 text-sm">Giriş Kapak Animasyonu</div>
+                      <div className="text-xs text-slate-500 mt-1">Siteye ilk girildiğinde lüks bir giriş kapak animasyonu gösterilsin.</div>
                     </div>
                     <div className="relative">
                       <input type="checkbox" className="sr-only" checked={useEnvelope} onChange={e => setUseEnvelope(e.target.checked)} />
