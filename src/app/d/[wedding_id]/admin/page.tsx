@@ -1606,18 +1606,70 @@ export default function CoupleAdminPage({
                       <div>
                         <label className="block text-sm font-semibold mb-1.5 text-slate-700">Açılış Animasyonu Türü</label>
                         <select value={entranceType} onChange={e => setEntranceType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
-                          <option value="embossed-envelope">🌸 Premium Kabartmalı Dikey Zarf</option>
-                          <option value="envelope">✉️ 3D Mühürlü Zarf</option>
-                          <option value="ribbon">🎀 Kurdeleli Premium Zarf</option>
-                          <option value="royal-seal-premium">👑 Royal Seal Premium (5 Faz Sinematik)</option>
-                          <option value="box">🎁 Lüks Hediye Kutusu</option>
-                          <option value="curtain">🎭 İpek Sahne Perdesi</option>
-                          <option value="gate">🏰 Saray / Bahçe Kapısı</option>
-                          <option value="card">🎴 Sade Tebrik Kartı (Süzülme)</option>
-                          <option value="heart-fade">❤️ Büyük Kalp Patlaması</option>
-                          <option value="flower-bloom">🌸 Çiçek Bahçesi (Açılış)</option>
-                          <option value="wax-seal-press">🏷️ Kraliyet Mühür Basımı</option>
-                          <option value="glass-shatter">💎 Elmas Cam Kırılması</option>
+                          <optgroup label="👑 Kraliyet & Lüks (Premium)">
+                            <option value="royal-seal-premium">👑 Royal Seal Premium (5 Faz Sinematik)</option>
+                            <option value="embossed-envelope">🌸 Premium Kabartmalı Dikey Zarf (Instagram Reels Stili)</option>
+                            <option value="gold-foil-pocket">✨ Altın Varaklı Lüks Cep Zarfı</option>
+                            <option value="velvet-casket">🍷 Kadife Mücevher Kutusu</option>
+                            <option value="diamond-crowned-gate">💎 Elmas Taçlı Saray Kapısı</option>
+                            <option value="monarch-scroll">📜 Kraliyet Fermanı (Rulo Açılış)</option>
+                            <option value="emerald-box">💚 Zümrüt Yeşili Hediye Kutusu</option>
+                            <option value="silk-ribbon-pull">🎀 İpek Kurdele Çözümü</option>
+                            <option value="platinum-card-rise">🪙 Platin Metalik Kart Yükselişi</option>
+                          </optgroup>
+                          <optgroup label="🌸 Çiçekli & Suluboya (Floral)">
+                            <option value="flower-bloom">🌸 Çiçek Bahçesi (Bahar Açılışı)</option>
+                            <option value="watercolor-wash">🎨 Sanatsal Suluboya Dağılımı</option>
+                            <option value="rose-garden-gate">🌹 Güllerle Süslü Bahçe Kapısı</option>
+                            <option value="botanical-press">🌿 Preslenmiş Botanik Kitap Açılışı</option>
+                            <option value="orchid-mist">💐 Egzotik Orkide Sisi</option>
+                            <option value="wreath-fade">🍃 Lüks Zeytin Dalı Çelengi Fading</option>
+                            <option value="ivy-curtain">🌱 Sarmaşık Perdesi (İkiye Ayrılma)</option>
+                            <option value="lavender-breeze">💜 Lavanta Esintisi Geçişi</option>
+                          </optgroup>
+                          <optgroup label="⬜ Modern & Minimalist (Sade)">
+                            <option value="card">🎴 Sade Tebrik Kartı (Süzülme)</option>
+                            <option value="split-reveal">📐 Minimal Köşegen Ayrılma</option>
+                            <option value="glass-blur-fade">🔮 Buğulu Cam Efekti (Soft Zoom)</option>
+                            <option value="geometric-slide">🔶 Geometrik Pencereler</option>
+                            <option value="aperture-lens">📷 Kamera Diyafram Açılışı</option>
+                            <option value="minimalist-monogram-zoom">✍️ Minimal Monogram Odaklanması</option>
+                            <option value="shadow-play">👤 Yaprak Gölgesi Perdesi</option>
+                            <option value="slide-sideways">↔️ Zıt Yönlere Kayma</option>
+                          </optgroup>
+                          <optgroup label="📜 Klasik & Retro (Vintage)">
+                            <option value="parchment-burn">🔥 Parşömen Yanma Efekti</option>
+                            <option value="wax-seal-press">🏷️ Kraliyet Mühür Basımı</option>
+                            <option value="typewriter-stamp">⌨️ Daktilo Harf Basımı</option>
+                            <option value="retro-postcard">✉️ Pullu Retro Kartpostal Dönüşü</option>
+                            <option value="lace-overlay">🕸️ Zarif Dantel Örtü Ayrılması</option>
+                            <option value="baroque-frame">🖼️ Barok Altın Çerçeve Genişlemesi</option>
+                            <option value="craft-twine">📦 Hasır İpli Kraft Zarf</option>
+                          </optgroup>
+                          <optgroup label="🌌 Mistik & Kozmik (Mystic)">
+                            <option value="starry-eclipse">🌑 Yıldızlı Güneş Tutulması</option>
+                            <option value="constellation-connect">✨ Takımyıldız Çizgileri Birleşimi</option>
+                            <option value="aurora-veil">🌌 Kuzey Işıkları (Aurora) Tülü</option>
+                            <option value="crystal-ball-zoom">🔮 Sihirli Kristal Küre Büyümesi</option>
+                            <option value="galaxy-spiral">🌀 Spiral Galaksi Girdabı</option>
+                            <option value="golden-hour-glow">☀️ Günbatımı Işık Süzmesi</option>
+                          </optgroup>
+                          <optgroup label="🍂 Doğa & Mevsimler (Seasonal)">
+                            <option value="autumn-leaves">🍁 Sonbahar Yaprakları Fırtınası</option>
+                            <option value="snow-shimmer">❄️ Kar Kristali Erimesi</option>
+                            <option value="ocean-ripple">🌊 Okyanus Dalgası Hareketi</option>
+                            <option value="forest-fog">🌲 Orman Sisi Dağılımı</option>
+                            <option value="butterfly-flight">🦋 Kelebeklerin Uçuşu</option>
+                            <option value="beach-sand-wash">🏖️ Kumların Dalga ile Silinmesi</option>
+                          </optgroup>
+                          <optgroup label="🎉 Işıltı & Eğlence (Glamour)">
+                            <option value="glass-shatter">💎 Elmas Cam Kırılması</option>
+                            <option value="neon-glow-pulse">⚡ Neon Işık Hareketi</option>
+                            <option value="confetti-burst">🎊 Konfeti Patlaması</option>
+                            <option value="sparkler-draw">🎇 Maytapla Kalp Çizilmesi</option>
+                            <option value="disco-reflection">🪩 Disko Topu Işık Yansıması</option>
+                            <option value="glitter-curtain">✨ Altın Sim Yağmuru Perdesi</option>
+                          </optgroup>
                         </select>
                       </div>
 

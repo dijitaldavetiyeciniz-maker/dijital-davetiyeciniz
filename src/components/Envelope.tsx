@@ -59,6 +59,77 @@ export default function Envelope({
   // Royal Seal Premium phase states (0=waiting, 1=seal glow, 2=ribbon untie, 3=flap open, 4=card rise, 5=names appear)
   const [royalPhase, setRoyalPhase] = useState(0);
 
+  // 50 Farklı Giriş Animasyonu Preset Tanımları
+  const getEntrancePreset = (type: string) => {
+    switch (type) {
+      // 1. KRALİYET & LÜKS (9 Çeşit)
+      case 'royal-seal-premium': return { category: 'royal', seal: 'crown', motion: 'royal-cinematic', bg: 'gold-dust', paper: '#1a1208' };
+      case 'embossed-envelope': return { category: 'royal', seal: 'monogram', motion: 'envelope-open', bg: 'none', paper: '#fcfbf7' };
+      case 'gold-foil-pocket': return { category: 'royal', seal: 'royal-crest', motion: 'slide-up-pocket', bg: 'gold-dust', paper: '#111111' };
+      case 'velvet-casket': return { category: 'royal', seal: 'ring', motion: 'split-middle', bg: 'none', paper: '#4a0012' };
+      case 'diamond-crowned-gate': return { category: 'royal', seal: 'crown', motion: 'gate-swing', bg: 'sparkles', paper: '#1c1917' };
+      case 'monarch-scroll': return { category: 'royal', seal: 'royal-crest', motion: 'scroll-unroll', bg: 'gold-dust', paper: '#fbf7ee' };
+      case 'emerald-box': return { category: 'royal', seal: 'monogram', motion: 'box-lid', bg: 'sparkles', paper: '#022c22' };
+      case 'silk-ribbon-pull': return { category: 'royal', seal: 'ring', motion: 'ribbon-untie', bg: 'light-orbs', paper: '#fff1f2' };
+      case 'platinum-card-rise': return { category: 'royal', seal: 'sparkles', motion: 'card-lift', bg: 'pearl-shimmer', paper: '#f8fafc' };
+
+      // 2. ÇİÇEKLİ & SULOBOYA (8 Çeşit)
+      case 'flower-bloom': return { category: 'floral', seal: 'flower', motion: 'bloom-fade', bg: 'sakura', paper: '#fff5f5' };
+      case 'watercolor-wash': return { category: 'floral', seal: 'minimal-monogram', motion: 'paint-dissolve', bg: 'soft-mist', paper: '#fafaf9' };
+      case 'rose-garden-gate': return { category: 'floral', seal: 'heart', motion: 'gate-swing', bg: 'rose-petals', paper: '#fff1f2' };
+      case 'botanical-press': return { category: 'floral', seal: 'flower', motion: 'book-open', bg: 'leaf-fall', paper: '#f4f6f0' };
+      case 'orchid-mist': return { category: 'floral', seal: 'minimal-monogram', motion: 'slide-sideways', bg: 'soft-mist', paper: '#faf8f5' };
+      case 'wreath-fade': return { category: 'floral', seal: 'flower', motion: 'zoom-fade', bg: 'leaf-fall', paper: '#fafaf9' };
+      case 'ivy-curtain': return { category: 'floral', seal: 'leaf', motion: 'split-middle', bg: 'leaf-fall', paper: '#f0fdf4' };
+      case 'lavender-breeze': return { category: 'floral', seal: 'flower', motion: 'split-middle', bg: 'light-orbs', paper: '#faf5ff' };
+
+      // 3. MODERN & MİNİMALİST (8 Çeşit)
+      case 'card': return { category: 'modern', seal: 'none', motion: 'card-lift', bg: 'none', paper: '#ffffff' };
+      case 'split-reveal': return { category: 'modern', seal: 'minimal-monogram', motion: 'split-diagonal', bg: 'none', paper: '#f1f5f9' };
+      case 'glass-blur-fade': return { category: 'modern', seal: 'none', motion: 'glass-fade', bg: 'bokeh', paper: 'rgba(255,255,255,0.1)' };
+      case 'geometric-slide': return { category: 'modern', seal: 'minimal-monogram', motion: 'geometric-shrink', bg: 'none', paper: '#f8fafc' };
+      case 'aperture-lens': return { category: 'modern', seal: 'none', motion: 'circle-grow', bg: 'none', paper: '#0f172a' };
+      case 'minimalist-monogram-zoom': return { category: 'modern', seal: 'minimal-monogram', motion: 'zoom-fade', bg: 'none', paper: '#ffffff' };
+      case 'shadow-play': return { category: 'modern', seal: 'none', motion: 'shadow-curtain', bg: 'leaf-fall', paper: '#fafaf9' };
+      case 'slide-sideways': return { category: 'modern', seal: 'none', motion: 'slide-sideways', bg: 'none', paper: '#ffffff' };
+
+      // 4. KLASİK & RETRO (7 Çeşit)
+      case 'parchment-burn': return { category: 'vintage', seal: 'royal-crest', motion: 'burn-out', bg: 'soft-mist', paper: '#f7f3e9' };
+      case 'wax-seal-press': return { category: 'vintage', seal: 'monogram', motion: 'seal-press', bg: 'none', paper: '#faf6f0' };
+      case 'typewriter-stamp': return { category: 'vintage', seal: 'monogram', motion: 'stamp-letters', bg: 'none', paper: '#f4f1ea' };
+      case 'retro-postcard': return { category: 'vintage', seal: 'none', motion: 'card-flip', bg: 'none', paper: '#eedcb3' };
+      case 'lace-overlay': return { category: 'vintage', seal: 'heart', motion: 'split-middle', bg: 'none', paper: '#fffaf0' };
+      case 'baroque-frame': return { category: 'vintage', seal: 'crown', motion: 'frame-expand', bg: 'gold-dust', paper: '#1e1b18' };
+      case 'craft-twine': return { category: 'vintage', seal: 'monogram', motion: 'twine-unravel', bg: 'none', paper: '#d7c49e' };
+
+      // 5. MİSTİK & KOZMİK (6 Çeşit)
+      case 'starry-eclipse': return { category: 'mystic', seal: 'ring', motion: 'eclipse-reveal', bg: 'starry-night', paper: '#09090b' };
+      case 'constellation-connect': return { category: 'mystic', seal: 'sparkles', motion: 'star-connect', bg: 'starry-night', paper: '#020205' };
+      case 'aurora-veil': return { category: 'mystic', seal: 'none', motion: 'wave-fade', bg: 'soft-mist', paper: '#050b14' };
+      case 'crystal-ball-zoom': return { category: 'mystic', seal: 'sparkles', motion: 'zoom-fade', bg: 'light-orbs', paper: '#0c0a09' };
+      case 'galaxy-spiral': return { category: 'mystic', seal: 'sparkles', motion: 'vortex-spin', bg: 'starry-night', paper: '#02000a' };
+      case 'golden-hour-glow': return { category: 'mystic', seal: 'none', motion: 'light-sweep', bg: 'bokeh', paper: '#fffbeb' };
+
+      // 6. DOĞA & MEVSİMLER (6 Çeşit)
+      case 'autumn-leaves': return { category: 'nature', seal: 'leaf', motion: 'leaves-blow', bg: 'leaf-fall', paper: '#fdf6e2' };
+      case 'snow-shimmer': return { category: 'nature', seal: 'sparkles', motion: 'melt-away', bg: 'snowflakes', paper: '#f1f5f9' };
+      case 'ocean-ripple': return { category: 'nature', seal: 'none', motion: 'water-ripple', bg: 'ocean-wave', paper: '#f0f9ff' };
+      case 'forest-fog': return { category: 'nature', seal: 'leaf', motion: 'fog-dissolve', bg: 'soft-mist', paper: '#fafaf9' };
+      case 'butterfly-flight': return { category: 'nature', seal: 'flower', motion: 'butterfly-scatter', bg: 'light-orbs', paper: '#fafaf6' };
+      case 'beach-sand-wash': return { category: 'nature', seal: 'none', motion: 'wave-wash', bg: 'ocean-wave', paper: '#faf6e8' };
+
+      // 7. IŞILTI & EĞLENCE (6 Çeşit)
+      case 'glass-shatter': return { category: 'glamour', seal: 'sparkles', motion: 'glass-break', bg: 'none', paper: '#0f172a' };
+      case 'neon-glow-pulse': return { category: 'glamour', seal: 'sparkles', motion: 'circle-grow', bg: 'neon-gradient', paper: '#09090b' };
+      case 'confetti-burst': return { category: 'glamour', seal: 'none', motion: 'zoom-fade', bg: 'confetti', paper: '#ffffff' };
+      case 'sparkler-draw': return { category: 'glamour', seal: 'sparkles', motion: 'sparkler-write', bg: 'none', paper: '#0c0a09' };
+      case 'disco-reflection': return { category: 'glamour', seal: 'none', motion: 'light-sweep', bg: 'spotlight', paper: '#020205' };
+      case 'glitter-curtain': return { category: 'glamour', seal: 'none', motion: 'split-middle', bg: 'gold-dust', paper: '#09090b' };
+
+      default: return { category: 'royal', seal: 'monogram', motion: 'envelope-open', bg: 'none', paper: '#fcfbf7' };
+    }
+  };
+
   const handleOpen = () => {
     // Play music immediately on user click to bypass browser autoplay restrictions
     if (typeof document !== 'undefined') {
@@ -69,61 +140,47 @@ export default function Envelope({
     }
 
     const isPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
-    
-    if (entranceType === 'ribbon' && !ribbonUntied) {
+    const preset = getEntrancePreset(entranceType);
+    let delay = 1500;
+
+    if (preset.motion === 'ribbon-untie' || entranceType === 'ribbon') {
       setRibbonUntied(true);
-      setTimeout(() => {
-        setIsOpened(true);
-        if (isPreview && typeof window !== 'undefined') {
-          window.sessionStorage.setItem('preview_envelope_opened', 'true');
-        }
-        setTimeout(() => {
-          setShowContent(true);
-        }, 1500);
-      }, 600);
-    } else if (entranceType === 'wax-seal-press') {
+      delay = 2000;
+    } else if (preset.motion === 'seal-press' || entranceType === 'wax-seal-press') {
       setIsPressed(true);
-      setTimeout(() => {
-        setIsOpened(true);
-        if (isPreview && typeof window !== 'undefined') {
-          window.sessionStorage.setItem('preview_envelope_opened', 'true');
-        }
-        setTimeout(() => {
-          setShowContent(true);
-        }, 1200);
-      }, 1000);
-    } else if (entranceType === 'glass-shatter') {
+      delay = 1800;
+    } else if (preset.motion === 'glass-break' || entranceType === 'glass-shatter') {
       setIsShattered(true);
-      if (isPreview && typeof window !== 'undefined') {
-        window.sessionStorage.setItem('preview_envelope_opened', 'true');
-      }
+      delay = 1000;
+    } else if (preset.motion === 'royal-cinematic' || entranceType === 'royal-seal-premium') {
+      setRoyalPhase(1);
+      setTimeout(() => setRoyalPhase(2), 1500);
       setTimeout(() => {
-        setShowContent(true);
-      }, 800);
-    } else if (entranceType === 'royal-seal-premium') {
-      // 5-phase royal sequence
-      if (isPreview && typeof window !== 'undefined') {
-        window.sessionStorage.setItem('preview_envelope_opened', 'true');
-      }
-      setRoyalPhase(1); // Seal glow
-      setTimeout(() => setRoyalPhase(2), 1800); // Ribbon untie
-      setTimeout(() => {
-        setRoyalPhase(3); // Flap open
+        setRoyalPhase(3);
         setIsOpened(true);
-      }, 3200);
-      setTimeout(() => setRoyalPhase(4), 4800); // Card rise + gold dust
-      setTimeout(() => setRoyalPhase(5), 6000); // Names cinematic reveal
-      setTimeout(() => setShowContent(true), 7500); // Full content
+      }, 2800);
+      setTimeout(() => setRoyalPhase(4), 4200);
+      setTimeout(() => setRoyalPhase(5), 5500);
+      delay = 7000;
     } else {
       setIsOpened(true);
+      if (preset.motion === 'scroll-unroll') delay = 2500;
+      else if (preset.motion === 'gate-swing') delay = 2000;
+      else if (preset.motion === 'split-middle') delay = 1800;
+      else if (preset.motion === 'paint-dissolve') delay = 2200;
+      else if (preset.motion === 'bloom-fade') delay = 1800;
+      else if (preset.motion === 'vortex-spin') delay = 2400;
+      else if (preset.motion === 'eclipse-reveal') delay = 2000;
+      else if (preset.motion === 'twine-unravel') delay = 2200;
+      else if (preset.motion === 'star-connect') delay = 2500;
+    }
+
+    setTimeout(() => {
+      setShowContent(true);
       if (isPreview && typeof window !== 'undefined') {
         window.sessionStorage.setItem('preview_envelope_opened', 'true');
       }
-      const delay = entranceType === 'card' || entranceType === 'flower-bloom' ? 800 : entranceType === 'heart-fade' ? 1000 : 1500;
-      setTimeout(() => {
-        setShowContent(true);
-      }, delay);
-    }
+    }, delay);
   };
 
   // Dynamic Google Font Injection
@@ -1254,6 +1311,266 @@ export default function Envelope({
     );
   };
 
+  const getSealIconForPreset = (seal: string) => {
+    switch (seal) {
+      case 'crown': return <Crown className="w-6 h-6 text-white/95 filter drop-shadow" />;
+      case 'heart': return <Heart className="w-6 h-6 text-white/95 fill-white/10 filter drop-shadow" />;
+      case 'ring': return (
+        <svg className="w-6 h-6 text-white/95 filter drop-shadow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="8" cy="12" r="4" />
+          <circle cx="16" cy="12" r="4" />
+        </svg>
+      );
+      case 'flower': return (
+        <svg className="w-6 h-6 text-white/95 filter drop-shadow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+        </svg>
+      );
+      case 'leaf': return <Leaf className="w-6 h-6 text-white/95 filter drop-shadow" />;
+      case 'royal-crest': return (
+        <svg className="w-6 h-6 text-white/95 filter drop-shadow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z M12 6v12 M6 12h12" />
+        </svg>
+      );
+      case 'minimal-monogram': return (
+        <span className="font-sans text-white/95 font-light text-sm tracking-widest filter drop-shadow">
+          {brideInitial}{groomInitial}
+        </span>
+      );
+      case 'monogram':
+      default: return (
+        <span className="font-serif text-white/95 font-bold text-xs tracking-wider filter drop-shadow">
+          {monogramText}
+        </span>
+      );
+    }
+  };
+
+  const getBackgroundStyleForPreset = (preset: any) => {
+    switch (preset.category) {
+      case 'royal':
+        return 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.35) 100%)';
+      case 'floral':
+        return 'radial-gradient(circle, rgba(244,63,94,0.02) 0%, rgba(255,255,255,0.8) 100%)';
+      case 'mystic':
+        return 'radial-gradient(circle, rgba(99,102,241,0.05) 0%, rgba(0,0,0,0.8) 100%)';
+      case 'vintage':
+        return 'radial-gradient(circle, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.15) 100%)';
+      case 'modern':
+      default:
+        return 'none';
+    }
+  };
+
+  const renderPresetStructure = (preset: any, sealColorStyle: string, sealIconToUse: React.ReactNode) => {
+    const isHex = sealColorStyle && sealColorStyle.startsWith('#');
+    const sealBg = isHex ? {
+      background: `radial-gradient(circle at 35% 35%, ${sealColorStyle}ee 0%, ${sealColorStyle} 70%, rgba(0,0,0,0.4) 100%)`,
+      boxShadow: 'inset 0 0 10px rgba(255,255,255,0.3), 0 4px 10px rgba(0,0,0,0.3)'
+    } : {};
+
+    // 1. Motion: split-middle
+    if (preset.motion === 'split-middle') {
+      return (
+        <div className="absolute inset-0 flex z-20">
+          <motion.div 
+            className="w-1/2 h-full relative border-r border-white/5"
+            style={{ backgroundColor: preset.paper, backgroundImage: getBackgroundStyleForPreset(preset) }}
+            animate={isOpened ? { x: '-100%' } : { x: 0 }}
+            transition={{ duration: 1.2, ease: [0.77, 0, 0.175, 1] }}
+          >
+            {preset.category === 'floral' && (
+              <div className="absolute top-1/2 -translate-y-1/2 right-4 text-emerald-800/10 text-9xl pointer-events-none font-serif">🌸</div>
+            )}
+          </motion.div>
+          <motion.div 
+            className="w-1/2 h-full relative border-l border-white/5"
+            style={{ backgroundColor: preset.paper, backgroundImage: getBackgroundStyleForPreset(preset) }}
+            animate={isOpened ? { x: '100%' } : { x: 0 }}
+            transition={{ duration: 1.2, ease: [0.77, 0, 0.175, 1] }}
+          >
+            {preset.category === 'floral' && (
+              <div className="absolute top-1/2 -translate-y-1/2 left-4 text-emerald-800/10 text-9xl pointer-events-none font-serif">🌺</div>
+            )}
+          </motion.div>
+          
+          <AnimatePresence>
+            {!isOpened && (
+              <motion.div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center justify-center cursor-pointer"
+                exit={{ scale: 0.3, opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                onClick={handleOpen}
+              >
+                {preset.seal !== 'none' && (
+                  <div 
+                    className="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 flex items-center justify-center shadow-2xl"
+                    style={{ backgroundColor: sealColorStyle, borderColor: 'rgba(255,255,255,0.2)', ...sealBg }}
+                  >
+                    {sealIconToUse}
+                  </div>
+                )}
+                <span className="text-[9px] tracking-[0.3em] font-bold mt-4 uppercase" style={{ color: preset.category === 'royal' ? '#dfc384' : '#64748b' }}>Açmak İçin Dokunun</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      );
+    }
+
+    // 2. Motion: scroll-unroll
+    if (preset.motion === 'scroll-unroll') {
+      return (
+        <motion.div 
+          className="relative w-[300px] h-[400px] md:w-[380px] md:h-[500px] rounded-sm p-8 shadow-2xl flex flex-col justify-between items-center z-20"
+          style={{ backgroundColor: preset.paper, border: '1px solid #dfc384' }}
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={isOpened ? { scale: 1.05, opacity: 0, filter: 'blur(10px)' } : { scale: 1, opacity: 1 }}
+          transition={{ duration: 1 }}
+          onClick={handleOpen}
+        >
+          <div className="absolute inset-2 border border-[#dfc384]/30 rounded" />
+          <div className="absolute left-0 right-0 top-0 h-3 bg-[#e2d5bd] border-b border-[#dfc384]" />
+          <div className="absolute left-0 right-0 bottom-0 h-3 bg-[#e2d5bd] border-t border-[#dfc384]" />
+          
+          <div className="text-center z-10 my-auto flex flex-col items-center">
+            <Crown className="w-8 h-8 text-[#dfc384] mb-4" />
+            <span className="text-[10px] tracking-[0.3em] text-[#b0945a] uppercase font-bold">Nikah Fermanı</span>
+            <div className="w-16 h-px bg-[#dfc384] my-4" />
+            <h3 className="text-xl md:text-2xl text-slate-800 font-serif leading-relaxed">{brideName} & {groomName}</h3>
+            <span className="text-[8px] text-slate-400 tracking-widest mt-6 uppercase">Okumak İçin Dokunun</span>
+          </div>
+        </motion.div>
+      );
+    }
+
+    // 3. Motion: gate-swing
+    if (preset.motion === 'gate-swing') {
+      return (
+        <div className="absolute inset-0 flex perspective-2000 z-20">
+          <motion.div 
+            className="w-1/2 h-full border-r border-[#dfc384]/40"
+            style={{ backgroundColor: preset.paper, originX: 0, backgroundImage: getBackgroundStyleForPreset(preset) }}
+            animate={isOpened ? { rotateY: -110, opacity: 0 } : { rotateY: 0, opacity: 1 }}
+            transition={{ duration: 1.5, ease: [0.6, 0.05, -0.01, 0.9] }}
+          />
+          <motion.div 
+            className="w-1/2 h-full border-l border-[#dfc384]/40"
+            style={{ backgroundColor: preset.paper, originX: 1, backgroundImage: getBackgroundStyleForPreset(preset) }}
+            animate={isOpened ? { rotateY: 110, opacity: 0 } : { rotateY: 0, opacity: 1 }}
+            transition={{ duration: 1.5, ease: [0.6, 0.05, -0.01, 0.9] }}
+          />
+          <AnimatePresence>
+            {!isOpened && (
+              <motion.div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center justify-center cursor-pointer"
+                exit={{ scale: 0.5, opacity: 0 }}
+                transition={{ duration: 0.6 }}
+                onClick={handleOpen}
+              >
+                <div 
+                  className="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 flex items-center justify-center shadow-2xl"
+                  style={{ backgroundColor: sealColorStyle, borderColor: '#dfc384', ...sealBg }}
+                >
+                  {sealIconToUse}
+                </div>
+                <span className="text-[8px] tracking-[0.3em] font-bold text-white uppercase mt-4">Kapıyı Aç</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      );
+    }
+
+    // 4. Motion: eclipse-reveal
+    if (preset.motion === 'eclipse-reveal') {
+      return (
+        <motion.div 
+          className="flex flex-col items-center justify-center text-center p-8 z-20 cursor-pointer"
+          animate={isOpened ? { scale: 1.3, opacity: 0, filter: 'blur(12px)' } : { scale: 1, opacity: 1 }}
+          transition={{ duration: 1.2 }}
+          onClick={handleOpen}
+        >
+          <div className="relative w-48 h-48 md:w-56 md:h-56 rounded-full flex flex-col items-center justify-center bg-black/90 border border-amber-400/40 shadow-2xl">
+            <motion.div 
+              className="absolute inset-0 rounded-full border border-amber-400"
+              animate={{ scale: [1, 1.06, 1], opacity: [0.3, 0.7, 0.3] }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+            />
+            <span className="text-white font-serif text-lg tracking-widest mb-1">{monogramText}</span>
+            <span className="text-[8px] text-amber-400 tracking-widest uppercase">Giriş Yap</span>
+          </div>
+        </motion.div>
+      );
+    }
+
+    // 5. Default Card Reveal
+    return (
+      <motion.div 
+        className="relative w-[310px] h-[450px] md:w-[380px] md:h-[540px] rounded-2xl shadow-2xl p-8 text-center flex flex-col justify-between items-center z-20"
+        style={{ 
+          backgroundColor: preset.paper,
+          border: `1px solid ${preset.category === 'royal' || preset.category === 'vintage' ? '#dfc384' : '#e2e8f0'}`,
+          backgroundImage: getBackgroundStyleForPreset(preset)
+        }}
+        initial={{ scale: 0.9, opacity: 0, y: 30 }}
+        animate={isOpened ? { y: -200, scale: 0.9, opacity: 0, filter: 'blur(8px)' } : { scale: 1, opacity: 1, y: 0 }}
+        transition={{ duration: 1.2, ease: [0.25, 1, 0.5, 1] }}
+        onClick={handleOpen}
+      >
+        <div className="absolute inset-3 border border-double border-slate-300/30 rounded-xl" />
+        <div className="text-center mt-6">
+          <span className="text-[8px] tracking-[0.3em] uppercase opacity-45">Özel Davetiye</span>
+        </div>
+        
+        <div className="my-auto">
+          <h2 className="text-2xl md:text-3xl font-serif text-slate-800 leading-normal" style={{ fontFamily: `"${fontFamily}", serif` }}>{brideName}</h2>
+          <div className="text-slate-400 font-serif text-lg my-2">&</div>
+          <h2 className="text-2xl md:text-3xl font-serif text-slate-800 leading-normal" style={{ fontFamily: `"${fontFamily}", serif` }}>{groomName}</h2>
+        </div>
+        
+        <div className="mb-6 flex flex-col items-center">
+          {preset.seal !== 'none' && (
+            <div 
+              className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg border"
+              style={{ backgroundColor: sealColorStyle, borderColor: 'rgba(255,255,255,0.2)', ...sealBg }}
+            >
+              {sealIconToUse}
+            </div>
+          )}
+          <span className="text-[8px] tracking-widest uppercase opacity-40 mt-3">Giriş Yapmak İçin Dokunun</span>
+        </div>
+      </motion.div>
+    );
+  };
+
+  const renderDynamicEntrance = () => {
+    const preset = getEntrancePreset(entranceType);
+    
+    // Determine seal colors & style
+    let sealColorStyle = currentSealColor;
+    if (preset.seal === 'gold') sealColorStyle = '#d4af37';
+    else if (preset.seal === 'silver') sealColorStyle = '#c0c0c0';
+    else if (preset.seal === 'rose-gold') sealColorStyle = '#b76e79';
+    else if (preset.seal === 'crest') sealColorStyle = '#5c0618';
+
+    const sealIconToUse = getSealIconForPreset(preset.seal);
+
+    return (
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-50">
+        {/* Dynamic background animation overlay if matching */}
+        {preset.bg && preset.bg !== 'none' && (
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <BackgroundParticles animationType={preset.bg} primaryColor={sealColorStyle} />
+          </div>
+        )}
+
+        {/* Dynamic Theme Content Rendering based on Motion / Structure */}
+        {renderPresetStructure(preset, sealColorStyle, sealIconToUse)}
+      </div>
+    );
+  };
+
   // Switch animation components based on entranceType
   let entranceComponent = renderEnvelope();
   
@@ -1290,6 +1607,9 @@ export default function Envelope({
       break;
     case 'royal-seal-premium':
       entranceComponent = renderRoyalSealPremium();
+      break;
+    default:
+      entranceComponent = renderDynamicEntrance();
       break;
   }
 
