@@ -137,7 +137,11 @@ function CreateForm() {
         venue_address: '',
         google_maps_url: '',
         custom_message: '',
-        is_paid: false
+        is_paid: false,
+        entrance_animation: 'royal-seal-premium',
+        envelope_style: 'classic',
+        seal_style: 'burgundy',
+        background_animation: 'golden'
       }
     ]);
 

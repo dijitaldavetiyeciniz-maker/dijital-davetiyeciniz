@@ -10,6 +10,7 @@ import HeartsEffect from '@/components/effects/HeartsEffect';
 import SnowEffect from '@/components/effects/SnowEffect';
 
 import BackgroundMusic from '@/components/BackgroundMusic';
+import { WeddingClientWrapper } from '@/components/invitation/WeddingClientWrapper';
 
 // Next.js App Router Page
 export default async function WeddingPage({
@@ -72,34 +73,10 @@ export default async function WeddingPage({
     case 'snow': effectComponent = <SnowEffect />; break;
   }
 
-  const contentWithEffect = (
+  const contentWithMusic = (
     <>
       {effectComponent}
       {templateComponent}
-    </>
-  );
-
-  return useEnvelope ? (
-    <Envelope 
-      brideName={wedding.bride_name} 
-      groomName={wedding.groom_name} 
-      primaryColor={wedding.primary_color}
-      envelopeColor={wedding.envelope_color}
-      envelopeBgColor={wedding.envelope_bg_color || 'slate'}
-      envelopeFlapType={wedding.envelope_flap_type || 'triangle'}
-      sealType={wedding.seal_type || 'sparkles'}
-      sealColor={wedding.seal_color}
-      entranceType={wedding.entrance_type || 'envelope'}
-      fontFamily={wedding.font_family || 'Montserrat'}
-      musicUrl={wedding.music_url}
-      musicAutoplay={wedding.music_autoplay !== false}
-      backgroundAnimation={wedding.background_animation || 'none'}
-    >
-      {contentWithEffect}
-    </Envelope>
-  ) : (
-    <>
-      {contentWithEffect}
       <BackgroundMusic 
         url={wedding.music_url} 
         isEnvelopeOpened={true} 
@@ -107,5 +84,11 @@ export default async function WeddingPage({
         primaryColor={wedding.primary_color}
       />
     </>
+  );
+
+  return (
+    <WeddingClientWrapper wedding={wedding}>
+      {contentWithMusic}
+    </WeddingClientWrapper>
   );
 }

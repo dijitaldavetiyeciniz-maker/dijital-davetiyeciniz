@@ -3,6 +3,11 @@ import { useState, useEffect, use } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2, Smartphone, Tablet, Trash2, Check, RefreshCw, Volume2, VolumeX, Eye } from 'lucide-react';
 import { getRandomQuote } from '@/lib/aiQuotes';
+import { entranceAnimations } from '@/data/entranceAnimations';
+import { envelopeStyles } from '@/data/envelopeStyles';
+import { sealStyles } from '@/data/sealStyles';
+import { getInitials } from '@/utils/getInitials';
+import { EntranceAnimation } from '@/components/invitation/EntranceAnimation';
 
 function getTemplatePreset(id: string) {
   const num = parseInt(id.replace('template', '')) || 1;
@@ -255,6 +260,9 @@ export default function CoupleAdminPage({
   const [showComments, setShowComments] = useState(true);
   const [showCountdown, setShowCountdown] = useState(true);
   const [backgroundAnimation, setBackgroundAnimation] = useState('none');
+  const [entranceAnimation, setEntranceAnimation] = useState('royal-seal-premium');
+  const [envelopeStyle, setEnvelopeStyle] = useState('classic');
+  const [sealStyle, setSealStyle] = useState('burgundy');
   
   // Premium UI/UX States
   const [countdownStyle, setCountdownStyle] = useState('glass');
@@ -347,6 +355,9 @@ export default function CoupleAdminPage({
       if (weddingData.show_comments !== undefined && weddingData.show_comments !== null) setShowComments(weddingData.show_comments);
       if (weddingData.show_countdown !== undefined && weddingData.show_countdown !== null) setShowCountdown(weddingData.show_countdown);
       if (weddingData.background_animation) setBackgroundAnimation(weddingData.background_animation);
+      if (weddingData.entrance_animation) setEntranceAnimation(weddingData.entrance_animation);
+      if (weddingData.envelope_style) setEnvelopeStyle(weddingData.envelope_style);
+      if (weddingData.seal_style) setSealStyle(weddingData.seal_style);
       if (weddingData.countdown_style) setCountdownStyle(weddingData.countdown_style);
       if (weddingData.is_dark_mode !== undefined && weddingData.is_dark_mode !== null) setIsDarkMode(weddingData.is_dark_mode);
       
@@ -397,6 +408,9 @@ export default function CoupleAdminPage({
           show_comments: showComments,
           show_countdown: showCountdown,
           background_animation: backgroundAnimation,
+          entrance_animation: entranceAnimation,
+          envelope_style: envelopeStyle,
+          seal_style: sealStyle,
           countdown_style: countdownStyle,
           is_dark_mode: isDarkMode
         })
@@ -419,7 +433,7 @@ export default function CoupleAdminPage({
     envelopeBgColor, envelopeFlapType, sealType, sealColor, 
     entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
     quoteFontFamily, quoteFontSize, showPhotos, showRsvp, showComments, showCountdown,
-    backgroundAnimation, countdownStyle, isDarkMode
+    backgroundAnimation, entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode
   ]);
 
   async function fetchRsvps(weddingId: string) {
@@ -496,6 +510,9 @@ export default function CoupleAdminPage({
         show_comments: showComments,
         show_countdown: showCountdown,
         background_animation: backgroundAnimation,
+        entrance_animation: entranceAnimation,
+        envelope_style: envelopeStyle,
+        seal_style: sealStyle,
         countdown_style: countdownStyle,
         is_dark_mode: isDarkMode
       })
@@ -1160,122 +1177,241 @@ export default function CoupleAdminPage({
                 </div>
               </div>
 
-              {/* BÖLÜM 2: TEMA SEÇİMİ */}
-              <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">2. Şablon Seçimi</h3>
+              {/* BÖLÜM 2: ŞABLON & TEMA SEÇİMİ */}
+              <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">2. Şablon & Tema Seçimi</h3>
 
-              <div className="mb-6">
-                {/* Category Tabs */}
-                <div className="flex gap-1.5 overflow-x-auto pb-2 mb-4 scrollbar-thin">
-                  {[
-                    { id: 'all', label: 'Tüm Şablonlar' },
-                    { id: 'wedding', label: 'Düğün' },
-                    { id: 'engagement', label: 'Nişan' },
-                    { id: 'henna', label: 'Kına' },
-                    { id: 'babyshower', label: 'Baby Shower' },
-                    { id: 'birthday', label: 'Doğum Günü' },
-                    { id: 'corporate', label: 'Kurumsal' },
-                    { id: 'minimal', label: 'Minimal' },
-                    { id: 'luxury', label: 'Lüks' },
-                    { id: 'bohemian', label: 'Bohem' }
-                  ].map(cat => (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => setTemplateCategory(cat.id)}
-                      className={`px-3 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap transition-all ${templateCategory === cat.id ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
-                    >
-                      {cat.label}
-                    </button>
-                  ))}
-                </div>
-
-                {/* DB Custom Themes row (if any) */}
-                {themes.length > 0 && templateCategory === 'all' && (
-                  <div className="mb-3">
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">⭐ Kaydedilen Özel Şablonlarınız</p>
-                    <div className="max-h-40 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {themes.map(theme => (
-                        <button
-                          key={theme.id}
-                          onClick={() => applyPreset(theme)}
-                          className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white ${templateId === theme.template_id && primaryColor === theme.primary_color ? 'border-rose-500 bg-white shadow-xs ring-2 ring-rose-100' : 'border-slate-200'}`}
-                        >
-                          <div className="w-6 h-6 rounded-full mb-1 shadow-inner" style={{ backgroundColor: theme.primary_color }}></div>
-                          <span className="text-[10px] font-bold text-slate-700 text-center line-clamp-1">{theme.name}</span>
-                        </button>
-                      ))}
-                    </div>
+              <div className="space-y-6">
+                {/* 1. Şablon Seçimi */}
+                <div>
+                  <h4 className="font-bold text-sm mb-1 text-slate-800">1. Şablon Seçimi</h4>
+                  <p className="text-xs text-slate-500 mb-3">
+                    Etkinliğinizin tarzına uygun hazır bir tasarım seçin. Renkleri, yazıları, arka planı ve animasyonları daha sonra düzenleyebilirsiniz.
+                  </p>
+                  
+                  {/* Category Tabs */}
+                  <div className="flex gap-1.5 overflow-x-auto pb-2 mb-4 scrollbar-thin">
+                    {[
+                      { id: 'all', label: 'Tüm Şablonlar' },
+                      { id: 'wedding', label: 'Düğün' },
+                      { id: 'engagement', label: 'Nişan' },
+                      { id: 'henna', label: 'Kına' },
+                      { id: 'babyshower', label: 'Baby Shower' },
+                      { id: 'birthday', label: 'Doğum Günü' },
+                      { id: 'corporate', label: 'Kurumsal' },
+                      { id: 'minimal', label: 'Minimal' },
+                      { id: 'luxury', label: 'Lüks' },
+                      { id: 'bohemian', label: 'Bohem' }
+                    ].map(cat => (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setTemplateCategory(cat.id)}
+                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap transition-all ${templateCategory === cat.id ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
+                      >
+                        {cat.label}
+                      </button>
+                    ))}
                   </div>
-                )}
 
-                {/* Filtered 100 templates with Lazy Loading */}
-                <div className="space-y-3">
-                  <div className="max-h-72 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {/* DB Custom Themes row (if any) */}
+                  {themes.length > 0 && templateCategory === 'all' && (
+                    <div className="mb-3">
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">⭐ Kaydedilen Özel Şablonlarınız</p>
+                      <div className="max-h-40 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {themes.map(theme => (
+                          <button
+                            key={theme.id}
+                            onClick={() => applyPreset(theme)}
+                            className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white ${templateId === theme.template_id && primaryColor === theme.primary_color ? 'border-rose-500 bg-white shadow-xs ring-2 ring-rose-100' : 'border-slate-200'}`}
+                          >
+                            <div className="w-6 h-6 rounded-full mb-1 shadow-inner" style={{ backgroundColor: theme.primary_color }}></div>
+                            <span className="text-[10px] font-bold text-slate-700 text-center line-clamp-1">{theme.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Filtered 100 templates with Lazy Loading */}
+                  <div className="space-y-3">
+                    <div className="max-h-72 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {(() => {
+                        const isTemplateInCategory = (num: number, category: string) => {
+                          if (category === 'all') return true;
+                          return categoryMap[category]?.includes(num) || false;
+                        };
+
+                        const filteredList = Array.from({ length: 100 }, (_, i) => i + 1)
+                          .filter(num => isTemplateInCategory(num, templateCategory));
+
+                        if (filteredList.length === 0) {
+                          return <div className="col-span-full py-8 text-center text-xs text-slate-400">Bu kategoride şablon bulunmamaktadır.</div>;
+                        }
+
+                        const visibleList = filteredList.slice(0, visibleCount);
+
+                        return visibleList.map(num => {
+                          const tId = `template${num}`;
+                          const preset = getTemplatePreset(tId);
+                          const isActive = templateId === tId;
+                          return (
+                            <button
+                              key={tId}
+                              type="button"
+                              onClick={() => {
+                                setTemplateId(tId);
+                                applyPreset(preset);
+                              }}
+                              className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white hover:shadow-xs active:scale-95 ${isActive ? 'border-rose-500 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200'}`}
+                            >
+                              <div className="w-full h-5 rounded-md mb-1 shadow-inner flex items-center justify-center gap-1 overflow-hidden">
+                                <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
+                                <div className="flex-1 h-1.5 rounded-full opacity-30" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
+                              </div>
+                              <span className="text-[9px] font-bold text-slate-700 text-center leading-tight">{templateNames[num - 1]}</span>
+                              <span className="text-[8px] text-slate-400">#{num}</span>
+                              {isActive && <span className="text-[8px] text-rose-600 font-bold mt-0.5">✓ Seçili</span>}
+                            </button>
+                          );
+                        });
+                      })()}
+                    </div>
+
+                    {/* Show More Button if there are more templates */}
                     {(() => {
                       const isTemplateInCategory = (num: number, category: string) => {
                         if (category === 'all') return true;
                         return categoryMap[category]?.includes(num) || false;
                       };
 
-                      const filteredList = Array.from({ length: 100 }, (_, i) => i + 1)
-                        .filter(num => isTemplateInCategory(num, templateCategory));
+                      const totalFiltered = Array.from({ length: 100 }, (_, i) => i + 1)
+                        .filter(num => isTemplateInCategory(num, templateCategory)).length;
 
-                      if (filteredList.length === 0) {
-                        return <div className="col-span-full py-8 text-center text-xs text-slate-400">Bu kategoride şablon bulunmamaktadır.</div>;
-                      }
-
-                      const visibleList = filteredList.slice(0, visibleCount);
-
-                      return visibleList.map(num => {
-                        const tId = `template${num}`;
-                        const preset = getTemplatePreset(tId);
-                        const isActive = templateId === tId;
+                      if (totalFiltered > visibleCount) {
                         return (
                           <button
-                            key={tId}
                             type="button"
-                            onClick={() => {
-                              setTemplateId(tId);
-                              applyPreset(preset);
-                            }}
-                            className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white hover:shadow-xs active:scale-95 ${isActive ? 'border-rose-500 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200'}`}
+                            onClick={() => setVisibleCount(prev => Math.min(totalFiltered, prev + 12))}
+                            className="w-full py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1 active:scale-98"
                           >
-                            <div className="w-full h-5 rounded-md mb-1 shadow-inner flex items-center justify-center gap-1 overflow-hidden">
-                              <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
-                              <div className="flex-1 h-1.5 rounded-full opacity-30" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
-                            </div>
-                            <span className="text-[9px] font-bold text-slate-700 text-center leading-tight">{templateNames[num - 1]}</span>
-                            <span className="text-[8px] text-slate-400">#{num}</span>
-                            {isActive && <span className="text-[8px] text-rose-600 font-bold mt-0.5">✓ Seçili</span>}
+                            <span>✨</span> Daha Fazla Şablon Göster ({totalFiltered - visibleCount} Kaldı)
                           </button>
                         );
-                      });
+                      }
+                      return null;
                     })()}
                   </div>
+                </div>
 
-                  {/* Show More Button if there are more templates */}
-                  {(() => {
-                    const isTemplateInCategory = (num: number, category: string) => {
-                      if (category === 'all') return true;
-                      return categoryMap[category]?.includes(num) || false;
-                    };
+                {/* 2. Zarf Tasarımı */}
+                <div className="mt-6 border-t pt-4">
+                  <h4 className="font-bold text-sm mb-1 text-slate-800">2. Zarf Tasarımı</h4>
+                  <p className="text-xs text-slate-500 mb-3">Davetiyenizin dış zarf stilini seçin.</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {envelopeStyles.map((style) => (
+                      <button
+                        key={style.id}
+                        type="button"
+                        onClick={() => setEnvelopeStyle(style.id)}
+                        className={`p-2.5 rounded-xl border text-xs font-semibold text-center transition-all ${envelopeStyle === style.id ? 'border-rose-500 bg-rose-50/10 text-rose-600 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'}`}
+                      >
+                        {style.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                    const totalFiltered = Array.from({ length: 100 }, (_, i) => i + 1)
-                      .filter(num => isTemplateInCategory(num, templateCategory)).length;
+                {/* 3. Mühür Tasarımı */}
+                <div className="mt-6 border-t pt-4">
+                  <h4 className="font-bold text-sm mb-1 text-slate-800">3. Mühür Tasarımı</h4>
+                  <p className="text-xs text-slate-500 mb-3">Zarfın üzerindeki balmumu mühür stilini seçin.</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {sealStyles.map((style) => (
+                      <button
+                        key={style.id}
+                        type="button"
+                        onClick={() => setSealStyle(style.id)}
+                        className={`p-2 rounded-xl border text-xs font-semibold text-center transition-all ${sealStyle === style.id ? 'border-rose-500 bg-rose-50/10 text-rose-600 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'}`}
+                      >
+                        {style.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                    if (totalFiltered > visibleCount) {
+                {/* 4. Giriş Animasyonu */}
+                <div className="mt-6 border-t pt-4">
+                  <h4 className="font-bold text-sm mb-1 text-slate-800">4. Giriş Animasyonu</h4>
+                  <p className="text-xs text-slate-500 mb-3">Davetiyeniz açılırken misafirlerin göreceği ilk animasyonu seçin.</p>
+                  <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1">
+                    {entranceAnimations.map((animation) => {
+                      const isSelected = entranceAnimation === animation.id;
                       return (
                         <button
+                          key={animation.id}
                           type="button"
-                          onClick={() => setVisibleCount(prev => Math.min(totalFiltered, prev + 12))}
-                          className="w-full py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1 active:scale-98"
+                          onClick={() => setEntranceAnimation(animation.id)}
+                          className={`animation-card text-left transition-all ${isSelected ? 'selected' : ''}`}
                         >
-                          <span>✨</span> Daha Fazla Şablon Göster ({totalFiltered - visibleCount} Kaldı)
+                          <div className="mini-animation-preview relative">
+                            {isSelected ? (
+                              <EntranceAnimation
+                                animationType={animation.id}
+                                envelopeStyle={envelopeStyle || "classic"}
+                                sealStyle={sealStyle || "burgundy"}
+                                backgroundAnimation={backgroundAnimation || "golden"}
+                                initials={getInitials(brideName, groomName)}
+                                brideName={brideName}
+                                groomName={groomName}
+                                eventDate={weddingDate ? new Date(weddingDate).toLocaleDateString('tr-TR') : undefined}
+                              />
+                            ) : (
+                              <div className="static-envelope-preview">
+                                <div className="static-envelope-seal" />
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex flex-col justify-between py-1">
+                            <div>
+                              <strong className="text-slate-800 text-xs font-bold block mb-1">{animation.name}</strong>
+                              <p className="text-[10px] text-slate-500 leading-relaxed font-normal">{animation.description}</p>
+                            </div>
+                            {animation.premium && (
+                              <div className="mt-2">
+                                <span className="premium-badge">Premium</span>
+                              </div>
+                            )}
+                          </div>
                         </button>
                       );
-                    }
-                    return null;
-                  })()}
+                    })}
+                  </div>
+                </div>
+
+                {/* 5. Arka Plan Animasyonu */}
+                <div className="mt-6 border-t pt-4">
+                  <h4 className="font-bold text-sm mb-1 text-slate-800">5. Arka Plan Animasyonu</h4>
+                  <p className="text-xs text-slate-500 mb-3">Davetiyenizin genel arka plan partikül efektini seçin.</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { id: 'golden', name: 'Altın Parıltılar' },
+                      { id: 'petals', name: 'Gül Yaprakları' },
+                      { id: 'pearl', name: 'İnci Işıltısı' },
+                      { id: 'night', name: 'Gece Modu' },
+                      { id: 'bokeh', name: 'Bokeh Efekti' },
+                      { id: 'none', name: 'Yok (Sade)' }
+                    ].map((bg) => (
+                      <button
+                        key={bg.id}
+                        type="button"
+                        onClick={() => setBackgroundAnimation(bg.id)}
+                        className={`p-2.5 rounded-xl border text-xs font-semibold text-center transition-all ${backgroundAnimation === bg.id ? 'border-rose-500 bg-rose-50/10 text-rose-600 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'}`}
+                      >
+                        {bg.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
