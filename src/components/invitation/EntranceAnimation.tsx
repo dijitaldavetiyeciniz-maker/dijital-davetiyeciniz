@@ -1,23 +1,40 @@
 'use client';
 import { useEffect, useState } from "react";
 import "@/styles/invitation-animations.css";
-import { EnvelopeCover } from "./EnvelopeCover";
-import { InvitationCard } from "./InvitationCard";
-import { WaxSeal } from "./WaxSeal";
-import { entranceAnimations } from "@/data/entranceAnimations";
+import "@/styles/opening-animations.css";
+import { openingAnimations, OpeningAnimation } from "@/data/openingAnimations";
+
+// Import opening family components
+import { EnvelopeOpening } from "./openings/EnvelopeOpening";
+import { CurtainOpening } from "./openings/CurtainOpening";
+import { DoorOpening } from "./openings/DoorOpening";
+import { GardenGateOpening } from "./openings/GardenGateOpening";
+import { BookOpening } from "./openings/BookOpening";
+import { LuxuryBoxOpening } from "./openings/LuxuryBoxOpening";
+import { TreasureChestOpening } from "./openings/TreasureChestOpening";
+import { GlassRevealOpening } from "./openings/GlassRevealOpening";
+import { MirrorRevealOpening } from "./openings/MirrorRevealOpening";
+import { CinematicZoomOpening } from "./openings/CinematicZoomOpening";
+import { SpotlightOpening } from "./openings/SpotlightOpening";
+import { StarryNightOpening } from "./openings/StarryNightOpening";
+import { ElevatorDoorOpening } from "./openings/ElevatorDoorOpening";
+import { RoyalHallOpening } from "./openings/RoyalHallOpening";
+import { MinimalFadeOpening } from "./openings/MinimalFadeOpening";
 
 type EntranceAnimationProps = {
-  animationType: string;
-  envelopeStyle: string;
-  sealStyle: string;
-  backgroundAnimation: string;
+  animationType: string; // matches id in openingAnimations
   initials: string;
   brideName?: string;
   groomName?: string;
   eventDate?: string;
   onComplete?: () => void;
+  // Backward compatibility:
+  envelopeStyle?: string;
+  sealStyle?: string;
+  backgroundAnimation?: string;
 };
 
+// Reusable Particle components
 function FloatingPetals() {
   return (
     <div className="floating-petals" aria-hidden="true">
@@ -50,9 +67,6 @@ function PearlParticles() {
 
 export function EntranceAnimation({
   animationType,
-  envelopeStyle,
-  sealStyle,
-  backgroundAnimation,
   initials,
   brideName = "Gelin",
   groomName = "Damat",
@@ -61,14 +75,10 @@ export function EntranceAnimation({
 }: EntranceAnimationProps) {
   const [opened, setOpened] = useState(false);
 
-  // Find unified preset if exists
-  const preset = entranceAnimations.find(p => p.id === animationType);
-
-  const actualAnimationType = preset ? preset.animationType : animationType;
-  const actualEnvelopeStyle = preset ? preset.envelopeStyle : envelopeStyle;
-  const actualSealStyle = preset ? preset.sealStyle : sealStyle;
-  const actualBackgroundAnimation = preset ? preset.backgroundAnimation : backgroundAnimation;
-  const actualSealInsignia = preset ? preset.sealInsignia : 'none';
+  // Find the selected opening animation configuration
+  const config: OpeningAnimation =
+    openingAnimations.find((a) => a.id === animationType) ||
+    openingAnimations[0]; // fallback to first item
 
   useEffect(() => {
     setOpened(false);
@@ -81,7 +91,7 @@ export function EntranceAnimation({
       if (onComplete) {
         completeTimer = setTimeout(() => {
           onComplete();
-        }, 3500);
+        }, config.duration);
       }
     }, 2200);
 
@@ -89,7 +99,7 @@ export function EntranceAnimation({
       clearTimeout(autoOpenTimer);
       clearTimeout(completeTimer);
     };
-  }, [animationType, actualAnimationType, actualEnvelopeStyle, actualSealStyle, actualBackgroundAnimation, onComplete]);
+  }, [animationType, config.duration, onComplete]);
 
   const handleManualOpen = () => {
     if (opened) return;
@@ -97,112 +107,113 @@ export function EntranceAnimation({
     if (onComplete) {
       setTimeout(() => {
         onComplete();
-      }, 3500);
+      }, config.duration);
     }
   };
 
-  const shouldShowPetals =
-    actualBackgroundAnimation === "petals" ||
-    actualAnimationType === "floral-bloom" ||
-    actualAnimationType === "petal-rain";
+  // Extract particle details from effects list
+  const hasRosePetals = config.effects.includes("rosePetals");
+  const hasGoldParticles =
+    config.effects.includes("goldParticles") ||
+    config.effects.includes("goldDust") ||
+    config.effects.includes("sparkleDust");
+  const hasPearlParticles =
+    config.effects.includes("pearlLight") ||
+    config.effects.includes("pearlParticles");
 
-  const shouldShowGold =
-    actualBackgroundAnimation === "golden" ||
-    actualAnimationType === "royal-seal-premium" ||
-    actualAnimationType === "golden-dust-reveal" ||
-    actualAnimationType === "satin-ribbon-unfold";
+  // Choose display text helper
+  const getPromptText = () => {
+    switch (config.family) {
+      case "envelope":
+        return "✉️ AÇMAK İÇİN DOKUNUN ✉️";
+      case "curtain":
+        return "🎭 PERDEYİ AÇMAK İÇİN DOKUNUN 🎭";
+      case "door":
+      case "elevator":
+        return "🚪 KAPILARI AÇMAK İÇİN DOKUNUN 🚪";
+      case "gardenGate":
+        return "🌿 GEÇİŞ İÇİN DOKUNUN 🌿";
+      case "book":
+        return "📖 KİTABI AÇMAK İÇİN DOKUNUN 📖";
+      case "luxuryBox":
+        return "🎁 KUTUYU AÇMAK İÇİN DOKUNUN 🎁";
+      case "treasureChest":
+        return "👑 HAZİNEYİ AÇMAK İÇİN DOKUNUN 👑";
+      case "glass":
+      case "mirror":
+        return "🔮 YANSIMAYI AÇMAK İÇİN DOKUNUN 🔮";
+      default:
+        return "✨ DEVAM ETMEK İÇİN DOKUNUN ✨";
+    }
+  };
 
-  const shouldShowPearl =
-    actualBackgroundAnimation === "pearl" ||
-    actualAnimationType === "pearl-light" ||
-    actualAnimationType === "glass-shimmer";
+  // Helper function to render correct opening family layout
+  const renderFamily = () => {
+    const commonProps = {
+      opened,
+      initials,
+      brideName,
+      groomName,
+      eventDate,
+      theme: config.theme,
+      motion: config.motion,
+      palette: config.palette,
+      effects: config.effects,
+    };
 
-  // Check if non-envelope style
-  const isCurtains = actualAnimationType.startsWith("theater-curtains");
-  const isCosmic = actualAnimationType === "cosmic-star-portal";
-  const isBook = actualAnimationType === "book-page-flip";
+    switch (config.family) {
+      case "envelope":
+        return <EnvelopeOpening {...commonProps} />;
+      case "curtain":
+        return <CurtainOpening {...commonProps} />;
+      case "door":
+        return <DoorOpening {...commonProps} />;
+      case "gardenGate":
+        return <GardenGateOpening {...commonProps} />;
+      case "book":
+        return <BookOpening {...commonProps} />;
+      case "luxuryBox":
+        return <LuxuryBoxOpening {...commonProps} />;
+      case "treasureChest":
+        return <TreasureChestOpening {...commonProps} />;
+      case "glass":
+        return <GlassRevealOpening {...commonProps} />;
+      case "mirror":
+        return <MirrorRevealOpening {...commonProps} />;
+      case "cinematicZoom":
+        return <CinematicZoomOpening {...commonProps} />;
+      case "spotlight":
+        return <SpotlightOpening {...commonProps} />;
+      case "starryNight":
+        return <StarryNightOpening {...commonProps} />;
+      case "elevator":
+        return <ElevatorDoorOpening {...commonProps} />;
+      case "royalHall":
+        return <RoyalHallOpening {...commonProps} />;
+      case "minimal":
+      default:
+        return <MinimalFadeOpening {...commonProps} />;
+    }
+  };
 
   return (
-    <div className={`entrance-root bg-${actualBackgroundAnimation}`}>
-      {shouldShowPetals && <FloatingPetals />}
-      {shouldShowGold && <GoldenParticles />}
-      {shouldShowPearl && <PearlParticles />}
+    <div 
+      className={`opening-stage-container opening-family-${config.family} opening-theme-${config.theme} overflow-hidden w-full h-full relative`}
+      onClick={handleManualOpen}
+    >
+      {/* Render Particles */}
+      {hasRosePetals && <FloatingPetals />}
+      {hasGoldParticles && <GoldenParticles />}
+      {hasPearlParticles && <PearlParticles />}
 
-      {/* 1. Curtains (Perde) Layout */}
-      {isCurtains && (
-        <div 
-          onClick={handleManualOpen}
-          className={`curtains-stage ${actualAnimationType === 'theater-curtains-gold' ? 'curtains-gold' : ''} ${opened ? "is-opened" : ""} cursor-pointer w-full h-full`}
-        >
-          <div className="curtain-panel curtain-left flex items-center justify-end pr-8 select-none">
-            <span className="curtain-logo font-serif text-2xl md:text-4xl text-right leading-tight">
-              {brideName}
-            </span>
-          </div>
-          <div className="curtain-panel curtain-right flex items-center justify-start pl-8 select-none">
-            <span className="curtain-logo font-serif text-2xl md:text-4xl text-left leading-tight">
-              {groomName}
-            </span>
-          </div>
-        </div>
-      )}
+      {/* Render selected family layout */}
+      {renderFamily()}
 
-      {/* 2. Cosmic Portal Layout */}
-      {isCosmic && (
-        <div 
-          onClick={handleManualOpen}
-          className={`cosmic-stage ${opened ? "is-opened" : ""} cursor-pointer w-full h-full`}
-        >
-          <div className="cosmic-portal-ring select-none">
-            <div className="cosmic-logo font-serif text-xl md:text-2xl">
-              {initials}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 3. Luxury Book Page Flip Layout */}
-      {isBook && (
-        <div 
-          onClick={handleManualOpen}
-          className={`book-stage ${opened ? "is-opened" : ""} cursor-pointer w-full h-full`}
-        >
-          <div className="book-cover select-none">
-            <span className="book-badge font-sans">DÜĞÜN DAVETİYESİ</span>
-            <div className="book-ornament" />
-            <h2 className="book-names font-serif">
-              {brideName} <br /> & <br /> {groomName}
-            </h2>
-            <div className="book-ornament" />
-            {eventDate && <span className="text-xs tracking-wider opacity-85 mt-2">{eventDate}</span>}
-          </div>
-        </div>
-      )}
-
-      {/* 4. Default Envelope Layout */}
-      {!isCurtains && !isCosmic && !isBook && (
-        <div 
-          onClick={handleManualOpen}
-          className={`entrance-stage animation-${actualAnimationType} ${opened ? "is-opened" : ""} cursor-pointer`}
-        >
-          <EnvelopeCover style={actualEnvelopeStyle}>
-            <InvitationCard 
-              brideName={brideName} 
-              groomName={groomName} 
-              eventDate={eventDate} 
-            />
-            {actualAnimationType === "satin-ribbon-unfold" && (
-              <div className="satin-ribbon" aria-hidden="true" />
-            )}
-            <WaxSeal style={actualSealStyle} initials={initials} insignia={actualSealInsignia} />
-          </EnvelopeCover>
-        </div>
-      )}
-
+      {/* Manual action prompt */}
       {!opened && (
-        <div className="absolute bottom-10 left-0 right-0 text-center animate-pulse z-20 pointer-events-none">
-          <p className="text-xs uppercase tracking-widest text-slate-500 font-extrabold drop-shadow-md select-none bg-white/40 inline-block px-4 py-2 rounded-full backdrop-blur-xs border border-white/20">
-            {isCurtains ? "🎭 AÇMAK İÇİN DOKUNUN 🎭" : isCosmic ? "🌌 GEÇİŞ İÇİN DOKUNUN 🌌" : isBook ? "📖 AÇMAK İÇİN DOKUNUN 📖" : "✉️ AÇMAK İÇİN DOKUNUN ✉️"}
+        <div className="absolute bottom-10 left-0 right-0 text-center animate-pulse z-20 pointer-events-none select-none">
+          <p className="text-xs uppercase tracking-widest text-slate-500 font-extrabold drop-shadow-md bg-white/40 inline-block px-5 py-2.5 rounded-full backdrop-blur-xs border border-white/20">
+            {getPromptText()}
           </p>
         </div>
       )}

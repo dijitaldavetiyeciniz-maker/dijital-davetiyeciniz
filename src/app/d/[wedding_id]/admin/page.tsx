@@ -3,7 +3,7 @@ import { useState, useEffect, use } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2, Smartphone, Tablet, Trash2, Check, RefreshCw, Volume2, VolumeX, Eye } from 'lucide-react';
 import { getRandomQuote } from '@/lib/aiQuotes';
-import { entranceAnimations } from '@/data/entranceAnimations';
+import { openingAnimations } from '@/data/openingAnimations';
 import { envelopeStyles } from '@/data/envelopeStyles';
 import { sealStyles } from '@/data/sealStyles';
 import { getInitials } from '@/utils/getInitials';
@@ -1310,7 +1310,7 @@ export default function CoupleAdminPage({
                     Davetiyenize girilirken misafirlerin göreceği lüks giriş kapak efektini seçin. Bir tasarım seçtiğinizde zarf, mühür, arka plan ve geçiş animasyonu otomatik olarak uyumlu şekilde ayarlanır.
                   </p>
                   <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
-                    {entranceAnimations.map((animation) => {
+                    {openingAnimations.map((animation) => {
                       const isSelected = entranceAnimation === animation.id;
                       return (
                         <button
@@ -1318,9 +1318,10 @@ export default function CoupleAdminPage({
                           type="button"
                           onClick={() => {
                             setEntranceAnimation(animation.id);
-                            setEnvelopeStyle(animation.envelopeStyle);
-                            setSealStyle(animation.sealStyle);
-                            setBackgroundAnimation(animation.backgroundAnimation);
+                            // Set backward compatible values
+                            setEnvelopeStyle(animation.family === "envelope" ? "classic" : "none");
+                            setSealStyle(animation.family === "envelope" ? "gold" : "none");
+                            setBackgroundAnimation(animation.family === "envelope" ? "golden" : "none");
                           }}
                           className={`animation-card text-left transition-all ${isSelected ? 'selected' : ''}`}
                         >
@@ -1328,9 +1329,6 @@ export default function CoupleAdminPage({
                             {isSelected ? (
                               <EntranceAnimation
                                 animationType={animation.id}
-                                envelopeStyle={animation.envelopeStyle}
-                                sealStyle={animation.sealStyle}
-                                backgroundAnimation={animation.backgroundAnimation}
                                 initials={getInitials(brideName, groomName)}
                                 brideName={brideName}
                                 groomName={groomName}
@@ -1338,11 +1336,11 @@ export default function CoupleAdminPage({
                               />
                             ) : (
                               <div className="static-envelope-preview">
-                                {animation.category === 'Zarf' ? (
+                                {animation.family === 'envelope' ? (
                                   <div className="static-envelope-seal" />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center bg-slate-800 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                                    {animation.category}
+                                    {animation.family}
                                   </div>
                                 )}
                               </div>
@@ -1354,7 +1352,7 @@ export default function CoupleAdminPage({
                               <div className="flex items-center gap-1.5 mb-1 flex-wrap">
                                 <strong className="text-slate-800 text-xs font-bold">{animation.name}</strong>
                                 <span className="px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[8px] font-bold uppercase tracking-wider">
-                                  {animation.category}
+                                  {animation.family}
                                 </span>
                               </div>
                               <p className="text-[10px] text-slate-500 leading-relaxed font-normal">{animation.description}</p>
