@@ -1303,63 +1303,34 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                {/* 2. Zarf Tasarımı */}
+                {/* 2. Giriş Animasyon Tasarımı */}
                 <div className="mt-6 border-t pt-4">
-                  <h4 className="font-bold text-sm mb-1 text-slate-800">2. Zarf Tasarımı</h4>
-                  <p className="text-xs text-slate-500 mb-3">Davetiyenizin dış zarf stilini seçin.</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {envelopeStyles.map((style) => (
-                      <button
-                        key={style.id}
-                        type="button"
-                        onClick={() => setEnvelopeStyle(style.id)}
-                        className={`p-2.5 rounded-xl border text-xs font-semibold text-center transition-all ${envelopeStyle === style.id ? 'border-rose-500 bg-rose-50/10 text-rose-600 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'}`}
-                      >
-                        {style.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 3. Mühür Tasarımı */}
-                <div className="mt-6 border-t pt-4">
-                  <h4 className="font-bold text-sm mb-1 text-slate-800">3. Mühür Tasarımı</h4>
-                  <p className="text-xs text-slate-500 mb-3">Zarfın üzerindeki balmumu mühür stilini seçin.</p>
-                  <div className="grid grid-cols-3 gap-2">
-                    {sealStyles.map((style) => (
-                      <button
-                        key={style.id}
-                        type="button"
-                        onClick={() => setSealStyle(style.id)}
-                        className={`p-2 rounded-xl border text-xs font-semibold text-center transition-all ${sealStyle === style.id ? 'border-rose-500 bg-rose-50/10 text-rose-600 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'}`}
-                      >
-                        {style.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 4. Giriş Animasyonu */}
-                <div className="mt-6 border-t pt-4">
-                  <h4 className="font-bold text-sm mb-1 text-slate-800">4. Giriş Animasyonu</h4>
-                  <p className="text-xs text-slate-500 mb-3">Davetiyeniz açılırken misafirlerin göreceği ilk animasyonu seçin.</p>
-                  <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1">
+                  <h4 className="font-bold text-sm mb-1 text-slate-800">2. Giriş Animasyon Tasarımı</h4>
+                  <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+                    Davetiyenize girilirken misafirlerin göreceği lüks giriş kapak efektini seçin. Bir tasarım seçtiğinizde zarf, mühür, arka plan ve geçiş animasyonu otomatik olarak uyumlu şekilde ayarlanır.
+                  </p>
+                  <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
                     {entranceAnimations.map((animation) => {
                       const isSelected = entranceAnimation === animation.id;
                       return (
                         <button
                           key={animation.id}
                           type="button"
-                          onClick={() => setEntranceAnimation(animation.id)}
+                          onClick={() => {
+                            setEntranceAnimation(animation.id);
+                            setEnvelopeStyle(animation.envelopeStyle);
+                            setSealStyle(animation.sealStyle);
+                            setBackgroundAnimation(animation.backgroundAnimation);
+                          }}
                           className={`animation-card text-left transition-all ${isSelected ? 'selected' : ''}`}
                         >
                           <div className="mini-animation-preview relative">
                             {isSelected ? (
                               <EntranceAnimation
                                 animationType={animation.id}
-                                envelopeStyle={envelopeStyle || "classic"}
-                                sealStyle={sealStyle || "burgundy"}
-                                backgroundAnimation={backgroundAnimation || "golden"}
+                                envelopeStyle={animation.envelopeStyle}
+                                sealStyle={animation.sealStyle}
+                                backgroundAnimation={animation.backgroundAnimation}
                                 initials={getInitials(brideName, groomName)}
                                 brideName={brideName}
                                 groomName={groomName}
@@ -1367,14 +1338,25 @@ export default function CoupleAdminPage({
                               />
                             ) : (
                               <div className="static-envelope-preview">
-                                <div className="static-envelope-seal" />
+                                {animation.category === 'Zarf' ? (
+                                  <div className="static-envelope-seal" />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center bg-slate-800 text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                                    {animation.category}
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>
 
                           <div className="flex flex-col justify-between py-1">
                             <div>
-                              <strong className="text-slate-800 text-xs font-bold block mb-1">{animation.name}</strong>
+                              <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                                <strong className="text-slate-800 text-xs font-bold">{animation.name}</strong>
+                                <span className="px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[8px] font-bold uppercase tracking-wider">
+                                  {animation.category}
+                                </span>
+                              </div>
                               <p className="text-[10px] text-slate-500 leading-relaxed font-normal">{animation.description}</p>
                             </div>
                             {animation.premium && (
@@ -1386,31 +1368,6 @@ export default function CoupleAdminPage({
                         </button>
                       );
                     })}
-                  </div>
-                </div>
-
-                {/* 5. Arka Plan Animasyonu */}
-                <div className="mt-6 border-t pt-4">
-                  <h4 className="font-bold text-sm mb-1 text-slate-800">5. Arka Plan Animasyonu</h4>
-                  <p className="text-xs text-slate-500 mb-3">Davetiyenizin genel arka plan partikül efektini seçin.</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[
-                      { id: 'golden', name: 'Altın Parıltılar' },
-                      { id: 'petals', name: 'Gül Yaprakları' },
-                      { id: 'pearl', name: 'İnci Işıltısı' },
-                      { id: 'night', name: 'Gece Modu' },
-                      { id: 'bokeh', name: 'Bokeh Efekti' },
-                      { id: 'none', name: 'Yok (Sade)' }
-                    ].map((bg) => (
-                      <button
-                        key={bg.id}
-                        type="button"
-                        onClick={() => setBackgroundAnimation(bg.id)}
-                        className={`p-2.5 rounded-xl border text-xs font-semibold text-center transition-all ${backgroundAnimation === bg.id ? 'border-rose-500 bg-rose-50/10 text-rose-600 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'}`}
-                      >
-                        {bg.name}
-                      </button>
-                    ))}
                   </div>
                 </div>
               </div>
@@ -1737,188 +1694,10 @@ export default function CoupleAdminPage({
                   </label>
                   
                   {useEnvelope && (
-                    <div className="mt-4 p-4 bg-slate-50 border rounded-xl space-y-4 text-left">
-                      {/* Giriş Animasyonu Türü */}
-                      <div>
-                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Açılış Animasyonu Türü</label>
-                        <select value={entranceType} onChange={e => setEntranceType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
-                          <optgroup label="👑 Kraliyet & Lüks (Premium)">
-                            <option value="royal-seal-premium">👑 Royal Seal Premium (5 Faz Sinematik)</option>
-                            <option value="embossed-envelope">🌸 Premium Kabartmalı Dikey Zarf (Instagram Reels Stili)</option>
-                            <option value="gold-foil-pocket">✨ Altın Varaklı Lüks Cep Zarfı</option>
-                            <option value="velvet-casket">🍷 Kadife Mücevher Kutusu</option>
-                            <option value="diamond-crowned-gate">💎 Elmas Taçlı Saray Kapısı</option>
-                            <option value="monarch-scroll">📜 Kraliyet Fermanı (Rulo Açılış)</option>
-                            <option value="emerald-box">💚 Zümrüt Yeşili Hediye Kutusu</option>
-                            <option value="silk-ribbon-pull">🎀 İpek Kurdele Çözümü</option>
-                            <option value="platinum-card-rise">🪙 Platin Metalik Kart Yükselişi</option>
-                          </optgroup>
-                          <optgroup label="🌸 Çiçekli & Suluboya (Floral)">
-                            <option value="flower-bloom">🌸 Çiçek Bahçesi (Bahar Açılışı)</option>
-                            <option value="watercolor-wash">🎨 Sanatsal Suluboya Dağılımı</option>
-                            <option value="rose-garden-gate">🌹 Güllerle Süslü Bahçe Kapısı</option>
-                            <option value="botanical-press">🌿 Preslenmiş Botanik Kitap Açılışı</option>
-                            <option value="orchid-mist">💐 Egzotik Orkide Sisi</option>
-                            <option value="wreath-fade">🍃 Lüks Zeytin Dalı Çelengi Fading</option>
-                            <option value="ivy-curtain">🌱 Sarmaşık Perdesi (İkiye Ayrılma)</option>
-                            <option value="lavender-breeze">💜 Lavanta Esintisi Geçişi</option>
-                          </optgroup>
-                          <optgroup label="⬜ Modern & Minimalist (Sade)">
-                            <option value="card">🎴 Sade Tebrik Kartı (Süzülme)</option>
-                            <option value="split-reveal">📐 Minimal Köşegen Ayrılma</option>
-                            <option value="glass-blur-fade">🔮 Buğulu Cam Efekti (Soft Zoom)</option>
-                            <option value="geometric-slide">🔶 Geometrik Pencereler</option>
-                            <option value="aperture-lens">📷 Kamera Diyafram Açılışı</option>
-                            <option value="minimalist-monogram-zoom">✍️ Minimal Monogram Odaklanması</option>
-                            <option value="shadow-play">👤 Yaprak Gölgesi Perdesi</option>
-                            <option value="slide-sideways">↔️ Zıt Yönlere Kayma</option>
-                          </optgroup>
-                          <optgroup label="📜 Klasik & Retro (Vintage)">
-                            <option value="parchment-burn">🔥 Parşömen Yanma Efekti</option>
-                            <option value="wax-seal-press">🏷️ Kraliyet Mühür Basımı</option>
-                            <option value="typewriter-stamp">⌨️ Daktilo Harf Basımı</option>
-                            <option value="retro-postcard">✉️ Pullu Retro Kartpostal Dönüşü</option>
-                            <option value="lace-overlay">🕸️ Zarif Dantel Örtü Ayrılması</option>
-                            <option value="baroque-frame">🖼️ Barok Altın Çerçeve Genişlemesi</option>
-                            <option value="craft-twine">📦 Hasır İpli Kraft Zarf</option>
-                          </optgroup>
-                          <optgroup label="🌌 Mistik & Kozmik (Mystic)">
-                            <option value="starry-eclipse">🌑 Yıldızlı Güneş Tutulması</option>
-                            <option value="constellation-connect">✨ Takımyıldız Çizgileri Birleşimi</option>
-                            <option value="aurora-veil">🌌 Kuzey Işıkları (Aurora) Tülü</option>
-                            <option value="crystal-ball-zoom">🔮 Sihirli Kristal Küre Büyümesi</option>
-                            <option value="galaxy-spiral">🌀 Spiral Galaksi Girdabı</option>
-                            <option value="golden-hour-glow">☀️ Günbatımı Işık Süzmesi</option>
-                          </optgroup>
-                          <optgroup label="🍂 Doğa & Mevsimler (Seasonal)">
-                            <option value="autumn-leaves">🍁 Sonbahar Yaprakları Fırtınası</option>
-                            <option value="snow-shimmer">❄️ Kar Kristali Erimesi</option>
-                            <option value="ocean-ripple">🌊 Okyanus Dalgası Hareketi</option>
-                            <option value="forest-fog">🌲 Orman Sisi Dağılımı</option>
-                            <option value="butterfly-flight">🦋 Kelebeklerin Uçuşu</option>
-                            <option value="beach-sand-wash">🏖️ Kumların Dalga ile Silinmesi</option>
-                          </optgroup>
-                          <optgroup label="🎉 Işıltı & Eğlence (Glamour)">
-                            <option value="glass-shatter">💎 Elmas Cam Kırılması</option>
-                            <option value="neon-glow-pulse">⚡ Neon Işık Hareketi</option>
-                            <option value="confetti-burst">🎊 Konfeti Patlaması</option>
-                            <option value="sparkler-draw">🎇 Maytapla Kalp Çizilmesi</option>
-                            <option value="disco-reflection">🪩 Disko Topu Işık Yansıması</option>
-                            <option value="glitter-curtain">✨ Altın Sim Yağmuru Perdesi</option>
-                          </optgroup>
-                        </select>
-                      </div>
-
-                      {/* Arka Plan Animasyonu */}
-                      <div>
-                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">✨ Arka Plan Animasyonu</label>
-                        <p className="text-[10px] text-slate-400 mb-2">Davetiye açıldıktan sonra arka planda görünür. Mobilde performanslı CSS animasyonları kullanılır.</p>
-                        <select value={backgroundAnimation} onChange={e => setBackgroundAnimation(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
-                          <option value="none">— Animasyon Yok</option>
-                          <option value="gold-dust">✨ Altın Toz Parçacıkları</option>
-                          <option value="rose-petals">🌹 Gül Yaprakları</option>
-                          <option value="sakura">🌸 Sakura Yaprakları</option>
-                          <option value="light-orbs">💫 Yavaş Uçan Işık Parçaları</option>
-                          <option value="bokeh">🔆 Bokeh Işıklar</option>
-                          <option value="hearts">❤️ Romantik Kalpler</option>
-                          <option value="starry-night">🌌 Yıldızlı Gece</option>
-                          <option value="soft-mist">🌫️ Hafif Sis Efekti</option>
-                          <option value="pearl-shimmer">🪙 İnci Parıltısı</option>
-                          <option value="confetti">🎊 Konfeti</option>
-                          <option value="snowflakes">❄️ Kar Taneleri</option>
-                          <option value="ocean-wave">🌊 Deniz Dalgası</option>
-                          <option value="silk-wave">🎀 İpek Kumaş Dalgalanması</option>
-                          <option value="leaf-fall">🍂 Yaprak Süzülmesi</option>
-                          <option value="candlelight">🕯️ Mum Işığı Titreşimi</option>
-                          <option value="neon-gradient">💜 Neon Gradient Hareketi</option>
-                          <option value="marble-reflection">🏛️ Mermer Işık Yansıması</option>
-                          <option value="spotlight">🔦 Lüks Spotlight Efekti</option>
-                        </select>
-                      </div>
-
-                      {/* Zarf Tasarımı / Stili */}
-                      <div>
-                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf Tasarımı / Stili</label>
-                        <select 
-                          value={envelopeColor && !envelopeColor.startsWith('#') ? envelopeColor : 'classic'} 
-                          onChange={e => {
-                            if (e.target.value === 'classic') {
-                              setEnvelopeColor('#e6d5c3');
-                            } else {
-                              setEnvelopeColor(e.target.value);
-                            }
-                          }} 
-                          className="w-full border p-2 rounded-lg bg-white text-sm"
-                        >
-                          <option value="classic">🎨 Klasik (Özel Düz Renk)</option>
-                          <option value="gold-edge">👑 Lüks Altın Kenarlı</option>
-                          <option value="marble-texture">🏛️ Mermer Dokulu</option>
-                          <option value="minimal-white">⬜ Minimal Beyaz</option>
-                          <option value="black-premium">🖤 Siyah Premium</option>
-                          <option value="kraft-natural">📦 Kraft Doğal</option>
-                          <option value="romantic-flowers">🌸 Çiçekli Romantik</option>
-                          <option value="velvet-burgundy">🍷 Kadife Bordo</option>
-                          <option value="glass-effect">💎 Şeffaf Cam Efekti</option>
-                          <option value="modern-gradient">🌈 Modern Gradient Zarf</option>
-                        </select>
-                      </div>
-
-                      {/* Zarf Gövde Rengi (Sadece Klasik stilde gösterilir) */}
-                      {(!envelopeColor || envelopeColor.startsWith('#')) && (
-                        <div>
-                          <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf / Kutu Gövde Rengi</label>
-                          <div className="flex items-center gap-4">
-                            <input type="color" value={envelopeColor} onChange={e => setEnvelopeColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
-                            <span className="text-slate-500 font-mono text-sm">{envelopeColor}</span>
-                            <span className="text-xs text-slate-400 ml-2">(Zarf veya kutunun dış kapak rengi)</span>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Kapak Şekli */}
-                      <div>
-                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Zarf Kapak Şekli</label>
-                        <select value={envelopeFlapType} onChange={e => setEnvelopeFlapType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
-                          <option value="triangle">📐 Klasik Üçgen Kapak</option>
-                          <option value="rounded">🟢 Modern Yuvarlak (Curved) Kapak</option>
-                          <option value="square">➖ Modern Düz Kesim Kapak</option>
-                          <option value="trapezoid">⬡ Yamuk Kesim Kapak</option>
-                          <option value="wavy">🌊 Dalgalı Dalga Kesim</option>
-                          <option value="pointed-oval">🌰 Badem Oval Kapak</option>
-                          <option value="asymmetric">📐 Asimetrik Modern Kesim</option>
-                          <option value="double-curve">⚜️ Barok Çift Kavis</option>
-                          <option value="heart">❤️ Zarif Kalp Kesimi</option>
-                        </select>
-                      </div>
-
-                      {/* Mühür Damgası / Seçeneği */}
-                      <div>
-                        <label className="block text-sm font-semibold mb-1.5 text-slate-700">Mühür Seçeneği / Motif</label>
-                        <select value={sealType} onChange={e => setSealType(e.target.value)} className="w-full border p-2 rounded-lg bg-white text-sm">
-                          <option value="gold">🟡 Altın Mühür</option>
-                          <option value="burgundy">🍷 Bordo Wax Mühür</option>
-                          <option value="silver">⚪ Gümüş Mühür</option>
-                          <option value="rose-gold">🌸 Rose Gold Mühür</option>
-                          <option value="double-initials">🔠 Çift Baş Harfli (Monogram - {brideName.charAt(0) || 'G'}&{groomName.charAt(0) || 'D'})</option>
-                          <option value="heart-icon">❤️ Kalp İkonlu</option>
-                          <option value="ring-icon">💍 Yüzük İkonlu</option>
-                          <option value="flower-icon">🌹 Çiçek İkonlu</option>
-                          <option value="minimal-monogram">✍️ Minimal Monogram ({brideName.charAt(0) || 'G'}{groomName.charAt(0) || 'D'})</option>
-                          <option value="royal-crest">👑 Premium Kraliyet Mühürü</option>
-                        </select>
-                      </div>
-
-                      {/* Mühür Rengi (Sadece özel mum/ikon tiplerinde gösterilir) */}
-                      {!['gold', 'silver', 'rose-gold', 'burgundy'].includes(sealType) && (
-                        <div>
-                          <label className="block text-sm font-semibold mb-1.5 text-slate-700">Mühür Mum Rengi</label>
-                          <div className="flex items-center gap-4">
-                            <input type="color" value={sealColor} onChange={e => setSealColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
-                            <span className="text-slate-500 font-mono text-sm">{sealColor}</span>
-                            <span className="text-xs text-slate-400 ml-2">(Mühürün 3D mum rengi)</span>
-                          </div>
-                        </div>
-                      )}
+                    <div className="mt-3 p-3.5 bg-rose-50/50 border border-rose-100 rounded-xl text-left">
+                      <span className="text-slate-600 text-xs font-semibold leading-relaxed block">
+                        ✨ Giriş tasarımı aktif. Animasyon tarzını yukarıdaki <strong>2. Şablon & Tema Seçimi &rarr; 2. Giriş Animasyon Tasarımı</strong> bölümünden tek tıkla seçebilirsiniz. Zarf, mühür modeli, arka plan parıltıları ve 3D efektler seçtiğiniz tasarıma göre otomatik yüklenir.
+                      </span>
                     </div>
                   )}
                 </div>
