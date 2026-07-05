@@ -24,6 +24,7 @@ export default function RsvpModal({
   const [guestName, setGuestName] = useState('');
   const [isAttending, setIsAttending] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState<number>(1);
+  const [childCount, setChildCount] = useState<number>(0);
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -41,6 +42,7 @@ export default function RsvpModal({
         guest_name: guestName,
         is_attending: isAttending,
         guest_count: isAttending ? guestCount : 0,
+        child_count: isAttending ? childCount : 0,
         message: message
       }
     ]);
@@ -59,6 +61,7 @@ export default function RsvpModal({
             guest_name: guestName,
             is_attending: isAttending,
             guest_count: isAttending ? guestCount : 0,
+            child_count: isAttending ? childCount : 0,
             message: message
           })
         });
@@ -135,19 +138,35 @@ export default function RsvpModal({
               </div>
 
               {isAttending === true && (
-                <div className="animate-in slide-in-from-top-2 fade-in duration-200">
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Kaç Kişi Katılacaksınız?</label>
-                  <select 
-                    value={guestCount} 
-                    onChange={e => setGuestCount(Number(e.target.value))}
-                    className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none"
-                  >
-                    <option value={1}>1 Kişi</option>
-                    <option value={2}>2 Kişi</option>
-                    <option value={3}>3 Kişi</option>
-                    <option value={4}>4 Kişi</option>
-                    <option value={5}>5 Kişi (veya daha fazla)</option>
-                  </select>
+                <div className="grid grid-cols-2 gap-4 animate-in slide-in-from-top-2 fade-in duration-200">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Yetişkin Sayısı</label>
+                    <select 
+                      value={guestCount} 
+                      onChange={e => setGuestCount(Number(e.target.value))}
+                      className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none"
+                    >
+                      <option value={1}>1 Yetişkin</option>
+                      <option value={2}>2 Yetişkin</option>
+                      <option value={3}>3 Yetişkin</option>
+                      <option value={4}>4 Yetişkin</option>
+                      <option value={5}>5 Yetişkin +</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Çocuk Sayısı</label>
+                    <select 
+                      value={childCount} 
+                      onChange={e => setChildCount(Number(e.target.value))}
+                      className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none"
+                    >
+                      <option value={0}>Çocuk Yok</option>
+                      <option value={1}>1 Çocuk</option>
+                      <option value={2}>2 Çocuk</option>
+                      <option value={3}>3 Çocuk</option>
+                      <option value={4}>4 Çocuk</option>
+                    </select>
+                  </div>
                 </div>
               )}
 

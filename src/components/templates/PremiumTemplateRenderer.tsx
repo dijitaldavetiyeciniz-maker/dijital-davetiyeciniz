@@ -143,6 +143,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
           .eq('is_attending', true)
           .not('message', 'is', null)
           .neq('message', '')
+          .neq('is_approved', false)
           .order('created_at', { ascending: false });
 
         if (data && !error) {
@@ -370,7 +371,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
       <CountdownTimer 
         targetDate={wedding.wedding_date} 
         primaryColor={primaryColor} 
-        styleType={config.textColorMode === 'light' ? 'neon' : 'glass'} 
+        styleType={wedding.countdown_style || (config.textColorMode === 'light' ? 'neon' : 'glass')} 
       />
     </div>
   );
@@ -406,16 +407,55 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         )}
         
         {wedding.google_maps_url && (
-          <a 
-            href={wedding.google_maps_url} 
-            target="_blank" 
-            rel="noreferrer"
-            className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold hover:underline"
-            style={{ color: primaryColor }}
-          >
-            <Navigation className="w-3.5 h-3.5" />
-            Haritada Gör
-          </a>
+          <div className="mt-4 w-full flex flex-col gap-2">
+            <span className="text-[10px] uppercase tracking-widest opacity-60 text-center mb-1">Yol Tarifi Al</span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 px-2 w-full">
+              <a 
+                href={wedding.google_maps_url} 
+                target="_blank" 
+                rel="noreferrer"
+                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border text-[11px] font-bold transition-all hover:scale-102 hover:shadow-xs"
+                style={{ 
+                  borderColor: `${primaryColor}30`,
+                  backgroundColor: textIsLight ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.03)',
+                  color: textColor
+                }}
+              >
+                <Navigation className="w-3.5 h-3.5" style={{ color: primaryColor }} />
+                <span>Google Harita</span>
+              </a>
+              <a 
+                href={`https://maps.apple.com/?q=${encodeURIComponent(wedding.venue_name || 'Düğün Mekanı')}`} 
+                target="_blank" 
+                rel="noreferrer"
+                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border text-[11px] font-bold transition-all hover:scale-102 hover:shadow-xs"
+                style={{ 
+                  borderColor: `${primaryColor}30`,
+                  backgroundColor: textIsLight ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.03)',
+                  color: textColor
+                }}
+              >
+                <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 170 170" fill="currentColor" style={{ color: primaryColor }}>
+                  <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.34.13-9.14-1.92-14.38-6.14-3.57-2.92-7.55-7.79-11.96-14.59-4.83-7.58-8.8-16.27-11.92-26.06-3.12-9.79-4.68-19.12-4.68-28 0-14.18 3.86-25.59 11.58-34.25 7.73-8.66 17.2-13 28.43-13 5.46 0 11.39 1.5 17.79 4.49 6.4 2.99 10.97 4.49 13.72 4.49 2.5 0 6.64-1.35 12.42-4.04 5.78-2.69 11.45-3.95 17-3.79 16.2.63 28.53 6.94 36.98 18.91-14.49 8.76-21.57 20.89-21.22 36.4.35 12.16 4.96 22.28 13.84 30.38 8.88 8.1 19.34 12.44 31.42 13.04.47 5 .94 9.5 1.42 13.5zM119.22 19.25c0 7.82-2.8 15.11-8.41 21.88-5.61 6.77-12.63 10.87-21.05 12.29.12-1.3.18-2.6.18-3.9 0-7.39 2.76-14.54 8.27-21.46 5.51-6.92 12.38-11.23 20.61-12.92 0 .5.1.7.1 1.2 0 1.25.1 2.37.3 2.91z"/>
+                </svg>
+                <span>Apple Harita</span>
+              </a>
+              <a 
+                href={`https://yandex.com.tr/maps/?text=${encodeURIComponent((wedding.venue_name || '') + ' ' + (wedding.venue_address || ''))}`} 
+                target="_blank" 
+                rel="noreferrer"
+                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl border text-[11px] font-bold transition-all hover:scale-102 hover:shadow-xs"
+                style={{ 
+                  borderColor: `${primaryColor}30`,
+                  backgroundColor: textIsLight ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.03)',
+                  color: textColor
+                }}
+              >
+                <span className="text-[13px] font-black italic tracking-tighter shrink-0" style={{ color: primaryColor }}>Y</span>
+                <span>Yandex Harita</span>
+              </a>
+            </div>
+          </div>
         )}
       </div>
     </div>

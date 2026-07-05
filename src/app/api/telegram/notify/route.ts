@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 
 export async function POST(request: Request) {
   try {
-    const { wedding_id, guest_name, is_attending, guest_count, message } = await request.json();
+    const { wedding_id, guest_name, is_attending, guest_count, child_count = 0, message } = await request.json();
 
     if (!wedding_id || !guest_name) {
       return NextResponse.json({ error: 'Eksik bilgi' }, { status: 400 });
@@ -30,10 +30,11 @@ export async function POST(request: Request) {
 
     // 2. Telegram Mesajını Hazırla
     const statusText = is_attending ? '✅ KATILACAK' : '❌ KATILAMAYACAK';
-    const countText = is_attending ? `\n👥 Kişi Sayısı: ${guest_count}` : '';
+    const countText = is_attending ? `\n👥 Yetişkin Sayısı: ${guest_count}` : '';
+    const childText = is_attending && child_count > 0 ? `\n👶 Çocuk Sayısı: ${child_count}` : '';
     const msgText = message ? `\n💬 Mesaj: "${message}"` : '';
     
-    const telegramMessage = `🎉 *YENİ LCV YANITI!*\n\n👤 *İsim:* ${guest_name}\n📌 *Durum:* ${statusText}${countText}${msgText}\n\n💍 Davetiye: ${wedding.bride_name} ${wedding.groom_name ? '& ' + wedding.groom_name : ''}`;
+    const telegramMessage = `🎉 *YENİ LCV YANITI!*\n\n👤 *İsim:* ${guest_name}\n📌 *Durum:* ${statusText}${countText}${childText}${msgText}\n\n💍 Davetiye: ${wedding.bride_name} ${wedding.groom_name ? '& ' + wedding.groom_name : ''}`;
 
     // 3. Telegram API'ye Gönder
     const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;

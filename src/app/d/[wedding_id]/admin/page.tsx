@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, use } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2 } from 'lucide-react';
+import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2, Smartphone, Tablet, Trash2, Check, RefreshCw, Volume2, VolumeX, Eye } from 'lucide-react';
 import { getRandomQuote } from '@/lib/aiQuotes';
 
 function getTemplatePreset(id: string) {
@@ -157,6 +157,15 @@ export default function CoupleAdminPage({
   const [showCountdown, setShowCountdown] = useState(true);
   const [backgroundAnimation, setBackgroundAnimation] = useState('none');
   
+  // Premium UI/UX States
+  const [countdownStyle, setCountdownStyle] = useState('glass');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isAudioUploading, setIsAudioUploading] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [previewDevice, setPreviewDevice] = useState<'iphone' | 'android' | 'tablet'>('iphone');
+  const [activeRsvpSubTab, setActiveRsvpSubTab] = useState<'list' | 'comments'>('list');
+  const [templateCategory, setTemplateCategory] = useState('all');
+  
   // Genel Bilgiler State
   const [eventType, setEventType] = useState('Düğün');
   const [brideName, setBrideName] = useState('');
@@ -233,6 +242,8 @@ export default function CoupleAdminPage({
       if (weddingData.show_comments !== undefined && weddingData.show_comments !== null) setShowComments(weddingData.show_comments);
       if (weddingData.show_countdown !== undefined && weddingData.show_countdown !== null) setShowCountdown(weddingData.show_countdown);
       if (weddingData.background_animation) setBackgroundAnimation(weddingData.background_animation);
+      if (weddingData.countdown_style) setCountdownStyle(weddingData.countdown_style);
+      if (weddingData.is_dark_mode !== undefined && weddingData.is_dark_mode !== null) setIsDarkMode(weddingData.is_dark_mode);
       
       // Genel Bilgileri Doldur
       if (weddingData.event_type) setEventType(weddingData.event_type);
@@ -258,7 +269,7 @@ export default function CoupleAdminPage({
     if (loading || !wedding?.id) return;
 
     const timer = setTimeout(async () => {
-      await supabase
+      const { error } = await supabase
         .from('weddings')
         .update({
           template_id: templateId,
@@ -280,9 +291,16 @@ export default function CoupleAdminPage({
           show_rsvp: showRsvp,
           show_comments: showComments,
           show_countdown: showCountdown,
-          background_animation: backgroundAnimation
+          background_animation: backgroundAnimation,
+          countdown_style: countdownStyle,
+          is_dark_mode: isDarkMode
         })
         .eq('id', wedding.id);
+
+      if (!error) {
+        setToastMessage('Değişiklikler kaydedildi...');
+        setTimeout(() => setToastMessage(''), 2000);
+      }
 
       if (typeof window !== 'undefined') {
         window.sessionStorage.removeItem('preview_envelope_opened');
@@ -296,7 +314,7 @@ export default function CoupleAdminPage({
     envelopeBgColor, envelopeFlapType, sealType, sealColor, 
     entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
     quoteFontFamily, quoteFontSize, showPhotos, showRsvp, showComments, showCountdown,
-    backgroundAnimation
+    backgroundAnimation, countdownStyle, isDarkMode
   ]);
 
   async function fetchRsvps(weddingId: string) {
@@ -306,6 +324,22 @@ export default function CoupleAdminPage({
       .eq('wedding_id', weddingId)
       .order('created_at', { ascending: false });
     if (data) setRsvps(data);
+  }
+
+  async function toggleMessageApproval(rsvpId: string, approved: boolean) {
+    const { error } = await supabase
+      .from('rsvps')
+      .update({ is_approved: approved })
+      .eq('id', rsvpId);
+
+    if (!error) {
+      setRsvps(prev => prev.map(r => r.id === rsvpId ? { ...r, is_approved: approved } : r));
+      setToastMessage(approved ? 'Mesaj onaylandı.' : 'Mesaj kaldırıldı.');
+      setTimeout(() => setToastMessage(''), 2500);
+      setPreviewKey(Date.now());
+    } else {
+      alert("Hata oluştu: " + error.message);
+    }
   }
 
   function handleLogin(e: React.FormEvent) {
@@ -356,7 +390,9 @@ export default function CoupleAdminPage({
         show_rsvp: showRsvp,
         show_comments: showComments,
         show_countdown: showCountdown,
-        background_animation: backgroundAnimation
+        background_animation: backgroundAnimation,
+        countdown_style: countdownStyle,
+        is_dark_mode: isDarkMode
       })
       .eq('id', wedding.id);
       
@@ -394,9 +430,9 @@ export default function CoupleAdminPage({
   const handleExportCSV = () => {
     if (rsvps.length === 0) return;
     const BOM = '\uFEFF';
-    const headers = 'Davetli Adı,Durum,Kişi Sayısı,Özel Mesaj\n';
+    const headers = 'Davetli Adı,Durum,Yetişkin Sayısı,Çocuk Sayısı,Özel Mesaj\n';
     const csvContent = rsvps.map(r => 
-      `"${(r.guest_name || '').replace(/"/g, '""')}","${r.is_attending ? 'Katılıyor' : 'Katılamıyor'}",${r.is_attending ? r.guest_count : 0},"${(r.message || '').replace(/"/g, '""')}"`
+      `"${(r.guest_name || '').replace(/"/g, '""')}","${r.is_attending ? 'Katılıyor' : 'Katılamıyor'}",${r.is_attending ? r.guest_count : 0},${r.is_attending ? (r.child_count || 0) : 0},"${(r.message || '').replace(/"/g, '""')}"`
     ).join('\n');
     
     const blob = new Blob([BOM + headers + csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -572,6 +608,42 @@ export default function CoupleAdminPage({
     setIsUploading(false);
   }
 
+  async function handleAudioUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files || e.target.files.length === 0) return;
+    
+    if (!telegramChatId) {
+      alert("Lütfen önce Telegram bağlantısını kurun.");
+      return;
+    }
+
+    const file = e.target.files[0];
+    setIsAudioUploading(true);
+
+    const formData = new FormData();
+    formData.append('audio', file);
+    formData.append('wedding_id', wedding.id);
+
+    try {
+      const res = await fetch('/api/telegram/uploadAudio', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        const proxyUrl = `/api/image?file_id=${data.file_id}&wedding_id=${wedding.id}`;
+        setMusicUrl(proxyUrl);
+        alert("Müzik dosyası başarıyla Telegram'a yüklendi! Lütfen 'Kaydet' butonuna basmayı unutmayın.");
+      } else {
+        alert("Yükleme başarısız: " + data.error);
+      }
+    } catch (err) {
+      alert("Bir hata oluştu.");
+    }
+    
+    setIsAudioUploading(false);
+  }
+
   if (loading) return <div className="p-10 text-center">Yükleniyor...</div>;
   if (!wedding) return <div className="p-10 text-center">Böyle bir düğün bulunamadı.</div>;
 
@@ -649,86 +721,189 @@ export default function CoupleAdminPage({
 
         {activeTab === 'rsvps' && (
           <div>
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div className="w-12 h-12 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center">
-                  <Users className="w-6 h-6" />
+            {/* LCV Premium İstatistik Panel Kartları */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <div className="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center shrink-0">
+                  <Users className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-slate-500 text-sm">Kesin Gelecek Kişi Sayısı</div>
-                  <div className="text-2xl font-bold">{totalGuests} Kişi</div>
+                  <div className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Toplam Cevap</div>
+                  <div className="text-xl font-bold text-slate-800">{rsvps.length} Yanıt</div>
                 </div>
               </div>
-              
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center">
-                  <MessageSquare className="w-6 h-6" />
+
+              <div className="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 flex items-center gap-3">
+                <div className="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center shrink-0">
+                  <Check className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-slate-500 text-sm">Gelen LCV Yanıtı</div>
-                  <div className="text-2xl font-bold">{rsvps.length} Yanıt</div>
+                  <div className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Gelecek Yetişkin</div>
+                  <div className="text-xl font-bold text-slate-800">{totalGuests} Kişi</div>
+                </div>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 flex items-center gap-3">
+                <div className="w-10 h-10 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center shrink-0">
+                  <span>👶</span>
+                </div>
+                <div>
+                  <div className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Gelecek Çocuk</div>
+                  <div className="text-xl font-bold text-slate-800">
+                    {rsvps.filter(r => r.is_attending).reduce((sum, curr) => sum + (curr.child_count || 0), 0)} Çocuk
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl shadow-xs border border-slate-100 flex items-center gap-3">
+                <div className="w-10 h-10 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center shrink-0">
+                  <Trash2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Katılamayanlar</div>
+                  <div className="text-xl font-bold text-slate-800">
+                    {rsvps.filter(r => !r.is_attending).length} Davetli
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* LCV guest list search & filters */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
-              <div className="flex gap-2 w-full sm:w-auto">
-                <input 
-                  type="text" 
-                  value={searchTerm} 
-                  onChange={e => setSearchTerm(e.target.value)} 
-                  placeholder="Davetli ara..." 
-                  className="border px-4 py-2 rounded-xl text-sm w-full sm:w-64 bg-white"
-                />
-                <select 
-                  value={filterStatus} 
-                  onChange={e => setFilterStatus(e.target.value as any)} 
-                  className="border px-4 py-2 rounded-xl text-sm bg-white"
-                >
-                  <option value="all">Tüm Liste</option>
-                  <option value="attending">Katılanlar</option>
-                  <option value="not-attending">Katılamayanlar</option>
-                </select>
-              </div>
-              <button 
-                onClick={handleExportCSV} 
-                className="w-full sm:w-auto px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white text-sm font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
+            {/* Alt Sekmeler (Sub Tabs) */}
+            <div className="flex border-b border-slate-200 mb-6">
+              <button
+                type="button"
+                onClick={() => setActiveRsvpSubTab('list')}
+                className={`pb-2 px-4 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${activeRsvpSubTab === 'list' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
               >
-                <Save className="w-4 h-4" /> Excel / CSV İndir
+                👥 Katılım Listesi
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveRsvpSubTab('comments')}
+                className={`pb-2 px-4 text-xs font-bold uppercase tracking-wider border-b-2 transition-all ${activeRsvpSubTab === 'comments' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
+              >
+                ✍️ Anı Defteri Onayı ({rsvps.filter(r => r.message && r.message.trim() !== '').length})
               </button>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-              <table className="w-full text-left">
-                <thead className="bg-slate-50 border-b border-slate-200">
-                  <tr>
-                    <th className="p-4 font-medium text-slate-500">İsim Soyisim</th>
-                    <th className="p-4 font-medium text-slate-500">Durum</th>
-                    <th className="p-4 font-medium text-slate-500">Kişi</th>
-                    <th className="p-4 font-medium text-slate-500">Mesaj</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredRsvps.length === 0 && (
-                    <tr><td colSpan={4} className="p-8 text-center text-slate-500">Eşleşen LCV yanıtı bulunamadı.</td></tr>
-                  )}
-                  {filteredRsvps.map(rsvp => (
-                    <tr key={rsvp.id} className="border-b border-slate-100 last:border-0">
-                      <td className="p-4 font-medium">{rsvp.guest_name}</td>
-                      <td className="p-4">
-                        {rsvp.is_attending ? 
-                          <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-sm font-medium">Katılacak</span> : 
-                          <span className="bg-rose-100 text-rose-700 px-3 py-1 rounded-full text-sm font-medium">Katılamayacak</span>
-                        }
-                      </td>
-                      <td className="p-4 text-slate-600">{rsvp.is_attending ? rsvp.guest_count : '-'}</td>
-                      <td className="p-4 text-slate-500 text-sm">{rsvp.message || '-'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            {activeRsvpSubTab === 'list' ? (
+              <>
+                {/* LCV guest list search & filters */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-6">
+                  <div className="flex gap-2 w-full sm:w-auto">
+                    <input 
+                      type="text" 
+                      value={searchTerm} 
+                      onChange={e => setSearchTerm(e.target.value)} 
+                      placeholder="Davetli ara..." 
+                      className="border px-4 py-2 rounded-xl text-sm w-full sm:w-64 bg-white"
+                    />
+                    <select 
+                      value={filterStatus} 
+                      onChange={e => setFilterStatus(e.target.value as any)} 
+                      className="border px-4 py-2 rounded-xl text-sm bg-white"
+                    >
+                      <option value="all">Tüm Liste</option>
+                      <option value="attending">Katılanlar</option>
+                      <option value="not-attending">Katılamayanlar</option>
+                    </select>
+                  </div>
+                  <button 
+                    onClick={handleExportCSV} 
+                    className="w-full sm:w-auto px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white text-sm font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
+                  >
+                    <Save className="w-4 h-4" /> Excel / CSV İndir
+                  </button>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                  <table className="w-full text-left">
+                    <thead className="bg-slate-50 border-b border-slate-200">
+                      <tr>
+                        <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider">İsim Soyisim</th>
+                        <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider">Durum</th>
+                        <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider text-center">Yetişkin</th>
+                        <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider text-center">Çocuk</th>
+                        <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider">Tebrik Notu</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredRsvps.length === 0 && (
+                        <tr><td colSpan={5} className="p-8 text-center text-slate-500">Eşleşen LCV yanıtı bulunamadı.</td></tr>
+                      )}
+                      {filteredRsvps.map(rsvp => (
+                        <tr key={rsvp.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50">
+                          <td className="p-4 font-medium text-slate-800">{rsvp.guest_name}</td>
+                          <td className="p-4">
+                            {rsvp.is_attending ? 
+                              <span className="bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1 rounded-full text-xs font-semibold">Katılacak</span> : 
+                              <span className="bg-rose-50 text-rose-700 border border-rose-100 px-3 py-1 rounded-full text-xs font-semibold">Katılamayacak</span>
+                            }
+                          </td>
+                          <td className="p-4 text-slate-700 text-center font-bold">{rsvp.is_attending ? rsvp.guest_count : '-'}</td>
+                          <td className="p-4 text-slate-700 text-center font-bold">{rsvp.is_attending ? (rsvp.child_count || 0) : '-'}</td>
+                          <td className="p-4 text-slate-500 text-xs italic truncate max-w-xs">{rsvp.message || '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            ) : (
+              // Tebrik Mesajları Onaylama & Düzenleme (Anı Defteri)
+              <div className="space-y-4">
+                {rsvps.filter(r => r.message && r.message.trim() !== '').length === 0 ? (
+                  <div className="bg-white p-8 text-center rounded-2xl border border-slate-200 text-slate-400 text-xs">
+                    Henüz misafir tebrik mesajı bırakılmamış.
+                  </div>
+                ) : (
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {rsvps.filter(r => r.message && r.message.trim() !== '').map(rsvp => {
+                      const approved = rsvp.is_approved !== false;
+                      return (
+                        <div key={rsvp.id} className="bg-white p-5 rounded-2xl border border-slate-200 flex flex-col justify-between gap-4 shadow-xs relative">
+                          <div className="absolute top-4 right-4">
+                            {approved ? (
+                              <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full text-[9px] font-bold">Davetiyede Yayında</span>
+                            ) : (
+                              <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full text-[9px] font-bold">Gizlendi</span>
+                            )}
+                          </div>
+                          <div>
+                            <div className="font-bold text-xs text-slate-800">{rsvp.guest_name}</div>
+                            <div className="text-[9px] text-slate-400 mt-0.5">
+                              {new Date(rsvp.created_at).toLocaleDateString('tr-TR')}
+                            </div>
+                            <p className="text-xs italic text-slate-600 mt-3 leading-relaxed">
+                              "{rsvp.message}"
+                            </p>
+                          </div>
+                          <div className="flex gap-2 justify-end border-t pt-3 border-slate-100">
+                            {approved ? (
+                              <button
+                                type="button"
+                                onClick={() => toggleMessageApproval(rsvp.id, false)}
+                                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold rounded-lg transition-all flex items-center gap-1"
+                              >
+                                <Trash2 className="w-3 h-3" /> Davetiyeden Kaldır
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => toggleMessageApproval(rsvp.id, true)}
+                                className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-bold rounded-lg shadow-sm transition-all flex items-center gap-1"
+                              >
+                                <Check className="w-3 h-3" /> Onayla ve Yayınla
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -864,24 +1039,44 @@ export default function CoupleAdminPage({
               </div>
 
               {/* BÖLÜM 2: TEMA SEÇİMİ */}
-              <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">2. Şablon & Tema Seçimi</h3>
+              <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">2. Şablon Seçimi</h3>
 
-              {/* UNIFIED TEMPLATE GRID — 50 templates + DB custom themes */}
               <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">
-                  Şablon Seç <span className="text-slate-400 font-normal text-xs">(Renk, yazı tipi ve tasarım otomatik uygulanır — istersen sonradan değiştirebilirsin)</span>
-                </label>
+                {/* Category Tabs */}
+                <div className="flex gap-1.5 overflow-x-auto pb-2 mb-4 scrollbar-thin">
+                  {[
+                    { id: 'all', label: 'Tüm Şablonlar' },
+                    { id: 'wedding', label: 'Düğün' },
+                    { id: 'engagement', label: 'Nişan' },
+                    { id: 'henna', label: 'Kına' },
+                    { id: 'babyshower', label: 'Baby Shower' },
+                    { id: 'birthday', label: 'Doğum Günü' },
+                    { id: 'corporate', label: 'Kurumsal' },
+                    { id: 'minimal', label: 'Minimal' },
+                    { id: 'luxury', label: 'Lüks' },
+                    { id: 'bohemian', label: 'Bohem' }
+                  ].map(cat => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setTemplateCategory(cat.id)}
+                      className={`px-3 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap transition-all ${templateCategory === cat.id ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
 
                 {/* DB Custom Themes row (if any) */}
-                {themes.length > 0 && (
+                {themes.length > 0 && templateCategory === 'all' && (
                   <div className="mb-3">
-                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">⭐ Özel Hazır Şablonlar</p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">⭐ Kaydedilen Özel Şablonlarınız</p>
                     <div className="max-h-40 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {themes.map(theme => (
                         <button
                           key={theme.id}
                           onClick={() => applyPreset(theme)}
-                          className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white ${templateId === theme.template_id && primaryColor === theme.primary_color ? 'border-blue-500 shadow-md ring-2 ring-blue-100' : 'border-slate-200'}`}
+                          className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white ${templateId === theme.template_id && primaryColor === theme.primary_color ? 'border-rose-500 bg-white shadow-xs ring-2 ring-rose-100' : 'border-slate-200'}`}
                         >
                           <div className="w-6 h-6 rounded-full mb-1 shadow-inner" style={{ backgroundColor: theme.primary_color }}></div>
                           <span className="text-[10px] font-bold text-slate-700 text-center line-clamp-1">{theme.name}</span>
@@ -891,8 +1086,7 @@ export default function CoupleAdminPage({
                   </div>
                 )}
 
-                {/* All 50 premium templates as clickable cards */}
-                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">🎨 50 Premium Şablon</p>
+                {/* Filtered 50 templates */}
                 <div className="max-h-72 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {(() => {
                     const templateNames = [
@@ -910,8 +1104,29 @@ export default function CoupleAdminPage({
                       "Monokrom Çizgi", "Eski Mektup", "Lüks Mermer", "Kır Düğünü",
                       "Minimal Çizgi", "Asil Bordo"
                     ];
-                    return Array.from({ length: 50 }, (_, i) => {
+
+                    const isTemplateInCategory = (num: number, category: string) => {
+                      if (category === 'all') return true;
+                      const map: Record<string, number[]> = {
+                        wedding: [1, 4, 10, 11, 13, 17, 21, 22, 26, 29, 30, 32, 35, 39, 46, 48],
+                        engagement: [5, 9, 12, 14, 24, 32, 34, 40, 47],
+                        henna: [12, 27, 42, 50],
+                        babyshower: [6, 16, 31, 42, 44],
+                        birthday: [2, 7, 18, 25, 36, 41, 43, 44, 49],
+                        corporate: [2, 8, 15, 19, 23, 28, 37, 43, 45],
+                        minimal: [3, 5, 7, 9, 17, 19, 20, 21, 22, 23, 24, 28, 31, 33, 37, 38, 39, 45, 49],
+                        luxury: [1, 4, 8, 11, 15, 25, 27, 30, 36, 40, 47, 50],
+                        bohemian: [3, 6, 10, 13, 14, 16, 18, 20, 26, 29, 33, 34, 35, 38, 41, 46, 48]
+                      };
+                      return map[category]?.includes(num) || false;
+                    };
+
+                    let renderedCount = 0;
+                    const buttons = Array.from({ length: 50 }, (_, i) => {
                       const num = i + 1;
+                      if (!isTemplateInCategory(num, templateCategory)) return null;
+                      renderedCount++;
+
                       const tId = `template${num}`;
                       const preset = getTemplatePreset(tId);
                       const isActive = templateId === tId;
@@ -922,7 +1137,7 @@ export default function CoupleAdminPage({
                             setTemplateId(tId);
                             applyPreset(preset);
                           }}
-                          className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white hover:shadow-md active:scale-95 ${isActive ? 'border-blue-500 shadow-md ring-2 ring-blue-100 bg-white' : 'border-slate-200'}`}
+                          className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white hover:shadow-xs active:scale-95 ${isActive ? 'border-rose-500 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200'}`}
                         >
                           <div className="w-full h-5 rounded-md mb-1 shadow-inner flex items-center justify-center gap-1 overflow-hidden">
                             <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
@@ -930,15 +1145,53 @@ export default function CoupleAdminPage({
                           </div>
                           <span className="text-[9px] font-bold text-slate-700 text-center leading-tight">{templateNames[i]}</span>
                           <span className="text-[8px] text-slate-400">#{num}</span>
-                          {isActive && <span className="text-[8px] text-blue-600 font-bold mt-0.5">✓ Seçili</span>}
+                          {isActive && <span className="text-[8px] text-rose-600 font-bold mt-0.5">✓ Seçili</span>}
                         </button>
                       );
                     });
+
+                    if (renderedCount === 0) {
+                      return <div className="col-span-full py-8 text-center text-xs text-slate-400">Bu kategoride şablon bulunmamaktadır.</div>;
+                    }
+                    return buttons;
                   })()}
                 </div>
               </div>
 
               <div className="space-y-6">
+                {/* Font Pairs Presets */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">⭐ Hazır Font Çiftleri</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+                    {[
+                      { name: '💍 Zarif Düğün', title: 'Great Vibes', body: 'Cormorant Garamond', label: 'Klasik & Şık' },
+                      { name: '🌿 Bohem Kır', title: 'Dancing Script', body: 'Lato', label: 'Samimi & Doğal' },
+                      { name: '👑 Kraliyet', title: 'Cinzel', body: 'Montserrat', label: 'Asil & Modern' },
+                      { name: '🌸 Romantik', title: 'Parisienne', body: 'Playfair Display', label: 'Zarif & Estetik' },
+                      { name: '⚡ Modern', title: 'Outfit', body: 'Inter', label: 'Sade & Minimalist' },
+                      { name: '📜 Vintage', title: 'Pinyon Script', body: 'Raleway', label: 'Nostaljik El Yazısı' }
+                    ].map(pair => {
+                      const isActive = (namesFontFamily === pair.title || (!namesFontFamily && fontFamily === pair.title)) && fontFamily === pair.body;
+                      return (
+                        <button
+                          key={pair.name}
+                          type="button"
+                          onClick={() => {
+                            setNamesFontFamily(pair.title);
+                            setFontFamily(pair.body);
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all hover:bg-slate-50 active:scale-95 ${isActive ? 'border-rose-500 bg-rose-50/10 ring-2 ring-rose-100' : 'border-slate-200 bg-white'}`}
+                        >
+                          <div className="text-[10px] font-bold text-slate-800 line-clamp-1">{pair.name}</div>
+                          <div className="text-[8px] text-slate-400 mt-0.5">{pair.label}</div>
+                          <div className="text-[11px] mt-1.5 line-clamp-1 font-semibold" style={{ fontFamily: `"${pair.title}", cursive` }}>Gelin & Damat</div>
+                          <div className="text-[9px] opacity-75 line-clamp-1" style={{ fontFamily: `"${pair.body}", sans-serif` }}>Tarih ve detaylar</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                    <div>
                     <label className="block text-sm font-medium mb-2">
@@ -1029,6 +1282,45 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
+                {/* Color Palettes Presets */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">🎨 Hazır Renk Paletleri</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+                    {[
+                      { name: '🍂 Bohem Toprak', primary: '#8c6239', text: '#4a3728', bg: 'paper-kraft', label: 'Toprak Tonları' },
+                      { name: '🌌 Gece Mavisi & Altın', primary: '#dfc384', text: '#f8fafc', bg: 'velvet-navy', label: 'Lüks Kontrast' },
+                      { name: '🌹 Gül Kurusu', primary: '#be123c', text: '#4c0519', bg: 'solid-blush', label: 'Zarif Pembe' },
+                      { name: '🌲 Zarif Zümrüt', primary: '#10b981', text: '#064e3b', bg: 'marble-green', label: 'Doğal & Şık' },
+                      { name: '🍇 Mürdüm & Gümüş', primary: '#94a3b8', text: '#fdf4ff', bg: 'solid-plum', label: 'Monokrom Pastel' },
+                      { name: '🍷 Klasik Aşk', primary: '#9f1239', text: '#ffe4e6', bg: 'solid-crimson', label: 'Asil Bordo' }
+                    ].map(palette => {
+                      const isActive = primaryColor === palette.primary && textColor === palette.text && envelopeBgColor === palette.bg;
+                      return (
+                        <button
+                          key={palette.name}
+                          type="button"
+                          onClick={() => {
+                            setPrimaryColor(palette.primary);
+                            setTextColor(palette.text);
+                            setEnvelopeBgColor(palette.bg);
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all hover:bg-slate-50 active:scale-95 flex flex-col justify-between ${isActive ? 'border-rose-500 bg-rose-50/10 ring-2 ring-rose-100' : 'border-slate-200 bg-white'}`}
+                        >
+                          <div>
+                            <div className="text-[10px] font-bold text-slate-800 line-clamp-1">{palette.name}</div>
+                            <div className="text-[8px] text-slate-400 mt-0.5">{palette.label}</div>
+                          </div>
+                          <div className="flex gap-1 mt-2.5">
+                            <div className="w-4 h-4 rounded-full border border-black/5 shadow-inner" style={{ backgroundColor: palette.primary }} title="Ana Renk"></div>
+                            <div className="w-4 h-4 rounded-full border border-black/5 shadow-inner" style={{ backgroundColor: palette.text }} title="Metin Rengi"></div>
+                            <div className="w-4 h-4 rounded-full border border-black/5 shadow-inner animate-pulse" style={{ backgroundColor: '#e2e8f0' }} title="Arka Plan"></div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Ana Renk (Tasarım)</label>
@@ -1044,6 +1336,43 @@ export default function CoupleAdminPage({
                       <span className="text-slate-500 font-mono text-sm">{textColor}</span>
                     </div>
                   </div>
+                </div>
+
+                {/* Dark Mode Switcher */}
+                <div className="mb-4">
+                  <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                    <div>
+                      <div className="font-bold text-slate-850 text-xs flex items-center gap-1.5">
+                        <span>🌙</span> Gece Modu (Koyu Tema)
+                      </div>
+                      <div className="text-[10px] text-slate-500 mt-0.5">Davetiyeyi siyah, altın ve koyu tonlara uyarla.</div>
+                    </div>
+                    <div className="relative shrink-0">
+                      <input 
+                        type="checkbox" 
+                        className="sr-only" 
+                        checked={isDarkMode} 
+                        onChange={e => {
+                          const val = e.target.checked;
+                          setIsDarkMode(val);
+                          if (val) {
+                            setPrimaryColor('#dfc384');
+                            setTextColor('#f8fafc');
+                            setEnvelopeBgColor('marble-black');
+                            setEnvelopeColor('#111111');
+                          } else {
+                            const preset = getTemplatePreset(templateId);
+                            setPrimaryColor(preset.primary_color);
+                            setTextColor(preset.text_color || '#1e293b');
+                            setEnvelopeBgColor(preset.envelope_bg_color || 'solid-ivory');
+                            setEnvelopeColor(preset.envelope_color || '#e6d5c3');
+                          }
+                        }} 
+                      />
+                      <div className={`block w-10 h-5 rounded-full transition-colors ${isDarkMode ? 'bg-indigo-600' : 'bg-slate-300'}`}></div>
+                      <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${isDarkMode ? 'transform translate-x-5' : ''}`}></div>
+                    </div>
+                  </label>
                 </div>
 
                 <div>
@@ -1290,23 +1619,68 @@ export default function CoupleAdminPage({
                     <Music className="w-5 h-5 text-rose-500" /> Arka Plan Müzik Ayarları
                   </h3>
                   <div className="space-y-4">
+                    {/* Audio Player Previews & Uploads */}
+                    <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-4 text-slate-700 space-y-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-500 shrink-0">
+                          <Music className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-bold text-slate-800 truncate">
+                            {musicUrl ? (musicUrl.includes('file_id=') ? 'Yüklenen Özel MP3' : musicUrl.substring(musicUrl.lastIndexOf('/') + 1)) : 'Müzik Seçilmedi'}
+                          </div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">Arka Plan Müziği</div>
+                        </div>
+                      </div>
+
+                      {/* Custom Audio Uploader using Telegram Proxy */}
+                      <div>
+                        <input 
+                          type="file" 
+                          accept="audio/mpeg,audio/mp3" 
+                          onChange={handleAudioUpload} 
+                          className="hidden" 
+                          id="audio-upload" 
+                          disabled={isAudioUploading} 
+                        />
+                        <label 
+                          htmlFor="audio-upload" 
+                          className="cursor-pointer border border-dashed border-slate-350 hover:bg-slate-100/50 rounded-xl p-3 flex flex-col items-center justify-center gap-1 text-center transition-all"
+                        >
+                          <span className="font-bold text-slate-700 text-xs flex items-center gap-1">
+                            {isAudioUploading ? 'Müzik Yükleniyor...' : '🖥️ Kendi MP3 Dosyanı Yükle'}
+                          </span>
+                          <span className="text-[9px] text-slate-400">Telegram Bot kanalı üzerinden ücretsiz barındırma</span>
+                        </label>
+                      </div>
+                    </div>
+
                     <div>
-                      <label className="block text-sm font-semibold mb-1.5 text-slate-700">Müzik Şarkısı / Melodi Seçimi</label>
+                      <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">🎵 Hazır Enstrümantal Liste</label>
                       <select 
-                        value={musicUrl} 
-                        onChange={e => setMusicUrl(e.target.value)} 
-                        className="w-full border p-2 rounded-lg bg-white text-sm"
+                        value={musicUrl && musicUrl.includes('SoundHelix') ? musicUrl : (musicUrl === '' ? '' : 'custom')} 
+                        onChange={e => {
+                          if (e.target.value !== 'custom') {
+                            setMusicUrl(e.target.value);
+                          }
+                        }} 
+                        className="w-full border p-2.5 rounded-lg bg-white text-sm"
                       >
                         <option value="">Müzik Yok (Sessiz)</option>
-                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">🎵 Romantik Melodi 1</option>
-                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">🎻 Düğün Valsi</option>
-                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">🎸 Yumuşak Akustik</option>
-                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3">🏛️ Klasik Orkestral</option>
-                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3">✨ Neşeli Melodi</option>
-                        <option value="custom">🔗 Özel MP3 Bağlantısı (URL)...</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">🎻 Romantik Vals (Klasik Orkestral)</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">🎹 Aşk Teması (Piyano & Keman)</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">🎸 Kır Düğünü Esintisi (Akustik Gitar)</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3">✨ Rüya Gibi (Duygusal Melodi)</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3">🥁 Masalsı Tören (Hafif Ritmik)</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3">🪵 Gün Batımı (Yumuşak Akustik)</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3">👑 Saray Dansı (Klasik Flüt)</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3">🪐 Sonsuz Aşk (Arp & Piyano)</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3">🌈 Mutlu Yarınlar (Pozitif Melodi)</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3">🌌 Gece Yıldızları (Minimalist Ambient)</option>
+                        <option value="custom">🔗 Özel MP3 / Telegram Proxy (Seçili)</option>
                       </select>
-                      {musicUrl && musicUrl !== '' && musicUrl !== 'custom' && (
-                        <div className="mt-2 flex items-center gap-2">
+                      {musicUrl && musicUrl !== '' && (
+                        <div className="mt-3 bg-white p-2.5 rounded-xl border border-slate-100 flex items-center justify-between gap-3 shadow-xs">
                           <audio controls src={musicUrl} className="w-full h-8 rounded-lg" preload="none" />
                         </div>
                       )}
@@ -1320,9 +1694,9 @@ export default function CoupleAdminPage({
                           value={musicUrl === 'custom' ? '' : musicUrl} 
                           onChange={e => setMusicUrl(e.target.value)} 
                           placeholder="https://örnek.com/muzik.mp3" 
-                          className="w-full border p-2 rounded-lg bg-slate-50 text-xs font-mono" 
+                          className="w-full border p-2.5 rounded-lg bg-slate-50 text-xs font-mono" 
                         />
-                        <p className="text-[10px] text-slate-400 mt-1">Gireceğiniz bağlantının doğrudan bir .mp3 dosyasına gitmesi gerekir.</p>
+                        <p className="text-[10px] text-slate-400 mt-1">Yükleme yapmadıysanız doğrudan bir .mp3 linki de yapıştırabilirsiniz.</p>
                       </div>
                     )}
 
@@ -1390,17 +1764,40 @@ export default function CoupleAdminPage({
                     </label>
 
                     {/* Geri Sayım Sayacı */}
-                    <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
-                      <div>
-                        <div className="font-bold text-slate-800 text-xs">Geri Sayım Sayacı</div>
-                        <div className="text-[10px] text-slate-500 mt-0.5">Etkinlik gününe ve saatine kalan süreyi gösteren geri sayım.</div>
-                      </div>
-                      <div className="relative shrink-0">
-                        <input type="checkbox" className="sr-only" checked={showCountdown} onChange={e => setShowCountdown(e.target.checked)} />
-                        <div className={`block w-10 h-5 rounded-full transition-colors ${showCountdown ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
-                        <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${showCountdown ? 'transform translate-x-5' : ''}`}></div>
-                      </div>
-                    </label>
+                    <div className="space-y-2">
+                      <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                        <div>
+                          <div className="font-bold text-slate-800 text-xs">Geri Sayım Sayacı</div>
+                          <div className="text-[10px] text-slate-500 mt-0.5">Etkinlik gününe ve saatine kalan süreyi gösteren geri sayım.</div>
+                        </div>
+                        <div className="relative shrink-0">
+                          <input type="checkbox" className="sr-only" checked={showCountdown} onChange={e => setShowCountdown(e.target.checked)} />
+                          <div className={`block w-10 h-5 rounded-full transition-colors ${showCountdown ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                          <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${showCountdown ? 'transform translate-x-5' : ''}`}></div>
+                        </div>
+                      </label>
+                      {showCountdown && (
+                        <div className="p-3 bg-white border border-slate-200/60 rounded-xl space-y-2 animate-in slide-in-from-top-2 duration-200">
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sayaç Tasarım Seçeneği</label>
+                          <div className="grid grid-cols-3 gap-2">
+                            {[
+                              { id: 'minimal', label: 'Minimal Çizgisel' },
+                              { id: 'digital', label: 'Klasik Dijital' },
+                              { id: 'circular', label: 'Zarif Yuvarlak' }
+                            ].map(style => (
+                              <button
+                                key={style.id}
+                                type="button"
+                                onClick={() => setCountdownStyle(style.id)}
+                                className={`py-2 px-1 text-[10px] font-bold rounded-lg border text-center transition-all ${countdownStyle === style.id ? 'border-rose-500 bg-rose-50/15 text-rose-600 shadow-xs' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                              >
+                                {style.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -1606,36 +2003,82 @@ export default function CoupleAdminPage({
       {/* SAĞ KOLON: Canlı Önizleme (Sürekli Görünür ve Aktif) */}
       <div className="lg:col-span-5 xl:col-span-4 relative">
         <div className="relative h-[850px] lg:sticky lg:top-8 flex flex-col gap-3">
-          <div className="flex justify-between items-center bg-slate-800 text-white px-6 py-2.5 rounded-2xl shadow-md border border-slate-700">
-            <span className="text-xs font-bold tracking-wider text-slate-300 flex items-center gap-1.5">
+          <div className="flex justify-between items-center bg-slate-800 text-white px-4 py-2.5 rounded-2xl shadow-md border border-slate-700">
+            <span className="text-[11px] font-bold tracking-wider text-slate-300 flex items-center gap-1 shrink-0">
               📱 Canlı Önizleme
-              {!wedding.is_paid && <span className="bg-amber-500 text-slate-900 font-bold px-2 py-0.5 rounded-full text-[9px] uppercase animate-pulse">Önizleme Modu</span>}
             </span>
+
+            {/* Cihaz Değiştirme Butonları */}
+            <div className="flex gap-1 items-center bg-slate-900/50 p-1 rounded-xl shrink-0">
+              <button
+                type="button"
+                onClick={() => setPreviewDevice('iphone')}
+                className={`p-1.5 rounded-lg transition-all ${previewDevice === 'iphone' ? 'bg-rose-500 text-white shadow-xs' : 'text-slate-400 hover:text-white'}`}
+                title="iPhone Önizleme"
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewDevice('android')}
+                className={`p-1.5 rounded-lg transition-all ${previewDevice === 'android' ? 'bg-rose-500 text-white shadow-xs' : 'text-slate-400 hover:text-white'}`}
+                title="Android Önizleme"
+              >
+                <Smartphone className="w-3.5 h-3.5 rotate-90" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewDevice('tablet')}
+                className={`p-1.5 rounded-lg transition-all ${previewDevice === 'tablet' ? 'bg-rose-500 text-white shadow-xs' : 'text-slate-400 hover:text-white'}`}
+                title="Tablet/PC Önizleme"
+              >
+                <Tablet className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
             <button 
               onClick={handleReplayAnimation}
-              className="bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors"
+              className="bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-colors shrink-0"
             >
-              <Wand2 className="w-3.5 h-3.5" /> Yenile
+              <RefreshCw className="w-3 h-3 animate-spin-slow" /> Yenile
             </button>
           </div>
-          <div className="relative h-[800px] w-full bg-slate-800 rounded-[3rem] p-4 shadow-2xl border-4 border-slate-700">
-            {/* Telefon Çentiği */}
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-3xl z-20"></div>
-            <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-hidden relative">
-              <iframe 
-                key={previewKey} 
-                src={`/d/${wedding.slug}?preview=true&t=${previewKey}`} 
-                className="w-full h-full border-0"
-                title="Live Preview"
-              />
+
+          <div className="w-full flex justify-center">
+            <div 
+              className={`relative h-[800px] w-full bg-slate-800 rounded-[3rem] p-4 shadow-2xl border-4 border-slate-700 transition-all duration-350 ${
+                previewDevice === 'iphone' ? 'max-w-[375px]' : previewDevice === 'android' ? 'max-w-[412px]' : 'max-w-[700px]'
+              }`}
+            >
+              {/* Telefon Çentiği */}
+              {previewDevice !== 'tablet' && (
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-3xl z-20"></div>
+              )}
+              <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-hidden relative">
+                <iframe 
+                  key={previewKey} 
+                  src={`/d/${wedding.slug}?preview=true&t=${previewKey}`} 
+                  className="w-full h-full border-0"
+                  title="Live Preview"
+                />
+              </div>
             </div>
           </div>
+
           {/* Mobil için önizleme uyarısı */}
           <div className="lg:hidden bg-blue-50 text-blue-600 p-4 rounded-xl text-sm font-medium">
             📱 Canlı önizleme ekranı telefonlarda performans sebebiyle gizlenmiştir. Değişikliklerinizi kaydettikten sonra <a href={`/d/${wedding.slug}?preview=true`} target="_blank" className="underline font-bold">buraya tıklayarak</a> sitenize bakabilirsiniz.
           </div>
         </div>
       </div>
+
+      {/* Canlı Taslak Değişiklik Uyarısı (Toast) */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 z-[200] bg-slate-900/90 backdrop-blur-md border border-slate-800 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 animate-bounce duration-300 text-xs font-semibold">
+          <span className="text-emerald-400 font-bold">✓</span>
+          <span>{toastMessage}</span>
+        </div>
+      )}
 
     </div> {/* GRID KAPANIŞ */}
   </div>
