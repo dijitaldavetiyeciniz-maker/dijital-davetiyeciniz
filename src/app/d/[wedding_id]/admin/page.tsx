@@ -11,8 +11,8 @@ function getTemplatePreset(id: string) {
     background_image_url: null,
   };
   
-  if (num <= 8) {
-    // Royal Gold
+  if (num <= 10) {
+    // 1. Royal Gold (Altın Saray)
     return {
       ...base,
       primary_color: '#dfc384',
@@ -27,8 +27,8 @@ function getTemplatePreset(id: string) {
       entrance_type: 'gate',
       effect_type: 'sparkles'
     };
-  } else if (num <= 16) {
-    // Watercolor Floral
+  } else if (num <= 20) {
+    // 2. Watercolor Floral (Suluboya Bahçe)
     return {
       ...base,
       primary_color: '#be123c',
@@ -43,8 +43,8 @@ function getTemplatePreset(id: string) {
       entrance_type: 'envelope',
       effect_type: 'hearts'
     };
-  } else if (num <= 24) {
-    // Minimalist Modern
+  } else if (num <= 30) {
+    // 3. Minimalist Modern (Sade & Modern)
     return {
       ...base,
       primary_color: '#0f172a',
@@ -59,8 +59,8 @@ function getTemplatePreset(id: string) {
       entrance_type: 'card',
       effect_type: ''
     };
-  } else if (num <= 32) {
-    // Galactic Neon
+  } else if (num <= 40) {
+    // 4. Galactic Neon (Karanlık & Neon)
     return {
       ...base,
       primary_color: '#a855f7',
@@ -75,8 +75,8 @@ function getTemplatePreset(id: string) {
       entrance_type: 'heart-fade',
       effect_type: 'sparkles'
     };
-  } else if (num <= 40) {
-    // Vintage Retro
+  } else if (num <= 50) {
+    // 5. Vintage Retro (Vintage Nostaljik)
     return {
       ...base,
       primary_color: '#b45309',
@@ -91,8 +91,8 @@ function getTemplatePreset(id: string) {
       entrance_type: 'ribbon',
       effect_type: 'bubbles'
     };
-  } else {
-    // Art Deco / Royal
+  } else if (num <= 60) {
+    // 6. Art Deco (Sanatsal Geometri)
     return {
       ...base,
       primary_color: '#dfc384',
@@ -107,8 +107,107 @@ function getTemplatePreset(id: string) {
       entrance_type: 'box',
       effect_type: 'sparkles'
     };
+  } else if (num <= 70) {
+    // 7. Gilded Marble (Altın Damarlı Mermer)
+    return {
+      ...base,
+      primary_color: '#dfc384',
+      text_color: '#111827',
+      font_family: 'Cormorant Garamond',
+      envelope_bg_color: 'marble-white',
+      use_envelope: true,
+      envelope_color: '#111827',
+      envelope_flap_type: 'rounded',
+      seal_type: 'crown',
+      seal_color: '#dfc384',
+      entrance_type: 'curtain',
+      effect_type: 'sparkles'
+    };
+  } else if (num <= 80) {
+    // 8. Botanical Line Art (Minimalist Botanik)
+    return {
+      ...base,
+      primary_color: '#15803d',
+      text_color: '#1e293b',
+      font_family: 'Playfair Display',
+      envelope_bg_color: 'solid-sage',
+      use_envelope: true,
+      envelope_color: '#e2e8f0',
+      envelope_flap_type: 'square',
+      seal_type: 'leaf',
+      seal_color: '#15803d',
+      entrance_type: 'gate',
+      effect_type: 'leaves'
+    };
+  } else if (num <= 90) {
+    // 9. Velvet Night (Mat Siyah Zümrüt)
+    return {
+      ...base,
+      primary_color: '#dfc384',
+      text_color: '#ffffff',
+      font_family: 'Cinzel',
+      envelope_bg_color: 'marble-black',
+      use_envelope: true,
+      envelope_color: '#111111',
+      envelope_flap_type: 'triangle',
+      seal_type: 'monogram',
+      seal_color: '#dfc384',
+      entrance_type: 'wax-press',
+      effect_type: 'sparkles'
+    };
+  } else {
+    // 10. Boho Sunset (Bohem Günbatımı)
+    return {
+      ...base,
+      primary_color: '#c2410c',
+      text_color: '#4a2f22',
+      font_family: 'Playfair Display',
+      envelope_bg_color: 'paper-kraft',
+      use_envelope: true,
+      envelope_color: '#ffedd5',
+      envelope_flap_type: 'rounded',
+      seal_type: 'heart',
+      seal_color: '#c2410c',
+      entrance_type: 'ribbon',
+      effect_type: 'leaves'
+    };
   }
 }
+
+const templateNames = [
+  "Altın Saray", "Neon Gece", "Organik Keten", "Kraliyet Aynası", "Sessiz Şıklık",
+  "Suluboya Bahçe", "Retro Polaroid", "Gatsby Işıltısı", "Geometrik Aşk", "Mühürlü Mektup",
+  "Zümrüt Şiiri", "Gül Yaprağı", "Toskana Esintisi", "Deniz Masalı", "Safir Büyüsü",
+  "Lavanta Bahçesi", "Fildişi Zarafet", "Kraft Defter", "Kuzey Işıkları", "Çöl Sıcağı",
+  "Kardelen Beyazı", "Dantel Düşü", "Modern Kübist", "Ege Rüzgarı", "Işıltılı Gece",
+  "Eskimiş Parşömen", "Asil Kadife", "Temiz Levha", "Bahçe Kemeri", "Platin Lüks",
+  "İnci Tanesi", "Sonsuz Aşk", "Zeytin Dalı", "Güz Yaprakları", "Gizemli Orman",
+  "Yakamoz Işıltısı", "Monogram Şıklık", "Daktilo Şiiri", "Cam Fanus", "Altın Çerçeve",
+  "Rustik Kütük", "Gül Suyu", "Retro Disk", "Yıldız Tozu", "Monokrom Çizgi",
+  "Eski Mektup", "Lüks Mermer", "Kır Düğünü", "Minimal Çizgi", "Asil Bordo",
+  "Papatya Demeti", "Bahar Dalı", "Gold Varak", "Monako Sarayı", "Retro Vintage",
+  "Bohem Düş", "Sonsuz Düğüm", "Gece Mavisi", "Cam Efekti", "Zümrüt Yeşili",
+  "Gilded Marble", "Altın Damar", "Mermer Dokusu", "Altın Yaprak", "Lüks Mermer Saray",
+  "Asimetrik Varak", "Beyaz Altın Mermer", "Siyah Premium Mermer", "Zümrüt Mermer", "Rose Gold Mermer",
+  "Botanical Line Art", "Minimalist Botanik", "Zarif Yaprak", "Altın Yaprak Çizgisi", "Siyah Yaprak Sanatı",
+  "Krem Dokulu Kağıt", "Asil Minimalist", "Modern Botanik", "Sade Dal", "Bohem Yapraklar",
+  "Velvet Night", "Premium Mat Siyah", "Koyu Zümrüt Kadife", "Siyah Kadife", "Gece Parıltısı",
+  "White Gold Monogram", "Asil Monogram", "Derin Zümrüt", "Mat Bordo Kadife", "Kraliyet Kadifesi",
+  "Boho Pampas & Sunset", "Bohem Günbatımı", "Kurutulmuş Pampas", "Terracotta Sulu Boya", "Modern Kır Havası",
+  "Doğal Kraft Düşü", "Palmiye Rüzgarı", "Sıcak Terracotta", "Pampas Esintisi", "Günbatımı Renkleri"
+];
+
+const categoryMap: Record<string, number[]> = {
+  wedding: [1, 4, 10, 11, 13, 17, 21, 22, 26, 29, 30, 32, 35, 39, 46, 48, 51, 52, 53, 54, 57, 61, 62, 63, 64, 65, 71, 72, 73, 77, 81, 82, 85, 91, 92, 95],
+  engagement: [5, 9, 12, 14, 24, 32, 34, 40, 47, 55, 56, 58, 66, 67, 74, 75, 83, 84, 86, 93, 94],
+  henna: [12, 27, 42, 50, 58, 59, 60, 68, 69, 87, 88, 89],
+  babyshower: [6, 16, 31, 42, 44, 56, 70, 78, 90, 96, 97],
+  birthday: [2, 7, 18, 25, 36, 41, 43, 44, 49, 56, 57, 79, 80, 90, 98, 99],
+  corporate: [2, 8, 15, 19, 23, 28, 37, 43, 45, 54, 60, 77, 80, 81, 82, 85],
+  minimal: [3, 5, 7, 9, 17, 19, 20, 21, 22, 23, 24, 28, 31, 33, 37, 38, 39, 45, 49, 55, 63, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 86],
+  luxury: [1, 4, 8, 11, 15, 25, 27, 30, 36, 40, 47, 50, 51, 52, 53, 61, 62, 63, 64, 65, 66, 67, 81, 82, 83, 84, 85, 86, 87, 88, 89],
+  bohemian: [3, 6, 10, 13, 14, 16, 18, 20, 26, 29, 33, 34, 35, 38, 41, 46, 48, 56, 60, 71, 78, 80, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
+};
 
 export default function CoupleAdminPage({
   params,
@@ -165,6 +264,11 @@ export default function CoupleAdminPage({
   const [previewDevice, setPreviewDevice] = useState<'iphone' | 'android' | 'tablet'>('iphone');
   const [activeRsvpSubTab, setActiveRsvpSubTab] = useState<'list' | 'comments'>('list');
   const [templateCategory, setTemplateCategory] = useState('all');
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [templateCategory]);
   
   // Genel Bilgiler State
   const [eventType, setEventType] = useState('Düğün');
@@ -1086,74 +1190,73 @@ export default function CoupleAdminPage({
                   </div>
                 )}
 
-                {/* Filtered 50 templates */}
-                <div className="max-h-72 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {(() => {
-                    const templateNames = [
-                      "Altın Saray", "Neon Gece", "Organik Keten", "Kraliyet Aynası",
-                      "Sessiz Şıklık", "Suluboya Bahçe", "Retro Polaroid", "Gatsby Işıltısı",
-                      "Geometrik Aşk", "Mühürlü Mektup", "Zümrüt Şiiri", "Gül Yaprağı",
-                      "Toskana Esintisi", "Deniz Masalı", "Safir Büyüsü", "Lavanta Bahçesi",
-                      "Fildişi Zarafet", "Kraft Defter", "Kuzey Işıkları", "Çöl Sıcağı",
-                      "Kardelen Beyazı", "Dantel Düşü", "Modern Kübist", "Ege Rüzgarı",
-                      "Işıltılı Gece", "Eskimiş Parşömen", "Asil Kadife", "Temiz Levha",
-                      "Bahçe Kemeri", "Platin Lüks", "İnci Tanesi", "Sonsuz Aşk",
-                      "Zeytin Dalı", "Güz Yaprakları", "Gizemli Orman", "Yakamoz Işıltısı",
-                      "Monogram Şıklık", "Daktilo Şiiri", "Cam Fanus", "Altın Çerçeve",
-                      "Rustik Kütük", "Gül Suyu", "Retro Disk", "Yıldız Tozu",
-                      "Monokrom Çizgi", "Eski Mektup", "Lüks Mermer", "Kır Düğünü",
-                      "Minimal Çizgi", "Asil Bordo"
-                    ];
+                {/* Filtered 100 templates with Lazy Loading */}
+                <div className="space-y-3">
+                  <div className="max-h-72 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {(() => {
+                      const isTemplateInCategory = (num: number, category: string) => {
+                        if (category === 'all') return true;
+                        return categoryMap[category]?.includes(num) || false;
+                      };
 
+                      const filteredList = Array.from({ length: 100 }, (_, i) => i + 1)
+                        .filter(num => isTemplateInCategory(num, templateCategory));
+
+                      if (filteredList.length === 0) {
+                        return <div className="col-span-full py-8 text-center text-xs text-slate-400">Bu kategoride şablon bulunmamaktadır.</div>;
+                      }
+
+                      const visibleList = filteredList.slice(0, visibleCount);
+
+                      return visibleList.map(num => {
+                        const tId = `template${num}`;
+                        const preset = getTemplatePreset(tId);
+                        const isActive = templateId === tId;
+                        return (
+                          <button
+                            key={tId}
+                            type="button"
+                            onClick={() => {
+                              setTemplateId(tId);
+                              applyPreset(preset);
+                            }}
+                            className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white hover:shadow-xs active:scale-95 ${isActive ? 'border-rose-500 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200'}`}
+                          >
+                            <div className="w-full h-5 rounded-md mb-1 shadow-inner flex items-center justify-center gap-1 overflow-hidden">
+                              <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
+                              <div className="flex-1 h-1.5 rounded-full opacity-30" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
+                            </div>
+                            <span className="text-[9px] font-bold text-slate-700 text-center leading-tight">{templateNames[num - 1]}</span>
+                            <span className="text-[8px] text-slate-400">#{num}</span>
+                            {isActive && <span className="text-[8px] text-rose-600 font-bold mt-0.5">✓ Seçili</span>}
+                          </button>
+                        );
+                      });
+                    })()}
+                  </div>
+
+                  {/* Show More Button if there are more templates */}
+                  {(() => {
                     const isTemplateInCategory = (num: number, category: string) => {
                       if (category === 'all') return true;
-                      const map: Record<string, number[]> = {
-                        wedding: [1, 4, 10, 11, 13, 17, 21, 22, 26, 29, 30, 32, 35, 39, 46, 48],
-                        engagement: [5, 9, 12, 14, 24, 32, 34, 40, 47],
-                        henna: [12, 27, 42, 50],
-                        babyshower: [6, 16, 31, 42, 44],
-                        birthday: [2, 7, 18, 25, 36, 41, 43, 44, 49],
-                        corporate: [2, 8, 15, 19, 23, 28, 37, 43, 45],
-                        minimal: [3, 5, 7, 9, 17, 19, 20, 21, 22, 23, 24, 28, 31, 33, 37, 38, 39, 45, 49],
-                        luxury: [1, 4, 8, 11, 15, 25, 27, 30, 36, 40, 47, 50],
-                        bohemian: [3, 6, 10, 13, 14, 16, 18, 20, 26, 29, 33, 34, 35, 38, 41, 46, 48]
-                      };
-                      return map[category]?.includes(num) || false;
+                      return categoryMap[category]?.includes(num) || false;
                     };
 
-                    let renderedCount = 0;
-                    const buttons = Array.from({ length: 50 }, (_, i) => {
-                      const num = i + 1;
-                      if (!isTemplateInCategory(num, templateCategory)) return null;
-                      renderedCount++;
+                    const totalFiltered = Array.from({ length: 100 }, (_, i) => i + 1)
+                      .filter(num => isTemplateInCategory(num, templateCategory)).length;
 
-                      const tId = `template${num}`;
-                      const preset = getTemplatePreset(tId);
-                      const isActive = templateId === tId;
+                    if (totalFiltered > visibleCount) {
                       return (
                         <button
-                          key={tId}
-                          onClick={() => {
-                            setTemplateId(tId);
-                            applyPreset(preset);
-                          }}
-                          className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white hover:shadow-xs active:scale-95 ${isActive ? 'border-rose-500 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200'}`}
+                          type="button"
+                          onClick={() => setVisibleCount(prev => Math.min(totalFiltered, prev + 12))}
+                          className="w-full py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1 active:scale-98"
                         >
-                          <div className="w-full h-5 rounded-md mb-1 shadow-inner flex items-center justify-center gap-1 overflow-hidden">
-                            <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
-                            <div className="flex-1 h-1.5 rounded-full opacity-30" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
-                          </div>
-                          <span className="text-[9px] font-bold text-slate-700 text-center leading-tight">{templateNames[i]}</span>
-                          <span className="text-[8px] text-slate-400">#{num}</span>
-                          {isActive && <span className="text-[8px] text-rose-600 font-bold mt-0.5">✓ Seçili</span>}
+                          <span>✨</span> Daha Fazla Şablon Göster ({totalFiltered - visibleCount} Kaldı)
                         </button>
                       );
-                    });
-
-                    if (renderedCount === 0) {
-                      return <div className="col-span-full py-8 text-center text-xs text-slate-400">Bu kategoride şablon bulunmamaktadır.</div>;
                     }
-                    return buttons;
+                    return null;
                   })()}
                 </div>
               </div>

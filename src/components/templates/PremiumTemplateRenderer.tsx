@@ -27,15 +27,15 @@ const getTemplateConfig = (id: string): TemplateConfig => {
   const num = parseInt(id.replace('template', '')) || 1;
   const name = `Tasarım #${num}`;
 
-  // 1-8: Royal Gold (Lüks & Altın) - classic-card ve full-screen
-  if (num <= 8) {
+  if (num <= 10) {
+    // 1. Royal Gold (Altın Saray)
     const accents: ('crown'|'rings'|'sparkles')[] = ['crown', 'rings', 'sparkles'];
     const textures: ('marble'|'geometric-lines')[] = ['marble', 'geometric-lines'];
     return {
       id,
       name,
       category: 'Royal Gold',
-      layout: 'classic-card',
+      layout: num % 2 === 0 ? 'full-screen' : 'classic-card',
       cardBg: num % 3 === 0 ? 'paper' : 'gold-border',
       bgTexture: textures[num % textures.length],
       borderStyle: 'double-gold',
@@ -44,8 +44,8 @@ const getTemplateConfig = (id: string): TemplateConfig => {
     };
   }
 
-  // 9-16: Watercolor Floral (Suluboya & Çiçekli) - classic-card ve full-screen
-  if (num <= 16) {
+  if (num <= 20) {
+    // 2. Watercolor Floral (Suluboya Bahçe)
     const textures: ('watercolor-pink'|'watercolor-blue'|'watercolor-emerald')[] = [
       'watercolor-pink', 'watercolor-blue', 'watercolor-emerald'
     ];
@@ -62,13 +62,13 @@ const getTemplateConfig = (id: string): TemplateConfig => {
     };
   }
 
-  // 17-24: Minimalist Modern (Sade & Modern) - minimalist
-  if (num <= 24) {
+  if (num <= 30) {
+    // 3. Minimalist Modern (Sade & Modern)
     return {
       id,
       name,
       category: 'Minimalist Modern',
-      layout: 'classic-card',
+      layout: 'minimalist',
       cardBg: 'glass',
       bgTexture: 'none',
       borderStyle: 'none',
@@ -77,28 +77,28 @@ const getTemplateConfig = (id: string): TemplateConfig => {
     };
   }
 
-  // 25-32: Galactic Neon (Karanlık Mod & Neon) - classic-card ve full-screen
-  if (num <= 32) {
+  if (num <= 40) {
+    // 4. Galactic Neon (Karanlık Mod & Neon)
     return {
       id,
       name,
       category: 'Galactic Neon',
-      layout: 'classic-card',
+      layout: num % 2 === 0 ? 'full-screen' : 'classic-card',
       cardBg: 'dark',
       bgTexture: 'starry-sky',
       borderStyle: 'neon',
-      accentIcon: 'heart',
+      accentIcon: 'sparkles',
       textColorMode: 'light',
     };
   }
 
-  // 33-40: Vintage Retro (Vintage & Nostaljik) - polaroid ve classic-card
-  if (num <= 40) {
+  if (num <= 50) {
+    // 5. Vintage Retro (Vintage & Nostaljik)
     return {
       id,
       name,
       category: 'Vintage Retro',
-      layout: 'classic-card',
+      layout: 'polaroid',
       cardBg: 'paper',
       bgTexture: 'aged-paper',
       borderStyle: 'stitch',
@@ -107,17 +107,77 @@ const getTemplateConfig = (id: string): TemplateConfig => {
     };
   }
 
-  // 41-50: Art Deco (Sanatsal & Avant-Garde) - split-screen ve classic-card
-  const accents: ('crown'|'sparkles'|'infinity')[] = ['crown', 'sparkles', 'infinity'];
+  if (num <= 60) {
+    // 6. Art Deco (Sanatsal & Avant-Garde)
+    const accents: ('crown'|'sparkles'|'infinity')[] = ['crown', 'sparkles', 'infinity'];
+    return {
+      id,
+      name,
+      category: 'Art Deco',
+      layout: 'split-screen',
+      cardBg: 'glass',
+      bgTexture: 'geometric-lines',
+      borderStyle: 'deco-corners',
+      accentIcon: 'rings',
+      textColorMode: 'dark',
+    };
+  }
+
+  if (num <= 70) {
+    // 7. Gilded Marble (Altın Damarlı Mermer)
+    return {
+      id,
+      name,
+      category: 'Gilded Marble',
+      layout: num % 2 === 0 ? 'full-screen' : 'classic-card',
+      cardBg: 'gold-border',
+      bgTexture: 'marble',
+      borderStyle: 'double-gold',
+      accentIcon: 'crown',
+      textColorMode: 'dark',
+    };
+  }
+
+  if (num <= 80) {
+    // 8. Botanical Line Art (Minimalist Botanik)
+    return {
+      id,
+      name,
+      category: 'Botanical Line Art',
+      layout: 'minimalist',
+      cardBg: 'paper',
+      bgTexture: 'none',
+      borderStyle: 'none',
+      accentIcon: 'leaf',
+      textColorMode: 'dark',
+    };
+  }
+
+  if (num <= 90) {
+    // 9. Velvet Night (Mat Siyah Zümrüt)
+    return {
+      id,
+      name,
+      category: 'Velvet Night',
+      layout: num % 2 === 0 ? 'full-screen' : 'classic-card',
+      cardBg: 'dark',
+      bgTexture: 'none',
+      borderStyle: 'neon',
+      accentIcon: 'rings',
+      textColorMode: 'light',
+    };
+  }
+
+  // 10. Boho Sunset (Bohem Günbatımı)
   return {
     id,
     name,
-    category: 'Art Deco',
-    layout: 'classic-card',
-    cardBg: 'gold-border',
-    bgTexture: 'geometric-lines',
-    borderStyle: 'deco-corners',
-    accentIcon: accents[num % accents.length],
+    category: 'Boho Sunset',
+    layout: num % 2 === 0 ? 'polaroid' : 'classic-card',
+    cardBg: 'paper',
+    bgTexture: 'watercolor-pink',
+    borderStyle: 'stitch',
+    accentIcon: 'leaf',
     textColorMode: 'dark',
   };
 };
