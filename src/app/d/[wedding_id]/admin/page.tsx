@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import { useState, useEffect, use } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2, Smartphone, Tablet, Trash2, Check, RefreshCw, Volume2, VolumeX, Eye } from 'lucide-react';
@@ -2132,11 +2132,20 @@ export default function CoupleAdminPage({
                 
                 <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 text-left mb-6 text-xs">
                   <h3 className="font-bold text-slate-800 mb-3 border-b pb-2">Banka Hesap Bilgileri</h3>
-                  <div className="space-y-1.5 text-slate-600">
-                    <p><span className="text-slate-400 font-medium">Banka:</span> Enpara / QNB Finansbank</p>
-                    <p><span className="text-slate-400 font-medium">Alıcı:</span> Dijital Davetiyeciniz Yazılım Hizmetleri</p>
-                    <p><span className="text-slate-400 font-medium">IBAN:</span> <span className="font-mono bg-white px-2 py-0.5 border rounded">TR12 3456 7890 0000 0000 0000 00</span></p>
+                  <div className="space-y-2 text-slate-600">
+                    <p><span className="text-slate-400 font-medium">Banka:</span> Moka United Ödeme Hizmetleri ve Elektronik Para Kuruluşu A.Ş</p>
+                    <p>
+                      <span className="text-slate-400 font-medium">IBAN:</span>{' '}
+                      <span className="font-mono bg-white px-2 py-0.5 border rounded text-slate-800 tracking-wide">TR39 0010 3000 0000 0069 7036 31</span>
+                    </p>
                     <p><span className="text-slate-400 font-medium">Açıklama:</span> <strong className="text-rose-500">{wedding.slug}</strong> (Lütfen ödeme açıklamasında tam olarak bu kodu belirtin)</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-slate-200 flex items-start gap-2 text-slate-500 leading-relaxed">
+                    <span className="text-base mt-0.5">📧</span>
+                    <p>
+                      Sorun yaşarsanız <a href="mailto:dijitaldavetiyeciniz@gmail.com" className="text-rose-500 font-semibold hover:underline">dijitaldavetiyeciniz@gmail.com</a> adresine mail atabilirsiniz.{' '}
+                      <span className="font-medium text-slate-600">En geç 12 saat içinde dönüş yapılacaktır.</span>
+                    </p>
                   </div>
                 </div>
 
