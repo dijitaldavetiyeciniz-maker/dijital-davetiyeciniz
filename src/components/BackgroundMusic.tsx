@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Volume2, VolumeX, Music } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -17,61 +17,57 @@ export default function BackgroundMusic({
   primaryColor = '#f43f5e'
 }: BackgroundMusicProps) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hasTriedAutoplay = useRef(false);
 
-  // Handle autoplay when envelope opens
-  useEffect(() => {
+  const tryPlay = useCallback(async () => {
     if (!audioRef.current || !url) return;
-
-    const handleFirstInteraction = () => {
-      if (audioRef.current && isEnvelopeOpened && autoplay && !isPlaying && !isMuted) {
-        audioRef.current.play()
-          .then(() => {
-            setIsPlaying(true);
-            removeListeners();
-          })
-          .catch(error => {
-            console.log('Autoplay was blocked by the browser. Waiting for interaction.', error);
-          });
-      }
-    };
-
-    const removeListeners = () => {
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('touchstart', handleFirstInteraction);
-    };
-
-    // Try to play immediately if already interacted
-    if (isEnvelopeOpened && autoplay && !isMuted && !isPlaying) {
-      audioRef.current.play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch(() => {
-          // Add fallback listeners for first touch/click
-          document.addEventListener('click', handleFirstInteraction);
-          document.addEventListener('touchstart', handleFirstInteraction);
-        });
+    try {
+      audioRef.current.volume = 0.7;
+      await audioRef.current.play();
+      setIsPlaying(true);
+    } catch {
+      // Browser blocked autoplay – will retry on first user interaction
     }
+  }, [url]);
 
-    return () => {
-      removeListeners();
+  // When envelope opens (or on non-envelope pages immediately), try autoplay
+  useEffect(() => {
+    if (!url || !autoplay || !isEnvelopeOpened || hasTriedAutoplay.current) return;
+    hasTriedAutoplay.current = true;
+    tryPlay();
+  }, [isEnvelopeOpened, autoplay, url, tryPlay]);
+
+  // Fallback: play on first user interaction anywhere on page
+  useEffect(() => {
+    if (!url || !autoplay) return;
+
+    const handleInteraction = () => {
+      if (!isPlaying && audioRef.current && isEnvelopeOpened) {
+        tryPlay();
+      }
+      cleanup();
     };
-  }, [isEnvelopeOpened, autoplay, url, isPlaying, isMuted]);
+
+    const cleanup = () => {
+      document.removeEventListener('click', handleInteraction, true);
+      document.removeEventListener('touchend', handleInteraction, true);
+      document.removeEventListener('keydown', handleInteraction, true);
+    };
+
+    document.addEventListener('click', handleInteraction, true);
+    document.addEventListener('touchend', handleInteraction, true);
+    document.addEventListener('keydown', handleInteraction, true);
+
+    return cleanup;
+  }, [url, autoplay, isPlaying, isEnvelopeOpened, tryPlay]);
 
   const togglePlayback = () => {
     if (!audioRef.current) return;
-
     if (isPlaying) {
       audioRef.current.pause();
-      setIsMuted(true);
     } else {
-      audioRef.current.play()
-        .then(() => {
-          setIsMuted(false);
-        })
-        .catch(err => console.log('Playback error:', err));
+      tryPlay();
     }
   };
 
@@ -88,6 +84,7 @@ export default function BackgroundMusic({
         preload="auto"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onEnded={() => setIsPlaying(false)}
       />
 
       <AnimatePresence>

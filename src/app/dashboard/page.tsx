@@ -72,7 +72,7 @@ export default function DashboardPage() {
             <p className="text-slate-500">Davetiyelerinizi buradan yönetebilirsiniz.</p>
           </div>
           <Link 
-            href="/sablonlar" 
+            href="/olustur" 
             className="bg-rose-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-rose-600 transition-colors flex items-center gap-2 shadow-lg shadow-rose-200"
           >
             <Plus className="w-5 h-5" /> Yeni Davetiye Oluştur
@@ -87,7 +87,7 @@ export default function DashboardPage() {
             <h2 className="text-2xl font-bold text-slate-700 mb-2">Henüz davetiyeniz yok</h2>
             <p className="text-slate-500 mb-8 max-w-md mx-auto">Hemen şablon galerisinden bir tasarım seçerek ilk davetiyenizi oluşturmaya başlayın.</p>
             <Link 
-              href="/sablonlar" 
+              href="/olustur" 
               className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition-colors inline-block"
             >
               Şablonları İncele
@@ -127,6 +127,9 @@ export default function DashboardPage() {
           </div>
         )}
       </main>
+      <footer className="text-center py-8 text-slate-500 text-sm border-t border-slate-100 mt-16">
+        Sorun veya öneriniz için: <a href="mailto:dijitaldavetiyeciniz@gmail.com" className="text-rose-500 font-medium hover:underline">dijitaldavetiyeciniz@gmail.com</a>
+      </footer>
     </div>
   );
 }

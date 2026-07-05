@@ -264,6 +264,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Contact Footer */}
+      <footer className="text-center py-8 text-slate-500 text-sm border-t border-slate-100 mt-16">
+        Sorun veya öneriniz için: <a href="mailto:dijitaldavetiyeciniz@gmail.com" className="text-rose-500 font-medium hover:underline">dijitaldavetiyeciniz@gmail.com</a>
+      </footer>
+
       {/* Footer */}
       <footer className="bg-slate-950 text-slate-400 py-16 px-6 border-t border-slate-900">
         <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 mb-12">

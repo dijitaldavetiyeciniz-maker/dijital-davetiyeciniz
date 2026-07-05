@@ -112,11 +112,11 @@ function CreateForm() {
         <div className="grid md:grid-cols-2 gap-5">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Gelin Anne & Baba Adı</label>
-            <input type="text" value={brideParents} onChange={e=>setBrideParents(e.target.value)} placeholder="Örn: Fatma & Ali Yılmaz" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+            <input type="text" value={brideParents} onChange={e=>setBrideParents(e.target.value)} placeholder="Örn: Fatma & Ali Yılmaz" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Damat Anne & Baba Adı</label>
-            <input type="text" value={groomParents} onChange={e=>setGroomParents(e.target.value)} placeholder="Örn: Ayşe & Veli Kaya" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" />
+            <input type="text" value={groomParents} onChange={e=>setGroomParents(e.target.value)} placeholder="Örn: Ayşe & Veli Kaya" className="w-full border border-slate-300 rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-rose-500 focus:outline-none" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
           </div>
         </div>
 

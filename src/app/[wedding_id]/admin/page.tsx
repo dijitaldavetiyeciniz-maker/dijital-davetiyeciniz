@@ -635,11 +635,11 @@ export default function CoupleAdminPage({
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">Gelin Anne & Baba</label>
-                    <input value={brideParents} onChange={e=>setBrideParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                    <input value={brideParents} onChange={e=>setBrideParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Damat Anne & Baba</label>
-                    <input value={groomParents} onChange={e=>setGroomParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                    <input value={groomParents} onChange={e=>setGroomParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
                   </div>
                 </div>
 
@@ -724,64 +724,82 @@ export default function CoupleAdminPage({
               </div>
 
               {/* BÖLÜM 2: TEMA SEÇİMİ */}
-              <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">2. Tema ve Renkler (1000+ Seçenek)</h3>
-              
+              <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">2. Şablon & Tema Seçimi</h3>
+
+              {/* UNIFIED TEMPLATE GRID — 50 templates + DB custom themes */}
               <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Hazır Şablonlardan Seç</label>
-                <div className="max-h-60 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {themes.map(theme => (
-                    <button 
-                      key={theme.id}
-                      onClick={() => applyPreset(theme)}
-                      className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white ${templateId === theme.template_id && primaryColor === theme.primary_color ? 'border-blue-500 shadow-md ring-2 ring-blue-100' : 'border-slate-200'}`}
-                    >
-                      <div className="w-6 h-6 rounded-full mb-1 shadow-inner" style={{ backgroundColor: theme.primary_color }}></div>
-                      <span className="text-[10px] font-bold text-slate-700 text-center line-clamp-1">{theme.name}</span>
-                    </button>
-                  ))}
+                <label className="block text-sm font-medium mb-2">
+                  Şablon Seç <span className="text-slate-400 font-normal text-xs">(Renk, yazı tipi ve tasarım otomatik uygulanır — istersen sonradan değiştirebilirsin)</span>
+                </label>
+
+                {/* DB Custom Themes row (if any) */}
+                {themes.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">⭐ Özel Hazır Şablonlar</p>
+                    <div className="max-h-40 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {themes.map(theme => (
+                        <button
+                          key={theme.id}
+                          onClick={() => applyPreset(theme)}
+                          className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white ${templateId === theme.template_id && primaryColor === theme.primary_color ? 'border-blue-500 shadow-md ring-2 ring-blue-100' : 'border-slate-200'}`}
+                        >
+                          <div className="w-6 h-6 rounded-full mb-1 shadow-inner" style={{ backgroundColor: theme.primary_color }}></div>
+                          <span className="text-[10px] font-bold text-slate-700 text-center line-clamp-1">{theme.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* All 50 premium templates as clickable cards */}
+                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">🎨 50 Premium Şablon</p>
+                <div className="max-h-72 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {(() => {
+                    const templateNames = [
+                      "Altın Saray", "Neon Gece", "Organik Keten", "Kraliyet Aynası",
+                      "Sessiz Şıklık", "Suluboya Bahçe", "Retro Polaroid", "Gatsby Işıltısı",
+                      "Geometrik Aşk", "Mühürlü Mektup", "Zümrüt Şiiri", "Gül Yaprağı",
+                      "Toskana Esintisi", "Deniz Masalı", "Safir Büyüsü", "Lavanta Bahçesi",
+                      "Fildişi Zarafet", "Kraft Defter", "Kuzey Işıkları", "Çöl Sıcağı",
+                      "Kardelen Beyazı", "Dantel Düşü", "Modern Kübist", "Ege Rüzgarı",
+                      "Işıltılı Gece", "Eskimiş Parşömen", "Asil Kadife", "Temiz Levha",
+                      "Bahçe Kemeri", "Platin Lüks", "İnci Tanesi", "Sonsuz Aşk",
+                      "Zeytin Dalı", "Güz Yaprakları", "Gizemli Orman", "Yakamoz Işıltısı",
+                      "Monogram Şıklık", "Daktilo Şiiri", "Cam Fanus", "Altın Çerçeve",
+                      "Rustik Kütük", "Gül Suyu", "Retro Disk", "Yıldız Tozu",
+                      "Monokrom Çizgi", "Eski Mektup", "Lüks Mermer", "Kır Düğünü",
+                      "Minimal Çizgi", "Asil Bordo"
+                    ];
+                    return Array.from({ length: 50 }, (_, i) => {
+                      const num = i + 1;
+                      const tId = `template${num}`;
+                      const preset = getTemplatePreset(tId);
+                      const isActive = templateId === tId;
+                      return (
+                        <button
+                          key={tId}
+                          onClick={() => {
+                            setTemplateId(tId);
+                            applyPreset(preset);
+                          }}
+                          className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white hover:shadow-md active:scale-95 ${isActive ? 'border-blue-500 shadow-md ring-2 ring-blue-100 bg-white' : 'border-slate-200'}`}
+                        >
+                          <div className="w-full h-5 rounded-md mb-1 shadow-inner flex items-center justify-center gap-1 overflow-hidden">
+                            <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
+                            <div className="flex-1 h-1.5 rounded-full opacity-30" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
+                          </div>
+                          <span className="text-[9px] font-bold text-slate-700 text-center leading-tight">{templateNames[i]}</span>
+                          <span className="text-[8px] text-slate-400">#{num}</span>
+                          {isActive && <span className="text-[8px] text-blue-600 font-bold mt-0.5">✓ Seçili</span>}
+                        </button>
+                      );
+                    });
+                  })()}
                 </div>
               </div>
 
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Şablon Düzeni</label>
-                    <select 
-                      value={templateId} 
-                      onChange={e => {
-                        const newId = e.target.value;
-                        setTemplateId(newId);
-                        const preset = getTemplatePreset(newId);
-                        applyPreset(preset);
-                      }} 
-                      className="w-full border p-2 rounded-lg bg-slate-50"
-                    >
-                      {Array.from({ length: 50 }, (_, i) => {
-                        const num = i + 1;
-                        const templateNames = [
-                          "Altın Saray (Royal Gold)", "Neon Gece (Karanlık Neon)", "Organik Keten (Doğal Kağıt)", "Kraliyet Aynası (Lüks Çerçeve)", 
-                          "Sessiz Şıklık (Minimalist)", "Suluboya Bahçesi (Çiçekli)", "Retro Polaroid (Vintage)", "Gatsby Işıltısı (Altın Gatsby)", 
-                          "Geometrik Aşk (Modern)", "Mühürlü Mektup (Klasik)", "Zümrüt Şiiri (Royal)", "Gül Yaprağı (Romantik)",
-                          "Toskana Esintisi (Bohem)", "Deniz Masalı (Sahil)", "Safir Büyüsü (Art Deco)", "Lavanta Bahçesi (Zarif)",
-                          "Fildişi Zarafet (Monokrom)", "Kraft Defter (Eskiz)", "Kuzey Işıkları (Karanlık)", "Çöl Sıcağı (Minimal)",
-                          "Kardelen Beyazı (Sade)", "Dantel Düşü (Nostaljik)", "Modern Kübist (Brütalist)", "Ege Rüzgarı (Klasik)",
-                          "Işıltılı Gece (Galaktik)", "Eskimiş Parşömen (Mektup)", "Asil Kadife (Bordo)", "Temiz Levha (Nordik)",
-                          "Bahçe Kemeri (Floral)", "Platin Lüks (Gümüş)", "İnci Tanesi (Zarif)", "Sonsuz Aşk (Minimalist)",
-                          "Zeytin Dalı (Ekolojik)", "Güz Yaprakları (Retro)", "Gizemli Orman (Koyu Zümrüt)", "Yakamoz Işıltısı (Gece)",
-                          "Monogram Şıklık (Kişiye Özel)", "Daktilo Şiiri (Vintage)", "Cam Fanus (Şeffaf)", "Altın Çerçeve (Kraliyet)",
-                          "Rustik Kütük (Doğal)", "Gül Suyu (Soft)", "Retro Disk (Eğlenceli)", "Yıldız Tozu (Galaksi)",
-                          "Monokrom Çizgiler (Modern)", "Eski Mektup (Nostaljik)", "Lüks Mermer (Art Deco)", "Kır Düğünü (Bohem)",
-                          "Minimal Çizgi (Sade)", "Asil Bordo (Gatsby)"
-                        ];
-                        const label = `Tasarım ${num}: ${templateNames[num - 1] || 'Premium Stil'}`;
-                        return (
-                          <option key={num} value={`template${num}`}>
-                            {label}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
                    <div>
                     <label className="block text-sm font-medium mb-2">
                       ✍️ İsimler Yazı Tipi 
@@ -900,7 +918,7 @@ export default function CoupleAdminPage({
                         <span className="text-[10px] text-slate-400">Telegram Bot ile sınırsız depolama</span>
                       </label>
                     </div>
-                    <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="veya manuel URL gir: https://..." className="w-full border p-2 rounded-lg bg-slate-50 text-xs font-mono" />
+                    <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="veya manuel URL gir: https://..." className="w-full border p-2 rounded-lg bg-white text-slate-700 text-xs font-mono placeholder:text-slate-400" />
                   </div>
                 </div>
 
@@ -1077,16 +1095,21 @@ export default function CoupleAdminPage({
                         className="w-full border p-2 rounded-lg bg-white text-sm"
                       >
                         <option value="">Müzik Yok (Sessiz)</option>
-                        <option value="https://assets.mixkit.co/music/preview/mixkit-romantic-campaign-237.mp3">🎵 Aşk Hikayesi (Lüks Romantik Piyano)</option>
-                        <option value="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-248.mp3">🎻 Bulutların Üstünde (Duygusal Keman & Piyano)</option>
-                        <option value="https://assets.mixkit.co/music/preview/mixkit-tender-love-252.mp3">🎸 Sonsuz Sevgilim (Soft Akustik Gitar)</option>
-                        <option value="https://assets.mixkit.co/music/preview/mixkit-wedding-waltz-262.mp3">🏛️ Masalsı Düğün Valsi (Klasik Orkestral)</option>
-                        <option value="https://assets.mixkit.co/music/preview/mixkit-happy-moment-272.mp3">✨ Mutlu Yarınlar (Neşeli & Mutlu Akustik)</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">🎵 Romantik Melodi 1</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">🎻 Düğün Valsi</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">🎸 Yumuşak Akustik</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3">🏛️ Klasik Orkestral</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3">✨ Neşeli Melodi</option>
                         <option value="custom">🔗 Özel MP3 Bağlantısı (URL)...</option>
                       </select>
+                      {musicUrl && musicUrl !== '' && musicUrl !== 'custom' && (
+                        <div className="mt-2 flex items-center gap-2">
+                          <audio controls src={musicUrl} className="w-full h-8 rounded-lg" preload="none" />
+                        </div>
+                      )}
                     </div>
 
-                    {(musicUrl === 'custom' || (musicUrl !== '' && !musicUrl.includes('mixkit.co'))) && (
+                    {(musicUrl === 'custom' || (musicUrl !== '' && !musicUrl.includes('soundhelix.com'))) && (
                       <div>
                         <label className="block text-sm font-semibold mb-1 text-slate-700">Özel MP3 Bağlantısı (Direct MP3 URL)</label>
                         <input 
