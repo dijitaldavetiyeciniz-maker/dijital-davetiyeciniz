@@ -18,12 +18,15 @@ export async function POST(request: Request) {
       .eq('id', wedding_id)
       .single();
 
-    if (error || !wedding || !wedding.telegram_bot_token || !wedding.telegram_chat_id) {
-      return NextResponse.json({ error: 'Bu davetiye için Telegram entegrasyonu (Bot Token ve Chat ID) yapılandırılmamış.' }, { status: 400 });
+    const isCustomBot = wedding.telegram_bot_token && wedding.telegram_bot_token.includes(':');
+    const botToken = isCustomBot ? wedding.telegram_bot_token : process.env.TELEGRAM_BOT_TOKEN;
+
+    if (error || !wedding || !botToken || !wedding.telegram_chat_id) {
+      return NextResponse.json({ error: 'Bu davetiye için Telegram entegrasyonu (Chat ID) yapılandırılmamış.' }, { status: 400 });
     }
 
     // 2. Dosyayı Telegram'a Yolla
-    const telegramUrl = `https://api.telegram.org/bot${wedding.telegram_bot_token}/sendPhoto`;
+    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendPhoto`;
     
     const telegramFormData = new FormData();
     telegramFormData.append('chat_id', wedding.telegram_chat_id);

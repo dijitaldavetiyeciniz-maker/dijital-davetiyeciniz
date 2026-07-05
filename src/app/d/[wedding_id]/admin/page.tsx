@@ -401,11 +401,117 @@ export default function CoupleAdminPage({
     setCustomMessage(newQuote);
   }
 
+  const [isConnectingTelegram, setIsConnectingTelegram] = useState(false);
+  const [telegramStatusMsg, setTelegramStatusMsg] = useState('');
+  const [isSendingTest, setIsSendingTest] = useState(false);
+
+  const handleConnectTelegram = async () => {
+    try {
+      setTelegramStatusMsg('Bağlantı linki oluşturuluyor...');
+      const newInviteToken = crypto.randomUUID();
+      
+      const { error: updateError } = await supabase
+        .from('weddings')
+        .update({ telegram_bot_token: newInviteToken })
+        .eq('id', wedding.id);
+
+      if (updateError) {
+        setTelegramStatusMsg('Bağlantı token\'ı oluşturulurken hata oluştu.');
+        return;
+      }
+
+      setTelegramBotToken(newInviteToken);
+
+      // Open Telegram link in a new tab
+      const telegramLink = `https://t.me/DijitalDavetiyecinizBot?start=${newInviteToken}`;
+      window.open(telegramLink, '_blank');
+
+      setIsConnectingTelegram(true);
+      setTelegramStatusMsg('Lütfen Telegram botunu açıp "Başlat" butonuna tıklayın. Bekleniyor...');
+
+      // Start polling for chat_id
+      const interval = setInterval(async () => {
+        const { data: updatedWedding } = await supabase
+          .from('weddings')
+          .select('telegram_chat_id')
+          .eq('id', wedding.id)
+          .single();
+
+        if (updatedWedding && updatedWedding.telegram_chat_id) {
+          setTelegramChatId(updatedWedding.telegram_chat_id);
+          setIsConnectingTelegram(false);
+          setTelegramStatusMsg('Telegram başarıyla bağlandı. LCV bildirimleri bu hesaba gönderilecek.');
+          clearInterval(interval);
+        }
+      }, 3000);
+
+      // Auto-clear interval after 5 minutes to avoid infinite loop
+      setTimeout(() => {
+        clearInterval(interval);
+        setIsConnectingTelegram(current => {
+          if (current) {
+            setTelegramStatusMsg('Bağlantı zaman aşımına uğradı. Lütfen tekrar deneyin.');
+          }
+          return false;
+        });
+      }, 300000);
+
+    } catch (err) {
+      console.error(err);
+      setTelegramStatusMsg('Bağlantı başlatılamadı.');
+    }
+  };
+
+  const handleDisconnectTelegram = async () => {
+    if (!confirm('Telegram bağlantısını kesmek istediğinize emin misiniz?')) return;
+    try {
+      const { error } = await supabase
+        .from('weddings')
+        .update({ telegram_bot_token: null, telegram_chat_id: null })
+        .eq('id', wedding.id);
+
+      if (!error) {
+        setTelegramBotToken('');
+        setTelegramChatId('');
+        setTelegramStatusMsg('Telegram bağlantısı kesildi.');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSendTestNotification = async () => {
+    setIsSendingTest(true);
+    try {
+      const res = await fetch('/api/telegram/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wedding_id: wedding.id,
+          guest_name: 'Test Davetlisi',
+          is_attending: true,
+          guest_count: 1,
+          message: 'Bu bir test bildirimidir. Telegram bağlantınız başarıyla çalışıyor! 🎉'
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Test bildirimi gönderildi.');
+      } else {
+        alert('Test bildirimi gönderilemedi: ' + (data.error || 'Bilinmeyen hata'));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Test bildirimi gönderilirken bir hata oluştu.');
+    }
+    setIsSendingTest(false);
+  };
+
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0) return;
     
-    if (!telegramBotToken || !telegramChatId) {
-      alert("Lütfen önce sayfanın altından Telegram Bot Token ve Chat ID bilgilerinizi girip 'Kaydet' butonuna basın.");
+    if (!telegramChatId) {
+      alert("Lütfen önce Telegram bağlantısını kurun.");
       return;
     }
 
@@ -1143,63 +1249,86 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                <div>
-                  <h3 className="font-bold text-lg mb-1 text-slate-800">📨 Telegram Bildirimleri</h3>
-                  <p className="text-xs text-slate-500 mb-4">LCV bildirimleri ve fotoğraf yüklemeleri Telegram grubunuza iletilir.</p>
+                <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-6 text-slate-700">
+                  <h3 className="font-serif font-bold text-lg text-slate-800 mb-1 flex items-center gap-2">
+                    <span>📨</span> Telegram Bildirimlerini Bağla
+                  </h3>
+                  <p className="text-xs text-slate-500 mb-5 leading-relaxed">
+                    Misafirleriniz LCV formunu doldurduğunda telefonunuza anlık Telegram bildirimi gelsin.
+                  </p>
 
-                  {/* Step-by-step guide */}
-                  <div className="mb-4 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 text-sm text-slate-700">
-                    <p className="font-bold text-blue-700 mb-3 flex items-center gap-2">
-                      <span>🤖</span> Telegram Bot Nasıl Kurulur?
-                    </p>
-                    <ol className="space-y-2 text-xs leading-relaxed">
+                  <div className="bg-white border border-slate-100 rounded-xl p-4 mb-5 shadow-sm text-xs">
+                    <h4 className="font-bold text-slate-700 mb-3 uppercase tracking-wider text-[10px]">Bağlantı Adımları</h4>
+                    <ol className="space-y-2.5 text-slate-600">
                       <li className="flex gap-2">
-                        <span className="font-bold text-blue-600 shrink-0">1.</span>
-                        <span>Telegram uygulamasını açın, arama çubuğuna <strong>BotFather</strong> yazıp girin.</span>
+                        <span className="font-bold text-rose-500 shrink-0">1.</span>
+                        <span><strong>Telegram ile Bağlan</strong> butonuna tıklayın.</span>
                       </li>
                       <li className="flex gap-2">
-                        <span className="font-bold text-blue-600 shrink-0">2.</span>
-                        <span>Mesaj alanına <code className="bg-white border border-blue-200 rounded px-1">/newbot</code> yazın ve gönderin.</span>
+                        <span className="font-bold text-rose-500 shrink-0">2.</span>
+                        <span>Açılan Telegram ekranında <strong>Başlat</strong> butonuna basın.</span>
                       </li>
                       <li className="flex gap-2">
-                        <span className="font-bold text-blue-600 shrink-0">3.</span>
-                        <span>Botunuza bir isim verin (Örn: <em>AyşenurAlperenBot</em>). İsim mutlaka <strong>bot</strong> ile bitmeli.</span>
-                      </li>
-                      <li className="flex gap-2">
-                        <span className="font-bold text-blue-600 shrink-0">4.</span>
-                        <span>BotFather'ın gönderdiği mesajdaki <strong>HTTP API token</strong> kodunu kopyalayıp aşağıdaki <em>Bot Token</em> alanına yapıştırın.</span>
-                      </li>
-                      <li className="flex gap-2">
-                        <span className="font-bold text-blue-600 shrink-0">5.</span>
-                        <span>Telegram ana sayfasına dönün, yeni bir <strong>Grup</strong> oluşturun ve oluşturduğunuz botu gruba ekleyin.</span>
-                      </li>
-                      <li className="flex gap-2">
-                        <span className="font-bold text-blue-600 shrink-0">6.</span>
-                        <span>Gruba herhangi bir mesaj atın. Ardından tarayıcıdan şu adrese gidin:</span>
+                        <span className="font-bold text-rose-500 shrink-0">3.</span>
+                        <span>Panele dönün ve <strong>Test Bildirimi Gönder</strong> butonuyla bağlantıyı kontrol edin.</span>
                       </li>
                     </ol>
-                    <div className="mt-3 bg-slate-900 text-green-400 font-mono text-[10px] rounded-lg p-3 break-all leading-relaxed">
-                      https://api.telegram.org/bot<span className="text-yellow-300">[BOT_TOKEN]</span>/getUpdates
-                    </div>
-                    <ol className="space-y-2 text-xs leading-relaxed mt-3" start={7}>
-                      <li className="flex gap-2">
-                        <span className="font-bold text-blue-600 shrink-0">7.</span>
-                        <span>Açılan JSON içinde <code className="bg-white border border-blue-200 rounded px-1">"chat":{"{"}"id": <strong>-100XXXXXXX</strong>{"}"}</code> değerini bulun ve aşağıdaki <em>Chat ID</em> alanına yapıştırın.</span>
-                      </li>
-                    </ol>
-                    <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-2 text-xs text-amber-700">
-                      ⚠️ Chat ID genellikle <strong>-100</strong> ile başlar (eksi işareti dahil!). Bota <strong>admin yetkisi</strong> vermeyi unutmayın.
+                  </div>
+
+                  <div className="bg-rose-50/70 border border-rose-100 rounded-xl p-3 text-xs text-rose-700 mb-6 flex items-start gap-2">
+                    <span className="text-base leading-none">⚠️</span>
+                    <div>
+                      <strong>Uyarı Notu:</strong> Chat ID bilmenize gerek yok. Sistem bağlantıyı otomatik yapar.
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <div>
-                      <label className="block text-xs font-medium text-slate-600 mb-1">🔑 Bot Token</label>
-                      <input type="text" value={telegramBotToken} onChange={e => setTelegramBotToken(e.target.value)} placeholder="Örn: 7123456789:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw" className="w-full border p-2 rounded-lg bg-slate-50 text-sm font-mono" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-slate-600 mb-1">💬 Chat ID</label>
-                      <input type="text" value={telegramChatId} onChange={e => setTelegramChatId(e.target.value)} placeholder="Örn: -1001234567890" className="w-full border p-2 rounded-lg bg-slate-50 text-sm font-mono" />
+                  {/* Status & Actions */}
+                  <div className="space-y-4">
+                    {telegramChatId ? (
+                      <div className="bg-emerald-50 border border-emerald-100 text-emerald-800 p-4 rounded-xl text-xs font-semibold flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-emerald-500 text-lg">✓</span>
+                          <span>Telegram başarıyla bağlandı. LCV bildirimleri bu hesaba gönderilecek.</span>
+                        </div>
+                        <button 
+                          onClick={handleDisconnectTelegram}
+                          className="text-[10px] text-rose-600 hover:text-rose-700 font-bold uppercase tracking-wider hover:underline"
+                        >
+                          Bağlantıyı Kes
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="bg-amber-50 border border-amber-100 text-amber-800 p-4 rounded-xl text-xs font-semibold">
+                        ⚠️ Henüz Telegram bağlantısı kurulmamış.
+                      </div>
+                    )}
+
+                    {telegramStatusMsg && (
+                      <div className="bg-slate-100 text-slate-700 p-3 rounded-lg text-xs font-mono break-words">
+                        {telegramStatusMsg}
+                      </div>
+                    )}
+
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      {!telegramChatId && (
+                        <button
+                          onClick={handleConnectTelegram}
+                          disabled={isConnectingTelegram}
+                          className="flex-1 py-3 px-4 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-2 shadow-md shadow-blue-100"
+                        >
+                          <span>💬</span> {isConnectingTelegram ? 'Telegram Bekleniyor...' : 'Telegram ile Bağlan'}
+                        </button>
+                      )}
+
+                      {telegramChatId && (
+                        <button
+                          onClick={handleSendTestNotification}
+                          disabled={isSendingTest}
+                          className="flex-1 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-2 shadow-md shadow-slate-100"
+                        >
+                          <span>🔔</span> {isSendingTest ? 'Test Bildirimi Gönderiliyor...' : 'Test Bildirimi Gönder'}
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

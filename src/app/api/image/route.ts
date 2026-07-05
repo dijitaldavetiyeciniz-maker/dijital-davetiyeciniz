@@ -18,11 +18,12 @@ export async function GET(request: Request) {
       .eq('id', wedding_id)
       .single();
 
-    if (!wedding || !wedding.telegram_bot_token) {
+    const isCustomBot = wedding.telegram_bot_token && wedding.telegram_bot_token.includes(':');
+    const token = isCustomBot ? wedding.telegram_bot_token : process.env.TELEGRAM_BOT_TOKEN;
+
+    if (!token) {
       return new NextResponse('Bot token bulunamadı', { status: 404 });
     }
-
-    const token = wedding.telegram_bot_token;
 
     // 2. Telegram'dan file_path bilgisini al
     const getFileUrl = `https://api.telegram.org/bot${token}/getFile?file_id=${file_id}`;

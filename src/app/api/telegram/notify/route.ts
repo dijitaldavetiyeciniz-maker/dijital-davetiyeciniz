@@ -20,8 +20,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Düğün bulunamadı' }, { status: 404 });
     }
 
-    // Eğer Telegram ayarları yoksa işlemi iptal et (sadece veritabanına kaydolur)
-    if (!wedding.telegram_bot_token || !wedding.telegram_chat_id) {
+    const isCustomBot = wedding.telegram_bot_token && wedding.telegram_bot_token.includes(':');
+    const botToken = isCustomBot ? wedding.telegram_bot_token : process.env.TELEGRAM_BOT_TOKEN;
+
+    // Eğer Telegram ayarları yoksa işlemi iptal et
+    if (!botToken || !wedding.telegram_chat_id) {
       return NextResponse.json({ success: true, message: 'Telegram ayarları yok, bildirim atlanıldı.' });
     }
 
@@ -33,7 +36,7 @@ export async function POST(request: Request) {
     const telegramMessage = `🎉 *YENİ LCV YANITI!*\n\n👤 *İsim:* ${guest_name}\n📌 *Durum:* ${statusText}${countText}${msgText}\n\n💍 Davetiye: ${wedding.bride_name} ${wedding.groom_name ? '& ' + wedding.groom_name : ''}`;
 
     // 3. Telegram API'ye Gönder
-    const telegramUrl = `https://api.telegram.org/bot${wedding.telegram_bot_token}/sendMessage`;
+    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
     
     const response = await fetch(telegramUrl, {
       method: 'POST',
