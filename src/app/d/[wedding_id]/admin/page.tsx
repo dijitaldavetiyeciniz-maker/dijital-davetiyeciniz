@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, use } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music } from 'lucide-react';
+import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2 } from 'lucide-react';
 import { getRandomQuote } from '@/lib/aiQuotes';
 
 function getTemplatePreset(id: string) {
@@ -163,6 +163,7 @@ export default function CoupleAdminPage({
   const [customMessage, setCustomMessage] = useState('');
   const [quoteFontFamily, setQuoteFontFamily] = useState('');
   const [quoteFontSize, setQuoteFontSize] = useState('text-sm');
+  const [isCopied, setIsCopied] = useState(false);
   
 
   const [isUploading, setIsUploading] = useState(false);
@@ -472,15 +473,22 @@ export default function CoupleAdminPage({
   const totalGuests = rsvps.filter(r => r.is_attending).reduce((sum, curr) => sum + curr.guest_count, 0);
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8 text-slate-800">
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{wedding.bride_name} & {wedding.groom_name}</h1>
-            <p className="text-slate-500">Müşteri Oluşturma ve Yönetim Paneli</p>
-          </div>
-          <button onClick={() => setIsAuthenticated(false)} className="text-sm font-medium text-slate-500 hover:text-slate-800">Çıkış Yap</button>
-        </header>
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8 text-slate-800">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8">
+        
+        {/* SOL KOLON: İçerik, Sekmeler ve Ayarlar */}
+        <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6">
+          <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <span>🎉</span> {wedding.bride_name} & {wedding.groom_name}
+              </h1>
+              <p className="text-slate-500 text-xs mt-1">Davetiye Yönetim ve Tasarım Paneli</p>
+            </div>
+            <button onClick={() => setIsAuthenticated(false)} className="text-xs font-semibold px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all">
+              Çıkış Yap
+            </button>
+          </header>
         
         {/* Sekmeler (Tabs) */}
         <div className="flex border-b border-slate-200 mb-8 overflow-x-auto">
@@ -591,9 +599,7 @@ export default function CoupleAdminPage({
         )}
 
         {activeTab === 'design' && (
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* SOL KOLON: Form ve Ayarlar */}
-            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+          <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
               <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
                 <Paintbrush className="w-6 h-6 text-rose-500" /> Tasarım Stüdyosu
               </h2>
@@ -1202,36 +1208,6 @@ export default function CoupleAdminPage({
               <button onClick={handleSaveDesign} className="mt-8 flex items-center justify-center gap-2 w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition-colors shadow-lg">
                 <Save className="w-5 h-5" /> Değişiklikleri Kaydet & Önizlemeyi Yenile
               </button>
-            </div>
-
-            {/* SAĞ KOLON: Canlı Önizleme */}
-            <div className="relative h-[850px] lg:sticky lg:top-8 flex flex-col gap-3 hidden lg:flex">
-              <div className="flex justify-between items-center bg-slate-800 text-white px-6 py-2.5 rounded-2xl shadow-md border border-slate-700">
-                <span className="text-xs font-bold tracking-wider text-slate-300">📱 Canlı Telefon Önizlemesi</span>
-                <button 
-                  onClick={handleReplayAnimation}
-                  className="bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors"
-                >
-                  <Wand2 className="w-3.5 h-3.5" /> Giriş Animasyonunu Oynat
-                </button>
-              </div>
-              <div className="relative h-[800px] w-full bg-slate-800 rounded-[3rem] p-4 shadow-2xl border-4 border-slate-700">
-                {/* Telefon Çentiği */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-3xl z-20"></div>
-                <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-hidden relative">
-                  <iframe 
-                    key={previewKey} 
-                    src={`/d/${wedding.slug}?preview=true&t=${previewKey}`} 
-                    className="w-full h-full border-0"
-                    title="Live Preview"
-                  />
-                </div>
-              </div>
-            </div>
-            {/* Mobil için önizleme uyarısı */}
-            <div className="lg:hidden bg-blue-50 text-blue-600 p-4 rounded-xl text-sm font-medium">
-              📱 Canlı önizleme ekranı telefonlarda performans sebebiyle gizlenmiştir. Değişikliklerinizi kaydettikten sonra <a href={`/d/${wedding.slug}`} target="_blank" className="underline font-bold">buraya tıklayarak</a> sitenize bakabilirsiniz.
-            </div>
           </div>
         )}
 
@@ -1242,41 +1218,143 @@ export default function CoupleAdminPage({
                 <div className="w-20 h-20 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
                   <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                 </div>
-                <h2 className="text-2xl font-bold mb-2">Davetiyeniz Yayında!</h2>
-                <p className="text-slate-500 mb-6">Ödemeniz onaylanmıştır. Davetiyenizi sevdiklerinize gönderebilirsiniz.</p>
-                <a href={`/d/${wedding.slug}`} target="_blank" className="inline-block px-8 py-3 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition-colors">
-                  Davetiyeyi Görüntüle
+                <h2 className="text-2xl font-bold mb-2 text-slate-800">Davetiyeniz Yayında! 🎉</h2>
+                <p className="text-slate-500 text-sm mb-6">Ödemeniz onaylanmıştır. Paylaşım linkinizi kopyalayarak misafirlerinize gönderebilirsiniz.</p>
+
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left mb-6">
+                  <p className="font-bold text-slate-700 text-xs mb-1.5 flex items-center gap-1">
+                    <Share2 className="w-4 h-4 text-emerald-600" /> Davetiye Paylaşım Bağlantınız:
+                  </p>
+                  <div className="flex gap-2">
+                    <input 
+                      readOnly 
+                      type="text" 
+                      value={`https://dijital-davetiyeciniz.vercel.app/d/${wedding.slug}`} 
+                      className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-700 font-bold" 
+                    />
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(`https://dijital-davetiyeciniz.vercel.app/d/${wedding.slug}`);
+                        setIsCopied(true);
+                        setTimeout(() => setIsCopied(false), 2000);
+                      }}
+                      className="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-4 rounded-xl transition-all flex items-center gap-1 shrink-0"
+                    >
+                      {isCopied ? 'Kopyalandı!' : <><Copy className="w-3.5 h-3.5" /> Kopyala</>}
+                    </button>
+                  </div>
+                </div>
+
+                <a 
+                  href={`/d/${wedding.slug}`} 
+                  target="_blank" 
+                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-100 text-sm"
+                >
+                  Davetiyeyi Yeni Sekmede Aç <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
             ) : (
               <div>
-                <div className="w-20 h-20 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Lock className="w-10 h-10" />
+                <div className="w-16 h-16 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Lock className="w-8 h-8" />
                 </div>
-                <h2 className="text-2xl font-bold mb-4">Siteyi Canlıya Almak İçin Ödeme Gerekiyor</h2>
-                <p className="text-slate-500 mb-8 leading-relaxed">
-                  Tasarımınızı tamamladınız! Davetiyenizi misafirlerinize gönderebilmek için aşağıdaki IBAN hesabına ödemenizi gerçekleştirip WhatsApp üzerinden dekont iletmeniz gerekmektedir.
+                <h2 className="text-xl font-bold mb-2 text-slate-800">Davetiyenizi Yayına Alın</h2>
+                <p className="text-slate-500 text-xs mb-6 max-w-md mx-auto leading-relaxed">
+                  Tasarımınızı oluşturup dilediğiniz gibi özelleştirebilirsiniz. Sitenizi misafirlerinize açmak için ödemenizi gerçekleştirip onay almanız gerekmektedir.
                 </p>
+
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-left mb-6">
+                  <p className="font-bold text-amber-800 text-xs mb-1.5">🔗 Davetiye Linkiniz (Taslak):</p>
+                  <div className="flex gap-2">
+                    <input 
+                      readOnly 
+                      type="text" 
+                      value={`https://dijital-davetiyeciniz.vercel.app/d/${wedding.slug}`} 
+                      className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-500" 
+                    />
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(`https://dijital-davetiyeciniz.vercel.app/d/${wedding.slug}`);
+                        setIsCopied(true);
+                        setTimeout(() => setIsCopied(false), 2000);
+                      }}
+                      className="bg-slate-850 hover:bg-slate-750 text-white text-xs font-semibold px-4 rounded-xl transition-all flex items-center gap-1 shrink-0"
+                    >
+                      {isCopied ? 'Kopyalandı!' : <><Copy className="w-3.5 h-3.5" /> Kopyala</>}
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-2 leading-relaxed">
+                    ⚠️ Bu link şu an ödeme onaylanmadığı için dışarıdan erişime kapalıdır, sadece bu panelde sağdaki Canlı Önizleme ekranında çalışır.
+                  </p>
+                </div>
+
+                {/* Lock Action Button */}
+                <button 
+                  disabled 
+                  className="w-full py-4 bg-slate-100 border border-slate-200 text-slate-500 font-bold rounded-xl text-xs cursor-not-allowed mb-6 flex items-center justify-center gap-2"
+                >
+                  <Lock className="w-4 h-4" /> Davetiyenizi önizleyebilirsiniz. Yayına almak için ödeme gereklidir.
+                </button>
                 
-                <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 text-left mb-8">
-                  <h3 className="font-bold text-slate-800 mb-4 border-b pb-2">Banka Bilgileri</h3>
-                  <div className="space-y-2">
-                    <p><span className="text-slate-500">Banka:</span> Enpara / QNB Finansbank</p>
-                    <p><span className="text-slate-500">Alıcı:</span> Dijital Davetiyeciniz Yazılım Hizmetleri</p>
-                    <p><span className="text-slate-500">IBAN:</span> <span className="font-mono bg-white px-2 py-1 border rounded">TR12 3456 7890 0000 0000 0000 00</span></p>
-                    <p><span className="text-slate-500">Açıklama:</span> <strong className="text-rose-500">{wedding.slug}</strong> (Ödeme açıklamasına mutlaka bunu yazın)</p>
+                <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 text-left mb-6 text-xs">
+                  <h3 className="font-bold text-slate-800 mb-3 border-b pb-2">Banka Hesap Bilgileri</h3>
+                  <div className="space-y-1.5 text-slate-600">
+                    <p><span className="text-slate-400 font-medium">Banka:</span> Enpara / QNB Finansbank</p>
+                    <p><span className="text-slate-400 font-medium">Alıcı:</span> Dijital Davetiyeciniz Yazılım Hizmetleri</p>
+                    <p><span className="text-slate-400 font-medium">IBAN:</span> <span className="font-mono bg-white px-2 py-0.5 border rounded">TR12 3456 7890 0000 0000 0000 00</span></p>
+                    <p><span className="text-slate-400 font-medium">Açıklama:</span> <strong className="text-rose-500">{wedding.slug}</strong> (Lütfen ödeme açıklamasında tam olarak bu kodu belirtin)</p>
                   </div>
                 </div>
 
-                <a href={`https://wa.me/905555555555?text=Merhaba, %20${wedding.slug}%20isimli%20davetiyemin%20ödemesini%20yaptım.%20Dekontu%20iletiyorum.`} target="_blank" className="inline-block px-8 py-4 bg-green-500 text-white font-bold rounded-xl hover:bg-green-600 transition-colors shadow-lg shadow-green-200">
-                  WhatsApp'tan Bildir
+                <a 
+                  href={`https://wa.me/905555555555?text=Merhaba, %20${wedding.slug}%20isimli%20davetiyemin%20ödemesini%20yaptım.%20Dekontu%20iletiyorum.`} 
+                  target="_blank" 
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-green-500 text-white font-bold rounded-xl hover:bg-green-600 transition-colors shadow-lg shadow-green-100 text-sm w-full"
+                >
+                  Dekont Gönder & Aktivasyon İste
                 </a>
               </div>
             )}
           </div>
         )}
+      </div> {/* SOL KOLON KAPANIŞ */}
 
+      {/* SAĞ KOLON: Canlı Önizleme (Sürekli Görünür ve Aktif) */}
+      <div className="lg:col-span-5 xl:col-span-4 relative">
+        <div className="relative h-[850px] lg:sticky lg:top-8 flex flex-col gap-3">
+          <div className="flex justify-between items-center bg-slate-800 text-white px-6 py-2.5 rounded-2xl shadow-md border border-slate-700">
+            <span className="text-xs font-bold tracking-wider text-slate-300 flex items-center gap-1.5">
+              📱 Canlı Önizleme
+              {!wedding.is_paid && <span className="bg-amber-500 text-slate-900 font-bold px-2 py-0.5 rounded-full text-[9px] uppercase animate-pulse">Önizleme Modu</span>}
+            </span>
+            <button 
+              onClick={handleReplayAnimation}
+              className="bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors"
+            >
+              <Wand2 className="w-3.5 h-3.5" /> Yenile
+            </button>
+          </div>
+          <div className="relative h-[800px] w-full bg-slate-800 rounded-[3rem] p-4 shadow-2xl border-4 border-slate-700">
+            {/* Telefon Çentiği */}
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-3xl z-20"></div>
+            <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-hidden relative">
+              <iframe 
+                key={previewKey} 
+                src={`/d/${wedding.slug}?preview=true&t=${previewKey}`} 
+                className="w-full h-full border-0"
+                title="Live Preview"
+              />
+            </div>
+          </div>
+          {/* Mobil için önizleme uyarısı */}
+          <div className="lg:hidden bg-blue-50 text-blue-600 p-4 rounded-xl text-sm font-medium">
+            📱 Canlı önizleme ekranı telefonlarda performans sebebiyle gizlenmiştir. Değişikliklerinizi kaydettikten sonra <a href={`/d/${wedding.slug}?preview=true`} target="_blank" className="underline font-bold">buraya tıklayarak</a> sitenize bakabilirsiniz.
+          </div>
+        </div>
       </div>
-    </div>
+
+    </div> {/* GRID KAPANIŞ */}
+  </div>
   );
 }
+

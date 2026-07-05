@@ -13,10 +13,14 @@ import BackgroundMusic from '@/components/BackgroundMusic';
 // Next.js App Router Page
 export default async function WeddingPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ wedding_id: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }) {
   const { wedding_id } = await params;
+  const { preview } = await searchParams;
+  const isPreview = preview === 'true';
 
   // Supabase'den veriyi çekiyoruz
   const { data: wedding, error } = await supabase
@@ -30,8 +34,8 @@ export default async function WeddingPage({
     notFound();
   }
 
-  // PAYWALL (Ödeme Duvarı) Kontrolü
-  if (!wedding.is_paid) {
+  // PAYWALL (Ödeme Duvarı) Kontrolü (Bypass if in preview mode)
+  if (!wedding.is_paid && !isPreview) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
         <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mb-6">
