@@ -14,9 +14,21 @@ export default function CountdownTimer({
   const [isPast, setIsPast] = useState(false);
 
   useEffect(() => {
+    if (!targetDate) {
+      setIsPast(true);
+      return;
+    }
+
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const target = new Date(targetDate).getTime();
+
+      if (isNaN(target)) {
+        clearInterval(timer);
+        setIsPast(true);
+        return;
+      }
+
       const distance = target - now;
 
       if (distance < 0) {
@@ -29,13 +41,20 @@ export default function CountdownTimer({
           minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
           seconds: Math.floor((distance % (1000 * 60)) / 1000)
         });
+        setIsPast(false);
       }
     }, 1000);
 
     return () => clearInterval(timer);
   }, [targetDate]);
 
-  if (isPast) return null;
+  if (isPast) {
+    return (
+      <div className="text-center py-4 px-6 rounded-2xl border border-dashed bg-white/30 backdrop-blur-xs font-serif text-xs font-bold uppercase tracking-[0.2em] max-w-[280px] mx-auto animate-pulse" style={{ borderColor: `${primaryColor}40`, color: primaryColor }}>
+        🎉 Etkinlik Gerçekleşti!
+      </div>
+    );
+  }
 
   const renderTimerBlock = (value: number, label: string) => {
     const paddedValue = value.toString().padStart(2, '0');
