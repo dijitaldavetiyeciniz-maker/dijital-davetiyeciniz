@@ -1955,9 +1955,12 @@ export default function CoupleAdminPage({
                           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sayaç Tasarım Seçeneği</label>
                           <div className="grid grid-cols-3 gap-2">
                             {[
-                              { id: 'minimal', label: 'Minimal Çizgisel' },
-                              { id: 'digital', label: 'Klasik Dijital' },
-                              { id: 'circular', label: 'Zarif Yuvarlak' }
+                              { id: 'minimal', label: 'Minimal' },
+                              { id: 'digital', label: 'Dijital' },
+                              { id: 'circular', label: 'Daire' },
+                              { id: 'glass', label: 'Cam' },
+                              { id: 'neon', label: 'Neon' },
+                              { id: 'elegant', label: 'Klasik' }
                             ].map(style => (
                               <button
                                 key={style.id}
