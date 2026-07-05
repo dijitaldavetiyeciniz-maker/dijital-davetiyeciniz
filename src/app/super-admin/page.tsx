@@ -312,7 +312,7 @@ export default function SuperAdminPage() {
                       }
                     </div>
                     <div className="flex gap-4">
-                      <a href={`/${w.slug}`} target="_blank" className="text-blue-500 text-sm font-medium flex items-center gap-1 hover:underline">
+                      <a href={`/d/${w.slug}`} target="_blank" className="text-blue-500 text-sm font-medium flex items-center gap-1 hover:underline">
                         Siteye Git <ExternalLink className="w-4 h-4" />
                       </a>
                       <button 
@@ -321,7 +321,7 @@ export default function SuperAdminPage() {
                       >
                         {w.is_paid ? 'Ödemeyi İptal Et' : 'Ödemeyi Onayla (Yayına Al)'}
                       </button>
-                      <a href={`/${w.slug}/admin`} target="_blank" className="text-rose-500 text-sm font-medium flex items-center gap-1 hover:underline">
+                      <a href={`/d/${w.slug}/admin`} target="_blank" className="text-rose-500 text-sm font-medium flex items-center gap-1 hover:underline">
                         Müşteri Paneli
                       </a>
                     </div>

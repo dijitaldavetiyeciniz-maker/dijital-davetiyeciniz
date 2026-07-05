@@ -1221,7 +1221,7 @@ export default function CoupleAdminPage({
                 <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-hidden relative">
                   <iframe 
                     key={previewKey} 
-                    src={`/${wedding.slug}?preview=true&t=${previewKey}`} 
+                    src={`/d/${wedding.slug}?preview=true&t=${previewKey}`} 
                     className="w-full h-full border-0"
                     title="Live Preview"
                   />
@@ -1230,7 +1230,7 @@ export default function CoupleAdminPage({
             </div>
             {/* Mobil için önizleme uyarısı */}
             <div className="lg:hidden bg-blue-50 text-blue-600 p-4 rounded-xl text-sm font-medium">
-              📱 Canlı önizleme ekranı telefonlarda performans sebebiyle gizlenmiştir. Değişikliklerinizi kaydettikten sonra <a href={`/${wedding.slug}`} target="_blank" className="underline font-bold">buraya tıklayarak</a> sitenize bakabilirsiniz.
+              📱 Canlı önizleme ekranı telefonlarda performans sebebiyle gizlenmiştir. Değişikliklerinizi kaydettikten sonra <a href={`/d/${wedding.slug}`} target="_blank" className="underline font-bold">buraya tıklayarak</a> sitenize bakabilirsiniz.
             </div>
           </div>
         )}
@@ -1244,7 +1244,7 @@ export default function CoupleAdminPage({
                 </div>
                 <h2 className="text-2xl font-bold mb-2">Davetiyeniz Yayında!</h2>
                 <p className="text-slate-500 mb-6">Ödemeniz onaylanmıştır. Davetiyenizi sevdiklerinize gönderebilirsiniz.</p>
-                <a href={`/${wedding.slug}`} target="_blank" className="inline-block px-8 py-3 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition-colors">
+                <a href={`/d/${wedding.slug}`} target="_blank" className="inline-block px-8 py-3 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition-colors">
                   Davetiyeyi Görüntüle
                 </a>
               </div>

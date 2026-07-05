@@ -101,7 +101,7 @@ export default function DashboardPage() {
                   <div className={`px-3 py-1 rounded-full text-xs font-bold ${wedding.is_paid ? 'bg-emerald-100 text-emerald-600' : 'bg-orange-100 text-orange-600'}`}>
                     {wedding.is_paid ? 'Yayında' : 'Ödeme Bekliyor'}
                   </div>
-                  <div className="text-xs text-slate-400 font-mono">/{wedding.slug}</div>
+                  <div className="text-xs text-slate-400 font-mono">/d/{wedding.slug}</div>
                 </div>
                 
                 <h3 className="text-xl font-bold text-slate-800 mb-1">{wedding.bride_name} {wedding.groom_name && `& ${wedding.groom_name}`}</h3>
@@ -109,13 +109,13 @@ export default function DashboardPage() {
 
                 <div className="flex gap-2">
                   <Link 
-                    href={`/${wedding.slug}/admin`}
+                    href={`/d/${wedding.slug}/admin`}
                     className="flex-1 bg-slate-100 text-slate-700 py-3 rounded-xl font-bold text-sm text-center hover:bg-slate-200 transition-colors flex items-center justify-center gap-2"
                   >
                     <Settings className="w-4 h-4" /> Oluştur / Düzenle
                   </Link>
                   <a 
-                    href={`/${wedding.slug}`}
+                    href={`/d/${wedding.slug}`}
                     target="_blank"
                     className="flex-1 bg-rose-50 text-rose-600 py-3 rounded-xl font-bold text-sm text-center hover:bg-rose-100 transition-colors flex items-center justify-center gap-2"
                   >
