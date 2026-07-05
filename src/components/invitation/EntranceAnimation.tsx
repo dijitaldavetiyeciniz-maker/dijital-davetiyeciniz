@@ -62,14 +62,34 @@ export function EntranceAnimation({
 
   useEffect(() => {
     setOpened(false);
+    let autoOpenTimer: NodeJS.Timeout;
+    let completeTimer: NodeJS.Timeout;
 
-    const timer = setTimeout(() => {
+    // Auto-open after 2.2 seconds if they don't click manually
+    autoOpenTimer = setTimeout(() => {
       setOpened(true);
-      onComplete?.();
-    }, 3800);
+      if (onComplete) {
+        completeTimer = setTimeout(() => {
+          onComplete();
+        }, 3500);
+      }
+    }, 2200);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(autoOpenTimer);
+      clearTimeout(completeTimer);
+    };
   }, [animationType, envelopeStyle, sealStyle, backgroundAnimation, onComplete]);
+
+  const handleManualOpen = () => {
+    if (opened) return;
+    setOpened(true);
+    if (onComplete) {
+      setTimeout(() => {
+        onComplete();
+      }, 3500);
+    }
+  };
 
   const shouldShowPetals =
     backgroundAnimation === "petals" ||
@@ -93,7 +113,10 @@ export function EntranceAnimation({
       {shouldShowGold && <GoldenParticles />}
       {shouldShowPearl && <PearlParticles />}
 
-      <div className={`entrance-stage animation-${animationType} ${opened ? "is-opened" : ""}`}>
+      <div 
+        onClick={handleManualOpen}
+        className={`entrance-stage animation-${animationType} ${opened ? "is-opened" : ""} cursor-pointer`}
+      >
         <EnvelopeCover style={envelopeStyle}>
           <InvitationCard 
             brideName={brideName} 
@@ -106,6 +129,14 @@ export function EntranceAnimation({
           <WaxSeal style={sealStyle} initials={initials} />
         </EnvelopeCover>
       </div>
+
+      {!opened && (
+        <div className="absolute bottom-10 left-0 right-0 text-center animate-pulse z-20 pointer-events-none">
+          <p className="text-xs uppercase tracking-widest text-slate-500 font-extrabold drop-shadow-md select-none bg-white/40 inline-block px-4 py-2 rounded-full backdrop-blur-xs border border-white/20">
+            ✉️ AÇMAK İÇİN DOKUNUN ✉️
+          </p>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,8 +1,8 @@
 .entrance-root {
   position: relative;
   width: 100%;
-  height: 100%;
-  min-height: 620px;
+  height: 100vh;
+  min-height: 580px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -18,16 +18,17 @@
   width: min(86vw, 360px);
   aspect-ratio: 9 / 14;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   transform-style: preserve-3d;
   z-index: 5;
+  padding-bottom: 60px;
 }
 
 .envelope {
   position: relative;
   width: 100%;
-  height: 68%;
+  height: 56%;
   border-radius: 18px;
   transform-style: preserve-3d;
   filter: drop-shadow(0 24px 45px rgba(80, 42, 25, 0.24));
