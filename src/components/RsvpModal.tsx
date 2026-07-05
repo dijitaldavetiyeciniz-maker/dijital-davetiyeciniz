@@ -51,23 +51,28 @@ export default function RsvpModal({
     if (error) {
       alert("Bir hata oluştu: " + error.message);
     } else {
-      // Başarılı kayıttan sonra Telegram bildirimi gönder
-      try {
-        await fetch('/api/telegram/notify', {
+      const notifPayload = {
+        wedding_id: weddingId,
+        guest_name: guestName,
+        is_attending: isAttending,
+        guest_count: isAttending ? guestCount : 0,
+        child_count: isAttending ? childCount : 0,
+        message: message
+      };
+
+      // Telegram ve E-posta bildirimlerini paralel gönder (hata olsa bile sessiz devam)
+      Promise.allSettled([
+        fetch('/api/telegram/notify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            wedding_id: weddingId,
-            guest_name: guestName,
-            is_attending: isAttending,
-            guest_count: isAttending ? guestCount : 0,
-            child_count: isAttending ? childCount : 0,
-            message: message
-          })
-        });
-      } catch (e) {
-        console.error("Telegram bildirim hatası", e);
-      }
+          body: JSON.stringify(notifPayload)
+        }),
+        fetch('/api/email/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(notifPayload)
+        })
+      ]).catch(e => console.error("Bildirim hatası:", e));
 
       setIsSuccess(true);
       setTimeout(() => {

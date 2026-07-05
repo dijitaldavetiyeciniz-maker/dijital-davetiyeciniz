@@ -573,63 +573,80 @@ export default function CoupleAdminPage({
   const [isConnectingTelegram, setIsConnectingTelegram] = useState(false);
   const [telegramStatusMsg, setTelegramStatusMsg] = useState('');
   const [isSendingTest, setIsSendingTest] = useState(false);
+  const [verifiedBotName, setVerifiedBotName] = useState('');
+  const [telegramWizardStep, setTelegramWizardStep] = useState<1 | 2 | 3>(1);
 
-  const handleConnectTelegram = async () => {
+  // Token doğrulama + webhook kayıt
+  const handleValidateToken = async () => {
+    if (!telegramBotToken || !telegramBotToken.includes(':')) {
+      setTelegramStatusMsg('❌ Lütfen geçerli bir Bot Token girin. (Örn: 123456:ABC-def...)');
+      return;
+    }
+
+    setIsConnectingTelegram(true);
+    setTelegramStatusMsg('🔄 Token doğrulanıyor...');
+
     try {
-      setTelegramStatusMsg('Bağlantı linki oluşturuluyor...');
-      const newInviteToken = crypto.randomUUID();
-      
-      const { error: updateError } = await supabase
-        .from('weddings')
-        .update({ telegram_bot_token: newInviteToken })
-        .eq('id', wedding.id);
+      const res = await fetch('/api/telegram/setwebhook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wedding_id: wedding.id, bot_token: telegramBotToken })
+      });
+      const data = await res.json();
 
-      if (updateError) {
-        setTelegramStatusMsg('Bağlantı token\'ı oluşturulurken hata oluştu.');
+      if (!res.ok || !data.success) {
+        setTelegramStatusMsg('❌ ' + (data.error || 'Token doğrulanamadı.'));
+        setIsConnectingTelegram(false);
         return;
       }
 
-      setTelegramBotToken(newInviteToken);
+      setVerifiedBotName(data.bot_name || data.bot_username || 'Bot');
+      setTelegramStatusMsg('✅ Bot doğrulandı! Adım 2\'ye geçin.');
+      setTelegramWizardStep(2);
 
-      // Open Telegram link in a new tab
-      const telegramLink = `https://t.me/DijitalDavetiyecinizBot?start=${newInviteToken}`;
-      window.open(telegramLink, '_blank');
-
-      setIsConnectingTelegram(true);
-      setTelegramStatusMsg('Lütfen Telegram botunu açıp "Başlat" butonuna tıklayın. Bekleniyor...');
-
-      // Start polling for chat_id
-      const interval = setInterval(async () => {
-        const { data: updatedWedding } = await supabase
-          .from('weddings')
-          .select('telegram_chat_id')
-          .eq('id', wedding.id)
-          .single();
-
-        if (updatedWedding && updatedWedding.telegram_chat_id) {
-          setTelegramChatId(updatedWedding.telegram_chat_id);
-          setIsConnectingTelegram(false);
-          setTelegramStatusMsg('Telegram başarıyla bağlandı. LCV bildirimleri bu hesaba gönderilecek.');
-          clearInterval(interval);
-        }
-      }, 3000);
-
-      // Auto-clear interval after 5 minutes to avoid infinite loop
-      setTimeout(() => {
-        clearInterval(interval);
-        setIsConnectingTelegram(current => {
-          if (current) {
-            setTelegramStatusMsg('Bağlantı zaman aşımına uğradı. Lütfen tekrar deneyin.');
-          }
-          return false;
-        });
-      }, 300000);
+      if (data.webhook_warning) {
+        console.warn('Webhook uyarısı:', data.webhook_warning);
+      }
 
     } catch (err) {
-      console.error(err);
-      setTelegramStatusMsg('Bağlantı başlatılamadı.');
+      setTelegramStatusMsg('❌ Bağlantı hatası. İnternet bağlantınızı kontrol edin.');
     }
+
+    setIsConnectingTelegram(false);
   };
+
+  // Grubun /bagla komutunu dinle (polling)
+  const handleStartBaglaPolling = () => {
+    setTelegramWizardStep(3);
+    setTelegramStatusMsg('⏳ Grubunuzdan /bagla komutu bekleniyor...');
+    setIsConnectingTelegram(true);
+
+    const interval = setInterval(async () => {
+      const { data: updatedWedding } = await supabase
+        .from('weddings')
+        .select('telegram_chat_id')
+        .eq('id', wedding.id)
+        .single();
+
+      if (updatedWedding?.telegram_chat_id) {
+        setTelegramChatId(updatedWedding.telegram_chat_id);
+        setIsConnectingTelegram(false);
+        setTelegramStatusMsg('');
+        clearInterval(interval);
+      }
+    }, 3000);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      setIsConnectingTelegram(current => {
+        if (current) setTelegramStatusMsg('⏱️ Zaman aşımı. Gruba /bagla yazdığınızdan emin olun ve tekrar deneyin.');
+        return false;
+      });
+    }, 300000);
+  };
+
+  // Eski uyumluluk — artık kullanılmıyor ama referans kırılmaması için bırakıldı
+  const handleConnectTelegram = handleValidateToken;
 
   const handleDisconnectTelegram = async () => {
     if (!confirm('Telegram bağlantısını kesmek istediğinize emin misiniz?')) return;
@@ -1905,137 +1922,181 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
+                {/* === TELEGRAM FOTOĞRAF BOTU SİHİRBAZI === */}
                 <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-6 text-slate-700">
-                  <h3 className="font-serif font-bold text-lg text-slate-800 mb-1 flex items-center gap-2">
-                    <span>📨</span> Telegram Bildirimlerini Bağla
-                  </h3>
-                  <p className="text-sm text-slate-600 mb-5 leading-relaxed">
-                    Misafirleriniz LCV formunu doldurduğunda telefonunuza anlık Telegram bildirimi gelsin.
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="font-serif font-bold text-lg text-slate-800 flex items-center gap-2">
+                      <span>🤖</span> Telegram Fotoğraf Botunuzu Kurun
+                    </h3>
+                    {telegramChatId && (
+                      <button
+                        onClick={handleDisconnectTelegram}
+                        className="text-xs text-rose-500 hover:text-rose-600 font-semibold hover:underline"
+                      >
+                        Bağlantıyı Kes
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-sm text-slate-500 mb-5 leading-relaxed">
+                    Misafirlerinizin davetiyeye yüklediği anlık fotoğraflar, kurduğunuz Telegram grubuna anında resim olarak düşsün.
                   </p>
 
-                  <div className="bg-white border border-slate-100 rounded-xl p-4 mb-5 shadow-sm text-xs">
-                    <h4 className="font-bold text-slate-700 mb-3 uppercase tracking-wider text-[10px]">Bağlantı Adımları</h4>
-                    <ol className="space-y-2.5 text-slate-600">
-                      <li className="flex gap-2">
-                        <span className="font-bold text-rose-500 shrink-0">1.</span>
-                        <span><strong>Telegram ile Bağlan</strong> butonuna tıklayın.</span>
-                      </li>
-                      <li className="flex gap-2">
-                        <span className="font-bold text-rose-500 shrink-0">2.</span>
-                        <span>Açılan Telegram ekranında <strong>Başlat</strong> butonuna basın.</span>
-                      </li>
-                      <li className="flex gap-2">
-                        <span className="font-bold text-rose-500 shrink-0">3.</span>
-                        <span>Panele dönün ve <strong>Test Bildirimi Gönder</strong> butonuyla bağlantıyı kontrol edin.</span>
-                      </li>
-                    </ol>
-                  </div>
-
-                  <div className="bg-rose-50/70 border border-rose-100 rounded-xl p-3 text-xs text-rose-700 mb-6 flex items-start gap-2">
-                    <span className="text-base leading-none">⚠️</span>
-                    <div>
-                      <strong>Uyarı Notu:</strong> Chat ID bilmenize gerek yok. Sistem bağlantıyı otomatik yapar.
-                    </div>
-                  </div>
-
-                  {/* Status & Actions */}
-                  <div className="space-y-4">
-                    {telegramChatId ? (
-                      <div className="bg-emerald-50 border border-emerald-100 text-emerald-800 p-4 rounded-xl text-xs font-semibold flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-emerald-500 text-lg">✓</span>
-                          <span>Telegram başarıyla bağlandı. LCV bildirimleri bu hesaba gönderilecek.</span>
-                        </div>
-                        <button 
-                          onClick={handleDisconnectTelegram}
-                          className="text-[10px] text-rose-600 hover:text-rose-700 font-bold uppercase tracking-wider hover:underline"
-                        >
-                          Bağlantıyı Kes
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="bg-amber-50 border border-amber-100 text-amber-800 p-4 rounded-xl text-xs font-semibold">
-                        ⚠️ Henüz Telegram bağlantısı kurulmamış.
-                      </div>
-                    )}
-
-                    {telegramStatusMsg && (
-                      <div className="bg-slate-100 text-slate-700 p-3 rounded-lg text-xs font-mono break-words">
-                        {telegramStatusMsg}
-                      </div>
-                    )}
-
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      {!telegramChatId && (
-                        <button
-                          onClick={handleConnectTelegram}
-                          disabled={isConnectingTelegram}
-                          className="flex-1 py-3 px-4 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-2 shadow-md shadow-blue-100"
-                        >
-                          <span>💬</span> {isConnectingTelegram ? 'Telegram Bekleniyor...' : 'Telegram ile Bağlan'}
-                        </button>
-                      )}
-
-                      {telegramChatId && (
-                        <button
-                          onClick={handleSendTestNotification}
-                          disabled={isSendingTest}
-                          className="flex-1 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-2 shadow-md shadow-slate-100"
-                        >
-                          <span>🔔</span> {isSendingTest ? 'Test Bildirimi Gönderiliyor...' : 'Test Bildirimi Gönder'}
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Manual Fallback */}
-                    <div className="pt-3 border-t border-slate-200/50 flex flex-col gap-2">
+                  {/* Bağlı Durumu */}
+                  {telegramChatId ? (
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center">
+                      <div className="text-3xl mb-2">🎉</div>
+                      <p className="font-bold text-emerald-800 text-base mb-1">Telegram Grubunuz Bağlandı!</p>
+                      <p className="text-xs text-emerald-600 mb-4">Misafir fotoğrafları bu gruba anlık olarak iletilecektir.</p>
                       <button
-                        type="button"
-                        onClick={() => setShowManualTelegram(!showManualTelegram)}
-                        className="text-slate-400 hover:text-slate-500 text-sm font-bold tracking-wider uppercase transition-colors text-left"
+                        onClick={handleSendTestNotification}
+                        disabled={isSendingTest}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition-colors shadow-md disabled:opacity-50"
                       >
-                        {showManualTelegram ? '❌ Manuel Girişi Kapat' : '🔧 Alternatif Yöntem: Manuel Chat ID Gir'}
+                        <span>🔔</span> {isSendingTest ? 'Gönderiliyor...' : 'Test Bildirimi Gönder'}
                       </button>
-
-                      {showManualTelegram && (
-                        <div className="bg-white p-4 rounded-xl border border-slate-200/60 space-y-3 shadow-xs">
-                          <p className="text-sm text-slate-600 leading-relaxed">
-                            Bot bağlantısı kuramadıysanız veya yerel ortamda test ediyorsanız:
-                            <br />
-                            1. Telegram'da <strong>@userinfobot</strong> botuna herhangi bir mesaj gönderin ve size yanıt olarak döneceği <strong>Id</strong> numarasını kopyalayın.
-                            <br />
-                            2. Kopyaladığınız numarayı aşağıdaki alana girip kaydedin.
-                          </p>
-                          <div className="flex gap-2">
-                            <input
-                              type="text"
-                              value={telegramChatId || ''}
-                              onChange={e => setTelegramChatId(e.target.value.replace(/[^0-9]/g, ''))}
-                              placeholder="Örn: 123456789"
-                              className="flex-1 border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-rose-500 focus:outline-none bg-slate-50 text-slate-800 font-mono"
-                            />
-                            <button
-                              type="button"
-                              onClick={async () => {
-                                const { error } = await supabase
-                                  .from('weddings')
-                                  .update({ telegram_chat_id: telegramChatId })
-                                  .eq('id', wedding.id);
-                                if (!error) {
-                                  alert('Telegram Chat ID başarıyla kaydedildi!');
-                                } else {
-                                  alert('Hata: ' + error.message);
-                                }
-                              }}
-                              className="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-colors shadow-sm"
-                            >
-                              Kaydet
-                            </button>
-                          </div>
-                        </div>
-                      )}
                     </div>
-                  </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {/* ADIM 1 */}
+                      <div className={`border rounded-2xl p-5 transition-all ${telegramWizardStep === 1 ? 'border-rose-200 bg-rose-50/30' : 'border-slate-200 bg-white opacity-60'}`}>
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${telegramWizardStep >= 1 && verifiedBotName ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'}`}>
+                            {verifiedBotName ? '✓' : '1'}
+                          </span>
+                          <h4 className="font-bold text-slate-800 text-sm">Kendi Botunuzu Oluşturun</h4>
+                        </div>
+                        <p className="text-xs text-slate-500 mb-3 leading-relaxed">
+                          Telegram'ın resmi bot oluşturucusu BotFather ile saniyeler içinde kendi botunuzu açın.
+                        </p>
+                        <a
+                          href="https://t.me/BotFather"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl text-xs transition-colors mb-4 shadow-sm"
+                        >
+                          💬 Telegram'da BotFather'ı Aç
+                        </a>
+                        <ol className="text-xs text-slate-600 space-y-1.5 mb-4 list-none">
+                          <li className="flex gap-2"><span className="text-rose-400 font-bold shrink-0">①</span> Açılan ekranda <strong>Başlat</strong>'a basın, ardından <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono">/newbot</code> yazın.</li>
+                          <li className="flex gap-2"><span className="text-rose-400 font-bold shrink-0">②</span> Botunuza bir isim verin (Örn: <em>Elif Kerem Fotoğraf Bot</em>).</li>
+                          <li className="flex gap-2"><span className="text-rose-400 font-bold shrink-0">③</span> Sonu <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono">bot</code> ile biten kullanıcı adı belirleyin.</li>
+                          <li className="flex gap-2"><span className="text-rose-400 font-bold shrink-0">④</span> BotFather'ın verdiği <strong>HTTP API Token</strong>'ı kopyalayın.</li>
+                        </ol>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={telegramBotToken}
+                            onChange={e => setTelegramBotToken(e.target.value.trim())}
+                            placeholder="Bot Token'ı buraya yapıştırın (Örn: 123456:ABC-def...)"
+                            className="flex-1 border border-slate-200 rounded-xl px-3 py-2.5 text-xs focus:ring-2 focus:ring-rose-300 focus:outline-none bg-white text-slate-800 placeholder:text-slate-400 font-mono"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleValidateToken}
+                            disabled={isConnectingTelegram || !telegramBotToken}
+                            className="px-4 py-2.5 bg-rose-500 hover:bg-rose-600 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-colors shadow-sm whitespace-nowrap"
+                          >
+                            {isConnectingTelegram && telegramWizardStep === 1 ? '⏳ Doğrulanıyor...' : '✓ Doğrula & Kaydet'}
+                          </button>
+                        </div>
+                        {telegramStatusMsg && telegramWizardStep === 1 && (
+                          <p className="text-xs mt-2 font-medium text-slate-600">{telegramStatusMsg}</p>
+                        )}
+                      </div>
+
+                      {/* ADIM 2 */}
+                      <div className={`border rounded-2xl p-5 transition-all ${telegramWizardStep === 2 ? 'border-rose-200 bg-rose-50/30' : 'border-slate-200 bg-white opacity-50 pointer-events-none'}`}>
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold shrink-0 ${telegramWizardStep > 2 ? 'bg-emerald-500 text-white' : 'bg-slate-300 text-white'}`}>2</span>
+                          <h4 className="font-bold text-slate-800 text-sm">Fotoğraf Paylaşım Grubunuzu Kurun</h4>
+                        </div>
+                        {verifiedBotName && (
+                          <div className="bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 mb-3 text-xs text-emerald-700 font-semibold">
+                            ✅ Bot doğrulandı: <span className="font-bold">@{verifiedBotName}</span>
+                          </div>
+                        )}
+                        <ol className="text-xs text-slate-600 space-y-2 mb-4 list-none">
+                          <li className="flex gap-2"><span className="text-rose-400 font-bold shrink-0">①</span> Telegram'da yeni bir <strong>grup</strong> kurun (Örn: <em>Düğün Fotoğrafları</em>).</li>
+                          <li className="flex gap-2"><span className="text-rose-400 font-bold shrink-0">②</span> Botunuzu kullanıcı adını aratarak gruba <strong>üye</strong> olarak ekleyin.</li>
+                          <li className="flex gap-2"><span className="text-rose-400 font-bold shrink-0">③</span> <strong className="text-rose-600">Kritik:</strong> Botunuzu grupta <strong>Yönetici (Admin)</strong> yapın.</li>
+                        </ol>
+                        <button
+                          type="button"
+                          onClick={handleStartBaglaPolling}
+                          className="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-sm transition-colors shadow-sm"
+                        >
+                          Grubu Kurdum → Adım 3'e Geç
+                        </button>
+                      </div>
+
+                      {/* ADIM 3 */}
+                      <div className={`border rounded-2xl p-5 transition-all ${telegramWizardStep === 3 ? 'border-rose-200 bg-rose-50/30' : 'border-slate-200 bg-white opacity-50 pointer-events-none'}`}>
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold shrink-0 bg-slate-300 text-white">3</span>
+                          <h4 className="font-bold text-slate-800 text-sm">Sihirli Kelimeyle Otomatik Bağlanın</h4>
+                        </div>
+                        <p className="text-xs text-slate-500 mb-3 leading-relaxed">
+                          Chat ID veya grup numarası aramaya <strong>son!</strong> Kurduğunuz Telegram grubuna girin ve şu komutu yazın:
+                        </p>
+                        <div className="bg-slate-900 text-emerald-400 font-mono text-lg font-bold text-center py-3 px-4 rounded-xl mb-3 tracking-widest">
+                          /bagla
+                        </div>
+                        {isConnectingTelegram && telegramWizardStep === 3 && (
+                          <div className="flex items-center gap-2 justify-center text-xs text-slate-500 animate-pulse">
+                            <span className="w-2 h-2 bg-rose-400 rounded-full animate-bounce"></span>
+                            Grubunuzdan komut bekleniyor...
+                          </div>
+                        )}
+                        {telegramStatusMsg && telegramWizardStep === 3 && (
+                          <p className="text-xs mt-2 font-medium text-center text-slate-600">{telegramStatusMsg}</p>
+                        )}
+                      </div>
+
+                      {/* Manuel Fallback */}
+                      <div className="pt-3 border-t border-slate-200/50">
+                        <button
+                          type="button"
+                          onClick={() => setShowManualTelegram(!showManualTelegram)}
+                          className="text-slate-400 hover:text-slate-500 text-xs font-semibold tracking-wider uppercase transition-colors"
+                        >
+                          {showManualTelegram ? '❌ Manuel Girişi Kapat' : '🔧 Sorun mu yaşıyorsunuz? Manuel Chat ID girin'}
+                        </button>
+                        {showManualTelegram && (
+                          <div className="mt-3 bg-white p-4 rounded-xl border border-slate-200 space-y-3 shadow-xs">
+                            <p className="text-xs text-slate-500 leading-relaxed">
+                              Telegram'da <strong>@userinfobot</strong>'a herhangi bir mesaj gönderin. Size döneceği <strong>Id</strong> numarasını aşağıya girin.
+                            </p>
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                value={telegramChatId || ''}
+                                onChange={e => setTelegramChatId(e.target.value.replace(/[^0-9-]/g, ''))}
+                                placeholder="Örn: -1001234567890"
+                                className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-rose-400 focus:outline-none bg-slate-50 text-slate-800 placeholder:text-slate-400 font-mono"
+                              />
+                              <button
+                                type="button"
+                                onClick={async () => {
+                                  const { error } = await supabase
+                                    .from('weddings')
+                                    .update({ telegram_chat_id: telegramChatId })
+                                    .eq('id', wedding.id);
+                                  if (!error) {
+                                    alert('Chat ID başarıyla kaydedildi!');
+                                  } else {
+                                    alert('Hata: ' + error.message);
+                                  }
+                                }}
+                                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-colors"
+                              >
+                                Kaydet
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
