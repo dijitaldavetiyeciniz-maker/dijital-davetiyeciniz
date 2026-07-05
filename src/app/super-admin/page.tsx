@@ -26,6 +26,7 @@ export default function SuperAdminPage() {
   const [venueAddress, setVenueAddress] = useState('');
   const [googleMapsUrl, setGoogleMapsUrl] = useState('');
   const [customMessage, setCustomMessage] = useState('');
+  const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -86,12 +87,14 @@ export default function SuperAdminPage() {
     setVenueAddress(w.venue_address || '');
     setGoogleMapsUrl(w.google_maps_url || '');
     setCustomMessage(w.custom_message || '');
+    setUserEmail(w.user_email || '');
   }
 
   function handleCancelEdit() {
     setEditingId(null);
     setBrideName(''); setGroomName(''); setBrideParents(''); setGroomParents(''); setSlug(''); setPassword('');
     setWeddingDate(''); setVenueName(''); setVenueAddress(''); setGoogleMapsUrl(''); setCustomMessage('');
+    setUserEmail('');
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -110,7 +113,8 @@ export default function SuperAdminPage() {
       venue_name: venueName,
       venue_address: venueAddress,
       google_maps_url: googleMapsUrl,
-      custom_message: customMessage
+      custom_message: customMessage,
+      user_email: userEmail
     };
 
     if (editingId) {
@@ -284,6 +288,11 @@ export default function SuperAdminPage() {
               </div>
 
               <div>
+                <label className="block text-sm font-medium mb-1">Kullanıcı E-postası (LCV vb. Bildirimler İçin)</label>
+                <input value={userEmail} onChange={e=>setUserEmail(e.target.value)} type="email" placeholder="ornek@domain.com" className="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-800" />
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium mb-1">Çift Yönetim Şifresi</label>
                 <input required value={password} onChange={e=>setPassword(e.target.value)} type="text" placeholder="Giriş yapmaları için şifre" className="w-full border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
@@ -302,7 +311,12 @@ export default function SuperAdminPage() {
               {loading ? <p>Yükleniyor...</p> : weddings.map((w: any) => (
                 <div key={w.id} className={`bg-white p-6 rounded-2xl shadow-sm border flex items-center justify-between transition-colors ${editingId === w.id ? 'border-blue-500 ring-2 ring-blue-100' : 'border-slate-200'}`}>
                   <div>
-                    <h3 className="font-bold text-lg">{w.bride_name} & {w.groom_name}</h3>
+                    <h3 className="font-bold text-lg flex items-center gap-2">
+                      {w.bride_name} & {w.groom_name}
+                      {w.user_email && (
+                        <span className="text-xs font-normal text-slate-400">({w.user_email})</span>
+                      )}
+                    </h3>
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-xs bg-rose-100 text-rose-700 px-2 py-1 rounded font-medium">{w.event_type || 'Düğün'}</span>
                       <span className="text-sm text-slate-500">Şablon: {w.template_id}</span>

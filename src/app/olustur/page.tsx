@@ -123,6 +123,7 @@ function CreateForm() {
     const { error } = await supabase.from('weddings').insert([
       {
         user_id: user?.id,
+        user_email: user?.email,
         bride_name: 'Gelin',
         groom_name: 'Damat',
         bride_parents: '',
