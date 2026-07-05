@@ -265,6 +265,7 @@ export default function CoupleAdminPage({
   const [activeRsvpSubTab, setActiveRsvpSubTab] = useState<'list' | 'comments'>('list');
   const [templateCategory, setTemplateCategory] = useState('all');
   const [visibleCount, setVisibleCount] = useState(12);
+  const [showManualTelegram, setShowManualTelegram] = useState(false);
 
   useEffect(() => {
     setVisibleCount(12);
@@ -1983,6 +1984,55 @@ export default function CoupleAdminPage({
                         >
                           <span>🔔</span> {isSendingTest ? 'Test Bildirimi Gönderiliyor...' : 'Test Bildirimi Gönder'}
                         </button>
+                      )}
+                    </div>
+
+                    {/* Manual Fallback */}
+                    <div className="pt-3 border-t border-slate-200/50 flex flex-col gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowManualTelegram(!showManualTelegram)}
+                        className="text-slate-400 hover:text-slate-500 text-[10px] font-bold tracking-wider uppercase transition-colors text-left"
+                      >
+                        {showManualTelegram ? '❌ Manuel Girişi Kapat' : '🔧 Alternatif Yöntem: Manuel Chat ID Gir'}
+                      </button>
+
+                      {showManualTelegram && (
+                        <div className="bg-white p-4 rounded-xl border border-slate-200/60 space-y-3 shadow-xs">
+                          <p className="text-[10px] text-slate-500 leading-relaxed">
+                            Bot bağlantısı kuramadıysanız veya yerel ortamda test ediyorsanız:
+                            <br />
+                            1. Telegram'da <strong>@userinfobot</strong> botuna herhangi bir mesaj gönderin ve size yanıt olarak döneceği <strong>Id</strong> numarasını kopyalayın.
+                            <br />
+                            2. Kopyaladığınız numarayı aşağıdaki alana girip kaydedin.
+                          </p>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={telegramChatId || ''}
+                              onChange={e => setTelegramChatId(e.target.value.replace(/[^0-9]/g, ''))}
+                              placeholder="Örn: 123456789"
+                              className="flex-1 border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-rose-500 focus:outline-none bg-slate-50 text-slate-800 font-mono"
+                            />
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                const { error } = await supabase
+                                  .from('weddings')
+                                  .update({ telegram_chat_id: telegramChatId })
+                                  .eq('id', wedding.id);
+                                if (!error) {
+                                  alert('Telegram Chat ID başarıyla kaydedildi!');
+                                } else {
+                                  alert('Hata: ' + error.message);
+                                }
+                              }}
+                              className="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition-colors shadow-sm"
+                            >
+                              Kaydet
+                            </button>
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>
