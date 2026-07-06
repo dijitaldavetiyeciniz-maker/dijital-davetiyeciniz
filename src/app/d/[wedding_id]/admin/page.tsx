@@ -263,6 +263,7 @@ export default function CoupleAdminPage({
   const [entranceAnimation, setEntranceAnimation] = useState('royal-seal-premium');
   const [envelopeStyle, setEnvelopeStyle] = useState('classic');
   const [sealStyle, setSealStyle] = useState('burgundy');
+  const [userChangedOpeningType, setUserChangedOpeningType] = useState(false);
   
   // Premium UI/UX States
   const [countdownStyle, setCountdownStyle] = useState('glass');
@@ -540,6 +541,22 @@ export default function CoupleAdminPage({
     if (theme.seal_color) setSealColor(theme.seal_color);
     if (theme.entrance_type) setEntranceType(theme.entrance_type);
     if (theme.effect_type !== undefined) setEffectType(theme.effect_type || '');
+
+    // Set recommended entrance animation settings
+    if (theme.recommendedOpeningType) setEntranceAnimation(theme.recommendedOpeningType);
+    if (theme.recommendedOpeningStyle) setEnvelopeStyle(theme.recommendedOpeningStyle);
+    if (theme.recommendedBackgroundAnimation) setBackgroundAnimation(theme.recommendedBackgroundAnimation);
+    setUserChangedOpeningType(false);
+  }
+
+  function resetOpeningToRecommended() {
+    const activeTheme = themes.find(t => t.template_id === templateId) || themes[0];
+    if (activeTheme) {
+      if (activeTheme.recommendedOpeningType) setEntranceAnimation(activeTheme.recommendedOpeningType);
+      if (activeTheme.recommendedOpeningStyle) setEnvelopeStyle(activeTheme.recommendedOpeningStyle);
+      if (activeTheme.recommendedBackgroundAnimation) setBackgroundAnimation(activeTheme.recommendedBackgroundAnimation);
+      setUserChangedOpeningType(false);
+    }
   }
 
   function handleReplayAnimation() {
@@ -1213,93 +1230,67 @@ export default function CoupleAdminPage({
                     ))}
                   </div>
 
-                  {/* DB Custom Themes row (if any) */}
-                  {themes.length > 0 && templateCategory === 'all' && (
-                    <div className="mb-3">
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">⭐ Kaydedilen Özel Şablonlarınız</p>
-                      <div className="max-h-40 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {themes.map(theme => (
-                          <button
-                            key={theme.id}
-                            onClick={() => applyPreset(theme)}
-                            className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white ${templateId === theme.template_id && primaryColor === theme.primary_color ? 'border-rose-500 bg-white shadow-xs ring-2 ring-rose-100' : 'border-slate-200'}`}
-                          >
-                            <div className="w-6 h-6 rounded-full mb-1 shadow-inner" style={{ backgroundColor: theme.primary_color }}></div>
-                            <span className="text-[10px] font-bold text-slate-700 text-center line-clamp-1">{theme.name}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Filtered 100 templates with Lazy Loading */}
+                  {/* Filtered Concept-Based Themes List */}
                   <div className="space-y-3">
-                    <div className="max-h-72 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    <div className="max-h-80 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {(() => {
-                        const isTemplateInCategory = (num: number, category: string) => {
-                          if (category === 'all') return true;
-                          return categoryMap[category]?.includes(num) || false;
-                        };
+                        const filteredThemes = themes.filter(theme => {
+                          if (templateCategory === 'all') return true;
+                          if (templateCategory === 'minimal') return theme.category === 'Minimalist';
+                          if (templateCategory === 'luxury') return theme.category === 'Lüks';
+                          if (templateCategory === 'bohemian') return theme.category === 'Doğal';
+                          if (templateCategory === 'engagement') return ['Doğal', 'Minimalist', 'Modern'].includes(theme.category);
+                          if (templateCategory === 'henna') return ['Klasik', 'Lüks'].includes(theme.category);
+                          return true;
+                        });
 
-                        const filteredList = Array.from({ length: 100 }, (_, i) => i + 1)
-                          .filter(num => isTemplateInCategory(num, templateCategory));
-
-                        if (filteredList.length === 0) {
+                        if (filteredThemes.length === 0) {
                           return <div className="col-span-full py-8 text-center text-xs text-slate-400">Bu kategoride şablon bulunmamaktadır.</div>;
                         }
 
-                        const visibleList = filteredList.slice(0, visibleCount);
-
-                        return visibleList.map(num => {
-                          const tId = `template${num}`;
-                          const preset = getTemplatePreset(tId);
-                          const isActive = templateId === tId;
+                        return filteredThemes.map(theme => {
+                          const isActive = templateId === theme.id || templateId === theme.template_id;
                           return (
                             <button
-                              key={tId}
+                              key={theme.id}
                               type="button"
                               onClick={() => {
-                                setTemplateId(tId);
-                                applyPreset(preset);
+                                setTemplateId(theme.template_id);
+                                applyPreset(theme);
                               }}
-                              className={`flex flex-col items-center p-2 rounded-lg border transition-all hover:bg-white hover:shadow-xs active:scale-95 ${isActive ? 'border-rose-500 shadow-xs ring-2 ring-rose-100 bg-white' : 'border-slate-200'}`}
+                              className={`flex items-start gap-3 p-3 rounded-xl border text-left transition-all hover:bg-white ${
+                                isActive 
+                                  ? 'border-rose-500 bg-rose-50/5 shadow-xs ring-2 ring-rose-100' 
+                                  : 'border-slate-200 bg-white hover:bg-slate-50'
+                              }`}
                             >
-                              <div className="w-full h-5 rounded-md mb-1 shadow-inner flex items-center justify-center gap-1 overflow-hidden">
-                                <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
-                                <div className="flex-1 h-1.5 rounded-full opacity-30" style={{ backgroundColor: preset.primary_color || '#f43f5e' }}></div>
+                              {/* Swatch color representation */}
+                              <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex flex-col items-center justify-center shrink-0 shadow-3xs overflow-hidden relative">
+                                <div className="absolute inset-0 flex flex-col">
+                                  <div className="h-2/3 w-full" style={{ backgroundColor: theme.palette?.background || '#fff' }} />
+                                  <div className="h-1/3 w-full flex">
+                                    <div className="w-1/2 h-full" style={{ backgroundColor: theme.palette?.primary || '#111' }} />
+                                    <div className="w-1/2 h-full" style={{ backgroundColor: theme.palette?.secondary || '#c9a44d' }} />
+                                  </div>
+                                </div>
+                                <span className="absolute z-10 text-[9px] font-bold text-slate-800/80 bg-white/70 px-1 py-0.5 rounded shadow-3xs border border-white/40 scale-85">
+                                  Aa
+                                </span>
                               </div>
-                              <span className="text-[9px] font-bold text-slate-700 text-center leading-tight">{templateNames[num - 1]}</span>
-                              <span className="text-[8px] text-slate-400">#{num}</span>
-                              {isActive && <span className="text-[8px] text-rose-600 font-bold mt-0.5">✓ Seçili</span>}
+                              <div className="flex-1 min-w-0">
+                                <strong className="text-slate-800 text-[11px] font-bold block mb-0.5 truncate">{theme.name}</strong>
+                                <span className="inline-block text-[8px] font-bold uppercase tracking-wider text-slate-400 font-mono">{theme.category}</span>
+                              </div>
+                              {isActive && (
+                                <span className="w-4 h-4 rounded-full bg-rose-500 text-white flex items-center justify-center text-[9px] font-bold shrink-0 self-center">
+                                  ✓
+                                </span>
+                              )}
                             </button>
                           );
                         });
                       })()}
                     </div>
-
-                    {/* Show More Button if there are more templates */}
-                    {(() => {
-                      const isTemplateInCategory = (num: number, category: string) => {
-                        if (category === 'all') return true;
-                        return categoryMap[category]?.includes(num) || false;
-                      };
-
-                      const totalFiltered = Array.from({ length: 100 }, (_, i) => i + 1)
-                        .filter(num => isTemplateInCategory(num, templateCategory)).length;
-
-                      if (totalFiltered > visibleCount) {
-                        return (
-                          <button
-                            type="button"
-                            onClick={() => setVisibleCount(prev => Math.min(totalFiltered, prev + 12))}
-                            className="w-full py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1 active:scale-98"
-                          >
-                            <span>✨</span> Daha Fazla Şablon Göster ({totalFiltered - visibleCount} Kaldı)
-                          </button>
-                        );
-                      }
-                      return null;
-                    })()}
                   </div>
                 </div>
 
