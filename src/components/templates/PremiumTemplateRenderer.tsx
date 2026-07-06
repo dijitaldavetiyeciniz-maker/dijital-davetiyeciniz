@@ -43,7 +43,11 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     fetchGuestMessages();
   }, [wedding.id, wedding.show_comments]);
 
-  const dateObj = wedding.wedding_date ? new Date(wedding.wedding_date) : new Date();
+  const dateObj = (() => {
+    if (!wedding.wedding_date) return new Date();
+    const d = new Date(wedding.wedding_date);
+    return isNaN(d.getTime()) ? new Date() : d;
+  })();
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
   const eventTitle = wedding.event_type || 'Düğün Töreni';
@@ -467,7 +471,10 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
               <div className="flex justify-between items-center mb-1.5">
                 <span className="font-bold text-xs" style={{ color: textColor }}>{msg.guest_name}</span>
                 <span className="text-[9px] opacity-50" style={{ color: textColor }}>
-                  {new Date(msg.created_at).toLocaleDateString('tr-TR')}
+                  {(() => {
+                    const d = new Date(msg.created_at);
+                    return isNaN(d.getTime()) ? '' : d.toLocaleDateString('tr-TR');
+                  })()}
                 </span>
               </div>
               <p className="text-xs italic leading-relaxed opacity-95" style={{ color: textColor }}>
