@@ -1,1500 +1,246 @@
-export type OpeningAnimation = {
+export interface EntranceAnimationType {
   id: string;
   name: string;
   description: string;
-  family:
-    | "envelope"
-    | "curtain"
-    | "door"
-    | "gardenGate"
-    | "book"
-    | "luxuryBox"
-    | "treasureChest"
-    | "glass"
-    | "mirror"
-    | "cinematicZoom"
-    | "spotlight"
-    | "starryNight"
-    | "elevator"
-    | "royalHall"
-    | "minimal";
-  category:
-    | "luxury"
-    | "romantic"
-    | "classic"
-    | "modern"
-    | "floral"
-    | "royal"
-    | "cinematic"
-    | "minimal"
-    | "bohemian"
-    | "corporate";
-  premium: boolean;
-  duration: number;
-  theme: string;
-  motion: string;
-  palette: string;
+  icon: string;
+}
+
+export interface EntranceAnimationStyle {
+  id: string;
+  name: string;
+  palette: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    card: string;
+    text: string;
+  };
   effects: string[];
-};
+}
 
-export const openingAnimations: OpeningAnimation[] = [
-  // 1. ENVELOPE FAMILY (15 items)
+export const entranceAnimationTypes: EntranceAnimationType[] = [
   {
-    id: "royal-wax-envelope",
-    name: "Royal Wax Envelope",
-    description: "Altın detaylı lüks zarf, parlak mühür ve sinematik davetiye çıkışı.",
-    family: "envelope",
-    category: "royal",
-    premium: true,
-    duration: 4200,
-    theme: "royal-gold-envelope",
-    motion: "seal-glow-flap-open-card-rise",
-    palette: "ivory-gold-burgundy",
-    effects: ["goldParticles", "waxSealGlow", "softBloom"]
+    id: "envelope",
+    name: "Zarf Açılışı",
+    description: "Mühürlü zarf açılır, davetiye kartı zarifçe ortaya çıkar.",
+    icon: "envelope",
   },
   {
-    id: "romantic-blush-envelope",
-    name: "Romantik Blush Zarf",
-    description: "Pembe tonlarda zarif zarf, gül yaprakları ve yumuşak açılış.",
-    family: "envelope",
-    category: "romantic",
-    premium: false,
-    duration: 3900,
-    theme: "blush-floral-envelope",
-    motion: "soft-flap-open",
-    palette: "blush-ivory-rose",
-    effects: ["rosePetals", "sparkleDust"]
+    id: "curtain",
+    name: "Perde Açılışı",
+    description: "Perde iki yana açılır, davetiye sahne ışığıyla görünür.",
+    icon: "curtain",
   },
   {
-    id: "black-gold-envelope",
-    name: "Siyah Gold Zarf",
-    description: "Siyah premium zarf, altın mühür ve güçlü lüks açılış.",
-    family: "envelope",
-    category: "luxury",
-    premium: true,
-    duration: 4300,
-    theme: "black-gold-envelope",
-    motion: "deep-zoom-flap-open",
-    palette: "black-gold-ivory",
-    effects: ["goldParticles", "spotlight"]
+    id: "door",
+    name: "Kapı Açılışı",
+    description: "Premium kapılar açılır, davetiye içeriden ışıkla belirir.",
+    icon: "door",
   },
   {
-    id: "marble-envelope-reveal",
-    name: "Mermer Zarf Açılışı",
-    description: "Mermer dokulu zarf, gold çizgiler ve elegant davetiye reveal.",
-    family: "envelope",
-    category: "luxury",
-    premium: true,
-    duration: 4100,
-    theme: "marble-gold-envelope",
-    motion: "seal-release-card-slide",
-    palette: "white-marble-gold",
-    effects: ["marbleLight", "goldDust"]
+    id: "gardenGate",
+    name: "Bahçe Kapısı Açılışı",
+    description: "Bahçe kapısı açılır, davetiye doğa atmosferinde görünür.",
+    icon: "garden",
   },
   {
-    id: "velvet-burgundy-envelope",
-    name: "Kadife Bordo Zarf",
-    description: "Kadife bordo zarf ve koyu romantik mühür açılışı.",
-    family: "envelope",
-    category: "romantic",
-    premium: true,
-    duration: 4200,
-    theme: "velvet-burgundy",
-    motion: "slow-luxury-open",
-    palette: "burgundy-gold-cream",
-    effects: ["candleLight", "softGlow"]
+    id: "book",
+    name: "Kitap Açılışı",
+    description: "Kitap kapağı açılır, davetiye sayfadan yükselir.",
+    icon: "book",
   },
   {
-    id: "floral-embossed-envelope",
-    name: "Kabartmalı Çiçek Zarf",
-    description: "Kabartmalı floral desenler ve çiçek yapraklarıyla romantik açılış.",
-    family: "envelope",
-    category: "floral",
-    premium: false,
-    duration: 4000,
-    theme: "embossed-floral-envelope",
-    motion: "petal-flap-open",
-    palette: "ivory-pink-sage",
-    effects: ["rosePetals", "floralBloom"]
+    id: "luxuryBox",
+    name: "Hediye Kutusu Açılışı",
+    description: "Kutu kapağı açılır, davetiye içinden çıkar.",
+    icon: "box",
   },
   {
-    id: "minimal-white-envelope",
-    name: "Minimal Beyaz Zarf",
-    description: "Sade beyaz zarf, ince çizgiler ve minimal premium açılış.",
-    family: "envelope",
-    category: "minimal",
-    premium: false,
-    duration: 3300,
-    theme: "minimal-white",
-    motion: "clean-fade-open",
-    palette: "white-warm-gray",
-    effects: ["pearlLight"]
+    id: "treasureChest",
+    name: "Sandık Açılışı",
+    description: "Sandık açılır, davetiye hazine gibi ortaya çıkar.",
+    icon: "chest",
   },
   {
-    id: "satin-ribbon-envelope",
-    name: "Saten Kurdele Zarf",
-    description: "Saten kurdele çözülür, mühür parlar ve davetiye zarifçe çıkar.",
-    family: "envelope",
-    category: "luxury",
-    premium: true,
-    duration: 4500,
-    theme: "satin-ribbon-envelope",
-    motion: "ribbon-unfold-card-rise",
-    palette: "champagne-gold-ivory",
-    effects: ["goldParticles", "ribbonShine"]
+    id: "glass",
+    name: "Cam Reveal",
+    description: "Cam yüzey açılır veya netleşir, davetiye görünür.",
+    icon: "glass",
   },
   {
-    id: "glass-envelope",
-    name: "Cam Efektli Zarf",
-    description: "Şeffaf cam dokulu modern zarf ve parıltılı reveal.",
-    family: "envelope",
-    category: "modern",
-    premium: true,
-    duration: 3900,
-    theme: "glass-envelope",
-    motion: "glass-blur-open",
-    palette: "frosted-white-silver",
-    effects: ["glassShimmer", "pearlLight"]
+    id: "mirror",
+    name: "Ayna Reveal",
+    description: "Ayna yansıması netleşir ve davetiye ortaya çıkar.",
+    icon: "mirror",
   },
   {
-    id: "kraft-boho-envelope",
-    name: "Bohem Kraft Zarf",
-    description: "Doğal kraft kağıt dokusu, bohem çiçekler ve sıcak açılış.",
-    family: "envelope",
-    category: "bohemian",
-    premium: false,
-    duration: 3700,
-    theme: "kraft-boho",
-    motion: "organic-open",
-    palette: "kraft-cream-sage",
-    effects: ["leafFall", "warmLight"]
+    id: "cinematicZoom",
+    name: "Sinematik Zoom",
+    description: "Kamera davetiyeye yaklaşır, görüntü netleşerek açılır.",
+    icon: "zoom",
   },
   {
-    id: "royal-blue-envelope",
-    name: "Saray Mavisi Zarf",
-    description: "Kraliyet mavisi saten zarf, gümüş mühürlü asil geçiş.",
-    family: "envelope",
-    category: "royal",
-    premium: true,
-    duration: 4100,
-    theme: "royal-blue",
-    motion: "fast-slide-open",
-    palette: "blue-silver-cream",
-    effects: ["pearlLight", "softBloom"]
+    id: "spotlight",
+    name: "Spotlight Açılışı",
+    description: "Sahne ışığı davetiyeyi karanlıktan ortaya çıkarır.",
+    icon: "spotlight",
   },
   {
-    id: "gold-foil-pocket-envelope",
-    name: "Altın Varaklı Zarf",
-    description: "Lüks altın varak desenli cepli zarf tasarımı.",
-    family: "envelope",
-    category: "luxury",
-    premium: true,
-    duration: 4400,
-    theme: "gold-foil",
-    motion: "pocket-slide-rise",
-    palette: "gold-champagne",
-    effects: ["goldParticles", "sparkleDust"]
+    id: "starryNight",
+    name: "Yıldızlı Gece Açılışı",
+    description: "Yıldızlar ve ay ışığıyla davetiye romantik şekilde belirir.",
+    icon: "stars",
   },
   {
-    id: "emerald-wax-envelope",
-    name: "Zümrüt Yeşil Zarf",
-    description: "Koyu zümrüt yeşili zarf, altın varak mühürlü zengin açılış.",
-    family: "envelope",
-    category: "luxury",
-    premium: true,
-    duration: 4200,
-    theme: "emerald-velvet",
-    motion: "seal-melt-flap-open",
-    palette: "emerald-gold-ivory",
-    effects: ["goldDust", "warmLight"]
+    id: "minimalFade",
+    name: "Minimal Fade Açılışı",
+    description: "Sade, hızlı ve premium bir geçiş efekti kullanılır.",
+    icon: "minimal",
   },
   {
-    id: "silver-pearl-envelope",
-    name: "Gümüş İnci Zarfı",
-    description: "Gümüş varak kaplı lüks zarf ve beyaz inci partikülleri.",
-    family: "envelope",
-    category: "classic",
-    premium: false,
-    duration: 4000,
-    theme: "silver-pearl",
-    motion: "clean-flap-open",
-    palette: "silver-white-pearl",
-    effects: ["pearlLight", "sparkleDust"]
+    id: "royalHall",
+    name: "Royal Hall Açılışı",
+    description: "Kraliyet salonu atmosferinde davetiye ışıkla görünür.",
+    icon: "hall",
   },
   {
-    id: "vintage-parchment-envelope",
-    name: "Antik Parşömen Zarf",
-    description: "Eski mektup havasında retro mühürlü mektup açılışı.",
-    family: "envelope",
-    category: "classic",
-    premium: false,
-    duration: 3800,
-    theme: "vintage-parchment",
-    motion: "parchment-slide-open",
-    palette: "parchment-brown",
-    effects: ["paperDust", "warmLight"]
+    id: "elevator",
+    name: "Asansör Kapısı Açılışı",
+    description: "Lüks otel asansörü gibi kapılar kayarak açılır.",
+    icon: "elevator",
   },
+];
 
-  // 2. CURTAIN FAMILY (10 items)
-  {
-    id: "royal-theater-curtain",
-    name: "Kraliyet Perdesi",
-    description: "Kırmızı kadife tiyatro perdesi iki yana açılır ve davetiye sahneye çıkar.",
-    family: "curtain",
-    category: "royal",
-    premium: true,
-    duration: 4300,
-    theme: "red-velvet-theater",
-    motion: "curtain-split-card-spotlight",
-    palette: "red-gold-black",
-    effects: ["spotlight", "goldParticles"]
-  },
-  {
-    id: "white-silk-curtain",
-    name: "Beyaz İpek Perde",
-    description: "İpek beyaz perdeler rüzgarla açılır, davetiye yumuşak ışıkla görünür.",
-    family: "curtain",
-    category: "romantic",
-    premium: true,
-    duration: 4000,
-    theme: "white-silk",
-    motion: "silk-curtain-wave",
-    palette: "white-cream-pearl",
-    effects: ["pearlLight", "softWind"]
-  },
-  {
-    id: "golden-stage-curtain",
-    name: "Altın Sahne Perdesi",
-    description: "Altın tonlu sahne perdesi açılırken davetiye spotlight altında belirir.",
-    family: "curtain",
-    category: "luxury",
-    premium: true,
-    duration: 4200,
-    theme: "golden-stage",
-    motion: "curtain-open-spotlight",
-    palette: "gold-champagne-ivory",
-    effects: ["spotlight", "goldDust"]
-  },
-  {
-    id: "rose-curtain-reveal",
-    name: "Gül Perdesi",
-    description: "Gül yapraklarından oluşan perde dağılır ve davetiye ortaya çıkar.",
-    family: "curtain",
-    category: "romantic",
-    premium: false,
-    duration: 3900,
-    theme: "rose-petal-curtain",
-    motion: "petal-curtain-dissolve",
-    palette: "rose-blush-ivory",
-    effects: ["rosePetals", "softBloom"]
-  },
-  {
-    id: "black-luxury-curtain",
-    name: "Siyah Lüks Perde",
-    description: "Siyah kadife perde altın ışıkla açılır, modern ve pahalı görünüm verir.",
-    family: "curtain",
-    category: "luxury",
-    premium: true,
-    duration: 4300,
-    theme: "black-velvet",
-    motion: "curtain-split-dramatic",
-    palette: "black-gold",
-    effects: ["dramaticLight", "goldParticles"]
-  },
-  {
-    id: "lace-curtain-opening",
-    name: "Dantel Perde Açılışı",
-    description: "Dantel dokulu zarif perde açılır, romantik davetiye görünür.",
-    family: "curtain",
-    category: "classic",
-    premium: false,
-    duration: 3800,
-    theme: "lace-curtain",
-    motion: "lace-slide-open",
-    palette: "ivory-beige",
-    effects: ["softGlow"]
-  },
-  {
-    id: "garden-curtain",
-    name: "Bahçe Tülü Açılışı",
-    description: "Bahçe düğünü hissi veren tül perde rüzgarla açılır.",
-    family: "curtain",
-    category: "bohemian",
-    premium: false,
-    duration: 3900,
-    theme: "garden-tulle",
-    motion: "wind-tulle-open",
-    palette: "sage-cream",
-    effects: ["leafFall", "sunFlare"]
-  },
-  {
-    id: "cinema-curtain",
-    name: "Sinematik Perde",
-    description: "Film galası gibi siyah-kırmızı perde açılır, davetiye sinematik girer.",
-    family: "curtain",
-    category: "cinematic",
-    premium: true,
-    duration: 4300,
-    theme: "cinema-premiere",
-    motion: "cinema-curtain-zoom",
-    palette: "red-black-gold",
-    effects: ["filmGrain", "spotlight"]
-  },
-  {
-    id: "pearl-curtain",
-    name: "İnci Perde",
-    description: "İnci ışıltılı perde aşağıdan yukarı çözülür ve davetiye belirir.",
-    family: "curtain",
-    category: "minimal",
-    premium: true,
-    duration: 4100,
-    theme: "pearl-curtain",
-    motion: "pearl-curtain-lift",
-    palette: "pearl-white-silver",
-    effects: ["pearlLight", "sparkleDust"]
-  },
-  {
-    id: "royal-blue-curtain",
-    name: "Lacivert Kraliyet Perdesi",
-    description: "Lacivert kadife perde altın detaylarla açılır.",
-    family: "curtain",
-    category: "royal",
-    premium: true,
-    duration: 4200,
-    theme: "royal-blue-velvet",
-    motion: "royal-curtain-open",
-    palette: "navy-gold-ivory",
-    effects: ["goldParticles", "spotlight"]
-  },
-
-  // 3. DOOR FAMILY (10 items)
-  {
-    id: "golden-palace-door",
-    name: "Altın Saray Kapısı",
-    description: "Lüks saray kapıları iki yana açılır ve davetiye içeride görünür.",
-    family: "door",
-    category: "royal",
-    premium: true,
-    duration: 4500,
-    theme: "golden-palace-door",
-    motion: "double-door-open",
-    palette: "gold-ivory-marble",
-    effects: ["royalLight", "goldParticles"]
-  },
-  {
-    id: "wooden-rustic-door",
-    name: "Rustik Ahşap Kapı",
-    description: "Ahşap kır düğünü kapısı açılır, sıcak ve doğal bir davetiye görünür.",
-    family: "door",
-    category: "bohemian",
-    premium: false,
-    duration: 3900,
-    theme: "rustic-wooden-door",
-    motion: "single-door-open",
-    palette: "wood-cream-sage",
-    effects: ["leafFall", "warmLight"]
-  },
-  {
-    id: "white-classic-door",
-    name: "Klasik Beyaz Kapı",
-    description: "Beyaz klasik kapı zarifçe açılır, sade davetiye içeri girer.",
-    family: "door",
-    category: "classic",
-    premium: false,
-    duration: 3700,
-    theme: "classic-white-door",
-    motion: "soft-door-open",
-    palette: "white-cream",
-    effects: ["softGlow"]
-  },
-  {
-    id: "black-gold-door",
-    name: "Siyah Gold Kapı",
-    description: "Siyah altın detaylı kapı dramatik ışıkla açılır.",
-    family: "door",
-    category: "luxury",
-    premium: true,
-    duration: 4300,
-    theme: "black-gold-door",
-    motion: "dramatic-double-door",
-    palette: "black-gold",
-    effects: ["spotlight", "goldDust"]
-  },
-  {
-    id: "floral-door",
-    name: "Çiçekli Kapı Açılışı",
-    description: "Çiçeklerle süslenmiş kapı açılır, romantik bahçe atmosferi oluşturur.",
-    family: "door",
-    category: "floral",
-    premium: false,
-    duration: 3900,
-    theme: "floral-door",
-    motion: "floral-door-open",
-    palette: "ivory-pink-green",
-    effects: ["rosePetals", "floralBloom"]
-  },
-  {
-    id: "glass-modern-door",
-    name: "Modern Cam Kapı",
-    description: "Cam kapılar flu efektten netleşerek açılır.",
-    family: "door",
-    category: "modern",
-    premium: true,
-    duration: 4000,
-    theme: "glass-modern-door",
-    motion: "glass-door-slide",
-    palette: "glass-silver-white",
-    effects: ["glassShimmer", "pearlLight"]
-  },
-  {
-    id: "castle-door",
-    name: "Şato Kapısı",
-    description: "Masalsı şato kapısı ağır ve gösterişli şekilde açılır.",
-    family: "door",
-    category: "royal",
-    premium: true,
-    duration: 4600,
-    theme: "castle-door",
-    motion: "heavy-door-open",
-    palette: "stone-gold-burgundy",
-    effects: ["royalLight", "dustGlow"]
-  },
-  {
-    id: "neon-door",
-    name: "Neon Gece Kapısı",
-    description: "Neon ışıklı modern kapı açılır, gece konseptli davetiye görünür.",
-    family: "door",
-    category: "modern",
-    premium: true,
-    duration: 3900,
-    theme: "neon-door",
-    motion: "neon-slide-open",
-    palette: "black-purple-neon",
-    effects: ["neonGlow", "lightSweep"]
-  },
-  {
-    id: "minimal-arch-door",
-    name: "Minimal Kemer Kapı",
-    description: "Minimal kemer formundaki kapı yumuşak geçişle açılır.",
-    family: "door",
-    category: "minimal",
-    premium: false,
-    duration: 3500,
-    theme: "minimal-arch",
-    motion: "arch-door-reveal",
-    palette: "beige-white",
-    effects: ["softGlow"]
-  },
-  {
-    id: "secret-chamber-door",
-    name: "Gizli Bölme Kapısı",
-    description: "Gizli oda kapısı gibi taş panel yana kayar ve davetiye parıldar.",
-    family: "door",
-    category: "classic",
-    premium: true,
-    duration: 4200,
-    theme: "secret-chamber",
-    motion: "chamber-slide-reveal",
-    palette: "stone-gold",
-    effects: ["goldParticles", "dustGlow"]
-  },
-
-  // 4. GARDEN GATE FAMILY (10 items)
-  {
-    id: "secret-garden-gate",
-    name: "Gizli Bahçe Kapısı",
-    description: "Yeşillikli bahçe kapısı açılır, romantik davetiye doğanın içinde belirir.",
-    family: "gardenGate",
-    category: "bohemian",
-    premium: false,
-    duration: 4100,
-    theme: "secret-garden",
-    motion: "garden-gate-open",
-    palette: "sage-cream-pink",
-    effects: ["leafFall", "sunFlare"]
-  },
-  {
-    id: "rose-garden-gate",
-    name: "Gül Bahçesi Kapısı",
-    description: "Güllerle süslü kapı açılırken yapraklar ekranın önünden geçer.",
-    family: "gardenGate",
-    category: "romantic",
-    premium: true,
-    duration: 4300,
-    theme: "rose-garden",
-    motion: "floral-gate-open",
-    palette: "rose-green-ivory",
-    effects: ["rosePetals", "floralBloom"]
-  },
-  {
-    id: "lavender-garden-gate",
-    name: "Lavanta Bahçesi",
-    description: "Lavanta bahçesine açılan kapı ve mor tonlu romantik reveal.",
-    family: "gardenGate",
-    category: "floral",
-    premium: false,
-    duration: 4000,
-    theme: "lavender-garden",
-    motion: "garden-gate-open",
-    palette: "lavender-cream-sage",
-    effects: ["lavenderParticles", "softWind"]
-  },
-  {
-    id: "villa-garden-gate",
-    name: "Villa Bahçe Kapısı",
-    description: "Modern villa bahçesi kapısı açılır, davetiye şık bir alanda görünür.",
-    family: "gardenGate",
-    category: "luxury",
-    premium: true,
-    duration: 4200,
-    theme: "villa-garden",
-    motion: "luxury-gate-open",
-    palette: "white-green-gold",
-    effects: ["sunFlare", "goldDust"]
-  },
-  {
-    id: "boho-macrame-gate",
-    name: "Makrome Bohem Kapı",
-    description: "Makrome detaylı bohem geçiş alanı açılır.",
-    family: "gardenGate",
-    category: "bohemian",
-    premium: false,
-    duration: 3900,
-    theme: "boho-macrame",
-    motion: "boho-gate-reveal",
-    palette: "cream-terracotta-sage",
-    effects: ["leafFall", "warmLight"]
-  },
-  {
-    id: "winter-garden-gate",
-    name: "Kış Bahçesi Kapısı",
-    description: "Kar taneleriyle kaplı bahçe kapısı açılır ve kış düğünü hissi verir.",
-    family: "gardenGate",
-    category: "classic",
-    premium: true,
-    duration: 4300,
-    theme: "winter-garden",
-    motion: "snow-gate-open",
-    palette: "white-silver-blue",
-    effects: ["snowFall", "pearlLight"]
-  },
-  {
-    id: "autumn-garden-gate",
-    name: "Sonbahar Bahçesi",
-    description: "Sonbahar yaprakları arasında sıcak tonlu bahçe kapısı açılır.",
-    family: "gardenGate",
-    category: "bohemian",
-    premium: false,
-    duration: 4000,
-    theme: "autumn-garden",
-    motion: "leaf-gate-open",
-    palette: "terracotta-brown-cream",
-    effects: ["autumnLeaves", "warmLight"]
-  },
-  {
-    id: "island-garden-gate",
-    name: "Ada Bahçesi Kapısı",
-    description: "Deniz kenarı bahçesine açılan ferah ve yazlık geçiş.",
-    family: "gardenGate",
-    category: "romantic",
-    premium: false,
-    duration: 3900,
-    theme: "island-garden",
-    motion: "breeze-gate-open",
-    palette: "aqua-white-sand",
-    effects: ["seaBreeze", "sunFlare"]
-  },
-  {
-    id: "royal-garden-gate",
-    name: "Kraliyet Bahçe Kapısı",
-    description: "Altın işlemeli büyük bahçe kapısı ihtişamlı şekilde açılır.",
-    family: "gardenGate",
-    category: "royal",
-    premium: true,
-    duration: 4600,
-    theme: "royal-garden-gate",
-    motion: "royal-gate-open",
-    palette: "gold-green-ivory",
-    effects: ["goldParticles", "royalLight"]
-  },
-  {
-    id: "moonlit-garden-gate",
-    name: "Ay Işığı Bahçesi",
-    description: "Gece bahçesi kapısı ay ışığıyla açılır, romantik gece atmosferi verir.",
-    family: "gardenGate",
-    category: "cinematic",
-    premium: true,
-    duration: 4300,
-    theme: "moonlit-garden",
-    motion: "moon-gate-open",
-    palette: "navy-silver-green",
-    effects: ["moonGlow", "stars"]
-  },
-
-  // 5. BOOK FAMILY (10 items)
-  {
-    id: "storybook-opening",
-    name: "Masal Kitabı Açılışı",
-    description: "Masal kitabı açılır, davetiye sayfaların içinden yükselir.",
-    family: "book",
-    category: "romantic",
-    premium: true,
-    duration: 4400,
-    theme: "storybook",
-    motion: "book-open-card-rise",
-    palette: "cream-gold-brown",
-    effects: ["goldDust", "pageGlow"]
-  },
-  {
-    id: "classic-book-opening",
-    name: "Klasik Kitap Açılışı",
-    description: "Klasik ciltli kitap açılır ve davetiye sayfa üzerinde belirir.",
-    family: "book",
-    category: "classic",
-    premium: false,
-    duration: 4000,
-    theme: "classic-book",
-    motion: "book-page-open",
-    palette: "brown-cream-gold",
-    effects: ["paperTexture", "softGlow"]
-  },
-  {
-    id: "gold-script-book",
-    name: "Altın Yazılı Kitap",
-    description: "Altın yazılı kitap kapağı açılır ve çiftin isimleri yazı animasyonuyla görünür.",
-    family: "book",
-    category: "luxury",
-    premium: true,
-    duration: 4300,
-    theme: "gold-script-book",
-    motion: "book-open-lettering",
-    palette: "black-gold-cream",
-    effects: ["goldWriting", "sparkleDust"]
-  },
-  {
-    id: "floral-book",
-    name: "Çiçekli Kitap",
-    description: "Çiçeklerle süslü kitap açılır, sayfalardan yapraklar yükselir.",
-    family: "book",
-    category: "floral",
-    premium: false,
-    duration: 4100,
-    theme: "floral-book",
-    motion: "book-open-petals",
-    palette: "pink-cream-green",
-    effects: ["rosePetals", "floralBloom"]
-  },
-  {
-    id: "royal-book",
-    name: "Kraliyet Kitabı",
-    description: "Kraliyet armalı kitap açılır, davetiye altın çerçevede belirir.",
-    family: "book",
-    category: "royal",
-    premium: true,
-    duration: 4500,
-    theme: "royal-book",
-    motion: "royal-book-open",
-    palette: "burgundy-gold-cream",
-    effects: ["royalLight", "goldParticles"]
-  },
-  {
-    id: "minimal-book",
-    name: "Minimal Sayfa Açılışı",
-    description: "Sade bir sayfa çevrilir, temiz ve modern davetiye görünür.",
-    family: "book",
-    category: "minimal",
-    premium: false,
-    duration: 3500,
-    theme: "minimal-book",
-    motion: "page-turn-minimal",
-    palette: "white-gray",
-    effects: ["softGlow"]
-  },
-  {
-    id: "vellum-book",
-    name: "Parşömen Kitap",
-    description: "Parşömen sayfa açılır, vintage davetiye atmosferi oluşur.",
-    family: "book",
-    category: "classic",
-    premium: false,
-    duration: 4000,
-    theme: "vellum-book",
-    motion: "vellum-page-open",
-    palette: "parchment-brown-gold",
-    effects: ["paperDust", "warmLight"]
-  },
-  {
-    id: "fairytale-book",
-    name: "Büyülü Masal Kitabı",
-    description: "Masalsı ışıklar ve yıldızlarla kitap kendiliğinden açılır.",
-    family: "book",
-    category: "romantic",
-    premium: true,
-    duration: 4600,
-    theme: "fairytale-book",
-    motion: "magic-book-open",
-    palette: "lavender-gold-cream",
-    effects: ["stars", "goldDust", "magicGlow"]
-  },
-  {
-    id: "modern-magazine-open",
-    name: "Modern Dergi Açılışı",
-    description: "Modern bir dergi kapağı gibi sayfa kayar ve davetiye görünür.",
-    family: "book",
-    category: "modern",
-    premium: false,
-    duration: 3600,
-    theme: "modern-magazine",
-    motion: "magazine-slide-open",
-    palette: "white-black-beige",
-    effects: ["lightSweep"]
-  },
-  {
-    id: "photo-album-opening",
-    name: "Fotoğraf Albümü Açılışı",
-    description: "Çiftin albümü açılır gibi görünür, davetiye fotoğraf hissiyle gelir.",
-    family: "book",
-    category: "romantic",
-    premium: true,
-    duration: 4300,
-    theme: "photo-album",
-    motion: "album-open-photo-reveal",
-    palette: "cream-brown-gold",
-    effects: ["photoFlash", "softGlow"]
-  },
-
-  // 6. LUXURY BOX FAMILY (8 items)
-  {
-    id: "luxury-gift-box",
-    name: "Lüks Hediye Kutusu",
-    description: "Kurdeleli hediye kutusu açılır, davetiye içinden yükselir.",
-    family: "luxuryBox",
-    category: "luxury",
-    premium: true,
-    duration: 4300,
-    theme: "luxury-gift-box",
-    motion: "box-lid-open-card-rise",
-    palette: "champagne-gold-cream",
-    effects: ["goldParticles", "ribbonShine"]
-  },
-  {
-    id: "rose-gold-box",
-    name: "Rose Gold Kutu",
-    description: "Rose gold kutu ışıkla açılır, romantik davetiye içeriden çıkar.",
-    family: "luxuryBox",
-    category: "romantic",
-    premium: true,
-    duration: 4200,
-    theme: "rose-gold-box",
-    motion: "soft-box-open",
-    palette: "rose-gold-ivory",
-    effects: ["sparkleDust", "softBloom"]
-  },
-  {
-    id: "black-premium-box",
-    name: "Siyah Premium Kutu",
-    description: "Siyah kutu altın çizgilerle açılır, pahalı ve modern görünür.",
-    family: "luxuryBox",
-    category: "luxury",
-    premium: true,
-    duration: 4400,
-    theme: "black-premium-box",
-    motion: "dramatic-box-open",
-    palette: "black-gold",
-    effects: ["spotlight", "goldDust"]
-  },
-  {
-    id: "pearl-jewelry-box",
-    name: "İnci Mücevher Kutusu",
-    description: "Mücevher kutusu açılır gibi davetiye inci ışıltısıyla ortaya çıkar.",
-    family: "luxuryBox",
-    category: "luxury",
-    premium: true,
-    duration: 4300,
-    theme: "pearl-jewelry-box",
-    motion: "jewelry-box-open",
-    palette: "pearl-white-gold",
-    effects: ["pearlLight", "sparkleDust"]
-  },
-  {
-    id: "velvet-ring-box",
-    name: "Yüzük Kutusu Açılışı",
-    description: "Yüzük kutusu açılır, davetiye yüzük parıltısıyla görünür.",
-    family: "luxuryBox",
-    category: "romantic",
-    premium: true,
-    duration: 4200,
-    theme: "velvet-ring-box",
-    motion: "ring-box-open",
-    palette: "burgundy-gold",
-    effects: ["ringSparkle", "softGlow"]
-  },
-  {
-    id: "floral-box",
-    name: "Çiçekli Kutu Açılışı",
-    description: "Çiçeklerle dolu kutu açılır ve davetiye yapraklar arasında belirir.",
-    family: "luxuryBox",
-    category: "floral",
-    premium: false,
-    duration: 4000,
-    theme: "floral-box",
-    motion: "floral-box-open",
-    palette: "pink-cream-green",
-    effects: ["rosePetals", "floralBloom"]
-  },
-  {
-    id: "minimal-white-box",
-    name: "Minimal Beyaz Kutu",
-    description: "Sade beyaz kutu açılır, temiz ve modern bir davetiye reveal oluşur.",
-    family: "luxuryBox",
-    category: "minimal",
-    premium: false,
-    duration: 3400,
-    theme: "minimal-white-box",
-    motion: "clean-box-open",
-    palette: "white-gray",
-    effects: ["softGlow"]
-  },
-  {
-    id: "golden-cube-box",
-    name: "Altın Küp Açılışı",
-    description: "Altın küp parçalanmadan döner ve davetiye merkezde belirir.",
-    family: "luxuryBox",
-    category: "modern",
-    premium: true,
-    duration: 4200,
-    theme: "golden-cube",
-    motion: "cube-rotate-open",
-    palette: "gold-black",
-    effects: ["metalShine", "goldParticles"]
-  },
-
-  // 7. TREASURE CHEST FAMILY (8 items)
-  {
-    id: "royal-treasure-chest",
-    name: "Kraliyet Sandığı",
-    description: "Altın işlemeli sandık açılır, davetiye hazine gibi yükselir.",
-    family: "treasureChest",
-    category: "royal",
-    premium: true,
-    duration: 4600,
-    theme: "royal-chest",
-    motion: "chest-open-glow-rise",
-    palette: "gold-brown-burgundy",
-    effects: ["goldParticles", "royalLight"]
-  },
-  {
-    id: "vintage-chest",
-    name: "Vintage Sandık",
-    description: "Eski ahşap sandık açılır ve nostaljik davetiye ortaya çıkar.",
-    family: "treasureChest",
-    category: "classic",
-    premium: false,
-    duration: 4000,
-    theme: "vintage-chest",
-    motion: "wooden-chest-open",
-    palette: "brown-cream-gold",
-    effects: ["paperDust", "warmLight"]
-  },
-  {
-    id: "jewel-chest",
-    name: "Mücevher Sandığı",
-    description: "Mücevher sandığı parıltıyla açılır, çok lüks bir reveal oluşturur.",
-    family: "treasureChest",
-    category: "luxury",
-    premium: true,
-    duration: 4500,
-    theme: "jewel-chest",
-    motion: "jewel-chest-open",
-    palette: "emerald-gold-black",
-    effects: ["gemSparkle", "goldDust"]
-  },
-  {
-    id: "sea-chest",
-    name: "Deniz Sandığı",
-    description: "Deniz temalı sandık açılır, sahil düğünü havası verir.",
-    family: "treasureChest",
-    category: "romantic",
-    premium: false,
-    duration: 4000,
-    theme: "sea-chest",
-    motion: "sea-chest-open",
-    palette: "aqua-sand-white",
-    effects: ["seaBreeze", "waterShimmer"]
-  },
-  {
-    id: "boho-chest",
-    name: "Bohem Sandık",
-    description: "Hasır ve ahşap detaylı bohem sandık açılır.",
-    family: "treasureChest",
-    category: "bohemian",
-    premium: false,
-    duration: 3900,
-    theme: "boho-chest",
-    motion: "boho-chest-open",
-    palette: "tan-cream-sage",
-    effects: ["leafFall", "warmLight"]
-  },
-  {
-    id: "black-gold-chest",
-    name: "Siyah Gold Sandık",
-    description: "Siyah ve altın sandık dramatik ışıkla açılır.",
-    family: "treasureChest",
-    category: "luxury",
-    premium: true,
-    duration: 4400,
-    theme: "black-gold-chest",
-    motion: "dramatic-chest-open",
-    palette: "black-gold",
-    effects: ["spotlight", "goldParticles"]
-  },
-  {
-    id: "flower-chest",
-    name: "Çiçek Sandığı",
-    description: "Çiçeklerle dolu sandık açılır ve davetiye romantik şekilde çıkar.",
-    family: "treasureChest",
-    category: "floral",
-    premium: false,
-    duration: 4000,
-    theme: "flower-chest",
-    motion: "flower-chest-open",
-    palette: "pink-green-cream",
-    effects: ["rosePetals", "floralBloom"]
-  },
-  {
-    id: "snow-chest",
-    name: "Kış Sandığı",
-    description: "Kar efektli sandık açılır, beyaz ve gümüş davetiye ortaya çıkar.",
-    family: "treasureChest",
-    category: "classic",
-    premium: true,
-    duration: 4200,
-    theme: "snow-chest",
-    motion: "snow-chest-open",
-    palette: "white-silver-blue",
-    effects: ["snowFall", "pearlLight"]
-  },
-
-  // 8. GLASS FAMILY (8 items)
-  {
-    id: "glass-shatter-reveal",
-    name: "Cam Kırılma Reveal",
-    description: "Cam yüzey zarifçe kırılır gibi dağılır, davetiye arkasından çıkar.",
-    family: "glass",
-    category: "modern",
-    premium: true,
-    duration: 3900,
-    theme: "glass-shatter",
-    motion: "glass-shatter-reveal",
-    palette: "glass-white-silver",
-    effects: ["glassShimmer", "lightSweep"]
-  },
-  {
-    id: "frosted-glass-slide",
-    name: "Buzlu Cam Kayma",
-    description: "Buzlu cam panel yana kayar ve davetiye netleşir.",
-    family: "glass",
-    category: "minimal",
-    premium: true,
-    duration: 3600,
-    theme: "frosted-glass",
-    motion: "glass-slide-reveal",
-    palette: "white-silver-blue",
-    effects: ["frostGlow", "pearlLight"]
-  },
-  {
-    id: "crystal-prism",
-    name: "Kristal Prizma",
-    description: "Kristal prizma ışığı kırar ve davetiye renkli parıltıyla görünür.",
-    family: "glass",
-    category: "luxury",
-    premium: true,
-    duration: 4100,
-    theme: "crystal-prism",
-    motion: "prism-light-reveal",
-    palette: "crystal-gold-white",
-    effects: ["rainbowLight", "glassShimmer"]
-  },
-  {
-    id: "glass-door-reveal",
-    name: "Cam Kapı Reveal",
-    description: "İki cam panel açılır, modern davetiye ortada belirir.",
-    family: "glass",
-    category: "modern",
-    premium: false,
-    duration: 3700,
-    theme: "glass-door",
-    motion: "double-glass-slide",
-    palette: "silver-white",
-    effects: ["lightSweep"]
-  },
-  {
-    id: "water-glass-reveal",
-    name: "Su Camı Efekti",
-    description: "Su dalgası gibi cam yüzey hareket eder ve davetiye ortaya çıkar.",
-    family: "glass",
-    category: "romantic",
-    premium: true,
-    duration: 4100,
-    theme: "water-glass",
-    motion: "water-distortion-reveal",
-    palette: "aqua-white-silver",
-    effects: ["waterShimmer", "softGlow"]
-  },
-  {
-    id: "gold-glass-frame",
-    name: "Gold Cam Çerçeve",
-    description: "Altın çerçeveli cam panel açılır, premium görünüm sağlar.",
-    family: "glass",
-    category: "luxury",
-    premium: true,
-    duration: 3900,
-    theme: "gold-glass-frame",
-    motion: "glass-frame-open",
-    palette: "gold-glass-ivory",
-    effects: ["goldParticles", "glassShimmer"]
-  },
-  {
-    id: "neon-glass",
-    name: "Neon Cam Reveal",
-    description: "Neon çizgilerle cam panel taranır ve davetiye görünür.",
-    family: "glass",
-    category: "modern",
-    premium: true,
-    duration: 3700,
-    theme: "neon-glass",
-    motion: "neon-scan-reveal",
-    palette: "black-purple-cyan",
-    effects: ["neonGlow", "lightSweep"]
-  },
-  {
-    id: "pearl-glass",
-    name: "İnci Cam Işıltısı",
-    description: "İnci parıltılı cam yüzey yumuşak fade ile açılır.",
-    family: "glass",
-    category: "minimal",
-    premium: false,
-    duration: 3500,
-    theme: "pearl-glass",
-    motion: "pearl-glass-fade",
-    palette: "pearl-white-silver",
-    effects: ["pearlLight"]
-  },
-
-  // 9. MIRROR FAMILY (8 items)
-  {
-    id: "antique-mirror",
-    name: "Antika Ayna",
-    description: "Antika ayna parlayarak davetiyeyi yansıma gibi gösterir.",
-    family: "mirror",
-    category: "classic",
-    premium: true,
-    duration: 4100,
-    theme: "antique-mirror",
-    motion: "mirror-glow-reveal",
-    palette: "gold-cream-brown",
-    effects: ["mirrorShine", "goldDust"]
-  },
-  {
-    id: "royal-mirror",
-    name: "Kraliyet Aynası",
-    description: "Altın işlemeli büyük ayna içinde davetiye belirir.",
-    family: "mirror",
-    category: "royal",
-    premium: true,
-    duration: 4300,
-    theme: "royal-mirror",
-    motion: "royal-mirror-reveal",
-    palette: "gold-burgundy-cream",
-    effects: ["royalLight", "sparkleDust"]
-  },
-  {
-    id: "modern-mirror",
-    name: "Modern Ayna Reveal",
-    description: "Minimal ayna yüzeyi ışık çizgisiyle açılır.",
-    family: "mirror",
-    category: "modern",
-    premium: false,
-    duration: 3500,
-    theme: "modern-mirror",
-    motion: "mirror-scan-reveal",
-    palette: "white-silver",
-    effects: ["lightSweep"]
-  },
-  {
-    id: "broken-mirror",
-    name: "Kırık Ayna Efekti",
-    description: "Ayna parçaları zarifçe ayrılır ve davetiye görünür.",
-    family: "mirror",
-    category: "cinematic",
-    premium: true,
-    duration: 3900,
-    theme: "broken-mirror",
-    motion: "mirror-fragments-open",
-    palette: "silver-black-white",
-    effects: ["glassShimmer", "dramaticLight"]
-  },
-  {
-    id: "pearl-mirror",
-    name: "İnci Ayna",
-    description: "İnci çerçeveli ayna yumuşak parıltıyla davetiyeyi gösterir.",
-    family: "mirror",
-    category: "minimal",
-    premium: true,
-    duration: 3700,
-    theme: "pearl-mirror",
-    motion: "pearl-mirror-fade",
-    palette: "pearl-white-gold",
+export const entranceAnimationStyles: EntranceAnimationStyle[] = [
+  {
+    id: "black-gold-premium",
+    name: "Siyah Gold Premium",
+    palette: {
+      primary: "#0f0e0e",
+      secondary: "#d6a84f",
+      accent: "#f8dfac",
+      background: "#111111",
+      card: "#fff8ec",
+      text: "#3a2a18"
+    },
+    effects: ["goldParticles", "spotlight", "softGlow"]
+  },
+  {
+    id: "rose-gold-romantic",
+    name: "Rose Gold Romantik",
+    palette: {
+      primary: "#f5d7ce",
+      secondary: "#c98778",
+      accent: "#fff5ef",
+      background: "#fff1ec",
+      card: "#fffaf6",
+      text: "#7a4d46"
+    },
+    effects: ["rosePetals", "sparkleDust", "softBloom"]
+  },
+  {
+    id: "minimal-white",
+    name: "Minimal Beyaz",
+    palette: {
+      primary: "#ffffff",
+      secondary: "#d8c7b2",
+      accent: "#f5efe8",
+      background: "#faf7f2",
+      card: "#ffffff",
+      text: "#4a4038"
+    },
     effects: ["pearlLight", "softGlow"]
   },
   {
-    id: "rose-mirror",
-    name: "Gül Aynası",
-    description: "Gül çerçeveli ayna içinde davetiye romantik şekilde belirir.",
-    family: "mirror",
-    category: "romantic",
-    premium: false,
-    duration: 3900,
-    theme: "rose-mirror",
-    motion: "rose-mirror-reveal",
-    palette: "rose-ivory-gold",
-    effects: ["rosePetals", "softBloom"]
+    id: "royal-burgundy",
+    name: "Kraliyet Bordo",
+    palette: {
+      primary: "#5a0f1b",
+      secondary: "#d4af5f",
+      accent: "#fff1dd",
+      background: "#2b0710",
+      card: "#fff7eb",
+      text: "#4b271f"
+    },
+    effects: ["goldParticles", "candleLight", "royalLight"]
   },
   {
-    id: "moon-mirror",
-    name: "Ay Aynası",
-    description: "Ay ışıklı ayna gece konseptli davetiyeyi gösterir.",
-    family: "mirror",
-    category: "cinematic",
-    premium: true,
-    duration: 4100,
-    theme: "moon-mirror",
-    motion: "moon-reflection-reveal",
-    palette: "navy-silver",
-    effects: ["moonGlow", "stars"]
+    id: "bohemian-garden",
+    name: "Bohem Bahçe",
+    palette: {
+      primary: "#d8c7a3",
+      secondary: "#8fa17a",
+      accent: "#fff8ea",
+      background: "#f5eddd",
+      card: "#fffaf0",
+      text: "#5c4a35"
+    },
+    effects: ["leafFall", "sunFlare", "warmLight"]
   },
   {
-    id: "gold-frame-mirror",
-    name: "Gold Çerçeve Ayna",
-    description: "Gold çerçeveli ayna ışıkla parlar ve davetiye görünür.",
-    family: "mirror",
-    category: "luxury",
-    premium: true,
-    duration: 4000,
-    theme: "gold-frame-mirror",
-    motion: "gold-mirror-reveal",
-    palette: "gold-white",
-    effects: ["goldParticles", "mirrorShine"]
-  },
-
-  // 10. CINEMATIC ZOOM FAMILY (5 items)
-  {
-    id: "cinematic-camera-zoom",
-    name: "Sinematik Kamera Zoom",
-    description: "Kamera davetiyeye yaklaşır, blur açılır ve içerik netleşir.",
-    family: "cinematicZoom",
-    category: "cinematic",
-    premium: true,
-    duration: 3600,
-    theme: "cinematic-camera",
-    motion: "blur-zoom-reveal",
-    palette: "black-gold-cream",
-    effects: ["filmGrain", "spotlight"]
+    id: "marble-gold",
+    name: "Mermer Gold",
+    palette: {
+      primary: "#f8f4ee",
+      secondary: "#c9a44d",
+      accent: "#ffffff",
+      background: "#f3eee7",
+      card: "#fffdf8",
+      text: "#4a3925"
+    },
+    effects: ["goldDust", "marbleLight", "softGlow"]
   },
   {
-    id: "golden-light-zoom",
-    name: "Altın Işık Zoom",
-    description: "Altın ışık patlamasıyla davetiye merkeze doğru gelir.",
-    family: "cinematicZoom",
-    category: "luxury",
-    premium: true,
-    duration: 3700,
-    theme: "golden-light-zoom",
-    motion: "light-burst-zoom",
-    palette: "gold-cream",
-    effects: ["goldParticles", "lightBurst"]
+    id: "glass-modern",
+    name: "Cam Modern",
+    palette: {
+      primary: "#eaf0f5",
+      secondary: "#9baec0",
+      accent: "#ffffff",
+      background: "#f4f8fb",
+      card: "#ffffff",
+      text: "#26313a"
+    },
+    effects: ["glassShimmer", "lightSweep", "pearlLight"]
   },
   {
-    id: "soft-romantic-zoom",
-    name: "Romantik Yakınlaşma",
-    description: "Yumuşak bokeh ışıklarla davetiye romantik şekilde yakınlaşır.",
-    family: "cinematicZoom",
-    category: "romantic",
-    premium: false,
-    duration: 3400,
-    theme: "romantic-bokeh",
-    motion: "soft-zoom-fade",
-    palette: "blush-cream",
-    effects: ["bokeh", "softGlow"]
+    id: "pastel-floral",
+    name: "Pastel Çiçekli",
+    palette: {
+      primary: "#f7d8df",
+      secondary: "#d9a7b0",
+      accent: "#fff7f8",
+      background: "#fff3f5",
+      card: "#fffafa",
+      text: "#6b444c"
+    },
+    effects: ["rosePetals", "floralBloom", "softGlow"]
   },
   {
-    id: "neon-zoom",
-    name: "Neon Zoom",
-    description: "Neon çizgiler davetiyeye doğru akar ve modern açılış oluşturur.",
-    family: "cinematicZoom",
-    category: "modern",
-    premium: true,
-    duration: 3500,
-    theme: "neon-zoom",
-    motion: "neon-tunnel-zoom",
-    palette: "black-purple-cyan",
-    effects: ["neonGlow", "speedLines"]
+    id: "navy-gold",
+    name: "Lacivert Gold",
+    palette: {
+      primary: "#101b36",
+      secondary: "#d3aa4c",
+      accent: "#fff1cf",
+      background: "#081225",
+      card: "#fff8ec",
+      text: "#302414"
+    },
+    effects: ["goldParticles", "stars", "spotlight"]
   },
   {
-    id: "film-premiere-zoom",
-    name: "Film Galası Zoom",
-    description: "Film galası havasında kırmızı halı ve spotlight geçişi.",
-    family: "cinematicZoom",
-    category: "cinematic",
-    premium: true,
-    duration: 3900,
-    theme: "film-premiere",
-    motion: "premiere-zoom",
-    palette: "red-black-gold",
-    effects: ["filmGrain", "spotlight"]
-  },
-
-  // 11. SPOTLIGHT FAMILY (4 items)
-  {
-    id: "grand-spotlight",
-    name: "Grand Spotlight",
-    description: "Sahne ışığı davetiyeyi karanlıktan premium şekilde ortaya çıkarır.",
-    family: "spotlight",
-    category: "luxury",
-    premium: true,
-    duration: 3600,
-    theme: "grand-spotlight",
-    motion: "spotlight-center-reveal",
-    palette: "black-gold",
-    effects: ["spotlight", "goldDust"]
-  },
-  {
-    id: "soft-stage-light",
-    name: "Yumuşak Sahne Işığı",
-    description: "Yumuşak ışık altında davetiye sahneye çıkar.",
-    family: "spotlight",
-    category: "classic",
-    premium: false,
-    duration: 3400,
-    theme: "soft-stage",
-    motion: "soft-light-reveal",
-    palette: "cream-gold",
-    effects: ["softGlow"]
-  },
-  {
-    id: "triple-spotlight",
-    name: "Üçlü Spotlight",
-    description: "Üç sahne ışığı davetiyeyi sırayla aydınlatır.",
-    family: "spotlight",
-    category: "cinematic",
-    premium: true,
-    duration: 3800,
-    theme: "triple-spotlight",
-    motion: "three-light-reveal",
-    palette: "black-gold-white",
-    effects: ["spotlight", "filmGrain"]
-  },
-  {
-    id: "rose-spotlight",
-    name: "Rose Spotlight",
-    description: "Pembe tonlu romantik spotlight davetiyeyi açığa çıkarır.",
-    family: "spotlight",
-    category: "romantic",
-    premium: false,
-    duration: 3500,
-    theme: "rose-spotlight",
-    motion: "rose-light-reveal",
-    palette: "rose-cream",
-    effects: ["softBloom", "rosePetals"]
-  },
-
-  // 12. STARRY NIGHT FAMILY (4 items)
-  {
-    id: "starry-night-reveal",
-    name: "Yıldızlı Gece",
-    description: "Yıldızlı gökyüzü açılır ve davetiye ay ışığında belirir.",
-    family: "starryNight",
-    category: "romantic",
-    premium: true,
-    duration: 4200,
-    theme: "starry-night",
-    motion: "stars-fade-card-rise",
-    palette: "navy-silver-gold",
-    effects: ["stars", "moonGlow"]
-  },
-  {
-    id: "moonlight-card",
-    name: "Ay Işığı Davetiye",
-    description: "Ay ışığı davetiyenin üzerine düşer ve içeriği gösterir.",
-    family: "starryNight",
-    category: "cinematic",
-    premium: true,
-    duration: 4000,
-    theme: "moonlight-card",
-    motion: "moonlight-reveal",
-    palette: "navy-silver-white",
-    effects: ["moonGlow", "stars"]
-  },
-  {
-    id: "falling-stars",
-    name: "Kayan Yıldızlar",
-    description: "Kayan yıldızlar davetiyeyi aydınlatır.",
-    family: "starryNight",
-    category: "romantic",
-    premium: false,
-    duration: 3900,
-    theme: "falling-stars",
-    motion: "shooting-stars-reveal",
-    palette: "navy-gold",
-    effects: ["shootingStars", "sparkleDust"]
-  },
-  {
-    id: "galaxy-reveal",
-    name: "Galaksi Reveal",
-    description: "Galaksi efekti merkezde açılır ve davetiye ortaya çıkar.",
-    family: "starryNight",
-    category: "cinematic",
-    premium: true,
-    duration: 4300,
-    theme: "galaxy",
-    motion: "galaxy-spin-reveal",
-    palette: "purple-navy-gold",
-    effects: ["stars", "galaxyGlow"]
-  },
-
-  // 13. ELEVATOR FAMILY (4 items)
-  {
-    id: "golden-elevator-door",
-    name: "Altın Asansör Kapısı",
-    description: "Lüks otel asansörü gibi altın kapılar kayarak açılır.",
-    family: "elevator",
-    category: "luxury",
-    premium: true,
-    duration: 4000,
-    theme: "golden-elevator",
-    motion: "elevator-slide-open",
-    palette: "gold-black-cream",
-    effects: ["metalShine", "spotlight"]
-  },
-  {
-    id: "modern-elevator",
-    name: "Modern Asansör",
-    description: "Paslanmaz çelik modern asansör kapıları iki yana kayarak açılır.",
-    family: "elevator",
-    category: "modern",
-    premium: false,
-    duration: 3800,
-    theme: "modern-elevator",
-    motion: "elevator-split-open",
-    palette: "silver-gray-white",
-    effects: ["lightSweep"]
-  },
-  {
-    id: "glass-elevator",
-    name: "Cam Asansör Geçişi",
-    description: "Panoramik cam asansör yukarı yükselir ve davetiye görünür.",
-    family: "elevator",
-    category: "modern",
-    premium: true,
-    duration: 4100,
-    theme: "glass-elevator",
-    motion: "elevator-rise-fade",
-    palette: "glass-white-silver",
-    effects: ["glassShimmer", "pearlLight"]
-  },
-  {
-    id: "wood-elevator",
-    name: "Rustik Asansör Kapısı",
-    description: "Ahşap kaplamalı retro asansör kapısı yukarı kayarak açılır.",
-    family: "elevator",
-    category: "classic",
-    premium: false,
-    duration: 3900,
-    theme: "wood-elevator",
-    motion: "elevator-lift-up",
-    palette: "brown-cream",
-    effects: ["warmLight"]
-  },
-
-  // 14. ROYAL HALL FAMILY (4 items)
-  {
-    id: "royal-hall-reveal",
-    name: "Kraliyet Koridoru",
-    description: "Saray koridoru boyunca ilerlenir, davetiye parıldayarak açılır.",
-    family: "royalHall",
-    category: "royal",
-    premium: true,
-    duration: 4500,
-    theme: "royal-corridor",
-    motion: "hall-walkthrough",
-    palette: "gold-burgundy",
-    effects: ["royalLight", "goldDust"]
-  },
-  {
-    id: "palace-ballroom",
-    name: "Saray Balo Salonu",
-    description: "Balo salonunun devasa pencerelerinden ışık süzülür ve davetiye belirir.",
-    family: "royalHall",
-    category: "royal",
-    premium: true,
-    duration: 4400,
-    theme: "palace-ballroom",
-    motion: "hall-zoom-reveal",
-    palette: "gold-cream-white",
-    effects: ["chandelierLight", "goldParticles"]
-  },
-  {
-    id: "monarch-hall",
-    name: "Monarch Hall",
-    description: "Monark taht odası kapıları açılır ve davetiye tahtın üzerinde belirir.",
-    family: "royalHall",
-    category: "royal",
-    premium: true,
-    duration: 4600,
-    theme: "monarch-hall",
-    motion: "hall-reveal-dramatic",
-    palette: "navy-gold-ivory",
-    effects: ["royalLight", "goldDust"]
-  },
-  {
-    id: "castle-corridor",
-    name: "Şato Koridoru",
-    description: "Meşaleli şato koridorundan geçiş sinematik bir his yaratır.",
-    family: "royalHall",
-    category: "classic",
-    premium: false,
-    duration: 4200,
-    theme: "castle-corridor",
-    motion: "corridor-zoom-glow",
-    palette: "stone-amber-cream",
-    effects: ["candleLight", "dustGlow"]
-  },
-
-  // 15. MINIMAL FAMILY (2 items)
-  {
-    id: "minimal-fade",
-    name: "Sade Fade Açılışı",
-    description: "Ekran ortasından yumuşak bir parlama ile zarif bir reveal.",
-    family: "minimal",
-    category: "minimal",
-    premium: false,
-    duration: 2800,
-    theme: "minimal-fade",
-    motion: "simple-fade-in",
-    palette: "white-gray",
-    effects: ["softGlow"]
-  },
-  {
-    id: "simple-slide",
-    name: "Minimal Kayma Efekti",
-    description: "Davetiyenin aşağıdan yukarı doğru kayarak ekrana yerleşmesi.",
-    family: "minimal",
-    category: "minimal",
-    premium: false,
-    duration: 2900,
-    theme: "minimal-slide",
-    motion: "simple-slide-up",
-    palette: "cream-gray",
-    effects: ["pearlLight"]
+    id: "champagne-gold",
+    name: "Şampanya Gold",
+    palette: {
+      primary: "#ead8bd",
+      secondary: "#c99b4e",
+      accent: "#fff6e8",
+      background: "#f6ead9",
+      card: "#fffaf2",
+      text: "#5a3d22"
+    },
+    effects: ["goldDust", "softBloom", "pearlLight"]
   }
 ];

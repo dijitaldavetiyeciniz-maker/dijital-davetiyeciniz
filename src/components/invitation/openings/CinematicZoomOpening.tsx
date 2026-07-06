@@ -1,24 +1,39 @@
 import React from "react";
+import { EntranceAnimationStyle } from "@/data/openingAnimations";
 
 type CinematicZoomOpeningProps = {
   opened: boolean;
   brideName: string;
   groomName: string;
+  styleConfig: EntranceAnimationStyle;
 };
 
 export function CinematicZoomOpening({
   opened,
   brideName,
   groomName,
+  styleConfig,
 }: CinematicZoomOpeningProps) {
+  const borderStyle = {
+    borderColor: `${styleConfig.palette.secondary}80`,
+  };
+
   return (
     <div className={`zoom-opening-stage ${opened ? "opened" : ""} w-full h-full flex items-center justify-center`}>
-      <div className="zoom-lens-border" />
-      <div className="z-10 text-center select-none text-white p-6">
-        <h3 className="font-serif text-3xl md:text-5xl tracking-widest font-extrabold text-[#dfc384] drop-shadow-md">
+      <div style={borderStyle} className="zoom-lens-border" />
+      <div className="z-10 text-center select-none p-6">
+        <h3 
+          style={{ color: styleConfig.palette.accent }}
+          className="font-serif text-3xl md:text-5xl tracking-widest font-extrabold drop-shadow-md"
+        >
           {brideName} & {groomName}
         </h3>
-        <p className="text-[10px] uppercase tracking-[0.3em] text-slate-300 mt-4">Düğün Davetine Giriş</p>
+        <p 
+          style={{ color: styleConfig.palette.secondary }}
+          className="text-[10px] uppercase tracking-[0.3em] mt-4"
+        >
+          Düğün Davetine Giriş
+        </p>
       </div>
     </div>
   );

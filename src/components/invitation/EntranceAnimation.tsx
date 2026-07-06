@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import "@/styles/invitation-animations.css";
 import "@/styles/opening-animations.css";
-import { openingAnimations, OpeningAnimation } from "@/data/openingAnimations";
+import { entranceAnimationTypes, entranceAnimationStyles, EntranceAnimationStyle } from "@/data/openingAnimations";
 
 // Import opening family components
 import { EnvelopeOpening } from "./openings/EnvelopeOpening";
@@ -22,14 +22,15 @@ import { RoyalHallOpening } from "./openings/RoyalHallOpening";
 import { MinimalFadeOpening } from "./openings/MinimalFadeOpening";
 
 type EntranceAnimationProps = {
-  animationType: string; // matches id in openingAnimations
+  animationType: string; // matches id in entranceAnimationTypes
   initials: string;
   brideName?: string;
   groomName?: string;
   eventDate?: string;
   onComplete?: () => void;
   // Backward compatibility:
-  envelopeStyle?: string;
+  envelopeStyle?: string; // used as animationStyle if passed
+  animationStyle?: string; // matches id in entranceAnimationStyles
   sealStyle?: string;
   backgroundAnimation?: string;
 };
@@ -65,6 +66,55 @@ function PearlParticles() {
   );
 }
 
+function parseLegacyAnimation(animationVal: string, styleVal: string) {
+  let type = "envelope";
+  let style = styleVal || "black-gold-premium";
+
+  const val = (animationVal || "").toLowerCase();
+  
+  const validTypes = ["envelope", "curtain", "door", "gardenGate", "book", "luxuryBox", "treasureChest", "glass", "mirror", "cinematicZoom", "spotlight", "starryNight", "minimalFade", "royalHall", "elevator"];
+  if (validTypes.includes(animationVal)) {
+    return { type: animationVal, style };
+  }
+
+  if (val.includes("envelope") || val.includes("zarf")) type = "envelope";
+  else if (val.includes("curtain") || val.includes("perde")) type = "curtain";
+  else if (val.includes("door") || val.includes("kapı")) type = "door";
+  else if (val.includes("garden") || val.includes("bahçe")) type = "gardenGate";
+  else if (val.includes("book") || val.includes("kitap")) type = "book";
+  else if (val.includes("box") || val.includes("kutu")) type = "luxuryBox";
+  else if (val.includes("chest") || val.includes("sandık")) type = "treasureChest";
+  else if (val.includes("glass") || val.includes("cam")) type = "glass";
+  else if (val.includes("mirror") || val.includes("ayna")) type = "mirror";
+  else if (val.includes("zoom") || val.includes("yakınlaşma")) type = "cinematicZoom";
+  else if (val.includes("spotlight") || val.includes("ışığı")) type = "spotlight";
+  else if (val.includes("star") || val.includes("yıldız")) type = "starryNight";
+  else if (val.includes("hall") || val.includes("salon") || val.includes("koridor")) type = "royalHall";
+  else if (val.includes("elevator") || val.includes("asansör")) type = "elevator";
+  else if (val.includes("fade") || val.includes("sade")) type = "minimalFade";
+
+  if (val.includes("gold") || val.includes("altın")) {
+    if (val.includes("black") || val.includes("siyah")) style = "black-gold-premium";
+    else if (val.includes("rose")) style = "rose-gold-romantic";
+    else if (val.includes("navy") || val.includes("lacivert")) style = "navy-gold";
+    else if (val.includes("champagne") || val.includes("şampanya")) style = "champagne-gold";
+    else if (val.includes("marble") || val.includes("mermer")) style = "marble-gold";
+    else style = "champagne-gold";
+  } else if (val.includes("burgundy") || val.includes("bordo")) {
+    style = "royal-burgundy";
+  } else if (val.includes("white") || val.includes("beyaz")) {
+    style = "minimal-white";
+  } else if (val.includes("boho") || val.includes("kraft") || val.includes("rustic")) {
+    style = "bohemian-garden";
+  } else if (val.includes("floral") || val.includes("çiçek")) {
+    style = "pastel-floral";
+  } else if (val.includes("glass") || val.includes("modern")) {
+    style = "glass-modern";
+  }
+
+  return { type, style };
+}
+
 export function EntranceAnimation({
   animationType,
   initials,
@@ -72,13 +122,15 @@ export function EntranceAnimation({
   groomName = "Damat",
   eventDate,
   onComplete,
+  envelopeStyle,
+  animationStyle,
 }: EntranceAnimationProps) {
   const [opened, setOpened] = useState(false);
 
-  // Find the selected opening animation configuration
-  const config: OpeningAnimation =
-    openingAnimations.find((a) => a.id === animationType) ||
-    openingAnimations[0]; // fallback to first item
+  const { type, style } = parseLegacyAnimation(animationType, animationStyle || envelopeStyle || "");
+
+  const typeConfig = entranceAnimationTypes.find((t) => t.id === type) || entranceAnimationTypes[0];
+  const styleConfig: EntranceAnimationStyle = entranceAnimationStyles.find((s) => s.id === style) || entranceAnimationStyles[0];
 
   useEffect(() => {
     setOpened(false);
@@ -91,7 +143,7 @@ export function EntranceAnimation({
       if (onComplete) {
         completeTimer = setTimeout(() => {
           onComplete();
-        }, config.duration);
+        }, 4000); // 4 seconds duration
       }
     }, 2200);
 
@@ -99,7 +151,7 @@ export function EntranceAnimation({
       clearTimeout(autoOpenTimer);
       clearTimeout(completeTimer);
     };
-  }, [animationType, config.duration, onComplete]);
+  }, [animationType, styleId, onComplete]);
 
   const handleManualOpen = () => {
     if (opened) return;
@@ -107,23 +159,23 @@ export function EntranceAnimation({
     if (onComplete) {
       setTimeout(() => {
         onComplete();
-      }, config.duration);
+      }, 4000);
     }
   };
 
   // Extract particle details from effects list
-  const hasRosePetals = config.effects.includes("rosePetals");
+  const hasRosePetals = styleConfig.effects.includes("rosePetals");
   const hasGoldParticles =
-    config.effects.includes("goldParticles") ||
-    config.effects.includes("goldDust") ||
-    config.effects.includes("sparkleDust");
+    styleConfig.effects.includes("goldParticles") ||
+    styleConfig.effects.includes("goldDust") ||
+    styleConfig.effects.includes("sparkleDust");
   const hasPearlParticles =
-    config.effects.includes("pearlLight") ||
-    config.effects.includes("pearlParticles");
+    styleConfig.effects.includes("pearlLight") ||
+    styleConfig.effects.includes("pearlParticles");
 
   // Choose display text helper
   const getPromptText = () => {
-    switch (config.family) {
+    switch (typeConfig.id) {
       case "envelope":
         return "✉️ AÇMAK İÇİN DOKUNUN ✉️";
       case "curtain":
@@ -147,7 +199,6 @@ export function EntranceAnimation({
     }
   };
 
-  // Helper function to render correct opening family layout
   const renderFamily = () => {
     const commonProps = {
       opened,
@@ -155,13 +206,10 @@ export function EntranceAnimation({
       brideName,
       groomName,
       eventDate,
-      theme: config.theme,
-      motion: config.motion,
-      palette: config.palette,
-      effects: config.effects,
+      styleConfig,
     };
 
-    switch (config.family) {
+    switch (typeConfig.id) {
       case "envelope":
         return <EnvelopeOpening {...commonProps} />;
       case "curtain":
@@ -190,7 +238,7 @@ export function EntranceAnimation({
         return <ElevatorDoorOpening {...commonProps} />;
       case "royalHall":
         return <RoyalHallOpening {...commonProps} />;
-      case "minimal":
+      case "minimalFade":
       default:
         return <MinimalFadeOpening {...commonProps} />;
     }
@@ -198,7 +246,8 @@ export function EntranceAnimation({
 
   return (
     <div 
-      className={`opening-stage-container opening-family-${config.family} opening-theme-${config.theme} overflow-hidden w-full h-full relative`}
+      className="opening-stage-container overflow-hidden w-full h-full relative"
+      style={{ backgroundColor: styleConfig.palette.background }}
       onClick={handleManualOpen}
     >
       {/* Render Particles */}

@@ -1,23 +1,38 @@
 import React from "react";
+import { EntranceAnimationStyle } from "@/data/openingAnimations";
 
 type SpotlightOpeningProps = {
   opened: boolean;
   brideName: string;
   groomName: string;
+  styleConfig: EntranceAnimationStyle;
 };
 
 export function SpotlightOpening({
   opened,
   brideName,
   groomName,
+  styleConfig,
 }: SpotlightOpeningProps) {
+  const beamStyle = {
+    background: `linear-gradient(to bottom, ${styleConfig.palette.secondary}66, transparent)`,
+  };
+
   return (
     <div className={`spotlight-opening-stage ${opened ? "opened" : ""} w-full h-full flex items-center justify-center`}>
-      <div className="spotlight-beam" />
-      <div className="z-10 text-center select-none text-white p-6">
-        <span className="text-[10px] text-amber-300 uppercase tracking-[0.25em] block mb-2">Davetli Listesi Girişi</span>
-        <h3 className="font-serif text-2xl md:text-4xl text-white drop-shadow-lg leading-tight">
-          {brideName} <span className="text-amber-300">&</span> {groomName}
+      <div style={beamStyle} className="spotlight-beam" />
+      <div className="z-10 text-center select-none p-6">
+        <span 
+          style={{ color: styleConfig.palette.accent }}
+          className="text-[10px] uppercase tracking-[0.25em] block mb-2"
+        >
+          Davetli Listesi Girişi
+        </span>
+        <h3 
+          style={{ color: styleConfig.palette.palette ? styleConfig.palette.text : '#ffffff' }}
+          className="font-serif text-2xl md:text-4xl drop-shadow-lg leading-tight"
+        >
+          {brideName} <span style={{ color: styleConfig.palette.secondary }}>&</span> {groomName}
         </h3>
       </div>
     </div>
