@@ -227,30 +227,49 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   // Program timeline simulation
-  const renderProgramTimeline = () => (
-    <div className="w-full mt-10 mb-6 text-center select-none font-sans relative z-10 px-2">
-      <h3 className="text-xs font-bold tracking-[0.2em] uppercase mb-8" style={{ color: primaryColor }}>
-        📅 PROGRAM AKIŞI
-      </h3>
-      <div className="flex flex-col gap-6 max-w-xs mx-auto text-left border-l border-slate-200/50 pl-5 ml-8 relative">
-        {[
-          { time: '19:00', title: 'Karşılama & Kokteyl', desc: 'Misafirlerin salona kabulü ve hoşgeldiniz kokteyli' },
-          { time: '20:00', title: 'Nikah Töreni', desc: 'Nikah akdi ve ömür boyu mutluluğa imzaların atılması' },
-          { time: '20:30', title: 'Yemek & Eğlence', desc: 'Düğün yemeği servisi ve müzik eşliğinde kutlama' },
-          { time: '23:30', title: 'Kapanış', desc: 'Teşekkür konuşması ve kapanış' }
-        ].map((item, idx) => (
-          <div key={idx} className="relative">
-            <span className="absolute -left-[27px] top-1.5 w-3.5 h-3.5 rounded-full border bg-white flex items-center justify-center shadow-xs" style={{ borderColor: primaryColor }}>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: primaryColor }} />
-            </span>
-            <strong className="text-xs font-bold tracking-wider" style={{ color: primaryColor }}>{item.time}</strong>
-            <h4 className="text-xs font-bold mt-0.5" style={{ color: textColor }}>{item.title}</h4>
-            <p className="text-[10px] font-normal leading-normal opacity-70 mt-0.5" style={{ color: mutedTextColor }}>{item.desc}</p>
-          </div>
-        ))}
+  const renderProgramTimeline = () => {
+    if (wedding.show_program === false) return null;
+
+    let timeline: { time: string; title: string; desc: string }[] = [];
+    if (wedding.program_timeline) {
+      try {
+        timeline = typeof wedding.program_timeline === 'string'
+          ? JSON.parse(wedding.program_timeline)
+          : wedding.program_timeline;
+      } catch (e) {
+        timeline = [];
+      }
+    }
+
+    if (!Array.isArray(timeline) || timeline.length === 0) {
+      timeline = [
+        { time: '19:00', title: 'Karşılama & Kokteyl', desc: 'Misafirlerin salona kabulü ve hoşgeldiniz kokteyli' },
+        { time: '20:00', title: 'Nikah Töreni', desc: 'Nikah akdi ve ömür boyu mutluluğa imzaların atılması' },
+        { time: '20:30', title: 'Yemek & Eğlence', desc: 'Düğün yemeği servisi ve müzik eşliğinde kutlama' },
+        { time: '23:30', title: 'Kapanış', desc: 'Teşekkür konuşması ve kapanış' }
+      ];
+    }
+
+    return (
+      <div className="w-full mt-10 mb-6 text-center select-none font-sans relative z-10 px-2">
+        <h3 className="text-xs font-bold tracking-[0.2em] uppercase mb-8" style={{ color: primaryColor }}>
+          📅 PROGRAM AKIŞI
+        </h3>
+        <div className="flex flex-col gap-6 max-w-xs mx-auto text-left border-l border-slate-200/50 pl-5 ml-8 relative">
+          {timeline.map((item, idx) => (
+            <div key={idx} className="relative">
+              <span className="absolute -left-[27px] top-1.5 w-3.5 h-3.5 rounded-full border bg-white flex items-center justify-center shadow-xs" style={{ borderColor: primaryColor }}>
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: primaryColor }} />
+              </span>
+              <strong className="text-xs font-bold tracking-wider" style={{ color: primaryColor }}>{item.time}</strong>
+              <h4 className="text-xs font-bold mt-0.5" style={{ color: textColor }}>{item.title}</h4>
+              <p className="text-[10px] font-normal leading-normal opacity-70 mt-0.5" style={{ color: mutedTextColor }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // Sub-renderers
   const renderHeader = () => (

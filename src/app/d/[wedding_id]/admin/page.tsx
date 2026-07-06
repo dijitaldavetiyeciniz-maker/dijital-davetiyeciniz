@@ -265,6 +265,8 @@ export default function CoupleAdminPage({
   const [sealStyle, setSealStyle] = useState('burgundy');
   const [userChangedOpeningType, setUserChangedOpeningType] = useState(false);
   const [isAnimationModalOpen, setIsAnimationModalOpen] = useState(false);
+  const [showProgram, setShowProgram] = useState(true);
+  const [programTimeline, setProgramTimeline] = useState<{ time: string; title: string; desc: string }[]>([]);
   
   // Premium UI/UX States
   const [countdownStyle, setCountdownStyle] = useState('glass');
@@ -363,6 +365,32 @@ export default function CoupleAdminPage({
       if (weddingData.countdown_style) setCountdownStyle(weddingData.countdown_style);
       if (weddingData.is_dark_mode !== undefined && weddingData.is_dark_mode !== null) setIsDarkMode(weddingData.is_dark_mode);
       
+      // Program Akışı Yükleme
+      if (weddingData.show_program !== undefined && weddingData.show_program !== null) {
+        setShowProgram(weddingData.show_program);
+      }
+      if (weddingData.program_timeline) {
+        try {
+          const parsed = typeof weddingData.program_timeline === 'string'
+            ? JSON.parse(weddingData.program_timeline)
+            : weddingData.program_timeline;
+          if (Array.isArray(parsed)) {
+            setProgramTimeline(parsed);
+          } else {
+            setProgramTimeline([]);
+          }
+        } catch (e) {
+          setProgramTimeline([]);
+        }
+      } else {
+        setProgramTimeline([
+          { time: '19:00', title: 'Karşılama & Kokteyl', desc: 'Misafirlerin salona kabulü ve hoşgeldiniz kokteyli' },
+          { time: '20:00', title: 'Nikah Töreni', desc: 'Nikah akdi ve ömür boyu mutluluğa imzaların atılması' },
+          { time: '20:30', title: 'Yemek & Eğlence', desc: 'Düğün yemeği servisi ve müzik eşliğinde kutlama' },
+          { time: '23:30', title: 'Kapanış', desc: 'Teşekkür konuşması ve kapanış' }
+        ]);
+      }
+      
       // Genel Bilgileri Doldur
       if (weddingData.event_type) setEventType(weddingData.event_type);
       if (weddingData.bride_name) setBrideName(weddingData.bride_name);
@@ -414,7 +442,9 @@ export default function CoupleAdminPage({
           envelope_style: envelopeStyle,
           seal_style: sealStyle,
           countdown_style: countdownStyle,
-          is_dark_mode: isDarkMode
+          is_dark_mode: isDarkMode,
+          show_program: showProgram,
+          program_timeline: programTimeline
         })
         .eq('id', wedding.id);
 
@@ -1924,6 +1954,90 @@ export default function CoupleAdminPage({
                               </button>
                             ))}
                           </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Program Akışı Modülü */}
+                    <div className="space-y-2">
+                      <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                        <div>
+                          <div className="font-bold text-slate-800 text-xs">Program Akışı</div>
+                          <div className="text-[10px] text-slate-500 mt-0.5">Düğün/Etkinlik programının saat saat akışını gösterin.</div>
+                        </div>
+                        <div className="relative shrink-0">
+                          <input type="checkbox" className="sr-only" checked={showProgram} onChange={e => setShowProgram(e.target.checked)} />
+                          <div className={`block w-10 h-5 rounded-full transition-colors ${showProgram ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                          <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${showProgram ? 'transform translate-x-5' : ''}`}></div>
+                        </div>
+                      </label>
+                      {showProgram && (
+                        <div className="p-4 bg-white border border-slate-200/60 rounded-xl space-y-4 animate-in slide-in-from-top-2 duration-200">
+                          <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Program Akışı Detayları</span>
+                          <div className="space-y-3">
+                            {programTimeline.map((item, idx) => (
+                              <div key={idx} className="flex gap-2 p-3 bg-slate-50/50 border rounded-xl relative group">
+                                <div className="space-y-2 flex-1">
+                                  <div className="grid grid-cols-3 gap-2">
+                                    <input 
+                                      type="text" 
+                                      placeholder="Saat (örn: 19:30)" 
+                                      value={item.time} 
+                                      onChange={e => {
+                                        const newList = [...programTimeline];
+                                        newList[idx].time = e.target.value;
+                                        setProgramTimeline(newList);
+                                      }}
+                                      className="border p-2 rounded-lg bg-white text-xs font-bold text-slate-800 placeholder:text-slate-400"
+                                    />
+                                    <input 
+                                      type="text" 
+                                      placeholder="Başlık (örn: Pasta Töreni)" 
+                                      value={item.title} 
+                                      onChange={e => {
+                                        const newList = [...programTimeline];
+                                        newList[idx].title = e.target.value;
+                                        setProgramTimeline(newList);
+                                      }}
+                                      className="border p-2 rounded-lg bg-white text-xs font-bold text-slate-800 col-span-2 placeholder:text-slate-400"
+                                    />
+                                  </div>
+                                  <input 
+                                    type="text" 
+                                    placeholder="Kısa açıklama..." 
+                                    value={item.desc} 
+                                    onChange={e => {
+                                      const newList = [...programTimeline];
+                                      newList[idx].desc = e.target.value;
+                                      setProgramTimeline(newList);
+                                    }}
+                                    className="border p-2 rounded-lg bg-white text-xs w-full text-slate-700 placeholder:text-slate-400"
+                                  />
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newList = programTimeline.filter((_, i) => i !== idx);
+                                    setProgramTimeline(newList);
+                                  }}
+                                  className="self-center p-1.5 hover:bg-rose-50 text-rose-500 rounded-lg transition-all active:scale-90"
+                                  title="Akışı Sil"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setProgramTimeline([...programTimeline, { time: '', title: '', desc: '' }]);
+                            }}
+                            className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1 active:scale-95"
+                          >
+                            <span>➕</span> Yeni Akış Ekle
+                          </button>
                         </div>
                       )}
                     </div>
