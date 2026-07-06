@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "@/styles/invitation-animations.css";
 import "@/styles/opening-animations.css";
 import { entranceAnimationTypes, entranceAnimationStyles, EntranceAnimationStyle } from "@/data/openingAnimations";
@@ -126,6 +126,11 @@ export function EntranceAnimation({
   animationStyle,
 }: EntranceAnimationProps) {
   const [opened, setOpened] = useState(false);
+  
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   const { type, style } = parseLegacyAnimation(animationType, animationStyle || envelopeStyle || "");
 
@@ -140,9 +145,9 @@ export function EntranceAnimation({
     // Auto-open after 2.2 seconds if they don't click manually
     autoOpenTimer = setTimeout(() => {
       setOpened(true);
-      if (onComplete) {
+      if (onCompleteRef.current) {
         completeTimer = setTimeout(() => {
-          onComplete();
+          onCompleteRef.current?.();
         }, 4000); // 4 seconds duration
       }
     }, 2200);
@@ -151,14 +156,14 @@ export function EntranceAnimation({
       clearTimeout(autoOpenTimer);
       clearTimeout(completeTimer);
     };
-  }, [animationType, style, onComplete]);
+  }, [animationType, style]);
 
   const handleManualOpen = () => {
     if (opened) return;
     setOpened(true);
-    if (onComplete) {
+    if (onCompleteRef.current) {
       setTimeout(() => {
-        onComplete();
+        onCompleteRef.current?.();
       }, 4000);
     }
   };
