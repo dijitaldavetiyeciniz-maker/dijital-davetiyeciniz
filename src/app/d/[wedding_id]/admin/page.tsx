@@ -264,6 +264,7 @@ export default function CoupleAdminPage({
   const [envelopeStyle, setEnvelopeStyle] = useState('classic');
   const [sealStyle, setSealStyle] = useState('burgundy');
   const [userChangedOpeningType, setUserChangedOpeningType] = useState(false);
+  const [isAnimationModalOpen, setIsAnimationModalOpen] = useState(false);
   
   // Premium UI/UX States
   const [countdownStyle, setCountdownStyle] = useState('glass');
