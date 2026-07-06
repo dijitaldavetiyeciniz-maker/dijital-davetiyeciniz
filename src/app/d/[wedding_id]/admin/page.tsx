@@ -1233,7 +1233,7 @@ export default function CoupleAdminPage({
 
                   {/* Filtered Concept-Based Themes List */}
                   <div className="space-y-3">
-                    <div className="max-h-80 overflow-y-auto border rounded-xl p-2 bg-slate-50 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="max-h-[520px] overflow-y-auto border rounded-2xl p-3 bg-slate-50 grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {(() => {
                         const filteredThemes = themes.filter(theme => {
                           if (templateCategory === 'all') return true;
@@ -1406,25 +1406,7 @@ export default function CoupleAdminPage({
                     </div>
                   </div>
 
-                  {/* Inline Live Preview Box */}
-                  <div className="p-4 bg-slate-50 border border-slate-200/60 rounded-2xl text-center">
-                    <span className="block text-[10px] uppercase font-bold tracking-widest text-slate-400 mb-3 font-mono">Canlı Animasyon Önizlemesi</span>
-                    <div className="aspect-video w-full max-w-[280px] mx-auto rounded-xl overflow-hidden shadow-lg border border-slate-200/60 relative bg-[#111]">
-                      <EntranceAnimation
-                        key={`${entranceAnimation}-${envelopeStyle}-${backgroundAnimation}`}
-                        animationType={entranceAnimation}
-                        animationStyle={envelopeStyle}
-                        initials={getInitials(brideName, groomName)}
-                        brideName={brideName}
-                        groomName={groomName}
-                        eventDate={(() => {
-                          if (!weddingDate) return undefined;
-                          const d = new Date(weddingDate);
-                          return isNaN(d.getTime()) ? undefined : d.toLocaleDateString('tr-TR');
-                        })()}
-                      />
-                    </div>
-                  </div>
+
                 </div>
               </div>
               <div className="space-y-6">
