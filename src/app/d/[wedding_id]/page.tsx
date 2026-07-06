@@ -66,11 +66,17 @@ export default async function WeddingPage({
   const useEnvelope = wedding.use_envelope !== false;
   
   let effectComponent = null;
-  switch (wedding.effect_type) {
-    case 'bubbles': effectComponent = <BubblesEffect />; break;
-    case 'sparkles': effectComponent = <SparklesEffect />; break;
-    case 'hearts': effectComponent = <HeartsEffect color={wedding.primary_color} />; break;
-    case 'snow': effectComponent = <SnowEffect />; break;
+  const bgAnim = wedding.background_animation || '';
+  const effType = wedding.effect_type || '';
+
+  if (bgAnim === 'rosePetals' || effType === 'hearts') {
+    effectComponent = <HeartsEffect color={wedding.primary_color} />;
+  } else if (bgAnim === 'goldParticles' || bgAnim === 'stars' || bgAnim === 'leafFall' || effType === 'sparkles') {
+    effectComponent = <SparklesEffect />;
+  } else if (bgAnim === 'pearlLight' || effType === 'bubbles') {
+    effectComponent = <BubblesEffect />;
+  } else if (bgAnim === 'snowFall' || effType === 'snow') {
+    effectComponent = <SnowEffect />;
   }
 
   const contentWithMusic = (

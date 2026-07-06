@@ -1303,120 +1303,134 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                {/* 2. Giriş Animasyon Tasarımı */}
+                                {/* 2. Giriş Animasyon Tasarımı */}
                 <div className="mt-6 border-t pt-4">
-                  <h4 className="font-bold text-sm mb-1 text-slate-800">2. Giriş Animasyonu Tipi</h4>
+                  <h4 className="font-bold text-sm mb-1 text-slate-800">2. Giriş Animasyon Tasarımı</h4>
                   <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-                    Davetiyenize girilirken misafirlerin göreceği lüks giriş kapak tipini seçin.
+                    Seçtiğiniz şablona en uygun giriş animasyonu otomatik olarak ayarlanır. Dilerseniz değiştirebilirsiniz.
                   </p>
-                  
-                  {/* Step 1: Animation Type Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[360px] overflow-y-auto pr-1 mb-6">
-                    {entranceAnimationTypes.map((type) => {
-                      const isSelected = entranceAnimation === type.id;
-                      const getEmojiIcon = (iconId: string) => {
-                        switch (iconId) {
-                          case "envelope": return "✉️";
-                          case "curtain": return "🎭";
-                          case "door": return "🚪";
-                          case "garden": return "🌿";
-                          case "book": return "📖";
-                          case "box": return "🎁";
-                          case "chest": return "👑";
-                          case "glass": return "🔮";
-                          case "mirror": return "🪞";
-                          case "zoom": return "📷";
-                          case "spotlight": return "🔦";
-                          case "stars": return "🌌";
-                          case "minimal": return "🌫️";
-                          case "hall": return "🏛️";
-                          case "elevator": return "🏢";
-                          default: return "✨";
-                        }
-                      };
-                      return (
-                        <button
-                          key={type.id}
-                          type="button"
-                          onClick={() => {
-                            setEntranceAnimation(type.id);
-                            // If no style selected yet, pick the default first style
-                            if (!envelopeStyle) {
-                              setEnvelopeStyle(entranceAnimationStyles[0].id);
-                            }
-                          }}
-                          className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition-all ${
-                            isSelected 
-                              ? 'border-rose-500 bg-rose-50/5 shadow-sm ring-2 ring-rose-100' 
-                              : 'border-slate-200 bg-white hover:bg-slate-50'
-                          }`}
-                        >
-                          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shadow-xs shrink-0">
-                            {getEmojiIcon(type.icon)}
-                          </div>
-                          <div>
-                            <strong className="text-slate-800 text-xs font-bold block mb-1">{type.name}</strong>
-                            <p className="text-[10px] text-slate-500 leading-relaxed font-normal">{type.description}</p>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
 
-                  {/* Step 2: Animation Style / Theme Selector (only if type is selected) */}
-                  {entranceAnimation && (
-                    <div className="mt-6 border-t pt-4 animate-fade-in">
-                      <h4 className="font-bold text-sm mb-1 text-slate-800">Animasyon Stili ve Renk Teması</h4>
-                      <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-                        Seçtiğiniz açılış animasyonunun renklerini ve genel havasını belirleyin.
-                      </p>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-6">
-                        {entranceAnimationStyles.map((style) => {
-                          const isActive = envelopeStyle === style.id;
-                          return (
-                            <button
-                              key={style.id}
-                              type="button"
-                              onClick={() => setEnvelopeStyle(style.id)}
-                              className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all ${
-                                isActive 
-                                  ? 'border-rose-500 bg-rose-50/5 shadow-xs ring-2 ring-rose-100' 
-                                  : 'border-slate-200 bg-white hover:bg-slate-50'
-                              }`}
-                            >
-                              <span className="text-slate-800 text-[11px] font-bold block mb-2">{style.name}</span>
-                              {/* Color Preview Swatch */}
-                              <div className="flex gap-1">
-                                <span className="w-4 h-4 rounded-full border border-slate-200 shadow-xs" style={{ backgroundColor: style.palette.primary }} />
-                                <span className="w-4 h-4 rounded-full border border-slate-200 shadow-xs" style={{ backgroundColor: style.palette.secondary }} />
-                                <span className="w-4 h-4 rounded-full border border-slate-200 shadow-xs" style={{ backgroundColor: style.palette.background }} />
-                              </div>
-                            </button>
-                          );
-                        })}
+                  {/* Compact Info Card */}
+                  <div className="p-4 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-3.5 mb-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 font-mono">Seçilen Giriş</span>
+                        <span className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+                          {(() => {
+                            const activeType = entranceAnimationTypes.find(t => t.id === entranceAnimation);
+                            const getEmojiIcon = (iconId: string) => {
+                              switch (iconId) {
+                                case "envelope": return "✉️";
+                                case "curtain": return "🎭";
+                                case "door": return "🚪";
+                                case "garden": return "🌿";
+                                case "book": return "📖";
+                                case "box": return "🎁";
+                                case "chest": return "👑";
+                                case "glass": return "🔮";
+                                case "mirror": return "🪞";
+                                case "zoom": return "📷";
+                                case "spotlight": return "🔦";
+                                case "stars": return "🌌";
+                                case "minimal": return "🌫️";
+                                case "hall": return "🏛️";
+                                case "elevator": return "🏢";
+                                default: return "✨";
+                              }
+                            };
+                            return (
+                              <>
+                                <span className="text-base">{getEmojiIcon(activeType?.icon || 'envelope')}</span>
+                                <span>{activeType?.name || 'Zarf Açılışı'}</span>
+                              </>
+                            );
+                          })()}
+                        </span>
+                        {!userChangedOpeningType && (
+                          <span className="inline-block mt-1 text-[9px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
+                            Tema ile Uyumlu
+                          </span>
+                        )}
                       </div>
 
-                      {/* Live Preview Emulator */}
-                      <div className="p-4 bg-slate-50 border border-slate-200/60 rounded-2xl text-center">
-                        <span className="block text-[10px] uppercase font-bold tracking-widest text-slate-400 mb-3">Canlı Animasyon Önizlemesi</span>
-                        <div className="aspect-video w-full max-w-[280px] mx-auto rounded-xl overflow-hidden shadow-lg border border-slate-200/60 relative bg-[#111]">
-                          <EntranceAnimation
-                            key={`${entranceAnimation}-${envelopeStyle}`}
-                            animationType={entranceAnimation}
-                            animationStyle={envelopeStyle}
-                            initials={getInitials(brideName, groomName)}
-                            brideName={brideName}
-                            groomName={groomName}
-                            eventDate={weddingDate ? new Date(weddingDate).toLocaleDateString('tr-TR') : undefined}
-                          />
-                        </div>
+                      <div>
+                        <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 font-mono">Animasyon Stili</span>
+                        <span className="text-xs font-semibold text-slate-800 block">
+                          {entranceAnimationStyles.find(s => s.id === envelopeStyle)?.name || 'Rose Gold Romantik'}
+                        </span>
                       </div>
                     </div>
-                  )}
+
+                    <div className="border-t pt-3 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsAnimationModalOpen(true)}
+                        className="px-3.5 py-1.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-1 active:scale-95"
+                      >
+                        <span>🪄</span> Animasyonu Değiştir
+                      </button>
+
+                      {userChangedOpeningType && (
+                        <button
+                          type="button"
+                          onClick={resetOpeningToRecommended}
+                          className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all flex items-center gap-1 active:scale-95"
+                        >
+                          <span>🔄</span> Tema Önerisine Dön
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Unified Background Effect Picker */}
+                  <div className="mb-4">
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 font-mono">⭐ Arka Plan Efekti (Ortak)</label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[
+                        { id: 'rosePetals', name: '🌹 Gül Yaprakları' },
+                        { id: 'goldParticles', name: '✨ Altın Tozları' },
+                        { id: 'pearlLight', name: '⚪ İnci Işıltısı' },
+                        { id: 'leafFall', name: '🌿 Yaprak Dökümü' },
+                        { id: 'stars', name: '🌌 Kayan Yıldızlar' },
+                        { id: 'snowFall', name: '❄️ Kar Yağışı' },
+                        { id: 'none', name: '❌ Yok' },
+                      ].map((item) => {
+                        const isBgActive = backgroundAnimation === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => setBackgroundAnimation(item.id)}
+                            className={`px-3 py-1.5 rounded-xl border text-[11px] font-semibold transition-all ${
+                              isBgActive 
+                                ? 'border-rose-500 bg-rose-50/10 text-rose-600 ring-2 ring-rose-100 bg-white' 
+                                : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                            }`}
+                          >
+                            {item.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Inline Live Preview Box */}
+                  <div className="p-4 bg-slate-50 border border-slate-200/60 rounded-2xl text-center">
+                    <span className="block text-[10px] uppercase font-bold tracking-widest text-slate-400 mb-3 font-mono">Canlı Animasyon Önizlemesi</span>
+                    <div className="aspect-video w-full max-w-[280px] mx-auto rounded-xl overflow-hidden shadow-lg border border-slate-200/60 relative bg-[#111]">
+                      <EntranceAnimation
+                        key={`${entranceAnimation}-${envelopeStyle}-${backgroundAnimation}`}
+                        animationType={entranceAnimation}
+                        animationStyle={envelopeStyle}
+                        initials={getInitials(brideName, groomName)}
+                        brideName={brideName}
+                        groomName={groomName}
+                        eventDate={weddingDate ? new Date(weddingDate).toLocaleDateString('tr-TR') : undefined}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-
               <div className="space-y-6">
                 {/* Font Pairs Presets */}
                 <div>
@@ -2310,6 +2324,104 @@ export default function CoupleAdminPage({
           </div>
         </div>
       </div>
+
+      {/* Giriş Animasyonu Seçimi Modalı */}
+      {isAnimationModalOpen && (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[85vh] overflow-hidden flex flex-col shadow-2xl border border-slate-100">
+            {/* Modal Header */}
+            <div className="p-5 border-b flex justify-between items-start">
+              <div>
+                <h3 className="text-sm font-bold text-slate-800">Giriş Animasyonu Seç</h3>
+                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                  Renkler ve efektler seçtiğiniz temaya göre otomatik uyarlanır. Buradan sadece açılış tarzını seçin.
+                </p>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setIsAnimationModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 font-bold text-lg p-1.5 hover:bg-slate-50 rounded-xl transition-all"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Body: Compact List */}
+            <div className="p-4 overflow-y-auto space-y-2">
+              {entranceAnimationTypes.map((type) => {
+                const isSelected = entranceAnimation === type.id;
+                const getEmojiIcon = (iconId: string) => {
+                  switch (iconId) {
+                    case "envelope": return "✉️";
+                    case "curtain": return "🎭";
+                    case "door": return "🚪";
+                    case "garden": return "🌿";
+                    case "book": return "📖";
+                    case "box": return "🎁";
+                    case "chest": return "👑";
+                    case "glass": return "🔮";
+                    case "mirror": return "🪞";
+                    case "zoom": return "📷";
+                    case "spotlight": return "🔦";
+                    case "stars": return "🌌";
+                    case "minimal": return "🌫️";
+                    case "hall": return "🏛️";
+                    case "elevator": return "🏢";
+                    default: return "✨";
+                  }
+                };
+                return (
+                  <div
+                    key={type.id}
+                    className={`flex items-center justify-between p-3 rounded-2xl border transition-all ${
+                      isSelected 
+                        ? 'border-rose-500 bg-rose-50/5 shadow-xs ring-1 ring-rose-100' 
+                        : 'border-slate-100 bg-slate-50/40 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-lg shadow-2xs">
+                        {getEmojiIcon(type.icon)}
+                      </div>
+                      <div>
+                        <strong className="text-slate-800 text-[11px] font-bold block">{type.name}</strong>
+                        <p className="text-[10px] text-slate-500 mt-0.5 leading-normal max-w-xs">{type.description}</p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEntranceAnimation(type.id);
+                        setUserChangedOpeningType(true);
+                        setIsAnimationModalOpen(false);
+                      }}
+                      className={`px-3 py-1.5 text-[10px] font-bold rounded-xl transition-all ${
+                        isSelected 
+                          ? 'bg-rose-500 text-white hover:bg-rose-600 shadow-xs' 
+                          : 'bg-white border border-slate-200 hover:bg-slate-50 text-slate-700'
+                      }`}
+                    >
+                      {isSelected ? 'Seçildi' : 'Seç'}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Modal Footer */}
+            <div className="p-4 border-t bg-slate-50 text-right">
+              <button
+                type="button"
+                onClick={() => setIsAnimationModalOpen(false)}
+                className="px-4 py-2 bg-slate-250 hover:bg-slate-350 text-slate-700 text-xs font-bold rounded-xl transition-all"
+              >
+                Kapat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Canlı Taslak Değişiklik Uyarısı (Toast) */}
       {toastMessage && (
