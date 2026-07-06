@@ -151,7 +151,7 @@ export function EntranceAnimation({
       clearTimeout(autoOpenTimer);
       clearTimeout(completeTimer);
     };
-  }, [animationType, styleId, onComplete]);
+  }, [animationType, style, onComplete]);
 
   const handleManualOpen = () => {
     if (opened) return;
