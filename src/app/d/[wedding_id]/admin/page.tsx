@@ -1425,7 +1425,11 @@ export default function CoupleAdminPage({
                         initials={getInitials(brideName, groomName)}
                         brideName={brideName}
                         groomName={groomName}
-                        eventDate={weddingDate ? new Date(weddingDate).toLocaleDateString('tr-TR') : undefined}
+                        eventDate={(() => {
+                          if (!weddingDate) return undefined;
+                          const d = new Date(weddingDate);
+                          return isNaN(d.getTime()) ? undefined : d.toLocaleDateString('tr-TR');
+                        })()}
                       />
                     </div>
                   </div>

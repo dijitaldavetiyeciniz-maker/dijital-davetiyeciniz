@@ -23,7 +23,11 @@ export function WeddingClientWrapper({ wedding, children }: WeddingClientWrapper
           initials={getInitials(wedding.bride_name, wedding.groom_name)}
           brideName={wedding.bride_name}
           groomName={wedding.groom_name}
-          eventDate={wedding.wedding_date ? new Date(wedding.wedding_date).toLocaleDateString('tr-TR') : undefined}
+          eventDate={(() => {
+            if (!wedding.wedding_date) return undefined;
+            const d = new Date(wedding.wedding_date);
+            return isNaN(d.getTime()) ? undefined : d.toLocaleDateString('tr-TR');
+          })()}
           onComplete={() => setShowEntrance(false)}
         />
       ) : (
