@@ -262,7 +262,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const renderNames = () => (
     <h1 
       className="text-4xl md:text-5xl lg:text-6xl mb-6 mt-4 leading-tight font-normal select-none relative z-10"
-      style={{ color: textColor, fontFamily: `"${namesFontFamily}", cursive, serif` }}
+      style={{ color: textColor, fontFamily: `"${headingFont}", cursive, serif` }}
     >
       {wedding.bride_parents && (
         <span 
