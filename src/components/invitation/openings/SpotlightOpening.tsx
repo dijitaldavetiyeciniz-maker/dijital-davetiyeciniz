@@ -6,6 +6,7 @@ type SpotlightOpeningProps = {
   brideName: string;
   groomName: string;
   styleConfig: EntranceAnimationStyle;
+  introText?: string;
 };
 
 export function SpotlightOpening({
@@ -13,6 +14,7 @@ export function SpotlightOpening({
   brideName,
   groomName,
   styleConfig,
+  introText,
 }: SpotlightOpeningProps) {
   const beamStyle = {
     background: `linear-gradient(to bottom, ${styleConfig.palette.secondary}66, transparent)`,
@@ -24,9 +26,9 @@ export function SpotlightOpening({
       <div className="z-10 text-center select-none p-6">
         <span 
           style={{ color: styleConfig.palette.accent }}
-          className="text-[10px] uppercase tracking-[0.25em] block mb-2"
+          className="text-[10px] tracking-[0.25em] block mb-2 font-bold"
         >
-          Davetli Listesi Girişi
+          {introText || "Davetlimizsiniz"}
         </span>
         <h3 
           style={{ color: styleConfig.palette.palette ? styleConfig.palette.text : '#ffffff' }}

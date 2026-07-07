@@ -12,6 +12,8 @@ type WeddingClientWrapperProps = {
 export function WeddingClientWrapper({ wedding, children }: WeddingClientWrapperProps) {
   const [showEntrance, setShowEntrance] = useState(true);
 
+  const isPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
+
   return (
     <>
       {showEntrance ? (
@@ -19,7 +21,10 @@ export function WeddingClientWrapper({ wedding, children }: WeddingClientWrapper
           animationType={wedding.entrance_animation || "royal-seal-premium"}
           envelopeStyle={wedding.envelope_style || "classic"}
           sealStyle={wedding.seal_style || "burgundy"}
+          sealType={wedding.seal_type || "monogram"}
+          eventType={wedding.event_type}
           backgroundAnimation={wedding.background_animation || "golden"}
+          backgroundDesign={wedding.background_design || wedding.envelope_bg_color || "rose-gold-silk"}
           initials={getInitials(wedding.bride_name, wedding.groom_name)}
           brideName={wedding.bride_name}
           groomName={wedding.groom_name}
@@ -34,16 +39,18 @@ export function WeddingClientWrapper({ wedding, children }: WeddingClientWrapper
         <>
           {children}
           
-          {/* Replay Animation Floating Button */}
-          <div className="fixed bottom-6 right-6 z-50">
-            <button
-              type="button"
-              onClick={() => setShowEntrance(true)}
-              className="bg-slate-900/90 text-white font-semibold text-xs tracking-wider uppercase px-4 py-3 rounded-full hover:bg-slate-800 transition-all shadow-2xl backdrop-blur-sm border border-slate-700/50 cursor-pointer active:scale-95"
-            >
-              🔄 Animasyonu Tekrar Oynat
-            </button>
-          </div>
+          {/* Replay Animation Floating Button (Only in Design Studio Emulator) */}
+          {isPreview && (
+            <div className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-3 duration-300">
+              <button
+                type="button"
+                onClick={() => setShowEntrance(true)}
+                className="bg-slate-900/90 text-white font-semibold text-xs tracking-wider uppercase px-4 py-3 rounded-full hover:bg-slate-800 transition-all shadow-2xl backdrop-blur-sm border border-slate-700/50 cursor-pointer active:scale-95"
+              >
+                🔄 Animasyonu Tekrar Oynat
+              </button>
+            </div>
+          )}
         </>
       )}
     </>

@@ -284,6 +284,15 @@ export default function Envelope({
     case 'crown':
       sealIcon = <Crown className="w-6 h-6 text-white/95 filter drop-shadow" />;
       break;
+    default:
+      if (sealType && sealType !== 'none') {
+        sealIcon = (
+          <span className="font-serif text-white/95 font-bold text-xs tracking-wider md:text-sm select-none filter drop-shadow">
+            {sealType}
+          </span>
+        );
+      }
+      break;
   }
 
   const getEnvelopeStyle = (colorOrPreset: string): { body: React.CSSProperties, flap: React.CSSProperties, extraBody?: React.ReactNode, extraFlap?: React.ReactNode } => {

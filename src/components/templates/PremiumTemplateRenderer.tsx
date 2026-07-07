@@ -10,6 +10,7 @@ import { isColorLight } from '@/lib/colorUtils';
 import { getBackgroundStyle, isBackgroundLight } from '@/lib/backgrounds';
 import { supabase } from '@/lib/supabase';
 import { predefinedThemes } from '@/lib/themes';
+import BackgroundAnimation from '../BackgroundAnimation';
 
 interface TemplateProps {
   wedding: any;
@@ -64,13 +65,14 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     mutedText: '#7b7066'
   };
 
+  const isDarkModeActive = !!wedding.is_dark_mode;
   const primaryColor = wedding.primary_color || palette.secondary;
-  const textColor = wedding.text_color || palette.text;
-  const cardBgColor = palette.card;
-  const mutedTextColor = palette.mutedText;
+  const textColor = isDarkModeActive ? '#f8fafc' : (wedding.text_color || palette.text);
+  const cardBgColor = isDarkModeActive ? '#12131a' : palette.card;
+  const mutedTextColor = isDarkModeActive ? '#94a3b8' : palette.mutedText;
 
-  const bgIsLight = isColorLight(palette.background);
-  const textIsLight = isColorLight(textColor);
+  const bgIsLight = isDarkModeActive ? false : isColorLight(palette.background);
+  const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
 
   const headingFont = wedding.names_font_family || themeConfig.typography?.heading || 'Playfair Display';
   const bodyFont = wedding.font_family || themeConfig.typography?.body || 'Cormorant Garamond';
@@ -79,6 +81,72 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const fontUrl = `https://fonts.googleapis.com/css2?family=${bodyFont.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
   const namesFontUrl = `https://fonts.googleapis.com/css2?family=${headingFont.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
   const accentFontUrl = `https://fonts.googleapis.com/css2?family=${accentFont.replace(/ /g, '+')}&display=swap`;
+
+  const hexToRgba = (hex: string, alpha: number) => {
+    let c = hex.replace('#', '');
+    if (c.length === 3) {
+      c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+    }
+    const r = parseInt(c.substring(0, 2), 16) || 255;
+    const g = parseInt(c.substring(2, 4), 16) || 255;
+    const b = parseInt(c.substring(4, 6), 16) || 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+
+  let cardStyles: React.CSSProperties = {
+    borderColor: `${primaryColor}25`,
+    fontFamily: `"${bodyFont}", serif`
+  };
+
+  const cardBgColorRaw = cardBgColor || '#ffffff';
+  const cardOpacity = 0.94;
+  const cardRgba = hexToRgba(cardBgColorRaw, cardOpacity);
+
+  const svgNoise = `data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.055'/%3E%3C/svg%3E`;
+
+  const txtId = wedding.background_design || wedding.envelope_bg_color || themeConfig.visualDetails?.texture || 'minimal-white-paper';
+
+  if (isDarkModeActive) {
+    cardStyles.backgroundImage = `url("${svgNoise}"), radial-gradient(circle at center, #1b1c22 0%, #0d0d12 100%)`;
+    cardStyles.color = '#fff8ec';
+    cardStyles.borderColor = 'rgba(214, 168, 79, 0.35)';
+  } else {
+    if (txtId === 'white-gold-marble' || txtId === 'marble-gold' || txtId === 'marble') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('https://www.transparenttextures.com/patterns/white-marble.png')`;
+      cardStyles.backgroundBlendMode = 'overlay';
+    } else if (txtId === 'black-gold-velvet' || txtId === 'dark-velvet') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), radial-gradient(circle at center, #1b1c22 0%, #08080a 100%)`;
+      cardStyles.color = '#fff8ec';
+      cardStyles.borderColor = 'rgba(215, 179, 104, 0.4)';
+    } else if (txtId === 'rose-gold-silk' || txtId === 'silk-paper') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('https://www.transparenttextures.com/patterns/linen.png')`;
+      cardStyles.backgroundBlendMode = 'overlay';
+      cardStyles.backgroundColor = '#fff1ec';
+    } else if (txtId === 'minimal-white-paper' || txtId === 'fine-paper') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('https://www.transparenttextures.com/patterns/paper-fibers.png')`;
+      cardStyles.backgroundBlendMode = 'overlay';
+    } else if (txtId === 'bohemian-kraft' || txtId === 'kraft') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('https://www.transparenttextures.com/patterns/cardboard-flat.png')`;
+      cardStyles.backgroundBlendMode = 'overlay';
+      cardStyles.backgroundColor = '#ecd5b8';
+    } else if (txtId === 'navy-gold-night' || txtId === 'dark-space') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), radial-gradient(circle at center, #0f1626 0%, #070a12 100%)`;
+      cardStyles.color = '#f8fafc';
+      cardStyles.borderColor = 'rgba(214, 168, 79, 0.35)';
+    } else if (txtId === 'pastel-floral' || txtId === 'damask') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('https://www.transparenttextures.com/patterns/gray-floral-double.png')`;
+      cardStyles.backgroundBlendMode = 'overlay';
+    } else if (txtId === 'glass-blur-modern' || txtId === 'canvas') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.72))`;
+      cardStyles.backdropFilter = 'blur(16px)';
+      cardStyles.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+    } else if (txtId === 'champagne-gold' || txtId === 'metallic') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(135deg, ${cardBgColorRaw}f2 0%, #f0e2cf 100%)`;
+      cardStyles.backgroundBlendMode = 'overlay';
+    } else {
+      cardStyles.backgroundColor = cardRgba;
+    }
+  }
 
   const handleGuestPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
@@ -113,16 +181,18 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
 
   // Dynamically compile paper texture styling
   let backgroundStyles: React.CSSProperties = {
-    backgroundColor: palette.background,
+    backgroundColor: isDarkModeActive ? '#090a0f' : palette.background,
     backgroundImage: wedding.background_image_url ? `url(${wedding.background_image_url})` : undefined,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    color: textColor
+    color: isDarkModeActive ? '#f8fafc' : textColor
   };
 
   if (!wedding.background_image_url) {
-    const txtId = themeConfig.visualDetails?.texture;
-    if (txtId === 'dark-velvet') {
+    const txtId = wedding.envelope_bg_color || themeConfig.visualDetails?.texture;
+    if (isDarkModeActive) {
+      backgroundStyles.background = `radial-gradient(circle at center, #0e111a 0%, #06080d 100%)`;
+    } else if (txtId === 'dark-velvet') {
       backgroundStyles.background = `radial-gradient(circle at center, #1a0f08 0%, #080706 100%)`;
     } else if (txtId === 'marble') {
       backgroundStyles.background = `linear-gradient(rgba(241, 237, 230, 0.92), rgba(241, 237, 230, 0.92)), url('https://www.transparenttextures.com/patterns/white-marble.png')`;
@@ -227,48 +297,9 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   // Program timeline simulation
+  // Program timeline simulation (Disabled per request)
   const renderProgramTimeline = () => {
-    if (wedding.show_program === false) return null;
-
-    let timeline: { time: string; title: string; desc: string }[] = [];
-    if (wedding.program_timeline) {
-      try {
-        timeline = typeof wedding.program_timeline === 'string'
-          ? JSON.parse(wedding.program_timeline)
-          : wedding.program_timeline;
-      } catch (e) {
-        timeline = [];
-      }
-    }
-
-    if (!Array.isArray(timeline) || timeline.length === 0) {
-      timeline = [
-        { time: '19:00', title: 'Karşılama & Kokteyl', desc: 'Misafirlerin salona kabulü ve hoşgeldiniz kokteyli' },
-        { time: '20:00', title: 'Nikah Töreni', desc: 'Nikah akdi ve ömür boyu mutluluğa imzaların atılması' },
-        { time: '20:30', title: 'Yemek & Eğlence', desc: 'Düğün yemeği servisi ve müzik eşliğinde kutlama' },
-        { time: '23:30', title: 'Kapanış', desc: 'Teşekkür konuşması ve kapanış' }
-      ];
-    }
-
-    return (
-      <div className="w-full mt-10 mb-6 text-center select-none font-sans relative z-10 px-2">
-        <h3 className="text-xs font-bold tracking-[0.2em] uppercase mb-8" style={{ color: primaryColor }}>
-          📅 PROGRAM AKIŞI
-        </h3>
-        <div className="flex flex-col gap-6 max-w-xs mx-auto text-left border-l border-slate-200/50 pl-5 ml-8 relative">
-          {timeline.map((item, idx) => (
-            <div key={idx} className="relative">
-              <span className="absolute -left-[27px] top-1.5 w-3.5 h-3.5 rounded-full border bg-white flex items-center justify-center shadow-xs" style={{ borderColor: primaryColor }}>
-                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: primaryColor }} />
-              </span>
-              <strong className="text-xs font-bold tracking-wider" style={{ color: primaryColor }}>{item.time}</strong>
-              <h4 className="text-xs font-bold mt-0.5" style={{ color: textColor }}>{item.title}</h4>
-              <p className="text-[10px] font-normal leading-normal opacity-70 mt-0.5" style={{ color: mutedTextColor }}>{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return null;
   };
 
   // Sub-renderers
@@ -285,7 +316,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     >
       {wedding.bride_parents && (
         <span 
-          className="text-[10px] tracking-[0.25em] uppercase font-light mb-3 block"
+          className="text-[10px] tracking-[0.25em] font-light mb-3 block"
           style={{ color: textColor, opacity: 0.6, fontFamily: 'Inter, system-ui, sans-serif' }}
         >
           {wedding.bride_parents}
@@ -302,7 +333,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
       </span>
       {wedding.groom_parents && (
         <span 
-          className="text-[10px] tracking-[0.25em] uppercase font-light mt-3 block"
+          className="text-[10px] tracking-[0.25em] font-light mt-3 block"
           style={{ color: textColor, opacity: 0.6, fontFamily: 'Inter, system-ui, sans-serif' }}
         >
           {wedding.groom_parents}
@@ -507,11 +538,14 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   };
 
   // Render the core layout
+  const backgroundDesign = wedding.background_design || wedding.envelope_bg_color || "rose-gold-silk";
+
   return (
     <div 
-      className="min-h-screen w-full relative overflow-x-hidden flex flex-col items-center justify-center p-4 sm:p-6 pb-28"
+      className={`min-h-screen w-full relative overflow-x-hidden flex flex-col items-center justify-center p-4 sm:p-6 pb-28 invitation-page bg-design-${backgroundDesign} ${isDarkModeActive ? 'dark-mode' : ''}`}
       style={backgroundStyles}
     >
+      <BackgroundAnimation type={wedding.background_animation} />
       <link href={fontUrl} rel="stylesheet" />
       <link href={namesFontUrl} rel="stylesheet" />
       <link href={accentFontUrl} rel="stylesheet" />
@@ -522,12 +556,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
 
       {/* Main Premium Invitation Card Box */}
       <div 
-        className={`max-w-[460px] mx-auto w-full p-8 sm:p-10 text-center relative z-10 border bg-white/90 backdrop-blur-md shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`}
-        style={{ 
-          backgroundColor: cardBgColor ? `${cardBgColor}ee` : 'rgba(255, 255, 255, 0.93)',
-          borderColor: `${primaryColor}25`,
-          fontFamily: `"${bodyFont}", serif`
-        }}
+        className={`max-w-[460px] mx-auto w-full p-8 sm:p-10 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`}
+        style={cardStyles}
       >
         {renderCardBorder()}
 

@@ -11,6 +11,8 @@ type EnvelopeOpeningProps = {
   groomName: string;
   eventDate?: string;
   styleConfig: EntranceAnimationStyle;
+  customSealStyle?: string;
+  customSealType?: string;
 };
 
 export function EnvelopeOpening({
@@ -20,6 +22,8 @@ export function EnvelopeOpening({
   groomName,
   eventDate,
   styleConfig,
+  customSealStyle,
+  customSealType,
 }: EnvelopeOpeningProps) {
   // Determine envelope cover style based on selected theme style
   let envelopeStyle = "classic";
@@ -33,16 +37,20 @@ export function EnvelopeOpening({
   else if (styleConfig.id === "glass-modern") envelopeStyle = "glass-effect";
 
   // Determine wax seal style
-  let sealStyle = "gold";
-  if (styleConfig.id === "royal-burgundy") sealStyle = "burgundy";
-  else if (styleConfig.id === "minimal-white" || styleConfig.id === "glass-modern") sealStyle = "silver";
-  else if (styleConfig.id === "rose-gold-romantic" || styleConfig.id === "pastel-floral") sealStyle = "rose-gold";
+  let sealStyle = customSealStyle || "gold";
+  if (!customSealStyle) {
+    if (styleConfig.id === "royal-burgundy") sealStyle = "burgundy";
+    else if (styleConfig.id === "minimal-white" || styleConfig.id === "glass-modern") sealStyle = "silver";
+    else if (styleConfig.id === "rose-gold-romantic" || styleConfig.id === "pastel-floral") sealStyle = "rose-gold";
+  }
 
   // Determine wax seal insignia
-  let insignia = "crown";
-  if (styleConfig.id === "rose-gold-romantic" || styleConfig.id === "pastel-floral") insignia = "rose";
-  else if (styleConfig.id === "bohemian-garden") insignia = "olive";
-  else if (styleConfig.id === "minimal-white") insignia = "infinity";
+  let insignia = customSealType || "crown";
+  if (!customSealType) {
+    if (styleConfig.id === "rose-gold-romantic" || styleConfig.id === "pastel-floral") insignia = "rose";
+    else if (styleConfig.id === "bohemian-garden") insignia = "olive";
+    else if (styleConfig.id === "minimal-white") insignia = "infinity";
+  }
 
   return (
     <div className={`envelope-opening-stage ${opened ? "is-opened" : ""}`}>

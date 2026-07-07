@@ -61,55 +61,55 @@ export default function CountdownTimer({
     switch (styleType) {
       case 'minimal': // Minimal Çizgisel (Thin lines, clean numbers)
         return (
-          <div className="flex flex-col items-center px-1 sm:px-3 relative shrink-0">
-            <div className="text-2xl sm:text-4xl font-light tracking-tight pb-1" style={{ color: primaryColor }}>
+          <div className="flex flex-col items-center px-1 sm:px-2.5 relative shrink-0">
+            <div className="text-xl sm:text-2.5xl font-light tracking-tight pb-0.5" style={{ color: primaryColor }}>
               {paddedValue}
             </div>
-            <div className="w-6 sm:w-8 h-[2px] rounded-full" style={{ backgroundColor: `${primaryColor}40` }}></div>
-            <span className="text-[8px] sm:text-[9px] mt-1 uppercase tracking-widest opacity-60 text-slate-500 font-sans">{label}</span>
+            <div className="w-5 sm:w-7 h-[1.5px] rounded-full" style={{ backgroundColor: `${primaryColor}40` }}></div>
+            <span className="text-[7.5px] sm:text-[8px] mt-0.5 uppercase tracking-widest opacity-60 text-slate-500 font-sans">{label}</span>
           </div>
         );
-      case 'digital': // Klasik Dijital (High-tech digital display style)
+      case 'digital': // Klasik Dijital
         return (
           <div className="flex flex-col items-center shrink-0">
             <div 
-              className="px-2 py-1 sm:px-3 sm:py-2 bg-slate-950/90 text-red-500 rounded-lg border border-slate-800 shadow-inner font-mono text-xl sm:text-3xl font-bold tracking-widest min-w-[40px] sm:min-w-[56px] text-center" 
+              className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-slate-950/90 text-red-500 rounded-lg border border-slate-800 shadow-inner font-mono text-lg sm:text-2xl font-bold tracking-widest min-w-[34px] sm:min-w-[46px] text-center" 
               style={{ 
                 color: primaryColor,
-                textShadow: `0 0 8px ${primaryColor}` 
+                textShadow: `0 0 6px ${primaryColor}` 
               }}
             >
               {paddedValue}
             </div>
-            <span className="text-[8px] sm:text-[9px] mt-1.5 uppercase tracking-widest opacity-50 font-sans font-bold text-slate-500">{label}</span>
+            <span className="text-[7.5px] sm:text-[8px] mt-1 uppercase tracking-widest opacity-50 font-sans font-bold text-slate-500">{label}</span>
           </div>
         );
-      case 'circular': // Zarif Yuvarlaklar İçinde
+      case 'circular': // Yuvarlaklar İçinde
       case 'elegant':
         return (
           <div className="flex flex-col items-center shrink-0">
             <div 
-              className="w-12 h-12 sm:w-18 sm:h-18 rounded-full flex flex-col items-center justify-center border shadow-sm bg-white/40 backdrop-blur-xs transition-transform hover:scale-105"
+              className="w-10 h-10 sm:w-14 sm:h-14 rounded-full flex flex-col items-center justify-center border shadow-sm bg-white/40 backdrop-blur-xs transition-transform hover:scale-105"
               style={{ borderColor: primaryColor, color: primaryColor }}
             >
-              <span className="text-lg sm:text-3xl font-serif font-medium leading-none">{paddedValue}</span>
+              <span className="text-base sm:text-2xl font-serif font-medium leading-none">{paddedValue}</span>
             </div>
-            <span className="text-[8px] sm:text-[9px] mt-1.5 uppercase tracking-widest font-semibold font-sans opacity-70" style={{ color: primaryColor }}>{label}</span>
+            <span className="text-[7.5px] sm:text-[8px] mt-1.5 uppercase tracking-widest font-semibold font-sans opacity-70" style={{ color: primaryColor }}>{label}</span>
           </div>
         );
       case 'neon':
         return (
           <div className="flex flex-col items-center shrink-0">
             <div 
-              className="text-2xl sm:text-4xl font-bold font-mono" 
+              className="text-xl sm:text-3xl font-bold font-mono" 
               style={{ 
                 color: primaryColor,
-                textShadow: `0 0 10px ${primaryColor}, 0 0 20px ${primaryColor}` 
+                textShadow: `0 0 8px ${primaryColor}, 0 0 16px ${primaryColor}` 
               }}
             >
               {paddedValue}
             </div>
-            <span className="text-[8px] sm:text-[10px] mt-1.5 uppercase tracking-widest text-white/50">{label}</span>
+            <span className="text-[7.5px] sm:text-[8.5px] mt-1 uppercase tracking-widest text-white/50">{label}</span>
           </div>
         );
       case 'glass':
@@ -117,12 +117,12 @@ export default function CountdownTimer({
         return (
           <div className="flex flex-col items-center shrink-0">
             <div 
-              className="w-11 h-11 sm:w-16 sm:h-16 bg-white/50 backdrop-blur-sm rounded-xl flex items-center justify-center text-lg sm:text-2xl font-bold shadow-xs border"
+              className="w-9 h-9 sm:w-13 sm:h-13 bg-white/50 backdrop-blur-sm rounded-xl flex items-center justify-center text-base sm:text-xl font-bold shadow-xs border"
               style={{ color: primaryColor, borderColor: `${primaryColor}20` }}
             >
               {paddedValue}
             </div>
-            <span className="text-[8px] sm:text-[10px] mt-1.5 uppercase tracking-widest opacity-60">{label}</span>
+            <span className="text-[7.5px] sm:text-[8.5px] mt-1 uppercase tracking-widest opacity-60">{label}</span>
           </div>
         );
     }
@@ -130,16 +130,16 @@ export default function CountdownTimer({
 
   const getSeparator = () => {
     if (styleType === 'circular' || styleType === 'elegant' || styleType === 'minimal') {
-      return <div className="text-lg sm:text-2xl font-light opacity-30 px-0.5 sm:px-1 self-center -mt-4 sm:-mt-6" style={{ color: primaryColor }}>/</div>;
+      return <div className="text-base sm:text-xl font-light opacity-30 px-0.5 sm:px-1 self-center -mt-3 sm:-mt-4" style={{ color: primaryColor }}>/</div>;
     }
     if (styleType === 'digital' || styleType === 'neon') {
-      return <div className="text-lg sm:text-2xl font-bold font-mono px-0.5 sm:px-1 self-center -mt-4 sm:-mt-6 animate-pulse" style={{ color: primaryColor, textShadow: styleType === 'neon' ? `0 0 10px ${primaryColor}` : 'none' }}>:</div>;
+      return <div className="text-base sm:text-xl font-bold font-mono px-0.5 sm:px-1 self-center -mt-3 sm:-mt-4 animate-pulse" style={{ color: primaryColor, textShadow: styleType === 'neon' ? `0 0 8px ${primaryColor}` : 'none' }}>:</div>;
     }
-    return <div className="text-lg sm:text-2xl font-light px-0.5 sm:px-1 self-center -mt-4 sm:-mt-6" style={{ color: primaryColor }}>:</div>;
+    return <div className="text-base sm:text-xl font-light px-0.5 sm:px-1 self-center -mt-3 sm:-mt-4" style={{ color: primaryColor }}>:</div>;
   };
 
   return (
-    <div className="flex gap-1.5 sm:gap-3 justify-center items-center my-4 flex-nowrap w-full max-w-full overflow-hidden select-none">
+    <div className="flex gap-1 sm:gap-2 justify-center items-center my-3 flex-nowrap w-full max-w-full overflow-hidden select-none">
       {renderTimerBlock(timeLeft.days, 'Gün')}
       {getSeparator()}
       {renderTimerBlock(timeLeft.hours, 'Saat')}

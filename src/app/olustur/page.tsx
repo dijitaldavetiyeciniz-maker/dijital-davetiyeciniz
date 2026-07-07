@@ -141,7 +141,8 @@ function CreateForm() {
         entrance_animation: 'royal-seal-premium',
         envelope_style: 'classic',
         seal_style: 'burgundy',
-        background_animation: 'golden'
+        background_animation: 'golden',
+        show_program: false
       }
     ]);
 

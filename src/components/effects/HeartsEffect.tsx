@@ -48,7 +48,7 @@ export default function HeartsEffect({ color = '#ef4444' }: { color?: string }) 
           />
         </div>
       ))}
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @keyframes heart-float {
           0% {
             transform: translateY(0) scale(1) rotate(-10deg);
@@ -70,7 +70,7 @@ export default function HeartsEffect({ color = '#ef4444' }: { color?: string }) 
           animation-timing-function: ease-in-out;
           animation-iteration-count: infinite;
         }
-      `}</style>
+      ` }} />
     </div>
   );
 }

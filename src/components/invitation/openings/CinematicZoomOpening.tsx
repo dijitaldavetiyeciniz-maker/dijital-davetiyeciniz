@@ -6,6 +6,7 @@ type CinematicZoomOpeningProps = {
   brideName: string;
   groomName: string;
   styleConfig: EntranceAnimationStyle;
+  introText?: string;
 };
 
 export function CinematicZoomOpening({
@@ -13,6 +14,7 @@ export function CinematicZoomOpening({
   brideName,
   groomName,
   styleConfig,
+  introText,
 }: CinematicZoomOpeningProps) {
   const borderStyle = {
     borderColor: `${styleConfig.palette.secondary}80`,
@@ -30,9 +32,9 @@ export function CinematicZoomOpening({
         </h3>
         <p 
           style={{ color: styleConfig.palette.secondary }}
-          className="text-[10px] uppercase tracking-[0.3em] mt-4"
+          className="text-[10px] tracking-[0.3em] mt-4 font-bold"
         >
-          Düğün Davetine Giriş
+          {introText || "Davetlimizsiniz"}
         </p>
       </div>
     </div>

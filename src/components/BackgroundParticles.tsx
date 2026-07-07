@@ -7,11 +7,22 @@ interface BackgroundParticlesProps {
 }
 
 export default function BackgroundParticles({ animationType, primaryColor = '#d4af37' }: BackgroundParticlesProps) {
-  if (!animationType || animationType === 'none') return null;
+  // Normalize new keys to existing keys
+  let normalizedType = animationType;
+  if (animationType === 'goldParticles') normalizedType = 'gold-dust';
+  if (animationType === 'rosePetals') normalizedType = 'rose-petals';
+  if (animationType === 'pearlLight') normalizedType = 'pearl-shimmer';
+  if (animationType === 'stars') normalizedType = 'starry-night';
+  if (animationType === 'snowFall') normalizedType = 'snowflakes';
+  if (animationType === 'leafFall') normalizedType = 'leaf-fall';
+  if (animationType === 'candleLight') normalizedType = 'candlelight';
+  if (animationType === 'glassShimmer') normalizedType = 'light-orbs';
+
+  if (!normalizedType || normalizedType === 'none') return null;
 
   // CSS keyframes injected inline via <style> tag (no external deps)
   const renderStyle = () => {
-    switch (animationType) {
+    switch (normalizedType) {
       case 'gold-dust':
         return `
           @keyframes goldRise {
@@ -296,7 +307,7 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
 
   // Generate particle elements for each type
   const renderParticles = () => {
-    switch (animationType) {
+    switch (normalizedType) {
       case 'gold-dust': {
         const count = 18;
         return Array.from({ length: count }, (_, i) => {

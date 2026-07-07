@@ -223,6 +223,7 @@ export default function CoupleAdminPage({
   
   const [wedding, setWedding] = useState<any>(null);
   const [rsvps, setRsvps] = useState<any[]>([]);
+  const [rsvpToDelete, setRsvpToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   
   const [passwordInput, setPasswordInput] = useState('');
@@ -265,7 +266,7 @@ export default function CoupleAdminPage({
   const [sealStyle, setSealStyle] = useState('burgundy');
   const [userChangedOpeningType, setUserChangedOpeningType] = useState(false);
   const [isAnimationModalOpen, setIsAnimationModalOpen] = useState(false);
-  const [showProgram, setShowProgram] = useState(true);
+  const [showProgram, setShowProgram] = useState(false);
   const [programTimeline, setProgramTimeline] = useState<{ time: string; title: string; desc: string }[]>([]);
   
   // Premium UI/UX States
@@ -337,7 +338,8 @@ export default function CoupleAdminPage({
       if (weddingData.primary_color) setPrimaryColor(weddingData.primary_color);
       if (weddingData.text_color) setTextColor(weddingData.text_color);
       if (weddingData.envelope_color) setEnvelopeColor(weddingData.envelope_color);
-      if (weddingData.envelope_bg_color) setEnvelopeBgColor(weddingData.envelope_bg_color);
+      const bgDesign = weddingData.background_design || weddingData.envelope_bg_color;
+      if (bgDesign) setEnvelopeBgColor(bgDesign);
       if (weddingData.envelope_flap_type) setEnvelopeFlapType(weddingData.envelope_flap_type);
       if (weddingData.seal_type) setSealType(weddingData.seal_type);
       if (weddingData.seal_color) setSealColor(weddingData.seal_color);
@@ -493,6 +495,23 @@ export default function CoupleAdminPage({
     }
   }
 
+  async function handleDeleteRsvp(rsvpId: string) {
+    const { error } = await supabase
+      .from('rsvps')
+      .delete()
+      .eq('id', rsvpId);
+
+    if (!error) {
+      setRsvps(prev => prev.filter(r => r.id !== rsvpId));
+      setRsvpToDelete(null);
+      setToastMessage('Katılımcı kaydı silindi.');
+      setTimeout(() => setToastMessage(''), 2500);
+      setPreviewKey(Date.now());
+    } else {
+      alert("Hata oluştu: " + error.message);
+    }
+  }
+
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     if (wedding && passwordInput === wedding.admin_password) {
@@ -504,51 +523,76 @@ export default function CoupleAdminPage({
   }
 
   async function handleSaveDesign() {
-    const { error } = await supabase
+    const payload: any = {
+      template_id: templateId,
+      primary_color: primaryColor,
+      text_color: textColor,
+      envelope_color: envelopeColor,
+      envelope_bg_color: envelopeBgColor,
+      envelope_flap_type: envelopeFlapType,
+      seal_type: sealType,
+      seal_color: sealColor,
+      entrance_type: entranceType,
+      effect_type: effectType,
+      font_family: fontFamily,
+      names_font_family: namesFontFamily,
+      background_image_url: bgImageUrl,
+      telegram_bot_token: telegramBotToken,
+      telegram_chat_id: telegramChatId,
+      use_envelope: useEnvelope,
+      event_type: eventType,
+      bride_name: brideName,
+      groom_name: groomName,
+      bride_parents: brideParents,
+      groom_parents: groomParents,
+      wedding_date: weddingDate,
+      venue_name: venueName,
+      venue_address: venueAddress,
+      google_maps_url: googleMapsUrl,
+      custom_message: customMessage,
+      quote_font_family: quoteFontFamily,
+      quote_font_size: quoteFontSize,
+      music_url: musicUrl,
+      music_autoplay: musicAutoplay,
+      show_photos: showPhotos,
+      show_rsvp: showRsvp,
+      show_comments: showComments,
+      show_countdown: showCountdown,
+      background_animation: backgroundAnimation,
+      entrance_animation: entranceAnimation,
+      envelope_style: envelopeStyle,
+      seal_style: sealStyle,
+      countdown_style: countdownStyle,
+      is_dark_mode: isDarkMode,
+      show_program: showProgram,
+      program_timeline: programTimeline,
+      background_design: envelopeBgColor
+    };
+
+    let { error } = await supabase
       .from('weddings')
-      .update({
-        template_id: templateId,
-        primary_color: primaryColor,
-        text_color: textColor,
-        envelope_color: envelopeColor,
-        envelope_bg_color: envelopeBgColor,
-        envelope_flap_type: envelopeFlapType,
-        seal_type: sealType,
-        seal_color: sealColor,
-        entrance_type: entranceType,
-        effect_type: effectType,
-        font_family: fontFamily,
-        names_font_family: namesFontFamily,
-        background_image_url: bgImageUrl,
-        telegram_bot_token: telegramBotToken,
-        telegram_chat_id: telegramChatId,
-        use_envelope: useEnvelope,
-        event_type: eventType,
-        bride_name: brideName,
-        groom_name: groomName,
-        bride_parents: brideParents,
-        groom_parents: groomParents,
-        wedding_date: weddingDate,
-        venue_name: venueName,
-        venue_address: venueAddress,
-        google_maps_url: googleMapsUrl,
-        custom_message: customMessage,
-        quote_font_family: quoteFontFamily,
-        quote_font_size: quoteFontSize,
-        music_url: musicUrl,
-        music_autoplay: musicAutoplay,
-        show_photos: showPhotos,
-        show_rsvp: showRsvp,
-        show_comments: showComments,
-        show_countdown: showCountdown,
-        background_animation: backgroundAnimation,
-        entrance_animation: entranceAnimation,
-        envelope_style: envelopeStyle,
-        seal_style: sealStyle,
-        countdown_style: countdownStyle,
-        is_dark_mode: isDarkMode
-      })
+      .update(payload)
       .eq('id', wedding.id);
+
+    // If pg_error 42703 (column does not exist), remove missing columns and retry
+    if (error && (error.code === '42703' || error.message?.includes('column'))) {
+      const errMsg = (error.message || '').toLowerCase();
+      if (errMsg.includes('background_design') || error.code === '42703') {
+        delete payload.background_design;
+      }
+      if (errMsg.includes('show_program')) {
+        delete payload.show_program;
+      }
+      if (errMsg.includes('program_timeline')) {
+        delete payload.program_timeline;
+      }
+
+      const retryResult = await supabase
+        .from('weddings')
+        .update(payload)
+        .eq('id', wedding.id);
+      error = retryResult.error;
+    }
       
     if (!error) {
       alert('Tüm ayarlar başarıyla kaydedildi!');
@@ -566,18 +610,30 @@ export default function CoupleAdminPage({
     setBgImageUrl(theme.background_image_url || '');
     if (theme.use_envelope !== undefined) setUseEnvelope(theme.use_envelope);
     if (theme.envelope_color) setEnvelopeColor(theme.envelope_color);
-    if (theme.envelope_bg_color) setEnvelopeBgColor(theme.envelope_bg_color);
+    
+    // backgroundDesign maps to envelope_bg_color
+    if (theme.recommendedBackgroundDesign) {
+      setEnvelopeBgColor(theme.recommendedBackgroundDesign);
+    } else if (theme.envelope_bg_color) {
+      setEnvelopeBgColor(theme.envelope_bg_color);
+    }
+    
     if (theme.envelope_flap_type) setEnvelopeFlapType(theme.envelope_flap_type);
     if (theme.seal_type) setSealType(theme.seal_type);
     if (theme.seal_color) setSealColor(theme.seal_color);
     if (theme.entrance_type) setEntranceType(theme.entrance_type);
     if (theme.effect_type !== undefined) setEffectType(theme.effect_type || '');
 
-    // Set recommended entrance animation settings
-    if (theme.recommendedOpeningType) setEntranceAnimation(theme.recommendedOpeningType);
-    if (theme.recommendedOpeningStyle) setEnvelopeStyle(theme.recommendedOpeningStyle);
-    if (theme.recommendedBackgroundAnimation) setBackgroundAnimation(theme.recommendedBackgroundAnimation);
-    setUserChangedOpeningType(false);
+    // If user hasn't manually customized opening, apply template recommendedOpeningType
+    if (theme.recommendedOpeningType && !userChangedOpeningType) {
+      setEntranceAnimation(theme.recommendedOpeningType);
+    }
+    if (theme.recommendedOpeningStyle) {
+      setEnvelopeStyle(theme.recommendedOpeningStyle);
+    }
+    if (theme.recommendedBackgroundAnimation) {
+      setBackgroundAnimation(theme.recommendedBackgroundAnimation);
+    }
   }
 
   function resetOpeningToRecommended() {
@@ -585,6 +641,7 @@ export default function CoupleAdminPage({
     if (activeTheme) {
       if (activeTheme.recommendedOpeningType) setEntranceAnimation(activeTheme.recommendedOpeningType);
       if (activeTheme.recommendedOpeningStyle) setEnvelopeStyle(activeTheme.recommendedOpeningStyle);
+      if (activeTheme.recommendedBackgroundDesign) setEnvelopeBgColor(activeTheme.recommendedBackgroundDesign);
       if (activeTheme.recommendedBackgroundAnimation) setBackgroundAnimation(activeTheme.recommendedBackgroundAnimation);
       setUserChangedOpeningType(false);
     }
@@ -1012,11 +1069,12 @@ export default function CoupleAdminPage({
                         <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider text-center">Yetişkin</th>
                         <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider text-center">Çocuk</th>
                         <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider">Tebrik Notu</th>
+                        <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider text-center">İşlem</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredRsvps.length === 0 && (
-                        <tr><td colSpan={5} className="p-8 text-center text-slate-500">Eşleşen LCV yanıtı bulunamadı.</td></tr>
+                        <tr><td colSpan={6} className="p-8 text-center text-slate-500">Eşleşen LCV yanıtı bulunamadı.</td></tr>
                       )}
                       {filteredRsvps.map(rsvp => (
                         <tr key={rsvp.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50">
@@ -1030,6 +1088,15 @@ export default function CoupleAdminPage({
                           <td className="p-4 text-slate-700 text-center font-bold">{rsvp.is_attending ? rsvp.guest_count : '-'}</td>
                           <td className="p-4 text-slate-700 text-center font-bold">{rsvp.is_attending ? (rsvp.child_count || 0) : '-'}</td>
                           <td className="p-4 text-slate-500 text-xs italic truncate max-w-xs">{rsvp.message || '-'}</td>
+                          <td className="p-4 text-center">
+                            <button
+                              type="button"
+                              onClick={() => setRsvpToDelete(rsvp.id)}
+                              className="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 hover:text-rose-700 text-xs font-bold rounded-lg transition-all active:scale-95 cursor-pointer"
+                            >
+                              Sil
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -1263,7 +1330,7 @@ export default function CoupleAdminPage({
 
                   {/* Filtered Concept-Based Themes List */}
                   <div className="space-y-3">
-                    <div className="max-h-[520px] overflow-y-auto border rounded-2xl p-3 bg-slate-50 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="max-h-[520px] overflow-y-auto border rounded-2xl p-3 bg-slate-50 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       {(() => {
                         const filteredThemes = themes.filter(theme => {
                           if (templateCategory === 'all') return true;
@@ -1295,18 +1362,22 @@ export default function CoupleAdminPage({
                                   : 'border-slate-200 bg-white hover:bg-slate-50'
                               }`}
                             >
-                              {/* Swatch color representation */}
-                              <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex flex-col items-center justify-center shrink-0 shadow-3xs overflow-hidden relative">
-                                <div className="absolute inset-0 flex flex-col">
-                                  <div className="h-2/3 w-full" style={{ backgroundColor: theme.palette?.background || '#fff' }} />
-                                  <div className="h-1/3 w-full flex">
-                                    <div className="w-1/2 h-full" style={{ backgroundColor: theme.palette?.primary || '#111' }} />
-                                    <div className="w-1/2 h-full" style={{ backgroundColor: theme.palette?.secondary || '#c9a44d' }} />
-                                  </div>
+                              {/* Miniature card premium mockup */}
+                              <div className="w-11 h-15 rounded-lg border flex flex-col items-center justify-between p-1 shrink-0 shadow-2xs overflow-hidden relative" style={{ 
+                                background: theme.palette?.background || '#fff', 
+                                borderColor: theme.palette?.secondary || '#c9a44d',
+                                borderWidth: '1.5px' 
+                              }}>
+                                {/* Inner miniature card */}
+                                <div className="w-full h-full rounded-md border flex flex-col items-center justify-between p-0.5" style={{ 
+                                  background: theme.palette?.card || '#fff', 
+                                  borderColor: `${theme.palette?.secondary}35`,
+                                  borderWidth: '1px'
+                                }}>
+                                  <div className="text-[5px] leading-none scale-75 mt-0.5" style={{ color: theme.palette?.secondary }}>👑</div>
+                                  <div className="text-[6px] font-serif leading-none scale-75 font-bold" style={{ color: theme.palette?.primary }}>A & B</div>
+                                  <div className="w-3 h-0.5 mb-0.5" style={{ backgroundColor: `${theme.palette?.secondary}50` }} />
                                 </div>
-                                <span className="absolute z-10 text-[9px] font-bold text-slate-800/80 bg-white/70 px-1 py-0.5 rounded shadow-3xs border border-white/40 scale-85">
-                                  Aa
-                                </span>
                               </div>
                               <div className="flex-1 min-w-0">
                                 <strong className="text-slate-800 text-[11px] font-bold block mb-0.5 truncate">{theme.name}</strong>
@@ -1334,7 +1405,7 @@ export default function CoupleAdminPage({
 
                   {/* Compact Info Card */}
                   <div className="p-4 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-3.5 mb-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div>
                         <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 font-mono">Seçilen Giriş</span>
                         <span className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
@@ -1345,24 +1416,21 @@ export default function CoupleAdminPage({
                                 case "envelope": return "✉️";
                                 case "curtain": return "🎭";
                                 case "door": return "🚪";
-                                case "garden": return "🌿";
+                                case "gardenGate": return "🌿";
                                 case "book": return "📖";
-                                case "box": return "🎁";
-                                case "chest": return "👑";
+                                case "luxuryBox": return "🎁";
                                 case "glass": return "🔮";
                                 case "mirror": return "🪞";
-                                case "zoom": return "📷";
+                                case "cinematicZoom": return "📷";
                                 case "spotlight": return "🔦";
-                                case "stars": return "🌌";
-                                case "minimal": return "🌫️";
-                                case "hall": return "🏛️";
-                                case "elevator": return "🏢";
+                                case "starryNight": return "🌌";
+                                case "minimalFade": return "🌫️";
                                 default: return "✨";
                               }
                             };
                             return (
                               <>
-                                <span className="text-base">{getEmojiIcon(activeType?.icon || 'envelope')}</span>
+                                <span className="text-base">{getEmojiIcon(entranceAnimation)}</span>
                                 <span>{activeType?.name || 'Zarf Açılışı'}</span>
                               </>
                             );
@@ -1379,6 +1447,27 @@ export default function CoupleAdminPage({
                         <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 font-mono">Animasyon Stili</span>
                         <span className="text-xs font-semibold text-slate-800 block">
                           {entranceAnimationStyles.find(s => s.id === envelopeStyle)?.name || 'Rose Gold Romantik'}
+                        </span>
+                      </div>
+
+                      <div>
+                        <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 font-mono">Arka Plan Efekti</span>
+                        <span className="text-xs font-semibold text-slate-800 block">
+                          {(() => {
+                            const effects = {
+                              rosePetals: '🌹 Gül Yaprakları',
+                              goldParticles: '✨ Altın Tozları',
+                              pearlLight: '⚪ İnci Işıltısı',
+                              leafFall: '🌿 Yaprak Dökümü',
+                              stars: '🌌 Yıldızlar',
+                              snowFall: '❄️ Kar Taneleri',
+                              bokeh: '🫧 Bokeh Işıklar',
+                              candleLight: '🕯️ Mum Işığı',
+                              glassShimmer: '🔮 Cam Parıltı',
+                              none: 'Yok'
+                            };
+                            return effects[backgroundAnimation as keyof typeof effects] || 'Yok';
+                          })()}
                         </span>
                       </div>
                     </div>
@@ -1413,8 +1502,11 @@ export default function CoupleAdminPage({
                         { id: 'goldParticles', name: '✨ Altın Tozları' },
                         { id: 'pearlLight', name: '⚪ İnci Işıltısı' },
                         { id: 'leafFall', name: '🌿 Yaprak Dökümü' },
-                        { id: 'stars', name: '🌌 Kayan Yıldızlar' },
-                        { id: 'snowFall', name: '❄️ Kar Yağışı' },
+                        { id: 'stars', name: '🌌 Yıldızlar' },
+                        { id: 'snowFall', name: '❄️ Kar Taneleri' },
+                        { id: 'bokeh', name: '🫧 Bokeh Işıklar' },
+                        { id: 'candleLight', name: '🕯️ Mum Işığı' },
+                        { id: 'glassShimmer', name: '🔮 Cam Parıltı' },
                         { id: 'none', name: '❌ Yok' },
                       ].map((item) => {
                         const isBgActive = backgroundAnimation === item.id;
@@ -1433,6 +1525,101 @@ export default function CoupleAdminPage({
                           </button>
                         );
                       })}
+                    </div>
+                  </div>
+
+                  {/* Wax Seal Customization Panel */}
+                  <div className="mt-4 pt-4 border-t border-dashed">
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 font-mono">⚜️ Mühür & Balmumu Ayarları</label>
+                    
+                    <div className="space-y-4">
+                      {/* 1. Mühür Rengi / Stili */}
+                      <div>
+                        <span className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">Mühür Rengi</span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            { id: 'gold', name: 'Altın Varak', color: '#d4af37' },
+                            { id: 'silver', name: 'Gümüş Varak', color: '#c0c0c0' },
+                            { id: 'rose-gold', name: 'Rose Gold', color: '#b76e79' },
+                            { id: 'burgundy', name: 'Kraliyet Bordo', color: '#600519' },
+                          ].map((style) => (
+                            <button
+                              key={style.id}
+                              type="button"
+                              onClick={() => setSealStyle(style.id)}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[11px] font-semibold transition-all ${
+                                sealStyle === style.id 
+                                  ? 'border-rose-500 bg-rose-50/10 text-rose-600 ring-2 ring-rose-100 bg-white' 
+                                  : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                              }`}
+                            >
+                              <span className="w-2.5 h-2.5 rounded-full border border-black/10" style={{ backgroundColor: style.color }} />
+                              {style.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* 2. Mühür Tasarımı (Symbol / Custom Initials) */}
+                      <div>
+                        <span className="block text-[10.5px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">Mühür Deseni veya Harfi</span>
+                        
+                        {/* Preset Symbols */}
+                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5 mb-2.5">
+                          {[
+                            { id: 'crown', name: '👑 Taç' },
+                            { id: 'rose', name: '🌹 Gül' },
+                            { id: 'olive', name: '🌿 Zeytin' },
+                            { id: 'heart', name: '❤️ Kalp' },
+                            { id: 'ring', name: '💍 Yüzük' },
+                            { id: 'infinity', name: '∞ Sonsuz' },
+                            { id: 'swan', name: '🦢 Kuğu' },
+                            { id: 'floral', name: '🌸 Çiçek' },
+                            { id: 'monogram', name: '🔤 Baş Harfler' },
+                            { id: 'custom', name: '✏️ Özel Harf' }
+                          ].map((symbol) => {
+                            const isSymbolActive = symbol.id === 'custom' 
+                              ? (!['crown', 'rose', 'olive', 'heart', 'ring', 'infinity', 'swan', 'floral', 'monogram'].includes(sealType))
+                              : sealType === symbol.id;
+                            
+                            return (
+                              <button
+                                key={symbol.id}
+                                type="button"
+                                onClick={() => {
+                                  if (symbol.id === 'custom') {
+                                    setSealType('A & B');
+                                  } else {
+                                    setSealType(symbol.id);
+                                  }
+                                }}
+                                className={`py-1.5 rounded-xl border text-[11px] font-semibold text-center transition-all ${
+                                  isSymbolActive 
+                                    ? 'border-rose-500 bg-rose-50/10 text-rose-600 ring-2 ring-rose-100 bg-white' 
+                                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                                }`}
+                              >
+                                {symbol.name}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {/* Custom letters text input */}
+                        {(!['crown', 'rose', 'olive', 'heart', 'ring', 'infinity', 'swan', 'floral', 'monogram'].includes(sealType)) && (
+                          <div className="animate-in slide-in-from-top-2 duration-200">
+                            <input 
+                              type="text"
+                              maxLength={6}
+                              placeholder="Mühür içine yazılacak harf(ler)"
+                              value={sealType}
+                              onChange={e => setSealType(e.target.value)}
+                              className="w-full border p-2 rounded-xl bg-white text-xs font-bold text-slate-800 placeholder:text-slate-400 focus:ring-1 focus:ring-rose-500 focus:outline-hidden"
+                            />
+                            <p className="text-[9px] text-slate-400 mt-1">Örn: M, E & K, A (Max 6 karakter)</p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -1676,51 +1863,16 @@ export default function CoupleAdminPage({
                 <div>
                   <label className="block text-sm font-medium mb-2">Arka Plan (Zemin Tasarımı)</label>
                   <select value={envelopeBgColor} onChange={e => setEnvelopeBgColor(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50 text-sm">
-                    <optgroup label="Mermer Desenler">
-                      <option value="marble-white">Beyaz Altın Damarlı Mermer</option>
-                      <option value="marble-black">Siyah Nero Marquina Mermer</option>
-                      <option value="marble-green">Zümrüt Yeşil Orman Mermer</option>
-                      <option value="marble-rose">Pembe Oniks Saray Mermeri</option>
-                    </optgroup>
-                    <optgroup label="Kumaş & Dokular">
-                      <option value="linen-cream">Krem Rengi Doğal Keten</option>
-                      <option value="linen-sage">Adaçayı Yeşili Premium Keten</option>
-                      <option value="linen-rose">Gül Kurusu Dokulu Keten</option>
-                      <option value="velvet-navy">Gece Mavisi Lüks Kadife</option>
-                      <option value="velvet-burgundy">Bordo Lüks Saray Kadifesi</option>
-                      <option value="silk-ivory">Fildişi İpek Parıltısı</option>
-                    </optgroup>
-                    <optgroup label="Sanatsal Kağıtlar">
-                      <option value="paper-kraft">Doğal Kraft Ambalaj Kağıdı</option>
-                      <option value="paper-parchment">Eskitilmiş Vintage Parşömen</option>
-                      <option value="paper-cotton">El Yapımı Dokulu Pamuk Kağıt</option>
-                      <option value="paper-pressed">Yaprak Baskılı Özel Davet Kağıdı</option>
-                    </optgroup>
-                    <optgroup label="Taş & Ahşap">
-                      <option value="terrazzo-beige">İtalyan Mozaik (Terrazzo) Krem</option>
-                      <option value="concrete-grey">Endüstriyel Ham Gri Beton</option>
-                      <option value="concrete-dark">Antrasit Koyu Beton zemin</option>
-                      <option value="wood-rustic">Ahşap Masa (Rustik)</option>
-                      <option value="wood-walnut">Ceviz Ağacı Masa (Koyu)</option>
-                      <option value="wood-oak">Meşe Masa (Doğal)</option>
-                    </optgroup>
-                    <optgroup label="Pastel Renkler">
-                      <option value="solid-champagne">Şampanya Pastel</option>
-                      <option value="solid-sage">Adaçayı Pastel</option>
-                      <option value="solid-dustyrose">Gül Kurusu Pastel</option>
-                      <option value="solid-terracotta">Kiremit Terracotta Pastel</option>
-                      <option value="solid-midnight">Gece Mavisi Pastel</option>
-                      <option value="solid-darkslate">Antrasit Koyu</option>
-                      <option value="solid-ivory">Fildişi Sade</option>
-                      <option value="solid-blush">Narin Pembe Pastel</option>
-                      <option value="solid-mint">Nane Yeşili Pastel</option>
-                      <option value="solid-lavender">Zarif Lavanta Pastel</option>
-                      <option value="solid-gold">Mat Klasik Altın</option>
-                      <option value="solid-crimson">Koyu Kan Kırmızı</option>
-                      <option value="solid-teal">Derin Okyanus Yeşili</option>
-                      <option value="solid-plum">Koyu Mürdüm / Erik</option>
-                      <option value="solid-sand">Çöl Kumu Pastel</option>
-                    </optgroup>
+                    <option value="white-gold-marble">⚪ Beyaz Altın Mermer</option>
+                    <option value="black-gold-velvet">⚫ Siyah Gold Kadife</option>
+                    <option value="rose-gold-silk">🌸 Rose Gold İpek</option>
+                    <option value="minimal-white-paper">📄 Minimal Beyaz Kağıt</option>
+                    <option value="bohemian-kraft">📦 Bohem Kraft Kağıt</option>
+                    <option value="navy-gold-night">🌌 Lacivert Gold Gece</option>
+                    <option value="marble-gold">🏛️ Altın Damarlı Mermer</option>
+                    <option value="pastel-floral">💐 Pastel Çiçekli</option>
+                    <option value="glass-blur-modern">🔮 Modern Cam Reveal</option>
+                    <option value="champagne-gold">🥂 Şampanya Gold Lüks</option>
                   </select>
                 </div>
 
@@ -1958,89 +2110,7 @@ export default function CoupleAdminPage({
                       )}
                     </div>
 
-                    {/* Program Akışı Modülü */}
-                    <div className="space-y-2">
-                      <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
-                        <div>
-                          <div className="font-bold text-slate-800 text-xs">Program Akışı</div>
-                          <div className="text-[10px] text-slate-500 mt-0.5">Düğün/Etkinlik programının saat saat akışını gösterin.</div>
-                        </div>
-                        <div className="relative shrink-0">
-                          <input type="checkbox" className="sr-only" checked={showProgram} onChange={e => setShowProgram(e.target.checked)} />
-                          <div className={`block w-10 h-5 rounded-full transition-colors ${showProgram ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
-                          <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${showProgram ? 'transform translate-x-5' : ''}`}></div>
-                        </div>
-                      </label>
-                      {showProgram && (
-                        <div className="p-4 bg-white border border-slate-200/60 rounded-xl space-y-4 animate-in slide-in-from-top-2 duration-200">
-                          <span className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Program Akışı Detayları</span>
-                          <div className="space-y-3">
-                            {programTimeline.map((item, idx) => (
-                              <div key={idx} className="flex gap-2 p-3 bg-slate-50/50 border rounded-xl relative group">
-                                <div className="space-y-2 flex-1">
-                                  <div className="grid grid-cols-3 gap-2">
-                                    <input 
-                                      type="text" 
-                                      placeholder="Saat (örn: 19:30)" 
-                                      value={item.time} 
-                                      onChange={e => {
-                                        const newList = [...programTimeline];
-                                        newList[idx].time = e.target.value;
-                                        setProgramTimeline(newList);
-                                      }}
-                                      className="border p-2 rounded-lg bg-white text-xs font-bold text-slate-800 placeholder:text-slate-400"
-                                    />
-                                    <input 
-                                      type="text" 
-                                      placeholder="Başlık (örn: Pasta Töreni)" 
-                                      value={item.title} 
-                                      onChange={e => {
-                                        const newList = [...programTimeline];
-                                        newList[idx].title = e.target.value;
-                                        setProgramTimeline(newList);
-                                      }}
-                                      className="border p-2 rounded-lg bg-white text-xs font-bold text-slate-800 col-span-2 placeholder:text-slate-400"
-                                    />
-                                  </div>
-                                  <input 
-                                    type="text" 
-                                    placeholder="Kısa açıklama..." 
-                                    value={item.desc} 
-                                    onChange={e => {
-                                      const newList = [...programTimeline];
-                                      newList[idx].desc = e.target.value;
-                                      setProgramTimeline(newList);
-                                    }}
-                                    className="border p-2 rounded-lg bg-white text-xs w-full text-slate-700 placeholder:text-slate-400"
-                                  />
-                                </div>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const newList = programTimeline.filter((_, i) => i !== idx);
-                                    setProgramTimeline(newList);
-                                  }}
-                                  className="self-center p-1.5 hover:bg-rose-50 text-rose-500 rounded-lg transition-all active:scale-90"
-                                  title="Akışı Sil"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                          
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setProgramTimeline([...programTimeline, { time: '', title: '', desc: '' }]);
-                            }}
-                            className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1 active:scale-95"
-                          >
-                            <span>➕</span> Yeni Akış Ekle
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                    {/* Program Akışı Modülü (Disabled per request) */}
                   </div>
                 </div>
 
@@ -2520,6 +2590,39 @@ export default function CoupleAdminPage({
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-6 z-[200] bg-slate-900/90 backdrop-blur-md border border-slate-800 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 animate-bounce duration-300 text-xs font-semibold">
           <span className="text-emerald-400 font-bold">✓</span>
           <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Katılımcı Silme Onay Modalı */}
+      {rsvpToDelete && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/65 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center border border-slate-100">
+            <div className="w-12 h-12 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xs">
+              <svg className="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </div>
+            <h3 className="text-base font-bold text-slate-800 mb-1">Katılımcı kaydı silinsin mi?</h3>
+            <p className="text-xs text-slate-500 mb-6 leading-relaxed">
+              Bu katılımcı kaydı listeden kaldırılacak. Bu işlem geri alınamayabilir.
+            </p>
+            <div className="flex gap-3 justify-center">
+              <button
+                type="button"
+                onClick={() => setRsvpToDelete(null)}
+                className="flex-1 py-2.5 px-4 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl hover:bg-slate-50 active:scale-95 transition-all cursor-pointer"
+              >
+                Vazgeç
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDeleteRsvp(rsvpToDelete)}
+                className="flex-1 py-2.5 px-4 bg-rose-500 text-white text-xs font-semibold rounded-xl hover:bg-rose-600 active:scale-95 transition-all cursor-pointer"
+              >
+                Sil
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

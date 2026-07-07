@@ -6,6 +6,7 @@ type MinimalFadeOpeningProps = {
   brideName: string;
   groomName: string;
   styleConfig: EntranceAnimationStyle;
+  introText?: string;
 };
 
 export function MinimalFadeOpening({
@@ -13,6 +14,7 @@ export function MinimalFadeOpening({
   brideName,
   groomName,
   styleConfig,
+  introText,
 }: MinimalFadeOpeningProps) {
   const initials = `${brideName.charAt(0) || 'G'}${groomName.charAt(0) || 'D'}`;
 
@@ -43,9 +45,9 @@ export function MinimalFadeOpening({
         </h3>
         <p 
           style={{ color: styleConfig.palette.secondary }}
-          className="text-[10px] uppercase tracking-[0.2em] mt-2"
+          className="text-[10px] tracking-[0.2em] mt-2 font-bold"
         >
-          Düğün Davetiye Girişi
+          {introText || "Davetlimizsiniz"}
         </p>
       </div>
     </div>

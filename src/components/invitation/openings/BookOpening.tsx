@@ -7,6 +7,7 @@ type BookOpeningProps = {
   groomName: string;
   eventDate?: string;
   styleConfig: EntranceAnimationStyle;
+  introText?: string;
 };
 
 export function BookOpening({
@@ -15,6 +16,7 @@ export function BookOpening({
   groomName,
   eventDate,
   styleConfig,
+  introText,
 }: BookOpeningProps) {
   const bookStyle = {
     background: `linear-gradient(135deg, ${styleConfig.palette.primary}, ${styleConfig.palette.secondary})`,
@@ -32,7 +34,7 @@ export function BookOpening({
         style={bookStyle}
         className="book-opening-cover select-none"
       >
-        <span className="text-[10px] uppercase tracking-[0.25em] opacity-80 mb-2">Düğün Davetiyesi</span>
+        <span className="text-[10px] tracking-[0.25em] opacity-80 mb-2">{introText || "Düğün Davetiyesi"}</span>
         <div style={lineStyle} className="w-12 h-[1px] my-3" />
         <h3 className="font-serif text-2xl text-center leading-snug my-2">
           {brideName} <br /> & <br /> {groomName}

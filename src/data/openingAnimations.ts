@@ -35,12 +35,12 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
   {
     id: "door",
     name: "Kapı Açılışı",
-    description: "Premium kapılar açılır, davetiye içeriden ışıkla belirir.",
+    description: "Karakteristik kapılar açılır, davetiye içeriden ışıkla belirir.",
     icon: "door",
   },
   {
     id: "gardenGate",
-    name: "Bahçe Kapısı Açılışı",
+    name: "Bahçe Kapısı",
     description: "Bahçe kapısı açılır, davetiye doğa atmosferinde görünür.",
     icon: "garden",
   },
@@ -52,20 +52,14 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
   },
   {
     id: "luxuryBox",
-    name: "Hediye Kutusu Açılışı",
+    name: "Hediye Kutusu",
     description: "Kutu kapağı açılır, davetiye içinden çıkar.",
     icon: "box",
   },
   {
-    id: "treasureChest",
-    name: "Sandık Açılışı",
-    description: "Sandık açılır, davetiye hazine gibi ortaya çıkar.",
-    icon: "chest",
-  },
-  {
     id: "glass",
     name: "Cam Reveal",
-    description: "Cam yüzey açılır veya netleşir, davetiye görünür.",
+    description: "Cam yüzey netleşir, davetiye görünür.",
     icon: "glass",
   },
   {
@@ -77,38 +71,26 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
   {
     id: "cinematicZoom",
     name: "Sinematik Zoom",
-    description: "Kamera davetiyeye yaklaşır, görüntü netleşerek açılır.",
+    description: "Kamera davetiyeye yaklaşır ve görüntü netleşir.",
     icon: "zoom",
   },
   {
     id: "spotlight",
-    name: "Spotlight Açılışı",
+    name: "Spotlight",
     description: "Sahne ışığı davetiyeyi karanlıktan ortaya çıkarır.",
     icon: "spotlight",
   },
   {
     id: "starryNight",
-    name: "Yıldızlı Gece Açılışı",
-    description: "Yıldızlar ve ay ışığıyla davetiye romantik şekilde belirir.",
+    name: "Yıldızlı Gece",
+    description: "Yıldızlar ve ay ışığıyla romantik açılış yapılır.",
     icon: "stars",
   },
   {
     id: "minimalFade",
-    name: "Minimal Fade Açılışı",
-    description: "Sade, hızlı ve premium bir geçiş efekti kullanılır.",
+    name: "Minimal Fade",
+    description: "Sade ve hızlı premium geçiş efekti kullanılır.",
     icon: "minimal",
-  },
-  {
-    id: "royalHall",
-    name: "Royal Hall Açılışı",
-    description: "Kraliyet salonu atmosferinde davetiye ışıkla görünür.",
-    icon: "hall",
-  },
-  {
-    id: "elevator",
-    name: "Asansör Kapısı Açılışı",
-    description: "Lüks otel asansörü gibi kapılar kayarak açılır.",
-    icon: "elevator",
   },
 ];
 

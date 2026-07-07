@@ -33,7 +33,7 @@ export default function BubblesEffect() {
           }}
         />
       ))}
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @keyframes bubble {
           0% {
             transform: translateY(0) scale(1);
@@ -52,7 +52,7 @@ export default function BubblesEffect() {
           animation-timing-function: linear;
           animation-iteration-count: infinite;
         }
-      `}</style>
+      ` }} />
     </div>
   );
 }

@@ -44,7 +44,7 @@ export default function SnowEffect() {
           <Snowflake style={{ width: '100%', height: '100%' }} />
         </div>
       ))}
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @keyframes snow-fall {
           0% {
             transform: translateY(0) translateX(0) rotate(0deg);
@@ -61,7 +61,7 @@ export default function SnowEffect() {
           animation-timing-function: linear;
           animation-iteration-count: infinite;
         }
-      `}</style>
+      ` }} />
     </div>
   );
 }

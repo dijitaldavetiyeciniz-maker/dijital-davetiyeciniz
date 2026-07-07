@@ -496,3 +496,112 @@
 .opened.minimal-opening-stage {
   opacity: 0;
 }
+
+/* Responsive & All Devices Support Settings */
+@supports (padding: max(0px)) {
+  .open-invitation-button {
+    bottom: max(24px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 480px) {
+  .invitation-page,
+  .entrance-screen {
+    min-height: 100svh;
+    overflow-x: hidden;
+  }
+
+  .open-invitation-button {
+    width: calc(100% - 40px);
+    max-width: 320px;
+    min-height: 48px;
+  }
+
+  .template-grid,
+  .animation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-participant-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .template-grid,
+  .animation-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1025px) {
+  .template-grid,
+  .animation-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Reduced Motion Settings */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 10 Zemin Tasarımı CSS Seçenekleri */
+.bg-design-white-gold-marble {
+  background: linear-gradient(rgba(241, 237, 230, 0.9), rgba(241, 237, 230, 0.9)), url('https://www.transparenttextures.com/patterns/white-marble.png') !important;
+  background-size: auto !important;
+}
+.bg-design-black-gold-velvet {
+  background: radial-gradient(circle at center, #1b1c22 0%, #08080a 100%) !important;
+  background-size: cover !important;
+}
+.bg-design-rose-gold-silk {
+  background: linear-gradient(rgba(255, 241, 236, 0.92), rgba(255, 241, 236, 0.92)), url('https://www.transparenttextures.com/patterns/linen.png') !important;
+  background-size: auto !important;
+}
+.bg-design-minimal-white-paper {
+  background: linear-gradient(rgba(250, 247, 242, 0.95), rgba(250, 247, 242, 0.95)), url('https://www.transparenttextures.com/patterns/paper-fibers.png') !important;
+  background-size: auto !important;
+}
+.bg-design-bohemian-kraft {
+  background: linear-gradient(rgba(243, 238, 231, 0.88), rgba(243, 238, 231, 0.88)), url('https://www.transparenttextures.com/patterns/cardboard-flat.png') !important;
+  background-size: auto !important;
+}
+.bg-design-navy-gold-night {
+  background: radial-gradient(circle at center, #0f1626 0%, #070a12 100%) !important;
+  background-size: cover !important;
+}
+.bg-design-marble-gold {
+  background: linear-gradient(rgba(245, 240, 232, 0.9), rgba(245, 240, 232, 0.9)), url('https://www.transparenttextures.com/patterns/white-marble.png') !important;
+  background-size: auto !important;
+}
+.bg-design-pastel-floral {
+  background: linear-gradient(rgba(252, 250, 246, 0.93), rgba(252, 250, 246, 0.93)), url('https://www.transparenttextures.com/patterns/gray-floral-double.png') !important;
+  background-size: auto !important;
+}
+.bg-design-glass-blur-modern {
+  background: radial-gradient(circle at center, #e2e8f0 0%, #cbd5e1 100%) !important;
+  background-size: cover !important;
+}
+.bg-design-champagne-gold {
+  background: linear-gradient(135deg, #f6ead9 0%, #ead8bd 100%) !important;
+  background-size: cover !important;
+}
+
+/* Gece Modu (Dark Mode) Global Ayarları */
+.invitation-page.dark-mode {
+  background: #0f0f12 !important;
+  color: #fff8ec !important;
+}
+.invitation-page.dark-mode .invitation-card {
+  background: rgba(20, 20, 24, 0.92) !important;
+  color: #fff8ec !important;
+  border-color: rgba(214, 168, 79, 0.35) !important;
+}

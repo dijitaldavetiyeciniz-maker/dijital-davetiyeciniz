@@ -37,7 +37,7 @@ export default function SparklesEffect({ color = '#d4af37' }: { color?: string }
           }}
         />
       ))}
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @keyframes sparkle {
           0%, 100% {
             opacity: 0;
@@ -53,7 +53,7 @@ export default function SparklesEffect({ color = '#d4af37' }: { color?: string }
           animation-timing-function: ease-in-out;
           animation-iteration-count: infinite;
         }
-      `}</style>
+      ` }} />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import "@/styles/invitation-animations.css";
 import "@/styles/opening-animations.css";
 import { entranceAnimationTypes, entranceAnimationStyles, EntranceAnimationStyle } from "@/data/openingAnimations";
+import BackgroundAnimation from "@/components/BackgroundAnimation";
 
 // Import opening family components
 import { EnvelopeOpening } from "./openings/EnvelopeOpening";
@@ -27,12 +28,15 @@ type EntranceAnimationProps = {
   brideName?: string;
   groomName?: string;
   eventDate?: string;
+  eventType?: string;
   onComplete?: () => void;
   // Backward compatibility:
   envelopeStyle?: string; // used as animationStyle if passed
   animationStyle?: string; // matches id in entranceAnimationStyles
   sealStyle?: string;
+  sealType?: string;
   backgroundAnimation?: string;
+  backgroundDesign?: string;
 };
 
 // Reusable Particle components
@@ -115,15 +119,45 @@ function parseLegacyAnimation(animationVal: string, styleVal: string) {
   return { type, style };
 }
 
+function getInvitationIntroText(eventType?: string) {
+  switch (eventType) {
+    case "Düğün":
+      return "Düğünümüze Davetlisiniz";
+    case "Nişan":
+      return "Nişanımıza Davetlisiniz";
+    case "Kına":
+      return "Kınamıza Davetlisiniz";
+    case "Söz":
+      return "Söz Törenimize Davetlisiniz";
+    case "Nikah":
+      return "Nikahımıza Davetlisiniz";
+    case "Baby Shower":
+      return "Baby Shower Davetimize Davetlisiniz";
+    case "Doğum Günü":
+      return "Doğum Günümüze Davetlisiniz";
+    case "Kurumsal Etkinlik":
+      return "Etkinliğimize Davetlisiniz";
+    case "Açılış / Lansman":
+      return "Açılışımıza Davetlisiniz";
+    default:
+      return "Davetimize Davetlisiniz";
+  }
+}
+
 export function EntranceAnimation({
   animationType,
   initials,
   brideName = "Gelin",
   groomName = "Damat",
   eventDate,
+  eventType,
   onComplete,
   envelopeStyle,
   animationStyle,
+  sealStyle,
+  sealType,
+  backgroundAnimation,
+  backgroundDesign,
 }: EntranceAnimationProps) {
   const [opened, setOpened] = useState(false);
   
@@ -140,32 +174,20 @@ export function EntranceAnimation({
   useEffect(() => {
     setOpened(false);
     let autoOpenTimer: NodeJS.Timeout;
-    let completeTimer: NodeJS.Timeout;
 
-    // Auto-open after 2.2 seconds if they don't click manually
+    // Auto-open after 1.5 seconds if they don't click manually
     autoOpenTimer = setTimeout(() => {
       setOpened(true);
-      if (onCompleteRef.current) {
-        completeTimer = setTimeout(() => {
-          onCompleteRef.current?.();
-        }, 4000); // 4 seconds duration
-      }
-    }, 2200);
+    }, 1500);
 
     return () => {
       clearTimeout(autoOpenTimer);
-      clearTimeout(completeTimer);
     };
   }, [animationType, style]);
 
   const handleManualOpen = () => {
     if (opened) return;
     setOpened(true);
-    if (onCompleteRef.current) {
-      setTimeout(() => {
-        onCompleteRef.current?.();
-      }, 4000);
-    }
   };
 
   // Extract particle details from effects list
@@ -212,6 +234,9 @@ export function EntranceAnimation({
       groomName,
       eventDate,
       styleConfig,
+      customSealStyle: sealStyle,
+      customSealType: sealType,
+      introText: getInvitationIntroText(eventType),
     };
 
     switch (typeConfig.id) {
@@ -251,26 +276,40 @@ export function EntranceAnimation({
 
   return (
     <div 
-      className="opening-stage-container overflow-hidden w-full h-full relative"
+      className={`opening-stage-container overflow-hidden w-full h-full relative bg-design-${backgroundDesign || "rose-gold-silk"}`}
       style={{ backgroundColor: styleConfig.palette.background }}
       onClick={handleManualOpen}
     >
       {/* Render Particles */}
-      {hasRosePetals && <FloatingPetals />}
-      {hasGoldParticles && <GoldenParticles />}
-      {hasPearlParticles && <PearlParticles />}
+      <BackgroundAnimation type={backgroundAnimation || ""} />
 
       {/* Render selected family layout */}
       {renderFamily()}
 
-      {/* Manual action prompt */}
-      {!opened && (
-        <div className="absolute bottom-10 left-0 right-0 text-center animate-pulse z-20 pointer-events-none select-none">
-          <p className="text-xs uppercase tracking-widest text-slate-500 font-extrabold drop-shadow-md bg-white/40 inline-block px-5 py-2.5 rounded-full backdrop-blur-xs border border-white/20">
-            {getPromptText()}
-          </p>
-        </div>
-      )}
+      {/* "Davetiyeyi Aç" Button Overlay */}
+      <div 
+        className="absolute bottom-8 left-0 right-0 z-[60] flex flex-col items-center px-6 pointer-events-auto open-invitation-container"
+        style={{ bottom: 'max(2rem, env(safe-area-inset-bottom))' } as React.CSSProperties}
+      >
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onCompleteRef.current) onCompleteRef.current();
+          }}
+          className="w-full max-w-[280px] min-h-[48px] text-white font-bold text-sm uppercase tracking-widest rounded-xl hover:opacity-95 transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 border cursor-pointer"
+          style={{
+            background: `linear-gradient(135deg, ${styleConfig.palette.secondary} 0%, ${styleConfig.palette.primary} 100%)`,
+            borderColor: `${styleConfig.palette.accent}70`,
+            boxShadow: `0 10px 25px -5px ${styleConfig.palette.primary}80, 0 8px 10px -6px rgba(0,0,0,0.1)`
+          }}
+        >
+          <span>✉️</span> Davetiyeyi Aç
+        </button>
+        <p className="text-[10px] font-bold tracking-[0.2em] uppercase mt-2.5 drop-shadow-xs" style={{ color: styleConfig.palette.text, opacity: 0.65 }}>
+          Detayları Görüntülemek İçin Dokunun
+        </p>
+      </div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ type GlassRevealOpeningProps = {
   brideName: string;
   groomName: string;
   styleConfig: EntranceAnimationStyle;
+  introText?: string;
 };
 
 export function GlassRevealOpening({
@@ -13,6 +14,7 @@ export function GlassRevealOpening({
   brideName,
   groomName,
   styleConfig,
+  introText,
 }: GlassRevealOpeningProps) {
   const initials = `${brideName.charAt(0) || 'G'}&${groomName.charAt(0) || 'D'}`;
 
@@ -30,9 +32,9 @@ export function GlassRevealOpening({
       >
         <span 
           style={{ color: styleConfig.palette.secondary }}
-          className="text-[10px] uppercase tracking-widest font-semibold mb-2"
+          className="text-[10px] tracking-widest font-bold mb-2"
         >
-          Modern Davetiye
+          {introText || "Modern Davetiye"}
         </span>
         <div style={{ backgroundColor: styleConfig.palette.secondary }} className="w-10 h-[1px] my-2 opacity-30" />
         <h3 
