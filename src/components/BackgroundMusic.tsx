@@ -17,8 +17,10 @@ export default function BackgroundMusic({
   primaryColor = '#f43f5e'
 }: BackgroundMusicProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMutedByUser, setIsMutedByUser] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hasTriedAutoplay = useRef(false);
+  const isMutedRef = useRef(false);
 
   const tryPlay = useCallback(async () => {
     if (!audioRef.current || !url) return;
@@ -43,7 +45,7 @@ export default function BackgroundMusic({
     if (!url || !autoplay) return;
 
     const handleInteraction = () => {
-      if (!isPlaying && audioRef.current && isEnvelopeOpened) {
+      if (!isPlaying && audioRef.current && isEnvelopeOpened && !isMutedRef.current) {
         tryPlay();
       }
       cleanup();
@@ -62,12 +64,18 @@ export default function BackgroundMusic({
     return cleanup;
   }, [url, autoplay, isPlaying, isEnvelopeOpened, tryPlay]);
 
-  const togglePlayback = () => {
+  const togglePlayback = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     if (!audioRef.current) return;
     if (isPlaying) {
       audioRef.current.pause();
+      setIsMutedByUser(true);
+      isMutedRef.current = true;
     } else {
       tryPlay();
+      setIsMutedByUser(false);
+      isMutedRef.current = false;
     }
   };
 

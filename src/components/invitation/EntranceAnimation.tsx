@@ -70,13 +70,50 @@ function PearlParticles() {
   );
 }
 
+function CinematicTextOpening({ opened, initials, eventDate }: any) {
+  return (
+    <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 z-50 ${opened ? 'opacity-0 scale-110 blur-xl pointer-events-none' : 'opacity-100 scale-100 blur-0'}`}>
+      <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" />
+      <div className="relative z-10 text-center space-y-6 pointer-events-none">
+        <h1 className="text-5xl md:text-7xl font-serif text-white/90 drop-shadow-2xl">{initials}</h1>
+        <p className="text-sm tracking-[0.3em] uppercase text-white/50">{eventDate || 'YAKINDA'}</p>
+      </div>
+    </div>
+  );
+}
+
+function PhotoCoverOpening({ opened, initials, eventDate }: any) {
+  return (
+    <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 z-50 ${opened ? 'opacity-0 scale-110 blur-xl pointer-events-none' : 'opacity-100 scale-100 blur-0'}`}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay pointer-events-none" />
+      <div className="relative z-10 text-center space-y-6 pointer-events-none">
+        <h1 className="text-5xl md:text-7xl font-serif text-white/90 drop-shadow-2xl">{initials}</h1>
+        <p className="text-sm tracking-[0.3em] uppercase text-white/70">{eventDate || 'YAKINDA'}</p>
+      </div>
+    </div>
+  );
+}
+
+function SealOnlyOpening({ opened, initials }: any) {
+  return (
+    <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 z-50 ${opened ? 'opacity-0 scale-150 blur-xl pointer-events-none' : 'opacity-100 scale-100 blur-0'}`}>
+      <div className="relative z-10 hover:scale-110 transition-transform duration-500 cursor-pointer drop-shadow-2xl pointer-events-auto">
+         <div className="w-32 h-32 rounded-full flex items-center justify-center bg-gradient-to-br from-red-800 to-red-950 border-4 border-yellow-600/40 shadow-2xl">
+           <span className="text-4xl text-yellow-500/90 font-serif">{initials || 'M'}</span>
+         </div>
+      </div>
+    </div>
+  );
+}
+
 function parseLegacyAnimation(animationVal: string, styleVal: string) {
   let type = "envelope";
   let style = styleVal || "black-gold-premium";
 
   const val = (animationVal || "").toLowerCase();
   
-  const validTypes = ["envelope", "curtain", "door", "gardenGate", "book", "luxuryBox", "treasureChest", "glass", "mirror", "cinematicZoom", "spotlight", "starryNight", "minimalFade", "royalHall", "elevator"];
+  const validTypes = ["envelope", "curtain", "door", "gardenGate", "book", "luxuryBox", "treasureChest", "glass", "mirror", "cinematicZoom", "spotlight", "starryNight", "minimalFade", "royalHall", "elevator", "cinematicText", "photoCover", "sealOnly"];
   if (validTypes.includes(animationVal)) {
     return { type: animationVal, style };
   }
@@ -90,12 +127,15 @@ function parseLegacyAnimation(animationVal: string, styleVal: string) {
   else if (val.includes("chest") || val.includes("sandık")) type = "treasureChest";
   else if (val.includes("glass") || val.includes("cam")) type = "glass";
   else if (val.includes("mirror") || val.includes("ayna")) type = "mirror";
+  else if (val.includes("cinematictext") || val.includes("sinematik") || (val.includes("cinematic") && !val.includes("zoom"))) type = "cinematicText";
   else if (val.includes("zoom") || val.includes("yakınlaşma")) type = "cinematicZoom";
   else if (val.includes("spotlight") || val.includes("ışığı")) type = "spotlight";
   else if (val.includes("star") || val.includes("yıldız")) type = "starryNight";
   else if (val.includes("hall") || val.includes("salon") || val.includes("koridor")) type = "royalHall";
   else if (val.includes("elevator") || val.includes("asansör")) type = "elevator";
   else if (val.includes("fade") || val.includes("sade")) type = "minimalFade";
+  else if (val.includes("photo") || val.includes("foto")) type = "photoCover";
+  else if (val.includes("sealonly") || val.includes("mühür")) type = "sealOnly";
 
   if (val.includes("gold") || val.includes("altın")) {
     if (val.includes("black") || val.includes("siyah")) style = "black-gold-premium";
@@ -169,7 +209,7 @@ export function EntranceAnimation({
 
   const { type, style } = parseLegacyAnimation(animationType, animationStyle || envelopeStyle || "");
 
-  const typeConfig = entranceAnimationTypes.find((t) => t.id === type) || entranceAnimationTypes[0];
+  const typeConfig = entranceAnimationTypes.find((t) => t.id === type) || { id: type };
   const styleConfig: EntranceAnimationStyle = entranceAnimationStyles.find((s) => s.id === style) || entranceAnimationStyles[0];
 
   // True for curtain-type animations which have a 2-phase flow:
@@ -248,6 +288,10 @@ export function EntranceAnimation({
       case "glass":
       case "mirror":
         return "🔮 YANSIMAYI AÇMAK İÇİN DOKUNUN 🔮";
+      case "cinematicText":
+      case "photoCover":
+      case "sealOnly":
+        return "✨ İÇERİ GİRMEK İÇİN DOKUNUN ✨";
       default:
         return "✨ DEVAM ETMEK İÇİN DOKUNUN ✨";
     }
@@ -295,6 +339,12 @@ export function EntranceAnimation({
         return <ElevatorDoorOpening {...commonProps} />;
       case "royalHall":
         return <RoyalHallOpening {...commonProps} />;
+      case "cinematicText":
+        return <CinematicTextOpening {...commonProps} />;
+      case "photoCover":
+        return <PhotoCoverOpening {...commonProps} />;
+      case "sealOnly":
+        return <SealOnlyOpening {...commonProps} />;
       case "minimalFade":
       default:
         return <MinimalFadeOpening {...commonProps} />;
@@ -303,9 +353,9 @@ export function EntranceAnimation({
 
   return (
     <div 
-      className={`opening-stage-container overflow-hidden w-full h-full relative bg-design-${backgroundDesign || "rose-gold-silk"}`}
+      className={`opening-stage-container overflow-hidden w-full h-full relative bg-design-${backgroundDesign || "rose-gold-silk"} absolute inset-0 z-50 cursor-pointer`}
       style={{ backgroundColor: styleConfig.palette.background }}
-      onClick={handleManualOpen}
+      onClick={handleRevealInvitation}
     >
       {/* Render Particles */}
       <BackgroundAnimation type={backgroundAnimation || ""} />
@@ -313,50 +363,13 @@ export function EntranceAnimation({
       {/* Render selected family layout */}
       {renderFamily()}
 
-      {/* "Davetiyeyi Aç" Button Overlay */}
+      {/* "Davetiyeyi Aç" Text Overlay */}
       <div 
-        className="absolute bottom-8 left-0 right-0 z-[60] flex flex-col items-center px-6 pointer-events-auto open-invitation-container"
+        className="absolute bottom-8 left-0 right-0 z-[60] flex flex-col items-center px-6 pointer-events-none"
         style={{ bottom: 'max(2rem, env(safe-area-inset-bottom))' } as React.CSSProperties}
       >
-        {/* For curtain type: show door-open button only after curtain has opened */}
-        {isCurtainType ? (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleRevealInvitation();
-            }}
-            className={`w-full max-w-[280px] min-h-[48px] text-white font-bold text-sm uppercase tracking-widest rounded-xl transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 border cursor-pointer ${
-              opened && !doorOpened ? 'opacity-100 translate-y-0 hover:opacity-95' : opened && doorOpened ? 'opacity-60 pointer-events-none' : 'opacity-0 translate-y-4 pointer-events-none'
-            }`}
-            style={{
-              background: `linear-gradient(135deg, ${styleConfig.palette.secondary} 0%, ${styleConfig.palette.primary} 100%)`,
-              borderColor: `${styleConfig.palette.accent}70`,
-              boxShadow: `0 10px 25px -5px ${styleConfig.palette.primary}80, 0 8px 10px -6px rgba(0,0,0,0.1)`,
-              transition: 'opacity 0.6s ease, transform 0.6s ease'
-            }}
-          >
-            <span>🚪</span> {doorOpened ? 'Girildi...' : 'Kapıyı Açmak İçin Dokunun'}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleRevealInvitation();
-            }}
-            className="w-full max-w-[280px] min-h-[48px] text-white font-bold text-sm uppercase tracking-widest rounded-xl hover:opacity-95 transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 border cursor-pointer"
-            style={{
-              background: `linear-gradient(135deg, ${styleConfig.palette.secondary} 0%, ${styleConfig.palette.primary} 100%)`,
-              borderColor: `${styleConfig.palette.accent}70`,
-              boxShadow: `0 10px 25px -5px ${styleConfig.palette.primary}80, 0 8px 10px -6px rgba(0,0,0,0.1)`
-            }}
-          >
-            <span>✉️</span> Davetiyeyi Aç
-          </button>
-        )}
-        <p className="text-[10px] font-bold tracking-[0.2em] uppercase mt-2.5 drop-shadow-xs" style={{ color: styleConfig.palette.text, opacity: 0.65 }}>
-          {isCurtainType && !opened ? 'Perde Açılıyor...' : 'Detayları Görüntülemek İçin Dokunun'}
+        <p className="text-white/70 text-sm tracking-widest uppercase animate-pulse text-center drop-shadow-md">
+          {isCurtainType && !opened ? 'Perde Açılıyor...' : 'Davetiyeyi Açmak İçin Ekrana Dokunun'}
         </p>
       </div>
     </div>
