@@ -277,6 +277,8 @@ export default function CoupleAdminPage({
   const [toastMessage, setToastMessage] = useState('');
   const [previewDevice, setPreviewDevice] = useState<'iphone' | 'android' | 'tablet'>('iphone');
   const [activeRsvpSubTab, setActiveRsvpSubTab] = useState<'list' | 'comments'>('list');
+  const [activeMainTab, setActiveMainTab] = useState<'genel'|'tema'|'animasyon'|'moduller'|'entegrasyonlar'>('genel');
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [templateCategory, setTemplateCategory] = useState('all');
   const [visibleCount, setVisibleCount] = useState(12);
   const [showManualTelegram, setShowManualTelegram] = useState(false);
@@ -922,6 +924,32 @@ export default function CoupleAdminPage({
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 text-slate-800">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] p-4 z-40 lg:hidden flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[10px] text-slate-500 font-medium">Anlık Önizleme</span>
+        </div>
+        <button
+          onClick={() => setShowMobilePreview(true)}
+          className="bg-rose-500 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-rose-500/30 flex items-center gap-2"
+        >
+          👁️ Önizle
+        </button>
+      </div>
+
+      {showMobilePreview && (
+        <div className="fixed inset-0 z-[200] bg-black/80 lg:hidden flex flex-col justify-end">
+          <div className="bg-slate-900 w-full h-[90vh] rounded-t-[2rem] flex flex-col overflow-hidden relative">
+            <div className="flex justify-between items-center p-4 border-b border-slate-700 bg-slate-800">
+              <h3 className="text-white font-bold text-sm">Canlı Önizleme</h3>
+              <button onClick={() => setShowMobilePreview(false)} className="text-slate-400 p-2 bg-slate-700 rounded-full">✕</button>
+            </div>
+            <div className="flex-1 overflow-y-auto relative">
+              <PremiumTemplateRenderer wedding={liveWeddingData} templateId={templateId} />
+            </div>
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8">
         
         {/* SOL KOLON: İçerik, Sekmeler ve Ayarlar */}
@@ -1166,7 +1194,27 @@ export default function CoupleAdminPage({
               </h2>
               <p className="text-slate-500 mb-8">Bilgilerinizi ve temanızı güncelledikten sonra "Kaydet" butonuna basarak sağdaki önizlemede sonuçları görebilirsiniz.</p>
               
-              {/* Hazır Tasarım Paletleri */}
+              <div className="flex overflow-x-auto gap-2 mb-8 pb-2 border-b border-slate-200 hide-scrollbar">
+                {[
+                  { id: 'genel', label: '📝 Genel Bilgiler' },
+                  { id: 'tema', label: '🎨 Şablon & Tema' },
+                  { id: 'animasyon', label: '🎬 Animasyon' },
+                  { id: 'moduller', label: '🧩 Modüller' },
+                  { id: 'entegrasyonlar', label: '🤖 Entegrasyonlar' }
+                ].map(t => (
+                  <button
+                    key={t.id}
+                    onClick={() => setActiveMainTab(t.id as any)}
+                    className={`px-4 py-2.5 rounded-t-xl text-sm font-bold whitespace-nowrap transition-colors ${activeMainTab === t.id ? 'bg-rose-50 text-rose-600 border-b-2 border-rose-500' : 'text-slate-500 hover:bg-slate-50'}`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+
+              {activeMainTab === 'tema' && (
+                <>
+                  {/* Hazır Tasarım Paletleri */}
               <div className="mb-6">
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">⚡ Hazır Tasarım Paletleri</p>
                 <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
@@ -1197,8 +1245,13 @@ export default function CoupleAdminPage({
                 </div>
               </div>
 
-              {/* BÖLÜM 1: GENEL BİLGİLER */}
-              <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">1. Genel Bilgiler</h3>
+                </>
+              )}
+
+              {activeMainTab === 'genel' && (
+                <>
+                  {/* BÖLÜM 1: GENEL BİLGİLER */}
+                  <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">1. Genel Bilgiler</h3>
               <div className="space-y-4 mb-10">
                 <div>
                   <label className="block text-sm font-medium mb-1">Davet / Etkinlik Türü</label>
@@ -1321,8 +1374,13 @@ export default function CoupleAdminPage({
                 </div>
               </div>
 
-              {/* BÖLÜM 2: ŞABLON & TEMA SEÇİMİ */}
-              <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">2. Şablon & Tema Seçimi</h3>
+                </>
+              )}
+
+              {activeMainTab === 'tema' && (
+                <>
+                  {/* BÖLÜM 2: ŞABLON & TEMA SEÇİMİ */}
+                  <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">2. Şablon & Tema Seçimi</h3>
 
               <div className="space-y-6">
                 {/* 1. Şablon Seçimi */}
@@ -1717,7 +1775,7 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                    <div>
                     <label className="block text-sm font-medium mb-2">
                       ✍️ İsimler Yazı Tipi 
@@ -1846,7 +1904,7 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   <div>
                     <label className="block text-sm font-medium mb-2">Ana Renk (Tasarım)</label>
                     <div className="flex items-center gap-4">
@@ -1952,11 +2010,16 @@ export default function CoupleAdminPage({
                 </div>
               </div>
 
-              {/* BÖLÜM 3: EKSTRA AYARLAR */}
-              <div className="mt-8 pt-6 border-t border-slate-200 space-y-6">
-                
-                <div>
-                  <h3 className="font-bold text-lg mb-4 text-slate-800">Site Giriş Animasyonu</h3>
+                </>
+              )}
+
+              {activeMainTab === 'animasyon' && (
+                <>
+                  {/* BÖLÜM 3: EKSTRA AYARLAR */}
+                  <div className="mt-8 pt-6 border-t border-slate-200 space-y-6">
+                    
+                    <div>
+                      <h3 className="font-bold text-lg mb-4 text-slate-800">Site Giriş Animasyonu</h3>
                   <label className="flex items-center justify-between p-4 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
                     <div>
                       <div className="font-bold text-slate-800 text-sm">Giriş Kapak Animasyonu</div>
@@ -2079,9 +2142,15 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                {/* BÖLÜM 2.6: MODÜLLER VE BİLEŞEN YÖNETİMİ (AÇ/KAPAT) */}
-                <div className="pt-6 border-t border-slate-200">
-                  <h3 className="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
+                  </div>
+                </>
+              )}
+
+              {activeMainTab === 'moduller' && (
+                <div className="space-y-6">
+                  {/* BÖLÜM 2.6: MODÜLLER VE BİLEŞEN YÖNETİMİ (AÇ/KAPAT) */}
+                  <div className="pt-6 border-t border-slate-200">
+                    <h3 className="font-bold text-lg mb-4 text-slate-800 flex items-center gap-2">
                     <span>⚙️</span> Modüller ve Bileşen Yönetimi
                   </h3>
                   <p className="text-xs text-slate-500 mb-4 leading-relaxed">
@@ -2171,8 +2240,13 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                {/* === TELEGRAM FOTOĞRAF BOTU SİHİRBAZI === */}
-                <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-6 text-slate-700">
+                </div>
+              )}
+
+              {activeMainTab === 'entegrasyonlar' && (
+                <>
+                  {/* === TELEGRAM FOTOĞRAF BOTU SİHİRBAZI === */}
+                  <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-6 text-slate-700">
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="font-serif font-bold text-lg text-slate-800 flex items-center gap-2">
                       <span>🤖</span> Telegram Fotoğraf Botunuzu Kurun
@@ -2347,7 +2421,8 @@ export default function CoupleAdminPage({
                     </div>
                   )}
                 </div>
-              </div>
+                </>
+              )}
 
               <button onClick={handleSaveDesign} className="mt-8 flex items-center justify-center gap-2 w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition-colors shadow-lg">
                 <Save className="w-5 h-5" /> Değişiklikleri Kaydet & Önizlemeyi Yenile
