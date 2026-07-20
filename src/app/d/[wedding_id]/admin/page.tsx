@@ -303,6 +303,7 @@ export default function CoupleAdminPage({
     text_color: textColor,
     envelope_color: envelopeColor,
     envelope_bg_color: envelopeBgColor,
+    background_design: envelopeBgColor,
     envelope_flap_type: envelopeFlapType,
     seal_type: sealType,
     seal_color: sealColor,
@@ -1678,23 +1679,6 @@ export default function CoupleAdminPage({
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-2">Arkaplan Animasyonu</label>
-                  <select value={effectType} onChange={e => setEffectType(e.target.value)} className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner">
-                    <option value="">Yok (Sade)</option>
-                    <option value="sakura">🌸 Uçan Kiraz Çiçekleri (Sakura)</option>
-                    <option value="leaves">🍁 Dökülen Sonbahar Yaprakları</option>
-                    <option value="stars">✨ Parlayan Gece Yıldızları</option>
-                    <option value="fireflies">💡 Işıldayan Ateş Böcekleri</option>
-                    <option value="rain">🌧️ Romantik Yağmur Damlaları</option>
-                    <option value="confetti">🎉 Altın Konfeti Yağmuru</option>
-                    <option value="bubbles">🫧 Uçan Baloncuklar</option>
-                    <option value="sparkles">✨ Altın/Gümüş Işıltılar</option>
-                    <option value="hearts">❤️ Uçan Kalpler</option>
-                    <option value="snow">❄️ Kar Taneleri</option>
-                  </select>
-                  <p className="text-xs text-slate-400 mt-1">Sitenin en arkasında sürekli hareket eden zarif animasyonlar.</p>
-                </div>
               </div>
 
                 </>
