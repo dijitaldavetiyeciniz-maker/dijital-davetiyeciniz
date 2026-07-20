@@ -437,61 +437,7 @@ export default function CoupleAdminPage({
     loadData();
   }, [wedding_id]);
 
-  // Gerçek Zamanlı Auto-Save Motoru (Debounce)
-  useEffect(() => {
-    if (loading || !wedding?.id) return;
-
-    const timer = setTimeout(async () => {
-      const { error } = await supabase
-        .from('weddings')
-        .update({
-          template_id: templateId,
-          primary_color: primaryColor,
-          text_color: textColor,
-          envelope_color: envelopeColor,
-          envelope_bg_color: envelopeBgColor,
-          envelope_flap_type: envelopeFlapType,
-          seal_type: sealType,
-          seal_color: sealColor,
-          entrance_type: entranceType,
-          effect_type: effectType,
-          font_family: fontFamily,
-          names_font_family: namesFontFamily,
-          quote_font_family: quoteFontFamily,
-          quote_font_size: quoteFontSize,
-          use_envelope: useEnvelope,
-          show_photos: showPhotos,
-          show_rsvp: showRsvp,
-          show_comments: showComments,
-          show_countdown: showCountdown,
-          background_animation: backgroundAnimation,
-          entrance_animation: entranceAnimation,
-          envelope_style: envelopeStyle,
-          seal_style: sealStyle,
-          countdown_style: countdownStyle,
-          is_dark_mode: isDarkMode
-        })
-        .eq('id', wedding.id);
-
-      if (!error) {
-        setToastMessage('Değişiklikler kaydedildi...');
-        setTimeout(() => setToastMessage(''), 2000);
-      }
-
-      if (typeof window !== 'undefined') {
-        window.sessionStorage.removeItem('preview_envelope_opened');
-      }
-      setPreviewKey(Date.now()); // Canlı Önizleme İframe'ini Tazele
-    }, 800);
-
-    return () => clearTimeout(timer);
-  }, [
-    templateId, primaryColor, textColor, envelopeColor, 
-    envelopeBgColor, envelopeFlapType, sealType, sealColor, 
-    entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
-    quoteFontFamily, quoteFontSize, showPhotos, showRsvp, showComments, showCountdown,
-    backgroundAnimation, entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode
-  ]);
+  // Gerçek Zamanlı Auto-Save Motoru KALDIRILDI - Kullanıcı sadece Kaydet butonu ile kaydedecek.
 
   async function fetchRsvps(weddingId: string) {
     const { data } = await supabase
