@@ -1,6 +1,7 @@
 'use client';
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
+import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
 import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2, Smartphone, Tablet, Trash2, Check, RefreshCw, Volume2, VolumeX, Eye } from 'lucide-react';
 import { getRandomQuote } from '@/lib/aiQuotes';
 import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingAnimations';
@@ -279,6 +280,52 @@ export default function CoupleAdminPage({
   const [templateCategory, setTemplateCategory] = useState('all');
   const [visibleCount, setVisibleCount] = useState(12);
   const [showManualTelegram, setShowManualTelegram] = useState(false);
+  const [showPaletteMenu, setShowPaletteMenu] = useState(false);
+
+  const designPalettes = [
+    { name: 'Lüks Mermer & Altın', primary: '#d6a84f', text: '#0f0e0e', font: 'Cormorant Garamond', animation: 'goldParticles', envelope: 'marble-white', seal: 'gold', bg: 'linear-gradient(135deg,#080706,#2a1f0a)' },
+    { name: 'Rose Gold Nişan', primary: '#c77dff', text: '#2d0036', font: 'Playfair Display', animation: 'rosePetals', envelope: 'rose-gold', seal: 'rose-gold', bg: 'linear-gradient(135deg,#ffe4e6,#fce7f3)' },
+    { name: 'Minimalist Beyaz', primary: '#1e293b', text: '#1e293b', font: 'Outfit', animation: 'none', envelope: 'solid-ivory', seal: 'minimal', bg: '#ffffff' },
+    { name: 'Bohem Kır', primary: '#c2410c', text: '#4a2f22', font: 'Playfair Display', animation: 'sakura', envelope: 'paper-kraft', seal: 'heart', bg: 'linear-gradient(135deg,#fef3c7,#fed7aa)' },
+    { name: 'Siyah Premium', primary: '#d6a84f', text: '#ffffff', font: 'Cinzel', animation: 'goldParticles', envelope: 'marble-black', seal: 'crown', bg: 'linear-gradient(135deg,#0a0a0a,#1a1a2e)' },
+    { name: 'Bordo Kına', primary: '#fbbf24', text: '#fff7ed', font: 'Cormorant Garamond', animation: 'pearlSparkle', envelope: 'solid-burgundy', seal: 'crown', bg: 'linear-gradient(135deg,#7f1d1d,#991b1b)' },
+    { name: 'Pastel Baby Shower', primary: '#f43f5e', text: '#334155', font: 'Nunito', animation: 'hearts', envelope: 'solid-blush', seal: 'heart', bg: 'linear-gradient(135deg,#fce7f3,#e0f2fe)' },
+    { name: 'Lavanta Bahçesi', primary: '#7c3aed', text: '#2d1b69', font: 'Playfair Display', animation: 'bokehLights', envelope: 'solid-lavender', seal: 'flower', bg: 'linear-gradient(135deg,#ede9fe,#ddd6fe)' },
+  ];
+
+  // Live preview data — reflects current state instantly without DB roundtrip
+  const liveWeddingData = useMemo(() => ({
+    ...wedding,
+    template_id: templateId,
+    primary_color: primaryColor,
+    text_color: textColor,
+    envelope_color: envelopeColor,
+    envelope_bg_color: envelopeBgColor,
+    envelope_flap_type: envelopeFlapType,
+    seal_type: sealType,
+    seal_color: sealColor,
+    entrance_type: entranceType,
+    effect_type: effectType,
+    font_family: fontFamily,
+    names_font_family: namesFontFamily,
+    use_envelope: useEnvelope,
+    show_photos: showPhotos,
+    show_rsvp: showRsvp,
+    show_comments: showComments,
+    show_countdown: showCountdown,
+    background_animation: backgroundAnimation,
+    entrance_animation: entranceAnimation,
+    envelope_style: envelopeStyle,
+    seal_style: sealStyle,
+    countdown_style: countdownStyle,
+    is_dark_mode: isDarkMode,
+  }), [
+    wedding, templateId, primaryColor, textColor, envelopeColor,
+    envelopeBgColor, envelopeFlapType, sealType, sealColor,
+    entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
+    showPhotos, showRsvp, showComments, showCountdown, backgroundAnimation,
+    entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode
+  ]);
 
   useEffect(() => {
     setVisibleCount(12);
@@ -1119,6 +1166,37 @@ export default function CoupleAdminPage({
               </h2>
               <p className="text-slate-500 mb-8">Bilgilerinizi ve temanızı güncelledikten sonra "Kaydet" butonuna basarak sağdaki önizlemede sonuçları görebilirsiniz.</p>
               
+              {/* Hazır Tasarım Paletleri */}
+              <div className="mb-6">
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">⚡ Hazır Tasarım Paletleri</p>
+                <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+                  {designPalettes.map((palette, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => {
+                        setPrimaryColor(palette.primary);
+                        setTextColor(palette.text);
+                        setFontFamily(palette.font);
+                        setBackgroundAnimation(palette.animation);
+                        setEnvelopeBgColor(palette.envelope);
+                        setSealStyle(palette.seal);
+                      }}
+                      className="shrink-0 rounded-xl overflow-hidden border-2 border-transparent hover:border-rose-400 transition-all group"
+                      title={palette.name}
+                    >
+                      <div 
+                        className="w-12 h-12 flex items-center justify-center"
+                        style={{ background: palette.bg }}
+                      >
+                        <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity text-white font-bold">✓</span>
+                      </div>
+                      <p className="text-[9px] text-slate-500 text-center px-1 py-1 leading-tight max-w-[48px]">{palette.name.split(' ').slice(0,2).join(' ')}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* BÖLÜM 1: GENEL BİLGİLER */}
               <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">1. Genel Bilgiler</h3>
               <div className="space-y-4 mb-10">
@@ -2420,13 +2498,20 @@ export default function CoupleAdminPage({
               {previewDevice !== 'tablet' && (
                 <div className="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-3xl z-20"></div>
               )}
-              <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-hidden relative">
-                <iframe 
-                  key={`${previewKey}-${templateId}-${primaryColor}-${textColor}-${envelopeColor}-${envelopeBgColor}-${envelopeFlapType}-${sealType}-${sealColor}-${entranceType}-${effectType}-${fontFamily}-${namesFontFamily}-${useEnvelope}-${showPhotos}-${showRsvp}-${showComments}-${showCountdown}-${backgroundAnimation}-${entranceAnimation}-${envelopeStyle}-${sealStyle}-${countdownStyle}-${isDarkMode}`}
-                  src={`/d/${wedding.slug}?preview=true&template_id=${templateId}&primary_color=${encodeURIComponent(primaryColor)}&text_color=${encodeURIComponent(textColor)}&is_dark_mode=${isDarkMode}&entrance_animation=${entranceAnimation}&background_animation=${backgroundAnimation}&background_design=${envelopeBgColor}&envelope_color=${encodeURIComponent(envelopeColor)}&envelope_style=${envelopeStyle}&seal_style=${sealStyle}&seal_color=${encodeURIComponent(sealColor)}&seal_type=${sealType}&use_envelope=${useEnvelope}&show_photos=${showPhotos}&show_rsvp=${showRsvp}&show_comments=${showComments}&show_countdown=${showCountdown}&envelope_flap_type=${envelopeFlapType}&effect_type=${effectType}&font_family=${fontFamily}&names_font_family=${namesFontFamily}`} 
-                  className="w-full h-full border-0"
-                  title="Live Preview"
-                />
+              <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-y-auto overflow-x-hidden relative">
+                {wedding && liveWeddingData ? (
+                  <PremiumTemplateRenderer 
+                    wedding={liveWeddingData} 
+                    templateId={templateId} 
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-slate-400">
+                    <div className="text-center">
+                      <div className="w-8 h-8 rounded-full border-2 border-rose-400 border-t-transparent animate-spin mx-auto mb-3" />
+                      <p className="text-xs">Yükleniyor...</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

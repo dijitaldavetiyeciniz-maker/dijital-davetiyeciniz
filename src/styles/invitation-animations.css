@@ -1256,3 +1256,244 @@
   opacity: 0;
 }
 
+/* 1. goldenDust */
+.golden-dust-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.golden-dust-particles span {
+  position: absolute;
+  width: 6px; height: 6px;
+  background: radial-gradient(circle, #fff9c4 0%, #d4af37 60%, transparent 100%);
+  border-radius: 50%;
+  animation: goldenDustRise calc(3s + var(--i) * 0.5s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.3s);
+}
+@keyframes goldenDustRise {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-20px) scale(1); opacity: 0; }
+}
+
+/* 2. rosePetals */
+.rose-petals-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.rose-petals-particles span {
+  position: absolute;
+  width: 14px; height: 18px;
+  background: radial-gradient(ellipse, #fda4af 0%, #fb7185 70%, transparent 100%);
+  border-radius: 50% 0 50% 0;
+  animation: rosePetalFall calc(5s + var(--i) * 0.4s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.2s);
+}
+@keyframes rosePetalFall {
+  0% { transform: translateY(-5vh) rotate(0deg); opacity: 0; }
+  20% { opacity: 0.9; }
+  80% { opacity: 0.6; }
+  100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+}
+
+/* 3. sakura */
+.sakura-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.sakura-particles span {
+  position: absolute;
+  width: 12px; height: 12px;
+  background: radial-gradient(circle, #fce7f3 0%, #fbcfe8 70%, transparent 100%);
+  border-radius: 70% 30% 70% 30% / 30% 70% 30% 70%;
+  animation: sakuraFall calc(4.5s + var(--i) * 0.3s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.25s);
+}
+@keyframes sakuraFall {
+  0% { transform: translateY(-5vh) rotate(0deg) scale(0.8); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 0.7; }
+  100% { transform: translateY(108vh) rotate(540deg) scale(1.2); opacity: 0; }
+}
+
+/* 4. bokehLights */
+.bokeh-lights-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.bokeh-lights-particles span {
+  position: absolute;
+  width: 60px; height: 60px;
+  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 40%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(8px);
+  animation: bokehPulse calc(4s + var(--i) * 0.6s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.4s);
+}
+@keyframes bokehPulse {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+/* 5. heartsRain */
+.hearts-rain-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.hearts-rain-particles span {
+  position: absolute;
+  font-size: 16px;
+  color: #fb7185;
+  animation: heartsRainFall calc(4s + var(--i) * 0.5s) linear infinite;
+  animation-delay: calc(var(--i) * 0.3s);
+}
+@keyframes heartsRainFall {
+  0% { transform: translateY(-10vh) rotate(-15deg); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(110vh) rotate(15deg); opacity: 0; }
+}
+
+/* 6. starShower */
+.star-shower-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.star-shower-particles span {
+  position: absolute;
+  width: 2px; height: 40px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.8), transparent);
+  animation: starShowerFall calc(2s + var(--i) * 0.8s) linear infinite;
+  animation-delay: calc(var(--i) * 0.5s);
+}
+@keyframes starShowerFall {
+  0% { transform: translate(0, -10vh) rotate(45deg); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translate(100vw, 110vh) rotate(45deg); opacity: 0; }
+}
+
+/* 7. pearlSparkle */
+.pearl-sparkle-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.pearl-sparkle-particles span {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #fff;
+  animation: pearlTwinkle calc(1.5s + var(--i) * 0.2s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.1s);
+}
+@keyframes pearlTwinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* 8. mistCloud */
+.mist-cloud-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.mist-cloud-particles span {
+  position: absolute;
+  width: 200px; height: 100px;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(20px);
+  animation: mistDrift calc(10s + var(--i) * 2s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 1s);
+}
+@keyframes mistDrift {
+  0% { transform: translateX(-20px) scale(1); opacity: 0; }
+  50% { opacity: 0.5; transform: translateX(20px) scale(1.1); }
+  100% { transform: translateX(-20px) scale(1); opacity: 0; }
+}
+
+/* 9. confettiBurst */
+.confetti-burst-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.confetti-burst-particles span {
+  position: absolute;
+  width: 8px; height: 16px;
+  animation: confettiFall calc(3s + var(--i) * 0.4s) linear infinite;
+  animation-delay: calc(var(--i) * 0.2s);
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0.2; }
+}
+
+/* 10. autumnLeaves */
+.autumn-leaves-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.autumn-leaves-particles span {
+  position: absolute;
+  width: 16px; height: 10px;
+  background: radial-gradient(ellipse, #d97706 0%, #b45309 70%, transparent 100%);
+  border-radius: 80% 20% 80% 20% / 20% 80% 20% 80%;
+  animation: autumnLeafFall calc(5s + var(--i) * 0.5s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.3s);
+}
+@keyframes autumnLeafFall {
+  0% { transform: translateY(-5vh) rotate(0deg) translateX(0); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 0.8; }
+  100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; }
+}
+
+/* 11. waveReflection */
+.wave-reflection-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.wave-reflection-particles span {
+  position: absolute;
+  bottom: 0; left: -20%; right: -20%;
+  height: 100px;
+  background: linear-gradient(to top, rgba(14,116,144,0.3) 0%, transparent 100%);
+  border-radius: 100% 100% 0 0;
+  animation: waveSway calc(4s + var(--i) * 1s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.5s);
+}
+@keyframes waveSway {
+  0%, 100% { transform: translateX(-5%) scaleY(1); opacity: 0.5; }
+  50% { transform: translateX(5%) scaleY(1.2); opacity: 0.8; }
+}
+
+/* 12. silkWave */
+.silk-wave-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.silk-wave-particles span {
+  position: absolute;
+  width: 150%; height: 150px; left: -25%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
+  transform-origin: center;
+  animation: silkDrift calc(6s + var(--i) * 1.5s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.5s);
+  border-radius: 50%;
+}
+@keyframes silkDrift {
+  0%, 100% { transform: translateY(-20px) rotate(-5deg); opacity: 0.3; }
+  50% { transform: translateY(20px) rotate(5deg); opacity: 0.6; }
+}
+
+/* 13. candleFlicker */
+.candle-flicker-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.candle-flicker-particles span {
+  position: absolute;
+  width: 50px; height: 50px;
+  background: radial-gradient(circle, #fde68a 0%, rgba(245,158,11,0.5) 40%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(5px);
+  animation: candleFlickerAnim calc(1.5s + var(--i) * 0.5s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.1s);
+}
+@keyframes candleFlickerAnim {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  25% { transform: scale(1.1); opacity: 0.9; }
+  75% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* 14. neonGradient */
+.neon-gradient-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.neon-gradient-particles span {
+  position: absolute;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: neonHalo calc(6s + var(--i) * 2s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.5s);
+}
+@keyframes neonHalo {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.2; }
+  50% { transform: scale(1.3) rotate(180deg); opacity: 0.5; }
+}
+
+/* 15. marbleLight */
+.marble-light-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 2; }
+.marble-light-particles span {
+  position: absolute;
+  width: 200%; height: 20px; left: -50%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: rotate(30deg);
+  animation: marbleStreak calc(4s + var(--i) * 1s) ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.5s);
+}
+@keyframes marbleStreak {
+  0% { transform: translateY(-50vh) rotate(30deg) translateX(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(150vh) rotate(30deg) translateX(100%); opacity: 0; }
+}

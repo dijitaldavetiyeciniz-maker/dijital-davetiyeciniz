@@ -66,9 +66,13 @@ export default function SuperAdminPage() {
     
     const { error } = await supabase.from('weddings').delete().eq('id', id);
     if (error) {
-      alert('Silinirken hata oluştu: ' + error.message);
+      if (error.message && error.message.toLowerCase().includes('row-level security')) {
+        alert('Super Admin yetkisi gerekiyor. Supabase Dashboard > SQL Editor > Authentication.rls sayfasından DELETE iznini açmanız gerekiyor.');
+      } else {
+        alert('Silinirken hata oluştu: ' + error.message);
+      }
     } else {
-      fetchWeddings();
+      setWeddings(prevWeddings => prevWeddings.filter(w => w.id !== id));
     }
   }
 
@@ -220,6 +224,21 @@ export default function SuperAdminPage() {
           </div>
         </header>
 
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="rounded-2xl p-5 border" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}>
+            <p className="text-xs text-slate-400 mb-1">Toplam Davetiye</p>
+            <p className="text-3xl font-black text-white">{weddings.length}</p>
+          </div>
+          <div className="rounded-2xl p-5 border" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}>
+            <p className="text-xs text-slate-400 mb-1">Yayında</p>
+            <p className="text-3xl font-black text-emerald-400">{weddings.filter(w => w.is_paid).length}</p>
+          </div>
+          <div className="rounded-2xl p-5 border" style={{ background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' }}>
+            <p className="text-xs text-slate-400 mb-1">Ödeme Bekliyor</p>
+            <p className="text-3xl font-black text-amber-400">{weddings.filter(w => !w.is_paid).length}</p>
+          </div>
+        </div>
+
         <div className="grid lg:grid-cols-12 gap-8">
           
           {/* Çift Ekleme / Düzenleme Formu - Sol Sidebar */}
@@ -340,9 +359,35 @@ export default function SuperAdminPage() {
 
           {/* Mevcut Çiftler Listesi */}
           <div className="lg:col-span-8">
-            <h2 className="text-xl font-bold text-white mb-6 font-serif flex items-center gap-2">
-              <Users className="w-5 h-5 text-indigo-400" /> Kayıtlı Davetiyeler
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-white font-serif flex items-center gap-2">
+                <Users className="w-5 h-5 text-indigo-400" /> Kayıtlı Davetiyeler
+              </h2>
+              <button
+                onClick={() => {
+                  const csvData = weddings.map(w => ({
+                    'Ad Soyad': `${w.bride_name} & ${w.groom_name}`,
+                    'Slug': w.slug,
+                    'E-posta': w.user_email || '',
+                    'Durum': w.is_paid ? 'Ödendi' : 'Bekliyor',
+                    'Şablon': w.template_id || '',
+                    'Etkinlik': w.event_type || 'Düğün',
+                  }));
+                  if (csvData.length === 0) return;
+                  const headers = Object.keys(csvData[0]);
+                  const csv = [headers.join(','), ...csvData.map(row => headers.map(h => `"${(row as any)[h]}"`).join(','))].join('\n');
+                  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `davetiyeler-${new Date().toISOString().slice(0,10)}.csv`;
+                  a.click();
+                }}
+                className="text-xs bg-emerald-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-emerald-600 transition-colors flex items-center gap-1"
+              >
+                📥 CSV İndir
+              </button>
+            </div>
             
             <div className="grid gap-4">
               {loading ? (
