@@ -18,11 +18,11 @@ export default async function WeddingPage({
   searchParams,
 }: {
   params: Promise<{ wedding_id: string }>;
-  searchParams: Promise<{ preview?: string }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const { wedding_id } = await params;
-  const { preview } = await searchParams;
-  const isPreview = preview === 'true';
+  const sParams = await searchParams;
+  const isPreview = sParams.preview === 'true';
 
   // Supabase'den veriyi çekiyoruz
   const { data: wedding, error } = await supabase
@@ -34,6 +34,32 @@ export default async function WeddingPage({
   // Eğer url yanlışsa veya böyle bir düğün yoksa 404 sayfası göster
   if (error || !wedding) {
     notFound();
+  }
+
+  // Değişiklikleri kaydetmeden canlı önizleme yapabilmek için URL query parametrelerini ez
+  if (isPreview) {
+    if (sParams.template_id) wedding.template_id = sParams.template_id;
+    if (sParams.primary_color) wedding.primary_color = sParams.primary_color;
+    if (sParams.text_color) wedding.text_color = sParams.text_color;
+    if (sParams.is_dark_mode) wedding.is_dark_mode = sParams.is_dark_mode === 'true';
+    if (sParams.entrance_animation) wedding.entrance_animation = sParams.entrance_animation;
+    if (sParams.background_animation) wedding.background_animation = sParams.background_animation;
+    if (sParams.background_design) wedding.background_design = sParams.background_design;
+    if (sParams.envelope_color) wedding.envelope_color = sParams.envelope_color;
+    if (sParams.envelope_bg_color) wedding.envelope_bg_color = sParams.envelope_bg_color;
+    if (sParams.envelope_style) wedding.envelope_style = sParams.envelope_style;
+    if (sParams.seal_style) wedding.seal_style = sParams.seal_style;
+    if (sParams.seal_color) wedding.seal_color = sParams.seal_color;
+    if (sParams.seal_type) wedding.seal_type = sParams.seal_type;
+    if (sParams.use_envelope) wedding.use_envelope = sParams.use_envelope === 'true';
+    if (sParams.show_photos) wedding.show_photos = sParams.show_photos === 'true';
+    if (sParams.show_rsvp) wedding.show_rsvp = sParams.show_rsvp === 'true';
+    if (sParams.show_comments) wedding.show_comments = sParams.show_comments === 'true';
+    if (sParams.show_countdown) wedding.show_countdown = sParams.show_countdown === 'true';
+    if (sParams.envelope_flap_type) wedding.envelope_flap_type = sParams.envelope_flap_type;
+    if (sParams.effect_type) wedding.effect_type = sParams.effect_type;
+    if (sParams.font_family) wedding.font_family = sParams.font_family;
+    if (sParams.names_font_family) wedding.names_font_family = sParams.names_font_family;
   }
 
   // PAYWALL (Ödeme Duvarı) Kontrolü (Bypass if in preview mode)

@@ -160,6 +160,7 @@ export function EntranceAnimation({
   backgroundDesign,
 }: EntranceAnimationProps) {
   const [opened, setOpened] = useState(false);
+  const [doorOpened, setDoorOpened] = useState(false);
   
   const onCompleteRef = useRef(onComplete);
   useEffect(() => {
@@ -171,11 +172,17 @@ export function EntranceAnimation({
   const typeConfig = entranceAnimationTypes.find((t) => t.id === type) || entranceAnimationTypes[0];
   const styleConfig: EntranceAnimationStyle = entranceAnimationStyles.find((s) => s.id === style) || entranceAnimationStyles[0];
 
+  // True for curtain-type animations which have a 2-phase flow:
+  // Phase 1: curtain opens → door revealed (closed)
+  // Phase 2: user taps → door opens → onComplete
+  const isCurtainType = typeConfig.id === 'curtain';
+
   useEffect(() => {
     setOpened(false);
+    setDoorOpened(false);
     let autoOpenTimer: NodeJS.Timeout;
 
-    // Auto-open after 1.5 seconds if they don't click manually
+    // Auto-open curtain after 1.5 seconds
     autoOpenTimer = setTimeout(() => {
       setOpened(true);
     }, 1500);
@@ -188,6 +195,26 @@ export function EntranceAnimation({
   const handleManualOpen = () => {
     if (opened) return;
     setOpened(true);
+  };
+
+  // Handle the main CTA button click:
+  // - Curtain type: first open the door, then reveal invitation after animation
+  // - All other types: directly reveal invitation
+  const handleRevealInvitation = () => {
+    if (isCurtainType && opened && !doorOpened) {
+      // Phase 2: open the door
+      setDoorOpened(true);
+      // Wait for door animation to complete (~1.4s), then show invitation
+      setTimeout(() => {
+        if (onCompleteRef.current) onCompleteRef.current();
+      }, 1400);
+    } else if (!isCurtainType) {
+      // For other types, open if not opened yet
+      if (!opened) setOpened(true);
+      setTimeout(() => {
+        if (onCompleteRef.current) onCompleteRef.current();
+      }, 600);
+    }
   };
 
   // Extract particle details from effects list
@@ -243,7 +270,7 @@ export function EntranceAnimation({
       case "envelope":
         return <EnvelopeOpening {...commonProps} />;
       case "curtain":
-        return <CurtainOpening {...commonProps} />;
+        return <CurtainOpening {...commonProps} doorOpened={doorOpened} />;
       case "door":
         return <DoorOpening {...commonProps} />;
       case "gardenGate":
@@ -291,23 +318,45 @@ export function EntranceAnimation({
         className="absolute bottom-8 left-0 right-0 z-[60] flex flex-col items-center px-6 pointer-events-auto open-invitation-container"
         style={{ bottom: 'max(2rem, env(safe-area-inset-bottom))' } as React.CSSProperties}
       >
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (onCompleteRef.current) onCompleteRef.current();
-          }}
-          className="w-full max-w-[280px] min-h-[48px] text-white font-bold text-sm uppercase tracking-widest rounded-xl hover:opacity-95 transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 border cursor-pointer"
-          style={{
-            background: `linear-gradient(135deg, ${styleConfig.palette.secondary} 0%, ${styleConfig.palette.primary} 100%)`,
-            borderColor: `${styleConfig.palette.accent}70`,
-            boxShadow: `0 10px 25px -5px ${styleConfig.palette.primary}80, 0 8px 10px -6px rgba(0,0,0,0.1)`
-          }}
-        >
-          <span>✉️</span> Davetiyeyi Aç
-        </button>
+        {/* For curtain type: show door-open button only after curtain has opened */}
+        {isCurtainType ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRevealInvitation();
+            }}
+            className={`w-full max-w-[280px] min-h-[48px] text-white font-bold text-sm uppercase tracking-widest rounded-xl transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 border cursor-pointer ${
+              opened && !doorOpened ? 'opacity-100 translate-y-0 hover:opacity-95' : opened && doorOpened ? 'opacity-60 pointer-events-none' : 'opacity-0 translate-y-4 pointer-events-none'
+            }`}
+            style={{
+              background: `linear-gradient(135deg, ${styleConfig.palette.secondary} 0%, ${styleConfig.palette.primary} 100%)`,
+              borderColor: `${styleConfig.palette.accent}70`,
+              boxShadow: `0 10px 25px -5px ${styleConfig.palette.primary}80, 0 8px 10px -6px rgba(0,0,0,0.1)`,
+              transition: 'opacity 0.6s ease, transform 0.6s ease'
+            }}
+          >
+            <span>🚪</span> {doorOpened ? 'Girildi...' : 'Kapıyı Açmak İçin Dokunun'}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRevealInvitation();
+            }}
+            className="w-full max-w-[280px] min-h-[48px] text-white font-bold text-sm uppercase tracking-widest rounded-xl hover:opacity-95 transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 border cursor-pointer"
+            style={{
+              background: `linear-gradient(135deg, ${styleConfig.palette.secondary} 0%, ${styleConfig.palette.primary} 100%)`,
+              borderColor: `${styleConfig.palette.accent}70`,
+              boxShadow: `0 10px 25px -5px ${styleConfig.palette.primary}80, 0 8px 10px -6px rgba(0,0,0,0.1)`
+            }}
+          >
+            <span>✉️</span> Davetiyeyi Aç
+          </button>
+        )}
         <p className="text-[10px] font-bold tracking-[0.2em] uppercase mt-2.5 drop-shadow-xs" style={{ color: styleConfig.palette.text, opacity: 0.65 }}>
-          Detayları Görüntülemek İçin Dokunun
+          {isCurtainType && !opened ? 'Perde Açılıyor...' : 'Detayları Görüntülemek İçin Dokunun'}
         </p>
       </div>
     </div>

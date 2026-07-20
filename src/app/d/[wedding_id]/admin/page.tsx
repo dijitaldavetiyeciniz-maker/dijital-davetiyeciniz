@@ -266,8 +266,8 @@ export default function CoupleAdminPage({
   const [sealStyle, setSealStyle] = useState('burgundy');
   const [userChangedOpeningType, setUserChangedOpeningType] = useState(false);
   const [isAnimationModalOpen, setIsAnimationModalOpen] = useState(false);
-  const [showProgram, setShowProgram] = useState(false);
-  const [programTimeline, setProgramTimeline] = useState<{ time: string; title: string; desc: string }[]>([]);
+
+
   
   // Premium UI/UX States
   const [countdownStyle, setCountdownStyle] = useState('glass');
@@ -367,32 +367,8 @@ export default function CoupleAdminPage({
       if (weddingData.countdown_style) setCountdownStyle(weddingData.countdown_style);
       if (weddingData.is_dark_mode !== undefined && weddingData.is_dark_mode !== null) setIsDarkMode(weddingData.is_dark_mode);
       
-      // Program Akışı Yükleme
-      if (weddingData.show_program !== undefined && weddingData.show_program !== null) {
-        setShowProgram(weddingData.show_program);
-      }
-      if (weddingData.program_timeline) {
-        try {
-          const parsed = typeof weddingData.program_timeline === 'string'
-            ? JSON.parse(weddingData.program_timeline)
-            : weddingData.program_timeline;
-          if (Array.isArray(parsed)) {
-            setProgramTimeline(parsed);
-          } else {
-            setProgramTimeline([]);
-          }
-        } catch (e) {
-          setProgramTimeline([]);
-        }
-      } else {
-        setProgramTimeline([
-          { time: '19:00', title: 'Karşılama & Kokteyl', desc: 'Misafirlerin salona kabulü ve hoşgeldiniz kokteyli' },
-          { time: '20:00', title: 'Nikah Töreni', desc: 'Nikah akdi ve ömür boyu mutluluğa imzaların atılması' },
-          { time: '20:30', title: 'Yemek & Eğlence', desc: 'Düğün yemeği servisi ve müzik eşliğinde kutlama' },
-          { time: '23:30', title: 'Kapanış', desc: 'Teşekkür konuşması ve kapanış' }
-        ]);
-      }
       
+
       // Genel Bilgileri Doldur
       if (weddingData.event_type) setEventType(weddingData.event_type);
       if (weddingData.bride_name) setBrideName(weddingData.bride_name);
@@ -444,9 +420,7 @@ export default function CoupleAdminPage({
           envelope_style: envelopeStyle,
           seal_style: sealStyle,
           countdown_style: countdownStyle,
-          is_dark_mode: isDarkMode,
-          show_program: showProgram,
-          program_timeline: programTimeline
+          is_dark_mode: isDarkMode
         })
         .eq('id', wedding.id);
 
@@ -563,36 +537,13 @@ export default function CoupleAdminPage({
       envelope_style: envelopeStyle,
       seal_style: sealStyle,
       countdown_style: countdownStyle,
-      is_dark_mode: isDarkMode,
-      show_program: showProgram,
-      program_timeline: programTimeline,
-      background_design: envelopeBgColor
+      is_dark_mode: isDarkMode
     };
 
-    let { error } = await supabase
+    const { error } = await supabase
       .from('weddings')
       .update(payload)
       .eq('id', wedding.id);
-
-    // If pg_error 42703 (column does not exist), remove missing columns and retry
-    if (error && (error.code === '42703' || error.message?.includes('column'))) {
-      const errMsg = (error.message || '').toLowerCase();
-      if (errMsg.includes('background_design') || error.code === '42703') {
-        delete payload.background_design;
-      }
-      if (errMsg.includes('show_program')) {
-        delete payload.show_program;
-      }
-      if (errMsg.includes('program_timeline')) {
-        delete payload.program_timeline;
-      }
-
-      const retryResult = await supabase
-        .from('weddings')
-        .update(payload)
-        .eq('id', wedding.id);
-      error = retryResult.error;
-    }
       
     if (!error) {
       alert('Tüm ayarlar başarıyla kaydedildi!');
@@ -2471,8 +2422,8 @@ export default function CoupleAdminPage({
               )}
               <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-hidden relative">
                 <iframe 
-                  key={previewKey} 
-                  src={`/d/${wedding.slug}?preview=true&t=${previewKey}`} 
+                  key={`${previewKey}-${templateId}-${primaryColor}-${textColor}-${envelopeColor}-${envelopeBgColor}-${envelopeFlapType}-${sealType}-${sealColor}-${entranceType}-${effectType}-${fontFamily}-${namesFontFamily}-${useEnvelope}-${showPhotos}-${showRsvp}-${showComments}-${showCountdown}-${backgroundAnimation}-${entranceAnimation}-${envelopeStyle}-${sealStyle}-${countdownStyle}-${isDarkMode}`}
+                  src={`/d/${wedding.slug}?preview=true&template_id=${templateId}&primary_color=${encodeURIComponent(primaryColor)}&text_color=${encodeURIComponent(textColor)}&is_dark_mode=${isDarkMode}&entrance_animation=${entranceAnimation}&background_animation=${backgroundAnimation}&background_design=${envelopeBgColor}&envelope_color=${encodeURIComponent(envelopeColor)}&envelope_style=${envelopeStyle}&seal_style=${sealStyle}&seal_color=${encodeURIComponent(sealColor)}&seal_type=${sealType}&use_envelope=${useEnvelope}&show_photos=${showPhotos}&show_rsvp=${showRsvp}&show_comments=${showComments}&show_countdown=${showCountdown}&envelope_flap_type=${envelopeFlapType}&effect_type=${effectType}&font_family=${fontFamily}&names_font_family=${namesFontFamily}`} 
                   className="w-full h-full border-0"
                   title="Live Preview"
                 />

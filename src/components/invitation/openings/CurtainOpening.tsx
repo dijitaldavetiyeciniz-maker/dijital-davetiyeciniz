@@ -1,8 +1,10 @@
 import React from "react";
 import { EntranceAnimationStyle } from "@/data/openingAnimations";
+import { DoorOpening } from "./DoorOpening";
 
 type CurtainOpeningProps = {
   opened: boolean;
+  doorOpened?: boolean;
   brideName: string;
   groomName: string;
   styleConfig: EntranceAnimationStyle;
@@ -10,6 +12,7 @@ type CurtainOpeningProps = {
 
 export function CurtainOpening({
   opened,
+  doorOpened = false,
   brideName,
   groomName,
   styleConfig,
@@ -24,22 +27,35 @@ export function CurtainOpening({
   };
 
   return (
-    <div className={`curtain-opening-stage ${opened ? "opened" : ""} w-full h-full`}>
-      <div 
-        style={leftCurtainStyle}
-        className="curtain-opening-left flex items-center justify-end pr-8 select-none"
-      >
-        <span className="font-serif text-2xl md:text-4xl text-white text-right leading-tight drop-shadow-lg">
-          {brideName}
-        </span>
+    <div className="relative w-full h-full">
+      {/* Door behind the curtain */}
+      <div className="absolute inset-0 z-10">
+        <DoorOpening 
+          opened={doorOpened}
+          brideName={brideName}
+          groomName={groomName}
+          styleConfig={styleConfig}
+        />
       </div>
-      <div 
-        style={rightCurtainStyle}
-        className="curtain-opening-right flex items-center justify-start pl-8 select-none"
-      >
-        <span className="font-serif text-2xl md:text-4xl text-white text-left leading-tight drop-shadow-lg">
-          {groomName}
-        </span>
+
+      {/* Curtain panels on top */}
+      <div className={`curtain-opening-stage ${opened ? "opened" : ""} w-full h-full absolute inset-0 z-20 pointer-events-none`}>
+        <div 
+          style={leftCurtainStyle}
+          className="curtain-opening-left flex items-center justify-end pr-8 select-none pointer-events-auto"
+        >
+          <span className="font-serif text-2xl md:text-4xl text-white text-right leading-tight drop-shadow-lg">
+            {brideName}
+          </span>
+        </div>
+        <div 
+          style={rightCurtainStyle}
+          className="curtain-opening-right flex items-center justify-start pl-8 select-none pointer-events-auto"
+        >
+          <span className="font-serif text-2xl md:text-4xl text-white text-left leading-tight drop-shadow-lg">
+            {groomName}
+          </span>
+        </div>
       </div>
     </div>
   );
