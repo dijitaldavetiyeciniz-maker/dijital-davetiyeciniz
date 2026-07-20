@@ -92,6 +92,24 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     description: "Sade ve hızlı premium geçiş efekti kullanılır.",
     icon: "minimal",
   },
+  {
+    id: "cinematicText",
+    name: "🎬 Sinematik İsimler",
+    description: "Karanlık zarif arkaplanda isimler, tıklayınca davetiyeye geçer.",
+    icon: "cinematic",
+  },
+  {
+    id: "photoCover",
+    name: "📸 Fotoğraf Kapağı",
+    description: "Fotoğraflı kapak üzerinde isimler yer alır.",
+    icon: "photo",
+  },
+  {
+    id: "sealOnly",
+    name: "🎯 Sadece Mühür",
+    description: "Süzülen zarif bir mühür ile açılış başlatılır.",
+    icon: "seal",
+  },
 ];
 
 export const entranceAnimationStyles: EntranceAnimationStyle[] = [
