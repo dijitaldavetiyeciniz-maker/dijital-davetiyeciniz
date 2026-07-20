@@ -839,7 +839,7 @@ export default function CoupleAdminPage({
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-white/50 backdrop-blur-sm shadow-inner flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-xl w-full max-w-md p-8 text-center border border-slate-100">
           <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6 text-rose-500">
             <Lock className="w-8 h-8" />
@@ -869,7 +869,7 @@ export default function CoupleAdminPage({
   const totalGuests = rsvps.filter(r => r.is_attending).reduce((sum, curr) => sum + curr.guest_count, 0);
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-8 text-slate-800">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-50 via-rose-50/20 to-slate-100 p-4 md:p-8 text-slate-800 selection:bg-rose-200">
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] p-4 z-40 lg:hidden flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -1034,7 +1034,7 @@ export default function CoupleAdminPage({
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                   <table className="w-full text-left">
-                    <thead className="bg-slate-50 border-b border-slate-200">
+                    <thead className="bg-white/50 backdrop-blur-sm shadow-inner border-b border-slate-200">
                       <tr>
                         <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider">İsim Soyisim</th>
                         <th className="p-4 font-semibold text-slate-600 text-xs uppercase tracking-wider">Durum</th>
@@ -1049,7 +1049,7 @@ export default function CoupleAdminPage({
                         <tr><td colSpan={6} className="p-8 text-center text-slate-500">Eşleşen LCV yanıtı bulunamadı.</td></tr>
                       )}
                       {filteredRsvps.map(rsvp => (
-                        <tr key={rsvp.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50">
+                        <tr key={rsvp.id} className="border-b border-slate-100 last:border-0 hover:bg-white/50 backdrop-blur-sm shadow-inner/50">
                           <td className="p-4 font-medium text-slate-800">{rsvp.guest_name}</td>
                           <td className="p-4">
                             {rsvp.is_attending ? 
@@ -1151,7 +1151,7 @@ export default function CoupleAdminPage({
                   <button
                     key={t.id}
                     onClick={() => setActiveMainTab(t.id as any)}
-                    className={`px-4 py-2.5 rounded-t-xl text-sm font-bold whitespace-nowrap transition-colors ${activeMainTab === t.id ? 'bg-rose-50 text-rose-600 border-b-2 border-rose-500' : 'text-slate-500 hover:bg-slate-50'}`}
+                    className={`px-4 py-2.5 rounded-t-xl text-sm font-bold whitespace-nowrap transition-colors ${activeMainTab === t.id ? 'bg-rose-50 text-rose-600 border-b-2 border-rose-500' : 'text-slate-500 hover:bg-white/50 backdrop-blur-sm shadow-inner'}`}
                   >
                     {t.label}
                   </button>
@@ -1197,14 +1197,14 @@ export default function CoupleAdminPage({
               {activeMainTab === 'genel' && (
                 <>
                   {/* BÖLÜM 1: GENEL BİLGİLER */}
-                  <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">1. Genel Bilgiler</h3>
+                  <h3 className="font-bold text-lg mb-4 text-slate-800 border-b border-rose-100 pb-3">1. Genel Bilgiler</h3>
               <div className="space-y-4 mb-10">
                 <div>
                   <label className="block text-sm font-medium mb-1">Davet / Etkinlik Türü</label>
                   <select 
                     value={eventType} 
                     onChange={e => setEventType(e.target.value)}
-                    className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white text-sm"
+                    className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white text-sm"
                   >
                     <option value="Düğün">Düğün Daveti</option>
                     <option value="Kına">Kına Daveti</option>
@@ -1221,44 +1221,44 @@ export default function CoupleAdminPage({
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">Gelin / Gelin Adayı</label>
-                    <input value={brideName} onChange={e=>setBrideName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                    <input value={brideName} onChange={e=>setBrideName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Damat / Damat Adayı</label>
-                    <input value={groomName} onChange={e=>setGroomName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                    <input value={groomName} onChange={e=>setGroomName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">Gelin Anne & Baba</label>
-                    <input value={brideParents} onChange={e=>setBrideParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
+                    <input value={brideParents} onChange={e=>setBrideParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Damat Anne & Baba</label>
-                    <input value={groomParents} onChange={e=>setGroomParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
+                    <input value={groomParents} onChange={e=>setGroomParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">Tarih ve Saat</label>
-                    <input type="datetime-local" value={weddingDate} onChange={e=>setWeddingDate(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                    <input type="datetime-local" value={weddingDate} onChange={e=>setWeddingDate(e.target.value)} className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Mekan Adı</label>
-                    <input value={venueName} onChange={e=>setVenueName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                    <input value={venueName} onChange={e=>setVenueName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">Açık Adres</label>
-                    <input value={venueAddress} onChange={e=>setVenueAddress(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                    <input value={venueAddress} onChange={e=>setVenueAddress(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Google Maps Linki</label>
-                    <input value={googleMapsUrl} onChange={e=>setGoogleMapsUrl(e.target.value)} type="url" className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white" />
+                    <input value={googleMapsUrl} onChange={e=>setGoogleMapsUrl(e.target.value)} type="url" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
                   </div>
                 </div>
 
@@ -1269,7 +1269,7 @@ export default function CoupleAdminPage({
                       <Wand2 className="w-3 h-3" /> Yapay Zeka ile Yazdır
                     </button>
                   </div>
-                  <textarea value={customMessage} onChange={e=>setCustomMessage(e.target.value)} rows={3} className="w-full border p-2 rounded-lg bg-slate-50 focus:bg-white resize-none" />
+                  <textarea value={customMessage} onChange={e=>setCustomMessage(e.target.value)} rows={3} className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white resize-none" />
                 </div>
 
                 {/* Davet Metni Font Ayrıntıları */}
@@ -1279,7 +1279,7 @@ export default function CoupleAdminPage({
                     <select 
                       value={quoteFontFamily} 
                       onChange={e => setQuoteFontFamily(e.target.value)} 
-                      className="w-full border p-2 rounded-lg bg-slate-50 text-xs focus:bg-white"
+                      className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner text-xs focus:bg-white"
                     >
                       <option value="">Şablon Yazı Tipi (Varsayılan)</option>
                       <optgroup label="Romantik El Yazısı (Kaligrafi)">
@@ -1308,7 +1308,7 @@ export default function CoupleAdminPage({
                     <select 
                       value={quoteFontSize} 
                       onChange={e => setQuoteFontSize(e.target.value)} 
-                      className="w-full border p-2 rounded-lg bg-slate-50 text-xs focus:bg-white"
+                      className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner text-xs focus:bg-white"
                     >
                       <option value="text-xs">Küçük (12px)</option>
                       <option value="text-sm">Orta (14px - Varsayılan)</option>
@@ -1326,7 +1326,7 @@ export default function CoupleAdminPage({
               {activeMainTab === 'tema' && (
                 <>
                   {/* BÖLÜM 2: ŞABLON & TEMA SEÇİMİ */}
-                  <h3 className="font-bold text-lg mb-4 text-slate-800 border-b pb-2">2. Şablon & Tema Seçimi</h3>
+                  <h3 className="font-bold text-lg mb-4 text-slate-800 border-b border-rose-100 pb-3">2. Şablon & Tema Seçimi</h3>
 
               <div className="space-y-6">
                 {/* 1. Şablon Seçimi */}
@@ -1363,7 +1363,7 @@ export default function CoupleAdminPage({
 
                   {/* Filtered Concept-Based Themes List */}
                   <div className="space-y-3">
-                    <div className="max-h-[520px] overflow-y-auto border rounded-2xl p-3 bg-slate-50 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="max-h-[520px] overflow-y-auto border rounded-2xl p-3 bg-white/50 backdrop-blur-sm shadow-inner grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       {(() => {
                         const filteredThemes = themes.filter(theme => {
                           if (templateCategory === 'all') return true;
@@ -1392,7 +1392,7 @@ export default function CoupleAdminPage({
                               className={`flex items-start gap-3 p-3 rounded-xl border text-left transition-all hover:bg-white ${
                                 isActive 
                                   ? 'border-rose-500 bg-rose-50/5 shadow-xs ring-2 ring-rose-100' 
-                                  : 'border-slate-200 bg-white hover:bg-slate-50'
+                                  : 'border-slate-200 bg-white hover:bg-white/50 backdrop-blur-sm shadow-inner'
                               }`}
                             >
                               {/* Miniature card premium mockup */}
@@ -1429,7 +1429,291 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                                {/* 2. Giriş Animasyon Tasarımı */}
+                                {/* Font Pairs Presets */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">⭐ Hazır Font Çiftleri</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+                    {[
+                      { name: '💍 Zarif Düğün', title: 'Great Vibes', body: 'Cormorant Garamond', label: 'Klasik & Şık' },
+                      { name: '🌿 Bohem Kır', title: 'Dancing Script', body: 'Lato', label: 'Samimi & Doğal' },
+                      { name: '👑 Kraliyet', title: 'Cinzel', body: 'Montserrat', label: 'Asil & Modern' },
+                      { name: '🌸 Romantik', title: 'Parisienne', body: 'Playfair Display', label: 'Zarif & Estetik' },
+                      { name: '⚡ Modern', title: 'Outfit', body: 'Inter', label: 'Sade & Minimalist' },
+                      { name: '📜 Vintage', title: 'Pinyon Script', body: 'Raleway', label: 'Nostaljik El Yazısı' }
+                    ].map(pair => {
+                      const isActive = (namesFontFamily === pair.title || (!namesFontFamily && fontFamily === pair.title)) && fontFamily === pair.body;
+                      return (
+                        <button
+                          key={pair.name}
+                          type="button"
+                          onClick={() => {
+                            setNamesFontFamily(pair.title);
+                            setFontFamily(pair.body);
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all hover:bg-white/50 backdrop-blur-sm shadow-inner active:scale-95 ${isActive ? 'border-rose-500 bg-rose-50/10 ring-2 ring-rose-100' : 'border-slate-200 bg-white'}`}
+                        >
+                          <div className="text-[10px] font-bold text-slate-800 line-clamp-1">{pair.name}</div>
+                          <div className="text-[8px] text-slate-400 mt-0.5">{pair.label}</div>
+                          <div className="text-[11px] mt-1.5 line-clamp-1 font-semibold" style={{ fontFamily: `"${pair.title}", cursive` }}>Gelin & Damat</div>
+                          <div className="text-[9px] opacity-75 line-clamp-1" style={{ fontFamily: `"${pair.body}", sans-serif` }}>Tarih ve detaylar</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                   <div>
+                    <label className="block text-sm font-medium mb-2">
+                      ✍️ İsimler Yazı Tipi 
+                      <span className="text-slate-400 font-normal ml-1 text-xs">(Gelin & Damat)</span>
+                    </label>
+                    <select value={namesFontFamily || fontFamily} onChange={e => setNamesFontFamily(e.target.value)} className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner text-sm">
+                      <optgroup label="Romantik El Yazısı (Kaligrafi)">
+                        <option value="Great Vibes">Great Vibes</option>
+                        <option value="Parisienne">Parisienne</option>
+                        <option value="Alex Brush">Alex Brush</option>
+                        <option value="Dancing Script">Dancing Script</option>
+                        <option value="Allura">Allura</option>
+                        <option value="Arizonia">Arizonia</option>
+                        <option value="Pinyon Script">Pinyon Script</option>
+                        <option value="Sacramento">Sacramento</option>
+                        <option value="Tangerine">Tangerine</option>
+                        <option value="Yellowtail">Yellowtail</option>
+                        <option value="Italianno">Italianno</option>
+                        <option value="Monsieur La Doulaise">Monsieur La Doulaise</option>
+                      </optgroup>
+                      <optgroup label="Zarif & Şık (Serif)">
+                        <option value="Cormorant Garamond">Cormorant Garamond</option>
+                        <option value="Playfair Display">Playfair Display</option>
+                        <option value="Cinzel">Cinzel</option>
+                        <option value="Italiana">Italiana</option>
+                        <option value="Bodoni Moda">Bodoni Moda</option>
+                        <option value="Cinzel Decorative">Cinzel Decorative</option>
+                      </optgroup>
+                      <optgroup label="Modern & Sade (Sans-serif)">
+                        <option value="Montserrat">Montserrat</option>
+                        <option value="Inter">Inter</option>
+                        <option value="Outfit">Outfit</option>
+                        <option value="Raleway">Raleway</option>
+                        <option value="Poppins">Poppins</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      📝 Genel Yazı Tipi
+                      <span className="text-slate-400 font-normal ml-1 text-xs">(Tarih, Mekan, Detaylar)</span>
+                    </label>
+                    <select value={fontFamily} onChange={e => setFontFamily(e.target.value)} className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner text-sm">
+                      <optgroup label="Romantik El Yazısı (Kaligrafi)">
+                        <option value="Great Vibes">Great Vibes</option>
+                        <option value="Parisienne">Parisienne</option>
+                        <option value="Alex Brush">Alex Brush</option>
+                        <option value="Dancing Script">Dancing Script</option>
+                        <option value="Allura">Allura</option>
+                        <option value="Arizonia">Arizonia</option>
+                        <option value="Pinyon Script">Pinyon Script</option>
+                        <option value="Sacramento">Sacramento</option>
+                        <option value="Tangerine">Tangerine</option>
+                        <option value="Yellowtail">Yellowtail</option>
+                        <option value="Yesteryear">Yesteryear</option>
+                        <option value="Playball">Playball</option>
+                        <option value="Clicker Script">Clicker Script</option>
+                        <option value="Italianno">Italianno</option>
+                        <option value="Herr Von Muellerhoff">Herr Von Muellerhoff</option>
+                        <option value="Monsieur La Doulaise">Monsieur La Doulaise</option>
+                        <option value="Niconne">Niconne</option>
+                        <option value="Marck Script">Marck Script</option>
+                      </optgroup>
+                      <optgroup label="Zarif & Şık (Serif)">
+                        <option value="Cormorant Garamond">Cormorant Garamond</option>
+                        <option value="Playfair Display">Playfair Display</option>
+                        <option value="Cinzel">Cinzel</option>
+                        <option value="Italiana">Italiana</option>
+                        <option value="Bodoni Moda">Bodoni Moda</option>
+                        <option value="Prata">Prata</option>
+                        <option value="Cardo">Cardo</option>
+                        <option value="Oranienbaum">Oranienbaum</option>
+                        <option value="Cinzel Decorative">Cinzel Decorative</option>
+                      </optgroup>
+                      <optgroup label="Modern & Sade (Sans-serif)">
+                        <option value="Montserrat">Montserrat</option>
+                        <option value="Inter">Inter</option>
+                        <option value="Outfit">Outfit</option>
+                        <option value="League Spartan">League Spartan</option>
+                        <option value="Lato">Lato</option>
+                        <option value="Raleway">Raleway</option>
+                        <option value="Quicksand">Quicksand</option>
+                        <option value="Josefin Sans">Josefin Sans</option>
+                        <option value="Poppins">Poppins</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Color Palettes Presets */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">🎨 Hazır Renk Paletleri</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+                    {[
+                      { name: '🍂 Bohem Toprak', primary: '#8c6239', text: '#4a3728', bg: 'paper-kraft', label: 'Toprak Tonları' },
+                      { name: '🌌 Gece Mavisi & Altın', primary: '#dfc384', text: '#f8fafc', bg: 'velvet-navy', label: 'Lüks Kontrast' },
+                      { name: '🌹 Gül Kurusu', primary: '#be123c', text: '#4c0519', bg: 'solid-blush', label: 'Zarif Pembe' },
+                      { name: '🌲 Zarif Zümrüt', primary: '#10b981', text: '#064e3b', bg: 'marble-green', label: 'Doğal & Şık' },
+                      { name: '🍇 Mürdüm & Gümüş', primary: '#94a3b8', text: '#fdf4ff', bg: 'solid-plum', label: 'Monokrom Pastel' },
+                      { name: '🍷 Klasik Aşk', primary: '#9f1239', text: '#ffe4e6', bg: 'solid-crimson', label: 'Asil Bordo' }
+                    ].map(palette => {
+                      const isActive = primaryColor === palette.primary && textColor === palette.text && envelopeBgColor === palette.bg;
+                      return (
+                        <button
+                          key={palette.name}
+                          type="button"
+                          onClick={() => {
+                            setPrimaryColor(palette.primary);
+                            setTextColor(palette.text);
+                            setEnvelopeBgColor(palette.bg);
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all hover:bg-white/50 backdrop-blur-sm shadow-inner active:scale-95 flex flex-col justify-between ${isActive ? 'border-rose-500 bg-rose-50/10 ring-2 ring-rose-100' : 'border-slate-200 bg-white'}`}
+                        >
+                          <div>
+                            <div className="text-[10px] font-bold text-slate-800 line-clamp-1">{palette.name}</div>
+                            <div className="text-[8px] text-slate-400 mt-0.5">{palette.label}</div>
+                          </div>
+                          <div className="flex gap-1 mt-2.5">
+                            <div className="w-4 h-4 rounded-full border border-black/5 shadow-inner" style={{ backgroundColor: palette.primary }} title="Ana Renk"></div>
+                            <div className="w-4 h-4 rounded-full border border-black/5 shadow-inner" style={{ backgroundColor: palette.text }} title="Metin Rengi"></div>
+                            <div className="w-4 h-4 rounded-full border border-black/5 shadow-inner animate-pulse" style={{ backgroundColor: '#e2e8f0' }} title="Arka Plan"></div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Ana Renk (Tasarım)</label>
+                    <div className="flex items-center gap-4">
+                      <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
+                      <span className="text-slate-500 font-mono text-sm">{primaryColor}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Metin Rengi</label>
+                    <div className="flex items-center gap-4">
+                      <input type="color" value={textColor} onChange={e => setTextColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
+                      <span className="text-slate-500 font-mono text-sm">{textColor}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dark Mode Switcher */}
+                <div className="mb-4">
+                  <label className="flex items-center justify-between p-3 bg-white/50 backdrop-blur-sm shadow-inner border rounded-xl cursor-pointer hover:bg-slate-100">
+                    <div>
+                      <div className="font-bold text-slate-850 text-xs flex items-center gap-1.5">
+                        <span>🌙</span> Gece Modu (Koyu Tema)
+                      </div>
+                      <div className="text-[10px] text-slate-500 mt-0.5">Davetiyeyi siyah, altın ve koyu tonlara uyarla.</div>
+                    </div>
+                    <div className="relative shrink-0">
+                      <input 
+                        type="checkbox" 
+                        className="sr-only" 
+                        checked={isDarkMode} 
+                        onChange={e => {
+                          const val = e.target.checked;
+                          setIsDarkMode(val);
+                          if (val) {
+                            setPrimaryColor('#dfc384');
+                            setTextColor('#f8fafc');
+                            setEnvelopeBgColor('marble-black');
+                            setEnvelopeColor('#111111');
+                          } else {
+                            const preset = getTemplatePreset(templateId);
+                            setPrimaryColor(preset.primary_color);
+                            setTextColor(preset.text_color || '#1e293b');
+                            setEnvelopeBgColor(preset.envelope_bg_color || 'solid-ivory');
+                            setEnvelopeColor(preset.envelope_color || '#e6d5c3');
+                          }
+                        }} 
+                      />
+                      <div className={`block w-10 h-5 rounded-full transition-colors ${isDarkMode ? 'bg-indigo-600' : 'bg-slate-300'}`}></div>
+                      <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${isDarkMode ? 'transform translate-x-5' : ''}`}></div>
+                    </div>
+                  </label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Arkaplan Görseli</label>
+                  <div className="flex flex-col gap-3">
+                    <div className="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center hover:bg-white/50 backdrop-blur-sm shadow-inner transition-colors">
+                      <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" id="file-upload" disabled={isUploading} />
+                      <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center justify-center gap-1">
+                        <span className="font-bold text-slate-700 text-sm">
+                          {isUploading ? "Yükleniyor..." : "Bilgisayardan Fotoğraf Yükle"}
+                        </span>
+                        <span className="text-[10px] text-slate-400">Telegram Bot ile sınırsız depolama</span>
+                      </label>
+                    </div>
+                    <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="veya manuel URL gir: https://..." className="w-full border p-2 rounded-lg bg-white text-slate-700 text-xs font-mono placeholder:text-slate-400" />
+                  </div>
+                </div>
+
+                {/* Birleşik Arka Plan (Zemin Tasarımı) */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Arka Plan (Zemin Tasarımı)</label>
+                  <select value={envelopeBgColor} onChange={e => setEnvelopeBgColor(e.target.value)} className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner text-sm">
+                    <option value="white-gold-marble">⚪ Beyaz Altın Mermer</option>
+                    <option value="black-gold-velvet">⚫ Siyah Gold Kadife</option>
+                    <option value="rose-gold-silk">🌸 Rose Gold İpek</option>
+                    <option value="minimal-white-paper">📄 Minimal Beyaz Kağıt</option>
+                    <option value="bohemian-kraft">📦 Bohem Kraft Kağıt</option>
+                    <option value="navy-gold-night">🌌 Lacivert Gold Gece</option>
+                    <option value="marble-gold">🏛️ Altın Damarlı Mermer</option>
+                    <option value="pastel-floral">💐 Pastel Çiçekli</option>
+                    <option value="glass-blur-modern">🔮 Modern Cam Reveal</option>
+                    <option value="champagne-gold">🥂 Şampanya Gold Lüks</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Arkaplan Animasyonu</label>
+                  <select value={effectType} onChange={e => setEffectType(e.target.value)} className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner">
+                    <option value="">Yok (Sade)</option>
+                    <option value="sakura">🌸 Uçan Kiraz Çiçekleri (Sakura)</option>
+                    <option value="leaves">🍁 Dökülen Sonbahar Yaprakları</option>
+                    <option value="stars">✨ Parlayan Gece Yıldızları</option>
+                    <option value="fireflies">💡 Işıldayan Ateş Böcekleri</option>
+                    <option value="rain">🌧️ Romantik Yağmur Damlaları</option>
+                    <option value="confetti">🎉 Altın Konfeti Yağmuru</option>
+                    <option value="bubbles">🫧 Uçan Baloncuklar</option>
+                    <option value="sparkles">✨ Altın/Gümüş Işıltılar</option>
+                    <option value="hearts">❤️ Uçan Kalpler</option>
+                    <option value="snow">❄️ Kar Taneleri</option>
+                  </select>
+                  <p className="text-xs text-slate-400 mt-1">Sitenin en arkasında sürekli hareket eden zarif animasyonlar.</p>
+                </div>
+              </div>
+
+                </>
+              )}
+
+              {activeMainTab === 'animasyon' && (
+                <>
+                  {/* BÖLÜM 3: EKSTRA AYARLAR */}
+                  <div className="mt-8 pt-6 border-t border-slate-200 space-y-6">
+                    
+                    <div>
+                      
+  <div className="mb-6 p-4 bg-amber-50/50 border border-amber-200/50 rounded-xl">
+    <p className="text-sm text-amber-800 font-bold flex items-center gap-2"><span>ℹ️</span> Animasyon Ayarları Hakkında</p>
+    <p className="text-xs text-amber-700/80 mt-1 leading-relaxed">
+      Bu sekmede yer alan ayarlar, davetiyenizin <strong>ilk açılış ekranını</strong> (zarf, kapak tasarımı, arka plan parıltıları) ve <strong>arka plan müziğini</strong> yönetir. Zarf/Mühür modelinizi veya yeni nesil zarfsız kapaklarınızı buradan değiştirebilirsiniz.
+    </p>
+  </div>
+{/* 2. Giriş Animasyon Tasarımı */}
                 <div className="mt-6 border-t pt-4">
                   <h4 className="font-bold text-sm mb-1 text-slate-800">2. Giriş Animasyon Tasarımı</h4>
                   <p className="text-xs text-slate-500 mb-4 leading-relaxed">
@@ -1579,7 +1863,7 @@ export default function CoupleAdminPage({
                             className={`px-3 py-1.5 rounded-xl border text-[11px] font-semibold transition-all ${
                               isBgActive 
                                 ? 'border-rose-500 bg-rose-50/10 text-rose-600 ring-2 ring-rose-100 bg-white' 
-                                : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                                : 'border-slate-200 bg-white hover:bg-white/50 backdrop-blur-sm shadow-inner text-slate-600'
                             }`}
                           >
                             {item.name}
@@ -1611,7 +1895,7 @@ export default function CoupleAdminPage({
                               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[11px] font-semibold transition-all ${
                                 sealStyle === style.id 
                                   ? 'border-rose-500 bg-rose-50/10 text-rose-600 ring-2 ring-rose-100 bg-white' 
-                                  : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                                  : 'border-slate-200 bg-white hover:bg-white/50 backdrop-blur-sm shadow-inner text-slate-600'
                               }`}
                             >
                               <span className="w-2.5 h-2.5 rounded-full border border-black/10" style={{ backgroundColor: style.color }} />
@@ -1657,7 +1941,7 @@ export default function CoupleAdminPage({
                                 className={`py-1.5 rounded-xl border text-[11px] font-semibold text-center transition-all ${
                                   isSymbolActive 
                                     ? 'border-rose-500 bg-rose-50/10 text-rose-600 ring-2 ring-rose-100 bg-white' 
-                                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                                    : 'border-slate-200 bg-white hover:bg-white/50 backdrop-blur-sm shadow-inner text-slate-600'
                                 }`}
                               >
                                 {symbol.name}
@@ -1686,287 +1970,8 @@ export default function CoupleAdminPage({
 
 
                 </div>
-              </div>
-              <div className="space-y-6">
-                {/* Font Pairs Presets */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">⭐ Hazır Font Çiftleri</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
-                    {[
-                      { name: '💍 Zarif Düğün', title: 'Great Vibes', body: 'Cormorant Garamond', label: 'Klasik & Şık' },
-                      { name: '🌿 Bohem Kır', title: 'Dancing Script', body: 'Lato', label: 'Samimi & Doğal' },
-                      { name: '👑 Kraliyet', title: 'Cinzel', body: 'Montserrat', label: 'Asil & Modern' },
-                      { name: '🌸 Romantik', title: 'Parisienne', body: 'Playfair Display', label: 'Zarif & Estetik' },
-                      { name: '⚡ Modern', title: 'Outfit', body: 'Inter', label: 'Sade & Minimalist' },
-                      { name: '📜 Vintage', title: 'Pinyon Script', body: 'Raleway', label: 'Nostaljik El Yazısı' }
-                    ].map(pair => {
-                      const isActive = (namesFontFamily === pair.title || (!namesFontFamily && fontFamily === pair.title)) && fontFamily === pair.body;
-                      return (
-                        <button
-                          key={pair.name}
-                          type="button"
-                          onClick={() => {
-                            setNamesFontFamily(pair.title);
-                            setFontFamily(pair.body);
-                          }}
-                          className={`p-2.5 rounded-xl border text-left transition-all hover:bg-slate-50 active:scale-95 ${isActive ? 'border-rose-500 bg-rose-50/10 ring-2 ring-rose-100' : 'border-slate-200 bg-white'}`}
-                        >
-                          <div className="text-[10px] font-bold text-slate-800 line-clamp-1">{pair.name}</div>
-                          <div className="text-[8px] text-slate-400 mt-0.5">{pair.label}</div>
-                          <div className="text-[11px] mt-1.5 line-clamp-1 font-semibold" style={{ fontFamily: `"${pair.title}", cursive` }}>Gelin & Damat</div>
-                          <div className="text-[9px] opacity-75 line-clamp-1" style={{ fontFamily: `"${pair.body}", sans-serif` }}>Tarih ve detaylar</div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                   <div>
-                    <label className="block text-sm font-medium mb-2">
-                      ✍️ İsimler Yazı Tipi 
-                      <span className="text-slate-400 font-normal ml-1 text-xs">(Gelin & Damat)</span>
-                    </label>
-                    <select value={namesFontFamily || fontFamily} onChange={e => setNamesFontFamily(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50 text-sm">
-                      <optgroup label="Romantik El Yazısı (Kaligrafi)">
-                        <option value="Great Vibes">Great Vibes</option>
-                        <option value="Parisienne">Parisienne</option>
-                        <option value="Alex Brush">Alex Brush</option>
-                        <option value="Dancing Script">Dancing Script</option>
-                        <option value="Allura">Allura</option>
-                        <option value="Arizonia">Arizonia</option>
-                        <option value="Pinyon Script">Pinyon Script</option>
-                        <option value="Sacramento">Sacramento</option>
-                        <option value="Tangerine">Tangerine</option>
-                        <option value="Yellowtail">Yellowtail</option>
-                        <option value="Italianno">Italianno</option>
-                        <option value="Monsieur La Doulaise">Monsieur La Doulaise</option>
-                      </optgroup>
-                      <optgroup label="Zarif & Şık (Serif)">
-                        <option value="Cormorant Garamond">Cormorant Garamond</option>
-                        <option value="Playfair Display">Playfair Display</option>
-                        <option value="Cinzel">Cinzel</option>
-                        <option value="Italiana">Italiana</option>
-                        <option value="Bodoni Moda">Bodoni Moda</option>
-                        <option value="Cinzel Decorative">Cinzel Decorative</option>
-                      </optgroup>
-                      <optgroup label="Modern & Sade (Sans-serif)">
-                        <option value="Montserrat">Montserrat</option>
-                        <option value="Inter">Inter</option>
-                        <option value="Outfit">Outfit</option>
-                        <option value="Raleway">Raleway</option>
-                        <option value="Poppins">Poppins</option>
-                      </optgroup>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">
-                      📝 Genel Yazı Tipi
-                      <span className="text-slate-400 font-normal ml-1 text-xs">(Tarih, Mekan, Detaylar)</span>
-                    </label>
-                    <select value={fontFamily} onChange={e => setFontFamily(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50 text-sm">
-                      <optgroup label="Romantik El Yazısı (Kaligrafi)">
-                        <option value="Great Vibes">Great Vibes</option>
-                        <option value="Parisienne">Parisienne</option>
-                        <option value="Alex Brush">Alex Brush</option>
-                        <option value="Dancing Script">Dancing Script</option>
-                        <option value="Allura">Allura</option>
-                        <option value="Arizonia">Arizonia</option>
-                        <option value="Pinyon Script">Pinyon Script</option>
-                        <option value="Sacramento">Sacramento</option>
-                        <option value="Tangerine">Tangerine</option>
-                        <option value="Yellowtail">Yellowtail</option>
-                        <option value="Yesteryear">Yesteryear</option>
-                        <option value="Playball">Playball</option>
-                        <option value="Clicker Script">Clicker Script</option>
-                        <option value="Italianno">Italianno</option>
-                        <option value="Herr Von Muellerhoff">Herr Von Muellerhoff</option>
-                        <option value="Monsieur La Doulaise">Monsieur La Doulaise</option>
-                        <option value="Niconne">Niconne</option>
-                        <option value="Marck Script">Marck Script</option>
-                      </optgroup>
-                      <optgroup label="Zarif & Şık (Serif)">
-                        <option value="Cormorant Garamond">Cormorant Garamond</option>
-                        <option value="Playfair Display">Playfair Display</option>
-                        <option value="Cinzel">Cinzel</option>
-                        <option value="Italiana">Italiana</option>
-                        <option value="Bodoni Moda">Bodoni Moda</option>
-                        <option value="Prata">Prata</option>
-                        <option value="Cardo">Cardo</option>
-                        <option value="Oranienbaum">Oranienbaum</option>
-                        <option value="Cinzel Decorative">Cinzel Decorative</option>
-                      </optgroup>
-                      <optgroup label="Modern & Sade (Sans-serif)">
-                        <option value="Montserrat">Montserrat</option>
-                        <option value="Inter">Inter</option>
-                        <option value="Outfit">Outfit</option>
-                        <option value="League Spartan">League Spartan</option>
-                        <option value="Lato">Lato</option>
-                        <option value="Raleway">Raleway</option>
-                        <option value="Quicksand">Quicksand</option>
-                        <option value="Josefin Sans">Josefin Sans</option>
-                        <option value="Poppins">Poppins</option>
-                      </optgroup>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Color Palettes Presets */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">🎨 Hazır Renk Paletleri</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
-                    {[
-                      { name: '🍂 Bohem Toprak', primary: '#8c6239', text: '#4a3728', bg: 'paper-kraft', label: 'Toprak Tonları' },
-                      { name: '🌌 Gece Mavisi & Altın', primary: '#dfc384', text: '#f8fafc', bg: 'velvet-navy', label: 'Lüks Kontrast' },
-                      { name: '🌹 Gül Kurusu', primary: '#be123c', text: '#4c0519', bg: 'solid-blush', label: 'Zarif Pembe' },
-                      { name: '🌲 Zarif Zümrüt', primary: '#10b981', text: '#064e3b', bg: 'marble-green', label: 'Doğal & Şık' },
-                      { name: '🍇 Mürdüm & Gümüş', primary: '#94a3b8', text: '#fdf4ff', bg: 'solid-plum', label: 'Monokrom Pastel' },
-                      { name: '🍷 Klasik Aşk', primary: '#9f1239', text: '#ffe4e6', bg: 'solid-crimson', label: 'Asil Bordo' }
-                    ].map(palette => {
-                      const isActive = primaryColor === palette.primary && textColor === palette.text && envelopeBgColor === palette.bg;
-                      return (
-                        <button
-                          key={palette.name}
-                          type="button"
-                          onClick={() => {
-                            setPrimaryColor(palette.primary);
-                            setTextColor(palette.text);
-                            setEnvelopeBgColor(palette.bg);
-                          }}
-                          className={`p-2.5 rounded-xl border text-left transition-all hover:bg-slate-50 active:scale-95 flex flex-col justify-between ${isActive ? 'border-rose-500 bg-rose-50/10 ring-2 ring-rose-100' : 'border-slate-200 bg-white'}`}
-                        >
-                          <div>
-                            <div className="text-[10px] font-bold text-slate-800 line-clamp-1">{palette.name}</div>
-                            <div className="text-[8px] text-slate-400 mt-0.5">{palette.label}</div>
-                          </div>
-                          <div className="flex gap-1 mt-2.5">
-                            <div className="w-4 h-4 rounded-full border border-black/5 shadow-inner" style={{ backgroundColor: palette.primary }} title="Ana Renk"></div>
-                            <div className="w-4 h-4 rounded-full border border-black/5 shadow-inner" style={{ backgroundColor: palette.text }} title="Metin Rengi"></div>
-                            <div className="w-4 h-4 rounded-full border border-black/5 shadow-inner animate-pulse" style={{ backgroundColor: '#e2e8f0' }} title="Arka Plan"></div>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Ana Renk (Tasarım)</label>
-                    <div className="flex items-center gap-4">
-                      <input type="color" value={primaryColor} onChange={e => setPrimaryColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
-                      <span className="text-slate-500 font-mono text-sm">{primaryColor}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Metin Rengi</label>
-                    <div className="flex items-center gap-4">
-                      <input type="color" value={textColor} onChange={e => setTextColor(e.target.value)} className="w-12 h-12 rounded cursor-pointer" />
-                      <span className="text-slate-500 font-mono text-sm">{textColor}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Dark Mode Switcher */}
-                <div className="mb-4">
-                  <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
-                    <div>
-                      <div className="font-bold text-slate-850 text-xs flex items-center gap-1.5">
-                        <span>🌙</span> Gece Modu (Koyu Tema)
-                      </div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Davetiyeyi siyah, altın ve koyu tonlara uyarla.</div>
-                    </div>
-                    <div className="relative shrink-0">
-                      <input 
-                        type="checkbox" 
-                        className="sr-only" 
-                        checked={isDarkMode} 
-                        onChange={e => {
-                          const val = e.target.checked;
-                          setIsDarkMode(val);
-                          if (val) {
-                            setPrimaryColor('#dfc384');
-                            setTextColor('#f8fafc');
-                            setEnvelopeBgColor('marble-black');
-                            setEnvelopeColor('#111111');
-                          } else {
-                            const preset = getTemplatePreset(templateId);
-                            setPrimaryColor(preset.primary_color);
-                            setTextColor(preset.text_color || '#1e293b');
-                            setEnvelopeBgColor(preset.envelope_bg_color || 'solid-ivory');
-                            setEnvelopeColor(preset.envelope_color || '#e6d5c3');
-                          }
-                        }} 
-                      />
-                      <div className={`block w-10 h-5 rounded-full transition-colors ${isDarkMode ? 'bg-indigo-600' : 'bg-slate-300'}`}></div>
-                      <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${isDarkMode ? 'transform translate-x-5' : ''}`}></div>
-                    </div>
-                  </label>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Arkaplan Görseli</label>
-                  <div className="flex flex-col gap-3">
-                    <div className="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center hover:bg-slate-50 transition-colors">
-                      <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" id="file-upload" disabled={isUploading} />
-                      <label htmlFor="file-upload" className="cursor-pointer flex flex-col items-center justify-center gap-1">
-                        <span className="font-bold text-slate-700 text-sm">
-                          {isUploading ? "Yükleniyor..." : "Bilgisayardan Fotoğraf Yükle"}
-                        </span>
-                        <span className="text-[10px] text-slate-400">Telegram Bot ile sınırsız depolama</span>
-                      </label>
-                    </div>
-                    <input type="text" value={bgImageUrl} onChange={e => setBgImageUrl(e.target.value)} placeholder="veya manuel URL gir: https://..." className="w-full border p-2 rounded-lg bg-white text-slate-700 text-xs font-mono placeholder:text-slate-400" />
-                  </div>
-                </div>
-
-                {/* Birleşik Arka Plan (Zemin Tasarımı) */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">Arka Plan (Zemin Tasarımı)</label>
-                  <select value={envelopeBgColor} onChange={e => setEnvelopeBgColor(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50 text-sm">
-                    <option value="white-gold-marble">⚪ Beyaz Altın Mermer</option>
-                    <option value="black-gold-velvet">⚫ Siyah Gold Kadife</option>
-                    <option value="rose-gold-silk">🌸 Rose Gold İpek</option>
-                    <option value="minimal-white-paper">📄 Minimal Beyaz Kağıt</option>
-                    <option value="bohemian-kraft">📦 Bohem Kraft Kağıt</option>
-                    <option value="navy-gold-night">🌌 Lacivert Gold Gece</option>
-                    <option value="marble-gold">🏛️ Altın Damarlı Mermer</option>
-                    <option value="pastel-floral">💐 Pastel Çiçekli</option>
-                    <option value="glass-blur-modern">🔮 Modern Cam Reveal</option>
-                    <option value="champagne-gold">🥂 Şampanya Gold Lüks</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Arkaplan Animasyonu</label>
-                  <select value={effectType} onChange={e => setEffectType(e.target.value)} className="w-full border p-2 rounded-lg bg-slate-50">
-                    <option value="">Yok (Sade)</option>
-                    <option value="sakura">🌸 Uçan Kiraz Çiçekleri (Sakura)</option>
-                    <option value="leaves">🍁 Dökülen Sonbahar Yaprakları</option>
-                    <option value="stars">✨ Parlayan Gece Yıldızları</option>
-                    <option value="fireflies">💡 Işıldayan Ateş Böcekleri</option>
-                    <option value="rain">🌧️ Romantik Yağmur Damlaları</option>
-                    <option value="confetti">🎉 Altın Konfeti Yağmuru</option>
-                    <option value="bubbles">🫧 Uçan Baloncuklar</option>
-                    <option value="sparkles">✨ Altın/Gümüş Işıltılar</option>
-                    <option value="hearts">❤️ Uçan Kalpler</option>
-                    <option value="snow">❄️ Kar Taneleri</option>
-                  </select>
-                  <p className="text-xs text-slate-400 mt-1">Sitenin en arkasında sürekli hareket eden zarif animasyonlar.</p>
-                </div>
-              </div>
-
-                </>
-              )}
-
-              {activeMainTab === 'animasyon' && (
-                <>
-                  {/* BÖLÜM 3: EKSTRA AYARLAR */}
-                  <div className="mt-8 pt-6 border-t border-slate-200 space-y-6">
-                    
-                    <div>
-                      <h3 className="font-bold text-lg mb-4 text-slate-800">Site Giriş Animasyonu</h3>
-                  <label className="flex items-center justify-between p-4 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                <h3 className="font-bold text-lg mb-4 text-slate-800">Site Giriş Animasyonu</h3>
+                  <label className="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm shadow-inner border rounded-xl cursor-pointer hover:bg-slate-100">
                     <div>
                       <div className="font-bold text-slate-800 text-sm">Giriş Kapak Animasyonu</div>
                       <div className="text-xs text-slate-500 mt-1">Siteye ilk girildiğinde lüks bir giriş kapak animasyonu gösterilsin.</div>
@@ -1994,7 +1999,7 @@ export default function CoupleAdminPage({
                   </h3>
                   <div className="space-y-4">
                     {/* Audio Player Previews & Uploads */}
-                    <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-4 text-slate-700 space-y-3">
+                    <div className="bg-white/50 backdrop-blur-sm shadow-inner border border-slate-200/60 rounded-2xl p-4 text-slate-700 space-y-3">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-500 shrink-0">
                           <Music className="w-5 h-5" />
@@ -2068,13 +2073,13 @@ export default function CoupleAdminPage({
                           value={musicUrl === 'custom' ? '' : musicUrl} 
                           onChange={e => setMusicUrl(e.target.value)} 
                           placeholder="https://örnek.com/muzik.mp3" 
-                          className="w-full border p-2.5 rounded-lg bg-slate-50 text-xs font-mono" 
+                          className="w-full border p-2.5 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner text-xs font-mono" 
                         />
                         <p className="text-[10px] text-slate-400 mt-1">Yükleme yapmadıysanız doğrudan bir .mp3 linki de yapıştırabilirsiniz.</p>
                       </div>
                     )}
 
-                    <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100 mt-2">
+                    <label className="flex items-center justify-between p-3 bg-white/50 backdrop-blur-sm shadow-inner border rounded-xl cursor-pointer hover:bg-slate-100 mt-2">
                       <div>
                         <div className="font-bold text-slate-800 text-xs">Müziği Otomatik Başlat</div>
                         <div className="text-[10px] text-slate-500 mt-0.5">Zarf veya kapı açıldığı anda melodi otomatik çalsın.</div>
@@ -2105,7 +2110,7 @@ export default function CoupleAdminPage({
                   
                   <div className="space-y-3">
                     {/* Fotoğraf Alanı */}
-                    <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                    <label className="flex items-center justify-between p-3 bg-white/50 backdrop-blur-sm shadow-inner border rounded-xl cursor-pointer hover:bg-slate-100">
                       <div>
                         <div className="font-bold text-slate-800 text-xs">Fotoğraf Alanı & Albüm</div>
                         <div className="text-[10px] text-slate-500 mt-0.5">Misafirlerin fotoğraf yüklemesi ve polaroid albüm görünümü.</div>
@@ -2118,7 +2123,7 @@ export default function CoupleAdminPage({
                     </label>
 
                     {/* LCV Formu */}
-                    <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                    <label className="flex items-center justify-between p-3 bg-white/50 backdrop-blur-sm shadow-inner border rounded-xl cursor-pointer hover:bg-slate-100">
                       <div>
                         <div className="font-bold text-slate-800 text-xs">LCV / Katılım Formu</div>
                         <div className="text-[10px] text-slate-500 mt-0.5">Misafirlerin katılım durumlarını (geliyor/gelmiyor) bildirme alanı.</div>
@@ -2131,7 +2136,7 @@ export default function CoupleAdminPage({
                     </label>
 
                     {/* Anı Defteri */}
-                    <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                    <label className="flex items-center justify-between p-3 bg-white/50 backdrop-blur-sm shadow-inner border rounded-xl cursor-pointer hover:bg-slate-100">
                       <div>
                         <div className="font-bold text-slate-800 text-xs">Anı Defteri</div>
                         <div className="text-[10px] text-slate-500 mt-0.5">Misafirlerinizin bıraktığı iyi dilek mesajlarının sergilenmesi.</div>
@@ -2145,7 +2150,7 @@ export default function CoupleAdminPage({
 
                     {/* Geri Sayım Sayacı */}
                     <div className="space-y-2">
-                      <label className="flex items-center justify-between p-3 bg-slate-50 border rounded-xl cursor-pointer hover:bg-slate-100">
+                      <label className="flex items-center justify-between p-3 bg-white/50 backdrop-blur-sm shadow-inner border rounded-xl cursor-pointer hover:bg-slate-100">
                         <div>
                           <div className="font-bold text-slate-800 text-xs">Geri Sayım Sayacı</div>
                           <div className="text-[10px] text-slate-500 mt-0.5">Etkinlik gününe ve saatine kalan süreyi gösteren geri sayım.</div>
@@ -2172,7 +2177,7 @@ export default function CoupleAdminPage({
                                 key={style.id}
                                 type="button"
                                 onClick={() => setCountdownStyle(style.id)}
-                                className={`py-2 px-1 text-[10px] font-bold rounded-lg border text-center transition-all ${countdownStyle === style.id ? 'border-rose-500 bg-rose-50/15 text-rose-600 shadow-xs' : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                                className={`py-2 px-1 text-[10px] font-bold rounded-lg border text-center transition-all ${countdownStyle === style.id ? 'border-rose-500 bg-rose-50/15 text-rose-600 shadow-xs' : 'border-slate-200 bg-white/50 backdrop-blur-sm shadow-inner text-slate-600 hover:bg-slate-100'}`}
                               >
                                 {style.label}
                               </button>
@@ -2192,7 +2197,7 @@ export default function CoupleAdminPage({
               {activeMainTab === 'entegrasyonlar' && (
                 <>
                   {/* === TELEGRAM FOTOĞRAF BOTU SİHİRBAZI === */}
-                  <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-6 text-slate-700">
+                  <div className="bg-white/50 backdrop-blur-sm shadow-inner border border-slate-200/60 rounded-2xl p-6 text-slate-700">
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="font-serif font-bold text-lg text-slate-800 flex items-center gap-2">
                       <span>🤖</span> Telegram Fotoğraf Botunuzu Kurun
@@ -2341,7 +2346,7 @@ export default function CoupleAdminPage({
                                 value={telegramChatId || ''}
                                 onChange={e => setTelegramChatId(e.target.value.replace(/[^0-9-]/g, ''))}
                                 placeholder="Örn: -1001234567890"
-                                className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-rose-400 focus:outline-none bg-slate-50 text-slate-800 placeholder:text-slate-400 font-mono"
+                                className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-rose-400 focus:outline-none bg-white/50 backdrop-blur-sm shadow-inner text-slate-800 placeholder:text-slate-400 font-mono"
                               />
                               <button
                                 type="button"
@@ -2386,7 +2391,7 @@ export default function CoupleAdminPage({
                 <h2 className="text-2xl font-bold mb-2 text-slate-800">Davetiyeniz Yayında! 🎉</h2>
                 <p className="text-slate-500 text-sm mb-6">Ödemeniz onaylanmıştır. Paylaşım linkinizi kopyalayarak misafirlerinize gönderebilirsiniz.</p>
 
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left mb-6">
+                <div className="bg-white/50 backdrop-blur-sm shadow-inner border border-slate-200 rounded-2xl p-5 text-left mb-6">
                   <p className="font-bold text-slate-700 text-xs mb-1.5 flex items-center gap-1">
                     <Share2 className="w-4 h-4 text-emerald-600" /> Davetiye Paylaşım Bağlantınız:
                   </p>
@@ -2461,8 +2466,8 @@ export default function CoupleAdminPage({
                   <Lock className="w-4 h-4" /> Davetiyenizi önizleyebilirsiniz. Yayına almak için ödeme gereklidir.
                 </button>
                 
-                <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 text-left mb-6 text-xs">
-                  <h3 className="font-bold text-slate-800 mb-3 border-b pb-2">Banka Hesap Bilgileri</h3>
+                <div className="bg-white/50 backdrop-blur-sm shadow-inner p-6 rounded-xl border border-slate-200 text-left mb-6 text-xs">
+                  <h3 className="font-bold text-slate-800 mb-3 border-b border-rose-100 pb-3">Banka Hesap Bilgileri</h3>
                   <div className="space-y-2 text-slate-600">
                     <p><span className="text-slate-400 font-medium">Banka:</span> Moka United Ödeme Hizmetleri ve Elektronik Para Kuruluşu A.Ş</p>
                     <p>
@@ -2547,7 +2552,7 @@ export default function CoupleAdminPage({
               {previewDevice !== 'tablet' && (
                 <div className="absolute top-4 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-3xl z-20"></div>
               )}
-              <div className="w-full h-full bg-slate-50 rounded-[2.2rem] overflow-y-auto overflow-x-hidden relative">
+              <div className="w-full h-full bg-white/50 backdrop-blur-sm shadow-inner rounded-[2.2rem] overflow-y-auto overflow-x-hidden relative">
                 {wedding && liveWeddingData ? (
                   <PremiumTemplateRenderer 
                     wedding={liveWeddingData} 
@@ -2587,7 +2592,7 @@ export default function CoupleAdminPage({
               <button 
                 type="button" 
                 onClick={() => setIsAnimationModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 font-bold text-lg p-1.5 hover:bg-slate-50 rounded-xl transition-all"
+                className="text-slate-400 hover:text-slate-600 font-bold text-lg p-1.5 hover:bg-white/50 backdrop-blur-sm shadow-inner rounded-xl transition-all"
               >
                 ✕
               </button>
@@ -2623,7 +2628,7 @@ export default function CoupleAdminPage({
                     className={`flex items-center justify-between p-3 rounded-2xl border transition-all ${
                       isSelected 
                         ? 'border-rose-500 bg-rose-50/5 shadow-xs ring-1 ring-rose-100' 
-                        : 'border-slate-100 bg-slate-50/40 hover:bg-slate-50'
+                        : 'border-slate-100 bg-white/50 backdrop-blur-sm shadow-inner/40 hover:bg-white/50 backdrop-blur-sm shadow-inner'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -2646,7 +2651,7 @@ export default function CoupleAdminPage({
                       className={`px-3 py-1.5 text-[10px] font-bold rounded-xl transition-all ${
                         isSelected 
                           ? 'bg-rose-500 text-white hover:bg-rose-600 shadow-xs' 
-                          : 'bg-white border border-slate-200 hover:bg-slate-50 text-slate-700'
+                          : 'bg-white border border-slate-200 hover:bg-white/50 backdrop-blur-sm shadow-inner text-slate-700'
                       }`}
                     >
                       {isSelected ? 'Seçildi' : 'Seç'}
@@ -2657,7 +2662,7 @@ export default function CoupleAdminPage({
             </div>
             
             {/* Modal Footer */}
-            <div className="p-4 border-t bg-slate-50 text-right">
+            <div className="p-4 border-t bg-white/50 backdrop-blur-sm shadow-inner text-right">
               <button
                 type="button"
                 onClick={() => setIsAnimationModalOpen(false)}
@@ -2695,7 +2700,7 @@ export default function CoupleAdminPage({
               <button
                 type="button"
                 onClick={() => setRsvpToDelete(null)}
-                className="flex-1 py-2.5 px-4 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl hover:bg-slate-50 active:scale-95 transition-all cursor-pointer"
+                className="flex-1 py-2.5 px-4 border border-slate-200 text-slate-700 text-xs font-semibold rounded-xl hover:bg-white/50 backdrop-blur-sm shadow-inner active:scale-95 transition-all cursor-pointer"
               >
                 Vazgeç
               </button>
