@@ -7,6 +7,45 @@ interface BackgroundParticlesProps {
 }
 
 export default function BackgroundParticles({ animationType, primaryColor = '#d4af37' }: BackgroundParticlesProps) {
+  if (['goldenDust', 'rosePetals', 'sakura', 'bokehLights', 'heartsRain', 'starShower', 'pearlSparkle', 'mistCloud', 'confettiBurst', 'autumnLeaves', 'waveReflection', 'silkWave', 'candleFlicker', 'neonGradient', 'marbleLight'].includes(animationType)) {
+    const config: Record<string, { cls: string; count: number; content?: string[]; noPos?: boolean }> = {
+      goldenDust: { cls: 'golden-dust-particles', count: 30 },
+      rosePetals: { cls: 'rose-petals-particles', count: 30 },
+      sakura: { cls: 'sakura-particles', count: 30 },
+      bokehLights: { cls: 'bokeh-lights-particles', count: 20 },
+      heartsRain: { cls: 'hearts-rain-particles', count: 30, content: ['❤️', '🩷', '💕', '💗'] },
+      starShower: { cls: 'star-shower-particles', count: 30 },
+      pearlSparkle: { cls: 'pearl-sparkle-particles', count: 30 },
+      mistCloud: { cls: 'mist-cloud-particles', count: 5 },
+      confettiBurst: { cls: 'confetti-burst-particles', count: 30 },
+      autumnLeaves: { cls: 'autumn-leaves-particles', count: 30 },
+      waveReflection: { cls: 'wave-reflection-particles', count: 3, noPos: true },
+      silkWave: { cls: 'silk-wave-particles', count: 3, noPos: true },
+      candleFlicker: { cls: 'candle-flicker-particles', count: 10 },
+      neonGradient: { cls: 'neon-gradient-particles', count: 5 },
+      marbleLight: { cls: 'marble-light-particles', count: 5, noPos: true }
+    };
+    const c = config[animationType];
+    return (
+      <div className={`absolute inset-0 overflow-hidden pointer-events-none z-0 ${c.cls}`} aria-hidden="true">
+        {Array.from({ length: c.count }).map((_, i) => {
+          const style: any = { '--i': i };
+          if (!c.noPos) {
+            style.left = `${Math.random() * 100}%`;
+            if (['bokehLights', 'pearlSparkle', 'mistCloud', 'candleFlicker', 'neonGradient'].includes(animationType)) {
+              style.top = `${Math.random() * 100}%`;
+            }
+          }
+          return (
+            <span key={i} style={style}>
+              {c.content ? c.content[i % c.content.length] : null}
+            </span>
+          );
+        })}
+      </div>
+    );
+  }
+
   // Normalize new keys to existing keys
   let normalizedType = animationType;
   if (animationType === 'goldParticles') normalizedType = 'gold-dust';
