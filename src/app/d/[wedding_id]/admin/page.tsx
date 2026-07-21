@@ -572,9 +572,9 @@ export default function CoupleAdminPage({
     if (theme.entrance_type) setEntranceType(theme.entrance_type);
     if (theme.effect_type !== undefined) setEffectType(theme.effect_type || '');
 
-    // If user hasn't manually customized opening, apply template recommendedOpeningType
-    if (theme.recommendedOpeningType && !userChangedOpeningType) {
+    if (theme.recommendedOpeningType) {
       setEntranceAnimation(theme.recommendedOpeningType);
+      setUserChangedOpeningType(false);
     }
     if (theme.recommendedOpeningStyle) {
       setEnvelopeStyle(theme.recommendedOpeningStyle);

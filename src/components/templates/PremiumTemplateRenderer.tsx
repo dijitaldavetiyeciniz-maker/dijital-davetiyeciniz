@@ -326,12 +326,12 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
 
   const renderNames = () => (
     <h1 
-      className="text-4xl md:text-5xl lg:text-6xl mb-6 mt-4 leading-tight font-normal select-none relative z-10"
+      className="text-[clamp(2.5rem,8vw,4.5rem)] mb-6 mt-4 leading-[1.1] font-normal select-none relative z-10 w-full"
       style={{ color: textColor, fontFamily: `"${headingFont}", cursive, serif` }}
     >
       {wedding.bride_parents && (
         <span 
-          className="text-[10px] tracking-[0.25em] font-light mb-3 block"
+          className="text-[10px] tracking-[0.25em] font-light mb-4 block"
           style={{ color: textColor, opacity: 0.6, fontFamily: 'Inter, system-ui, sans-serif' }}
         >
           {wedding.bride_parents}
@@ -609,10 +609,10 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   };
 
   const renderCenteredLayout = () => (
-    <div className={`max-w-[460px] mx-auto w-full p-8 sm:p-10 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
+    <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-12 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
       {renderContextualDecorations()}
       {renderCardBorder()}
-      <div className="mb-4 z-10"><Crown className="w-8 h-8 animate-bounce mx-auto" style={{ color: primaryColor }} /></div>
+      <div className="mb-4 z-10"><Crown className="w-8 h-8 mx-auto opacity-80" style={{ color: primaryColor }} /></div>
       {renderHeader()}
       {renderMonogramDivider()}
       {renderNames()}
@@ -626,7 +626,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderAsymmetricLayout = () => (
-    <div className={`max-w-[460px] mx-auto w-full p-8 sm:p-10 text-left relative z-10 border shadow-2xl my-8 flex flex-col ${cardShapeClass}`} style={cardStyles}>
+    <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-12 text-left relative z-10 border shadow-2xl my-8 flex flex-col ${cardShapeClass}`} style={cardStyles}>
       {renderContextualDecorations()}
       {renderCardBorder()}
       <div className="w-full flex justify-between items-start mb-12 relative z-10">
@@ -645,11 +645,11 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
       </div>
       
       <div className="relative z-10 mb-8 mt-4">
-        <h1 className="text-5xl leading-tight font-normal" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+        <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] leading-[1.1] font-normal" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
           <span className="block px-2">{wedding.bride_name}</span>
         </h1>
         {wedding.groom_name && (
-          <h1 className="text-5xl leading-tight font-normal text-right mt-2" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+          <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] leading-[1.1] font-normal text-right mt-2" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
             <span className="text-3xl mr-4 opacity-70" style={{ color: primaryColor, fontFamily: 'sans-serif' }}>&</span>
             <span className="block px-2">{wedding.groom_name}</span>
           </h1>
@@ -668,7 +668,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderBotanicalLayout = () => (
-    <div className={`max-w-[460px] mx-auto w-full p-8 sm:p-12 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
+    <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-14 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
       {renderContextualDecorations()}
       <div className="absolute top-0 left-0 w-full h-32 opacity-30 pointer-events-none rounded-t-3xl overflow-hidden">
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full" style={{ fill: primaryColor }}>
@@ -700,24 +700,26 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderCircularLayout = () => (
-    <div className={`max-w-[460px] mx-auto w-full p-6 sm:p-8 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
+    <div className={`max-w-[500px] mx-auto w-full p-6 sm:p-10 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
       {renderContextualDecorations()}
       {renderCardBorder()}
       
-      <div className="w-64 h-64 mx-auto rounded-full border flex flex-col items-center justify-center relative z-10 mb-10 p-4 shadow-sm" style={{ borderColor: `${primaryColor}80`, backgroundColor: `rgba(255,255,255,0.03)` }}>
+      <div className="w-[80vw] h-[80vw] max-w-[300px] max-h-[300px] mx-auto rounded-full border flex flex-col items-center justify-center relative z-10 mb-10 p-4 shadow-sm" style={{ borderColor: `${primaryColor}80`, backgroundColor: `rgba(255,255,255,0.03)` }}>
         <div className="absolute inset-2 rounded-full border border-dashed opacity-50" style={{ borderColor: primaryColor }} />
-        {renderHeader()}
-        <h1 className="text-4xl leading-none font-normal" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
-          {wedding.bride_name}
-        </h1>
-        {wedding.groom_name && (
-          <>
-            <span className="text-2xl my-3 opacity-80 block" style={{ color: primaryColor, fontFamily: `"${accentFont}", cursive` }}>and</span>
-            <h1 className="text-4xl leading-none font-normal" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
-              {wedding.groom_name}
-            </h1>
-          </>
-        )}
+        <div className="scale-90 flex flex-col items-center">
+          {renderHeader()}
+          <h1 className="text-[clamp(2rem,6vw,3.5rem)] leading-none font-normal mt-2" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+            {wedding.bride_name}
+          </h1>
+          {wedding.groom_name && (
+            <>
+              <span className="text-xl my-2 opacity-80 block" style={{ color: primaryColor, fontFamily: `"${accentFont}", cursive` }}>and</span>
+              <h1 className="text-[clamp(2rem,6vw,3.5rem)] leading-none font-normal" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+                {wedding.groom_name}
+              </h1>
+            </>
+          )}
+        </div>
       </div>
 
       {renderQuote()}
@@ -734,17 +736,17 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderMinimalCardLayout = () => (
-    <div className={`max-w-[420px] mx-auto w-full p-8 sm:p-12 text-center relative z-10 shadow-lg my-8 flex flex-col items-center ${cardShapeClass}`} style={{ ...cardStyles, border: 'none' }}>
+    <div className="max-w-[600px] mx-auto w-full py-16 px-4 sm:px-8 text-center relative z-10 flex flex-col items-center">
       {renderContextualDecorations()}
-      <div className="w-12 h-[2px] mb-12" style={{ backgroundColor: primaryColor }} />
+      <Infinity className="w-8 h-8 mb-8 opacity-60" style={{ color: primaryColor }} />
       
-      <h1 className="text-5xl mb-8 leading-tight font-light tracking-wide uppercase" style={{ color: textColor, fontFamily: `"${headingFont}", sans-serif` }}>
+      <h1 className="text-[clamp(3rem,10vw,5.5rem)] mb-8 leading-[1.1] font-light tracking-wide uppercase w-full" style={{ color: textColor, fontFamily: `"${headingFont}", sans-serif` }}>
         {wedding.bride_name} <br/>
         {wedding.groom_name && <span className="text-3xl my-4 block opacity-60 lowercase" style={{ fontFamily: `"${accentFont}", serif`, color: primaryColor }}>and</span>}
         {wedding.groom_name}
       </h1>
       
-      <div className="w-full flex justify-between items-center my-8 text-[10px] font-bold tracking-[0.25em] uppercase border-y py-4" style={{ borderColor: `${primaryColor}40`, color: textColor }}>
+      <div className="w-full max-w-sm flex justify-between items-center my-10 text-[10px] font-bold tracking-[0.25em] uppercase border-y py-5" style={{ borderColor: `${primaryColor}40`, color: textColor }}>
         <span>{dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}</span>
         <span className="opacity-40">|</span>
         <span>{eventTitle}</span>
@@ -760,9 +762,46 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     </div>
   );
 
+  const renderFullBleedLayout = () => (
+    <div className="w-full min-h-screen py-20 px-4 sm:px-8 text-center relative z-10 flex flex-col items-center justify-center">
+      {renderContextualDecorations()}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={cardStyles}></div>
+      
+      <div className="relative z-10 max-w-2xl mx-auto flex flex-col items-center w-full">
+        {renderHeader()}
+        
+        <h1 className="text-[clamp(3.5rem,12vw,7rem)] my-8 leading-[1] font-normal w-full" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+          {wedding.bride_name}
+          {wedding.groom_name && (
+            <>
+              <span className="text-4xl mx-4 opacity-70 italic" style={{ color: primaryColor, fontFamily: `"${accentFont}", serif` }}>&</span>
+              <br className="md:hidden" />
+              {wedding.groom_name}
+            </>
+          )}
+        </h1>
+        
+        <div className="w-16 h-[2px] mx-auto my-8" style={{ backgroundColor: primaryColor }} />
+        
+        <div className="text-2xl md:text-3xl font-light tracking-widest mb-12" style={{ color: textColor }}>
+          {dateObj.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\./g, ' . ')}
+        </div>
+
+        {renderQuote()}
+        {renderTimer()}
+        <div className="w-full max-w-md mx-auto mt-8">
+          {renderDetails()}
+        </div>
+        {renderRsvpButton()}
+        {renderGuestBook()}
+      </div>
+    </div>
+  );
+
   const renderLayout = () => {
     const layoutStyle = themeConfig.layoutStyle || 'centered';
     switch (layoutStyle) {
+      case 'fullscreen-photo': return renderFullBleedLayout();
       case 'asymmetric': return renderAsymmetricLayout();
       case 'botanical-border': return renderBotanicalLayout();
       case 'circular': return renderCircularLayout();
