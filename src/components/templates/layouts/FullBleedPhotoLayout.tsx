@@ -83,7 +83,7 @@ export default function FullBleedPhotoLayout({
               className="w-full h-full object-cover transition-transform duration-[12000ms] ease-out motion-safe:scale-105 motion-safe:hover:scale-100"
               style={{ objectPosition }}
               loading="eager"
-              priority="true"
+              {...({ fetchPriority: 'high' } as any)}
             />
             {/* Fotoğraf üstü gradient koruması (metin okunabilirliği için) */}
             <div className={`absolute inset-0 z-10 pointer-events-none transition-opacity ${overlayColorClass}`} />
@@ -106,8 +106,11 @@ export default function FullBleedPhotoLayout({
 
         {/* 2. POZİSYON BAZLI İÇERİK BLOKLARI (Safe Area ve Çentik Korumalı) */}
         <div 
-          className={`relative z-20 w-full px-6 sm:px-10 pb-10 pt-28 flex flex-col justify-end min-h-[450px] text-left safe-bottom`}
-          style={{ color: displayTextColor }}
+          className={`relative z-20 w-full px-6 sm:px-10 pb-10 pt-28 flex flex-col justify-end min-h-[450px] text-left`}
+          style={{ 
+            color: displayTextColor,
+            paddingBottom: 'calc(2.5rem + env(safe-area-inset-bottom))'
+          }}
         >
           
           {/* VARYANT 1: ALT MERKEZ BİLGİ PANELİ */}
