@@ -14,6 +14,7 @@ import BackgroundAnimation from '../BackgroundAnimation';
 import { backgroundDesignRegistry } from '@/lib/registries';
 import FoldedSealLayout from './layouts/FoldedSealLayout';
 import GiantMonogramLayout from './layouts/GiantMonogramLayout';
+import PhotoLuxuryLayout from './layouts/PhotoLuxuryLayout';
 
 interface TemplateProps {
   wedding: any;
@@ -760,6 +761,28 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
       case 'monogram-media':
         return (
           <GiantMonogramLayout 
+            wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode}
+          />
+        );
+      case 'photo-luxury':
+        return (
+          <PhotoLuxuryLayout 
             wedding={wedding}
             primaryColor={primaryColor}
             textColor={textColor}
