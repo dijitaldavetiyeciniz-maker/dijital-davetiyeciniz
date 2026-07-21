@@ -2559,10 +2559,11 @@ export default function CoupleAdminPage({
               )}
               <div className="w-full h-full bg-white/50 backdrop-blur-sm shadow-inner rounded-[2.2rem] overflow-y-auto overflow-x-hidden relative">
                 {wedding && liveWeddingData ? (
-                  <WeddingClientWrapper key={previewKey} wedding={liveWeddingData}>
+                  <WeddingClientWrapper key={previewKey} wedding={liveWeddingData} mode="preview">
                     <PremiumTemplateRenderer 
                       wedding={liveWeddingData} 
                       templateId={templateId} 
+                      mode="preview"
                     />
                   </WeddingClientWrapper>
                 ) : (

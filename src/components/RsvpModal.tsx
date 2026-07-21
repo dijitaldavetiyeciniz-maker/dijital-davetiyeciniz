@@ -11,6 +11,7 @@ interface RsvpModalProps {
   primaryColor?: string;
   brideName?: string;
   groomName?: string;
+  mode?: 'preview' | 'public';
 }
 
 export default function RsvpModal({ 
@@ -19,7 +20,8 @@ export default function RsvpModal({
   onClose, 
   primaryColor = '#f43f5e',
   brideName = 'Gelin',
-  groomName = 'Damat'
+  groomName = 'Damat',
+  mode = 'public'
 }: RsvpModalProps) {
   const [guestName, setGuestName] = useState('');
   const [isAttending, setIsAttending] = useState<boolean | null>(null);
@@ -34,6 +36,19 @@ export default function RsvpModal({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (isAttending === null) return alert("Lütfen katılım durumunuzu seçin.");
+    
+    if (mode === 'preview') {
+      setIsSubmitting(true);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+          onClose();
+        }, 3000);
+      }, 800);
+      return;
+    }
     
     setIsSubmitting(true);
     const { error } = await supabase.from('rsvps').insert([

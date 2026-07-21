@@ -7,12 +7,13 @@ import BackgroundMusic from '@/components/BackgroundMusic';
 type WeddingClientWrapperProps = {
   wedding: any;
   children: React.ReactNode;
+  mode?: 'preview' | 'public';
 };
 
-export default function WeddingClientWrapper({ wedding, children }: WeddingClientWrapperProps) {
+export default function WeddingClientWrapper({ wedding, children, mode = 'public' }: WeddingClientWrapperProps) {
   const [showEntrance, setShowEntrance] = useState(true);
 
-  const [isPreview, setIsPreview] = useState(false);
+  const [isPreview, setIsPreview] = useState(mode === 'preview');
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.location.search.includes('preview=true')) {

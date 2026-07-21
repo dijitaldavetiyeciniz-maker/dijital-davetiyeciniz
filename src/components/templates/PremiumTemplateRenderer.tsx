@@ -11,13 +11,15 @@ import { getBackgroundStyle, isBackgroundLight } from '@/lib/backgrounds';
 import { supabase } from '@/lib/supabase';
 import { predefinedThemes } from '@/lib/themes';
 import BackgroundAnimation from '../BackgroundAnimation';
+import { backgroundDesignRegistry } from '@/lib/registries';
 
 interface TemplateProps {
   wedding: any;
   templateId: string;
+  mode?: 'preview' | 'public';
 }
 
-export default function PremiumTemplateRenderer({ wedding, templateId }: TemplateProps) {
+export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'public' }: TemplateProps) {
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -105,66 +107,27 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const svgNoise = `data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.055'/%3E%3C/svg%3E`;
 
   const txtId = wedding.background_design || wedding.envelope_bg_color || themeConfig.visualDetails?.texture || 'minimal-white-paper';
+  const registryBg = backgroundDesignRegistry[txtId] || backgroundDesignRegistry['minimal-white-paper'];
 
   if (isDarkModeActive) {
     cardStyles.backgroundImage = `url("${svgNoise}"), radial-gradient(circle at center, #1b1c22 0%, #0d0d12 100%)`;
     cardStyles.color = '#fff8ec';
     cardStyles.borderColor = 'rgba(214, 168, 79, 0.35)';
   } else {
-    if (txtId === 'white-gold-marble' || txtId === 'marble-gold' || txtId === 'marble') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('https://www.transparenttextures.com/patterns/white-marble.png')`;
-      cardStyles.backgroundBlendMode = 'overlay';
-    } else if (txtId === 'black-gold-velvet' || txtId === 'dark-velvet') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), radial-gradient(circle at center, #1b1c22 0%, #08080a 100%)`;
-      cardStyles.color = '#fff8ec';
-      cardStyles.borderColor = 'rgba(215, 179, 104, 0.4)';
-    } else if (txtId === 'rose-gold-silk' || txtId === 'silk-paper') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('https://www.transparenttextures.com/patterns/linen.png')`;
-      cardStyles.backgroundBlendMode = 'overlay';
-      cardStyles.backgroundColor = '#fff1ec';
-    } else if (txtId === 'minimal-white-paper' || txtId === 'fine-paper') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('https://www.transparenttextures.com/patterns/paper-fibers.png')`;
-      cardStyles.backgroundBlendMode = 'overlay';
-    } else if (txtId === 'bohemian-kraft' || txtId === 'kraft') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('https://www.transparenttextures.com/patterns/cardboard-flat.png')`;
-      cardStyles.backgroundBlendMode = 'overlay';
-      cardStyles.backgroundColor = '#ecd5b8';
-    } else if (txtId === 'navy-gold-night' || txtId === 'dark-space') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), radial-gradient(circle at center, #0f1626 0%, #070a12 100%)`;
-      cardStyles.color = '#f8fafc';
-      cardStyles.borderColor = 'rgba(214, 168, 79, 0.35)';
-    } else if (txtId === 'pastel-floral' || txtId === 'damask') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('https://www.transparenttextures.com/patterns/gray-floral-double.png')`;
-      cardStyles.backgroundBlendMode = 'overlay';
-    } else if (txtId === 'glass-blur-modern' || txtId === 'canvas') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.72))`;
-      cardStyles.backdropFilter = 'blur(16px)';
-      cardStyles.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-    } else if (txtId === 'champagne-gold' || txtId === 'metallic') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(135deg, ${cardBgColorRaw}f2 0%, #f0e2cf 100%)`;
-      cardStyles.backgroundBlendMode = 'overlay';
-    } else if (txtId === 'black-marble') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('https://www.transparenttextures.com/patterns/white-marble.png')`;
-      cardStyles.backgroundBlendMode = 'overlay';
-      cardStyles.color = '#fff8ec';
-      cardStyles.borderColor = 'rgba(215, 179, 104, 0.4)';
-    } else if (txtId === 'emerald-marble') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(rgba(6,78,59,0.9), rgba(6,78,59,0.9)), url('https://www.transparenttextures.com/patterns/white-marble.png')`;
-      cardStyles.backgroundBlendMode = 'overlay';
-      cardStyles.color = '#fff8ec';
-      cardStyles.borderColor = 'rgba(215, 179, 104, 0.4)';
-    } else if (txtId === 'silver-marble') {
-      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(rgba(241,245,249,0.9), rgba(241,245,249,0.9)), url('https://www.transparenttextures.com/patterns/white-marble.png')`;
-      cardStyles.backgroundBlendMode = 'multiply';
-      cardStyles.color = '#1e293b';
-      cardStyles.borderColor = 'rgba(148, 163, 184, 0.5)';
-    } else {
-      cardStyles.backgroundColor = cardRgba;
-    }
+    cardStyles.backgroundColor = registryBg.fallbackColor;
+    cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(${cardRgba}, ${cardRgba}), url('${registryBg.image}')`;
+    cardStyles.backgroundBlendMode = 'overlay';
+    cardStyles.backgroundSize = registryBg.size;
+    cardStyles.backgroundPosition = registryBg.position;
+    cardStyles.backgroundRepeat = registryBg.repeat;
   }
 
   const handleGuestPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
+    if (mode === 'preview') {
+      alert("Önizleme Modu: Fotoğraf yükleme simülasyonu başarılı! (Gerçek yükleme için davetiyeyi kaydedip yayındaki sayfadan yükleme yapın.) 📸❤️");
+      return;
+    }
     const file = e.target.files[0];
     setIsUploading(true);
 
@@ -196,37 +159,15 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
 
   // Dynamically compile paper texture styling
   let backgroundStyles: React.CSSProperties = {
-    backgroundColor: isDarkModeActive ? '#090a0f' : palette.background,
-    backgroundImage: wedding.background_image_url ? `url(${wedding.background_image_url})` : undefined,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
+    backgroundColor: isDarkModeActive ? '#090a0f' : registryBg.fallbackColor,
+    backgroundImage: wedding.background_image_url 
+      ? `url(${wedding.background_image_url})` 
+      : `linear-gradient(${registryBg.overlay}, ${registryBg.overlay}), url('${registryBg.image}')`,
+    backgroundSize: wedding.background_image_url ? 'cover' : registryBg.size,
+    backgroundPosition: wedding.background_image_url ? 'center' : registryBg.position,
+    backgroundRepeat: wedding.background_image_url ? 'no-repeat' : registryBg.repeat,
     color: isDarkModeActive ? '#f8fafc' : textColor
   };
-
-  if (!wedding.background_image_url) {
-    const txtId = wedding.envelope_bg_color || themeConfig.visualDetails?.texture;
-    if (isDarkModeActive) {
-      backgroundStyles.background = `radial-gradient(circle at center, #0e111a 0%, #06080d 100%)`;
-    } else if (txtId === 'dark-velvet') {
-      backgroundStyles.background = `radial-gradient(circle at center, #1a0f08 0%, #080706 100%)`;
-    } else if (txtId === 'marble') {
-      backgroundStyles.background = `linear-gradient(rgba(241, 237, 230, 0.92), rgba(241, 237, 230, 0.92)), url('https://www.transparenttextures.com/patterns/white-marble.png')`;
-    } else if (txtId === 'damask') {
-      backgroundStyles.background = `linear-gradient(rgba(252, 250, 246, 0.94), rgba(252, 250, 246, 0.94)), url('https://www.transparenttextures.com/patterns/gray-floral-double.png')`;
-    } else if (txtId === 'kraft') {
-      backgroundStyles.background = `linear-gradient(rgba(243, 238, 231, 0.9), rgba(243, 238, 231, 0.9)), url('https://www.transparenttextures.com/patterns/cardboard-flat.png')`;
-    } else if (txtId === 'canvas') {
-      backgroundStyles.background = `linear-gradient(rgba(255, 243, 245, 0.93), rgba(255, 243, 245, 0.93)), url('https://www.transparenttextures.com/patterns/canvas-paper.png')`;
-    } else if (txtId === 'dark-space') {
-      backgroundStyles.background = `radial-gradient(circle at center, #0f1b36 0%, #081225 100%)`;
-    } else if (txtId === 'silk-paper') {
-      backgroundStyles.background = `linear-gradient(rgba(255, 241, 236, 0.95), rgba(255, 241, 236, 0.95)), url('https://www.transparenttextures.com/patterns/linen.png')`;
-    } else if (txtId === 'fine-paper') {
-      backgroundStyles.background = `linear-gradient(rgba(250, 247, 242, 0.97), rgba(250, 247, 242, 0.97)), url('https://www.transparenttextures.com/patterns/paper-fibers.png')`;
-    } else if (txtId === 'metallic') {
-      backgroundStyles.background = `linear-gradient(135deg, #f6ead9 0%, #ead8bd 100%)`;
-    }
-  }
 
   // Get card border styling
   const renderCardBorder = () => {
@@ -827,6 +768,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         primaryColor={primaryColor} 
         brideName={wedding.bride_name}
         groomName={wedding.groom_name}
+        mode={mode}
       />
 
       {/* Travel directions Yandex/Google Maps Dialog */}
