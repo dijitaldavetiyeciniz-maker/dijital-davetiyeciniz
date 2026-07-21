@@ -395,7 +395,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         }}
       >
         <Calendar className="w-4 h-4" style={{ color: primaryColor }} />
-        <span>{dateStr} <span className="mx-2" style={{ color: primaryColor }}>|</span> {timeStr}</span>
+        <span suppressHydrationWarning>{dateStr} <span className="mx-2" style={{ color: primaryColor }}>|</span> {timeStr}</span>
       </div>
 
       <div 

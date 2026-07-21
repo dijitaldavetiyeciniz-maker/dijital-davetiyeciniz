@@ -76,7 +76,7 @@ function CinematicTextOpening({ opened, initials, eventDate }: any) {
       <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" />
       <div className="relative z-10 text-center space-y-6 pointer-events-none">
         <h1 className="text-5xl md:text-7xl font-serif text-white/90 drop-shadow-2xl">{initials}</h1>
-        <p className="text-sm tracking-[0.3em] uppercase text-white/50">{eventDate || 'YAKINDA'}</p>
+        <p className="text-sm tracking-[0.3em] uppercase text-white/50" suppressHydrationWarning>{eventDate || 'YAKINDA'}</p>
       </div>
     </div>
   );
@@ -89,7 +89,7 @@ function PhotoCoverOpening({ opened, initials, eventDate }: any) {
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay pointer-events-none" />
       <div className="relative z-10 text-center space-y-6 pointer-events-none">
         <h1 className="text-5xl md:text-7xl font-serif text-white/90 drop-shadow-2xl">{initials}</h1>
-        <p className="text-sm tracking-[0.3em] uppercase text-white/70">{eventDate || 'YAKINDA'}</p>
+        <p className="text-sm tracking-[0.3em] uppercase text-white/70" suppressHydrationWarning>{eventDate || 'YAKINDA'}</p>
       </div>
     </div>
   );
