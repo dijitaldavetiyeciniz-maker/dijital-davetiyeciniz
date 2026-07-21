@@ -298,6 +298,7 @@ export default function CoupleAdminPage({
   // Live preview data — reflects current state instantly without DB roundtrip
   const liveWeddingData = useMemo(() => ({
     ...wedding,
+    event_type: eventType,
     template_id: templateId,
     primary_color: primaryColor,
     text_color: textColor,
@@ -327,7 +328,7 @@ export default function CoupleAdminPage({
     envelopeBgColor, envelopeFlapType, sealType, sealColor,
     entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
     showPhotos, showRsvp, showComments, showCountdown, backgroundAnimation,
-    entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode
+    entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode, eventType
   ]);
 
   useEffect(() => {
