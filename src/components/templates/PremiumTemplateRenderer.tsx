@@ -143,6 +143,21 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     } else if (txtId === 'champagne-gold' || txtId === 'metallic') {
       cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(135deg, ${cardBgColorRaw}f2 0%, #f0e2cf 100%)`;
       cardStyles.backgroundBlendMode = 'overlay';
+    } else if (txtId === 'black-marble') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.9)), url('https://www.transparenttextures.com/patterns/white-marble.png')`;
+      cardStyles.backgroundBlendMode = 'overlay';
+      cardStyles.color = '#fff8ec';
+      cardStyles.borderColor = 'rgba(215, 179, 104, 0.4)';
+    } else if (txtId === 'emerald-marble') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(rgba(6,78,59,0.9), rgba(6,78,59,0.9)), url('https://www.transparenttextures.com/patterns/white-marble.png')`;
+      cardStyles.backgroundBlendMode = 'overlay';
+      cardStyles.color = '#fff8ec';
+      cardStyles.borderColor = 'rgba(215, 179, 104, 0.4)';
+    } else if (txtId === 'silver-marble') {
+      cardStyles.backgroundImage = `url("${svgNoise}"), linear-gradient(rgba(241,245,249,0.9), rgba(241,245,249,0.9)), url('https://www.transparenttextures.com/patterns/white-marble.png')`;
+      cardStyles.backgroundBlendMode = 'multiply';
+      cardStyles.color = '#1e293b';
+      cardStyles.borderColor = 'rgba(148, 163, 184, 0.5)';
     } else {
       cardStyles.backgroundColor = cardRgba;
     }

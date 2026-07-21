@@ -1174,7 +1174,6 @@ export default function CoupleAdminPage({
                         setTextColor(palette.text);
                         setFontFamily(palette.font);
                         setBackgroundAnimation(palette.animation);
-                        setEnvelopeBgColor(palette.envelope);
                         setSealStyle(palette.seal);
                       }}
                       className="shrink-0 rounded-xl overflow-hidden border-2 border-transparent hover:border-rose-400 transition-all group"
@@ -1573,7 +1572,6 @@ export default function CoupleAdminPage({
                           onClick={() => {
                             setPrimaryColor(palette.primary);
                             setTextColor(palette.text);
-                            setEnvelopeBgColor(palette.bg);
                           }}
                           className={`p-2.5 rounded-xl border text-left transition-all hover:bg-white/50 backdrop-blur-sm shadow-inner active:scale-95 flex flex-col justify-between ${isActive ? 'border-rose-500 bg-rose-50/10 ring-2 ring-rose-100' : 'border-slate-200 bg-white'}`}
                         >
@@ -1629,13 +1627,11 @@ export default function CoupleAdminPage({
                           if (val) {
                             setPrimaryColor('#dfc384');
                             setTextColor('#f8fafc');
-                            setEnvelopeBgColor('marble-black');
                             setEnvelopeColor('#111111');
                           } else {
                             const preset = getTemplatePreset(templateId);
                             setPrimaryColor(preset.primary_color);
                             setTextColor(preset.text_color || '#1e293b');
-                            setEnvelopeBgColor(preset.envelope_bg_color || 'solid-ivory');
                             setEnvelopeColor(preset.envelope_color || '#e6d5c3');
                           }
                         }} 
@@ -1667,12 +1663,15 @@ export default function CoupleAdminPage({
                   <label className="block text-sm font-medium mb-2">Arka Plan (Zemin Tasarımı)</label>
                   <select value={envelopeBgColor} onChange={e => setEnvelopeBgColor(e.target.value)} className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner text-sm">
                     <option value="white-gold-marble">⚪ Beyaz Altın Mermer</option>
+                    <option value="marble-gold">🏛️ Altın Damarlı Mermer</option>
+                    <option value="black-marble">⚫ Siyah Altın Mermer</option>
+                    <option value="emerald-marble">🌲 Zümrüt Yeşili Mermer</option>
+                    <option value="silver-marble">🩶 Gümüş & Beyaz Mermer</option>
                     <option value="black-gold-velvet">⚫ Siyah Gold Kadife</option>
                     <option value="rose-gold-silk">🌸 Rose Gold İpek</option>
                     <option value="minimal-white-paper">📄 Minimal Beyaz Kağıt</option>
                     <option value="bohemian-kraft">📦 Bohem Kraft Kağıt</option>
                     <option value="navy-gold-night">🌌 Lacivert Gold Gece</option>
-                    <option value="marble-gold">🏛️ Altın Damarlı Mermer</option>
                     <option value="pastel-floral">💐 Pastel Çiçekli</option>
                     <option value="glass-blur-modern">🔮 Modern Cam Reveal</option>
                     <option value="champagne-gold">🥂 Şampanya Gold Lüks</option>
