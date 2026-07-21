@@ -325,10 +325,10 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderNames = () => (
-    <div className="w-full max-w-full px-6 flex flex-col items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center" style={{ overflow: 'visible' }}>
       <h1 
-        className="text-[clamp(1.5rem,7vw,3.5rem)] mb-6 mt-4 leading-normal font-normal select-none relative z-10 w-full text-center"
-        style={{ color: textColor, fontFamily: `"${headingFont}", cursive, serif`, overflowWrap: 'break-word', wordBreak: 'break-word' }}
+        className="text-[clamp(1.5rem,7vw,3.5rem)] mb-6 mt-4 font-normal select-none relative z-10 w-full text-center"
+        style={{ color: textColor, fontFamily: `"${headingFont}", cursive, serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}
       >
         {wedding.bride_parents && (
           <span 
@@ -338,7 +338,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
             {wedding.bride_parents}
           </span>
         )}
-        <span className="block w-full">
+        <span className="block w-full" style={{ overflow: 'visible' }}>
           {wedding.bride_name}
         </span>
       {wedding.groom_name && (
@@ -346,7 +346,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
           <span className="text-xl my-2 block w-full text-center" style={{ color: primaryColor, fontFamily: 'Inter, system-ui, sans-serif' }}>
             &
           </span>
-          <span className="block w-full">
+          <span className="block w-full" style={{ overflow: 'visible' }}>
             {wedding.groom_name}
           </span>
         </>
@@ -613,7 +613,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
 
 
   const renderMonogramLayout = () => (
-    <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-12 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
+    <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-12 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={{ ...cardStyles, overflow: 'visible' }}>
       {renderContextualDecorations()}
       {renderCardBorder()}
       <div className="mb-4 z-10 text-6xl font-light italic" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
@@ -632,7 +632,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderAsymmetricLayout = () => (
-    <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-12 text-left relative z-10 border shadow-2xl my-8 flex flex-col ${cardShapeClass}`} style={cardStyles}>
+    <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-12 text-left relative z-10 border shadow-2xl my-8 flex flex-col ${cardShapeClass}`} style={{ ...cardStyles, overflow: 'visible' }}>
       {renderContextualDecorations()}
       {renderCardBorder()}
       <div className="w-full flex justify-between items-start mb-12 relative z-10">
@@ -650,14 +650,14 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         </div>
       </div>
       
-      <div className="relative z-10 mb-8 mt-4 w-full px-6 flex flex-col justify-start">
-        <h1 className="text-[clamp(1.5rem,7vw,3.5rem)] leading-normal font-normal w-full break-words text-left" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
-          <span className="block">{wedding.bride_name}</span>
+      <div className="relative z-10 mb-8 mt-4 w-full flex flex-col justify-start" style={{ overflow: 'visible' }}>
+        <h1 className="text-[clamp(1.5rem,7vw,3.5rem)] font-normal w-full text-left" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}>
+          <span className="block" style={{ overflow: 'visible' }}>{wedding.bride_name}</span>
         </h1>
         {wedding.groom_name && (
-          <h1 className="text-[clamp(1.5rem,7vw,3.5rem)] leading-normal font-normal mt-2 w-full break-words text-right flex items-center justify-end" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
-            <span className="text-3xl mr-3 opacity-50" style={{ color: primaryColor, fontFamily: 'sans-serif' }}>&</span>
-            <span className="block">{wedding.groom_name}</span>
+          <h1 className="text-[clamp(1.5rem,7vw,3.5rem)] font-normal mt-2 w-full text-right" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}>
+            <span className="text-2xl mr-3 opacity-50" style={{ color: primaryColor, fontFamily: 'sans-serif' }}>&</span>
+            <span style={{ overflow: 'visible' }}>{wedding.groom_name}</span>
           </h1>
         )}
       </div>
@@ -684,8 +684,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         </div>
       </div>
       
-      <div className="w-full px-6 mb-12">
-        <h1 className="text-[clamp(2rem,8vw,4.5rem)] leading-tight font-black uppercase tracking-tight w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", sans-serif` }}>
+      <div className="w-full mb-12" style={{ overflow: 'visible' }}>
+        <h1 className="text-[clamp(2rem,8vw,4.5rem)] leading-tight font-black uppercase tracking-tight w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", sans-serif`, overflow: 'visible', padding: '0 0.3em' }}>
           {wedding.bride_name}
           {wedding.groom_name && (
             <>
@@ -716,21 +716,21 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderOrientalLayout = () => (
-    <div className={`max-w-[500px] mx-auto w-full p-6 sm:p-10 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
+    <div className={`max-w-[500px] mx-auto w-full p-6 sm:p-10 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={{ ...cardStyles, overflow: 'visible' }}>
       {renderContextualDecorations()}
       {renderCardBorder()}
       
       <div className="w-full max-w-[320px] aspect-square mx-auto rounded-t-full border-2 flex flex-col items-center justify-center relative z-10 mb-10 p-6 shadow-inner" style={{ borderColor: `${primaryColor}80`, backgroundColor: `rgba(0,0,0,0.05)` }}>
         <div className="absolute inset-2 rounded-t-full border border-dashed opacity-50" style={{ borderColor: primaryColor }} />
-        <div className="scale-90 flex flex-col items-center w-full px-6 text-center">
+        <div className="scale-90 flex flex-col items-center w-full text-center" style={{ overflow: 'visible' }}>
           {renderHeader()}
-          <h1 className="text-[clamp(1.5rem,7vw,3.5rem)] leading-normal font-normal mt-4 w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+          <h1 className="text-[clamp(1.5rem,6vw,3rem)] font-normal mt-4 w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}>
             {wedding.bride_name}
           </h1>
           {wedding.groom_name && (
             <>
-              <span className="text-2xl my-3 opacity-80 block" style={{ color: primaryColor, fontFamily: `"${accentFont}", cursive` }}>and</span>
-              <h1 className="text-[clamp(1.5rem,7vw,3.5rem)] leading-normal font-normal w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+              <span className="text-xl my-2 opacity-80 block" style={{ color: primaryColor, fontFamily: `"${accentFont}", cursive` }}>and</span>
+              <h1 className="text-[clamp(1.5rem,6vw,3rem)] font-normal w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}>
                 {wedding.groom_name}
               </h1>
             </>
@@ -755,10 +755,10 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     <div className="w-full min-h-screen py-20 px-4 sm:px-8 text-center relative z-10 flex flex-col items-center justify-center">
       {renderContextualDecorations()}
       
-      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full px-8">
+      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full" style={{ overflow: 'visible' }}>
         {renderHeader()}
         
-        <h1 className="text-[clamp(1.8rem,8vw,4.5rem)] my-12 leading-normal font-normal w-full break-words flex flex-wrap items-center justify-center gap-x-6 gap-y-2" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+        <h1 className="text-[clamp(1.8rem,8vw,4.5rem)] my-12 font-normal w-full break-words flex flex-wrap items-center justify-center gap-x-6 gap-y-2" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}>
           <span>{wedding.bride_name}</span>
           {wedding.groom_name && (
             <>
@@ -804,8 +804,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
 
   return (
     <div 
-      className={`min-h-screen w-full relative overflow-x-hidden flex flex-col items-center justify-center p-4 sm:p-6 pb-28 invitation-page bg-design-${backgroundDesign} ${isDarkModeActive ? 'dark-mode' : ''}`}
-      style={backgroundStyles}
+      className={`min-h-screen w-full relative flex flex-col items-center justify-center p-4 sm:p-6 pb-28 invitation-page bg-design-${backgroundDesign} ${isDarkModeActive ? 'dark-mode' : ''}`}
+      style={{ ...backgroundStyles, overflowX: 'clip' }}
     >
       <BackgroundAnimation type={wedding.background_animation} />
       <link href={fontUrl} rel="stylesheet" />
