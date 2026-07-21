@@ -566,7 +566,215 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     );
   };
 
+  const renderContextualDecorations = () => {
+    const eventTypeStr = eventTitle.toLowerCase();
+    const isSunnet = eventTypeStr.includes('sünnet');
+    const isKina = eventTypeStr.includes('kına') || eventTypeStr.includes('henna');
+    const isBaby = eventTypeStr.includes('baby') || eventTypeStr.includes('doğum') || eventTypeStr.includes('yaş');
+
+    if (isSunnet) {
+      return (
+        <div className="absolute top-0 left-0 w-full flex justify-center -mt-8 z-20 pointer-events-none">
+          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg border-2" style={{ borderColor: primaryColor }}>
+            <span className="text-3xl">🧿</span>
+          </div>
+        </div>
+      );
+    }
+    
+    if (isKina) {
+      return (
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-10">
+          <svg className="absolute -top-16 -left-16 w-64 h-64" viewBox="0 0 200 200" fill={primaryColor}>
+            <path d="M100,0 C120,40 160,40 200,60 C160,80 160,120 140,160 C100,180 60,180 0,200 C40,160 40,120 20,80 C60,60 60,20 100,0 Z" />
+          </svg>
+          <svg className="absolute -bottom-16 -right-16 w-64 h-64" viewBox="0 0 200 200" fill={primaryColor}>
+            <path d="M100,0 C120,40 160,40 200,60 C160,80 160,120 140,160 C100,180 60,180 0,200 C40,160 40,120 20,80 C60,60 60,20 100,0 Z" />
+          </svg>
+        </div>
+      );
+    }
+    
+    if (isBaby) {
+      return (
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-30 text-4xl">
+          <div className="absolute top-10 left-10 animate-pulse">☁️</div>
+          <div className="absolute top-40 right-10 text-2xl animate-bounce">⭐</div>
+          <div className="absolute bottom-20 left-20 text-3xl">🧸</div>
+        </div>
+      );
+    }
+    
+    return null;
+  };
+
+  const renderCenteredLayout = () => (
+    <div className={`max-w-[460px] mx-auto w-full p-8 sm:p-10 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
+      {renderContextualDecorations()}
+      {renderCardBorder()}
+      <div className="mb-4 z-10"><Crown className="w-8 h-8 animate-bounce mx-auto" style={{ color: primaryColor }} /></div>
+      {renderHeader()}
+      {renderMonogramDivider()}
+      {renderNames()}
+      {renderQuote()}
+      {renderTimer()}
+      {renderDetails()}
+      {renderProgramTimeline()}
+      {renderRsvpButton()}
+      {renderGuestBook()}
+    </div>
+  );
+
+  const renderAsymmetricLayout = () => (
+    <div className={`max-w-[460px] mx-auto w-full p-8 sm:p-10 text-left relative z-10 border shadow-2xl my-8 flex flex-col ${cardShapeClass}`} style={cardStyles}>
+      {renderContextualDecorations()}
+      {renderCardBorder()}
+      <div className="w-full flex justify-between items-start mb-12 relative z-10">
+        <div>
+          <h3 className="font-semibold tracking-[0.2em] uppercase text-xs opacity-70" style={{ color: textColor }}>{eventTitle}</h3>
+          <div className="w-8 h-[2px] my-3" style={{ backgroundColor: primaryColor }} />
+        </div>
+        <div className="text-right">
+          <div className="text-4xl font-light" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
+            {dateObj.getDate()}
+          </div>
+          <div className="text-xs uppercase tracking-widest opacity-70 font-semibold" style={{ color: textColor }}>
+            {dateObj.toLocaleDateString('tr-TR', { month: 'short' })}
+          </div>
+        </div>
+      </div>
+      
+      <div className="relative z-10 mb-8 mt-4">
+        <h1 className="text-5xl leading-tight font-normal" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+          <span className="block px-2">{wedding.bride_name}</span>
+        </h1>
+        {wedding.groom_name && (
+          <h1 className="text-5xl leading-tight font-normal text-right mt-2" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+            <span className="text-3xl mr-4 opacity-70" style={{ color: primaryColor, fontFamily: 'sans-serif' }}>&</span>
+            <span className="block px-2">{wedding.groom_name}</span>
+          </h1>
+        )}
+      </div>
+      
+      {renderQuote()}
+      {renderTimer()}
+      
+      <div className="mt-8 pt-8 border-t relative z-10" style={{ borderColor: `${primaryColor}40` }}>
+        {renderDetails()}
+      </div>
+      {renderRsvpButton()}
+      {renderGuestBook()}
+    </div>
+  );
+
+  const renderBotanicalLayout = () => (
+    <div className={`max-w-[460px] mx-auto w-full p-8 sm:p-12 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
+      {renderContextualDecorations()}
+      <div className="absolute top-0 left-0 w-full h-32 opacity-30 pointer-events-none rounded-t-3xl overflow-hidden">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full" style={{ fill: primaryColor }}>
+          <path d="M0 0 Q 50 100 100 0 Z" />
+        </svg>
+      </div>
+      {renderCardBorder()}
+      
+      <div className="relative z-10 mt-6 w-full">
+        <Leaf className="w-8 h-8 mx-auto mb-6 opacity-80" style={{ color: primaryColor }} />
+        {renderNames()}
+        <div className="w-full max-w-[200px] h-[1px] mx-auto my-6" style={{ backgroundColor: primaryColor, opacity: 0.5 }} />
+        {renderHeader()}
+      </div>
+
+      {renderQuote()}
+      {renderTimer()}
+      {renderDetails()}
+      
+      <div className="absolute bottom-0 left-0 w-full h-24 opacity-30 pointer-events-none rounded-b-3xl overflow-hidden rotate-180">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full" style={{ fill: primaryColor }}>
+          <path d="M0 0 Q 50 100 100 0 Z" />
+        </svg>
+      </div>
+      
+      {renderRsvpButton()}
+      {renderGuestBook()}
+    </div>
+  );
+
+  const renderCircularLayout = () => (
+    <div className={`max-w-[460px] mx-auto w-full p-6 sm:p-8 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
+      {renderContextualDecorations()}
+      {renderCardBorder()}
+      
+      <div className="w-64 h-64 mx-auto rounded-full border flex flex-col items-center justify-center relative z-10 mb-10 p-4 shadow-sm" style={{ borderColor: `${primaryColor}80`, backgroundColor: `rgba(255,255,255,0.03)` }}>
+        <div className="absolute inset-2 rounded-full border border-dashed opacity-50" style={{ borderColor: primaryColor }} />
+        {renderHeader()}
+        <h1 className="text-4xl leading-none font-normal" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+          {wedding.bride_name}
+        </h1>
+        {wedding.groom_name && (
+          <>
+            <span className="text-2xl my-3 opacity-80 block" style={{ color: primaryColor, fontFamily: `"${accentFont}", cursive` }}>and</span>
+            <h1 className="text-4xl leading-none font-normal" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+              {wedding.groom_name}
+            </h1>
+          </>
+        )}
+      </div>
+
+      {renderQuote()}
+      {renderTimer()}
+      
+      <div className="w-full rounded-2xl p-4 relative z-10" style={{ backgroundColor: `rgba(0,0,0,0.03)` }}>
+        <div className="text-xl mb-4 font-light" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>{dateStr}</div>
+        {renderDetails()}
+      </div>
+      
+      {renderRsvpButton()}
+      {renderGuestBook()}
+    </div>
+  );
+
+  const renderMinimalCardLayout = () => (
+    <div className={`max-w-[420px] mx-auto w-full p-8 sm:p-12 text-center relative z-10 shadow-lg my-8 flex flex-col items-center ${cardShapeClass}`} style={{ ...cardStyles, border: 'none' }}>
+      {renderContextualDecorations()}
+      <div className="w-12 h-[2px] mb-12" style={{ backgroundColor: primaryColor }} />
+      
+      <h1 className="text-5xl mb-8 leading-tight font-light tracking-wide uppercase" style={{ color: textColor, fontFamily: `"${headingFont}", sans-serif` }}>
+        {wedding.bride_name} <br/>
+        {wedding.groom_name && <span className="text-3xl my-4 block opacity-60 lowercase" style={{ fontFamily: `"${accentFont}", serif`, color: primaryColor }}>and</span>}
+        {wedding.groom_name}
+      </h1>
+      
+      <div className="w-full flex justify-between items-center my-8 text-[10px] font-bold tracking-[0.25em] uppercase border-y py-4" style={{ borderColor: `${primaryColor}40`, color: textColor }}>
+        <span>{dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}</span>
+        <span className="opacity-40">|</span>
+        <span>{eventTitle}</span>
+        <span className="opacity-40">|</span>
+        <span>{dateObj.getFullYear()}</span>
+      </div>
+
+      {renderQuote()}
+      {renderTimer()}
+      {renderDetails()}
+      {renderRsvpButton()}
+      {renderGuestBook()}
+    </div>
+  );
+
+  const renderLayout = () => {
+    const layoutStyle = themeConfig.layoutStyle || 'centered';
+    switch (layoutStyle) {
+      case 'asymmetric': return renderAsymmetricLayout();
+      case 'botanical-border': return renderBotanicalLayout();
+      case 'circular': return renderCircularLayout();
+      case 'minimal-card': return renderMinimalCardLayout();
+      case 'centered':
+      default:
+        return renderCenteredLayout();
+    }
+  };
+
   // Render the core layout
+
   const backgroundDesign = wedding.background_design || wedding.envelope_bg_color || "rose-gold-silk";
 
   return (
@@ -584,44 +792,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
       )}
 
       {/* Main Premium Invitation Card Box */}
-      <div 
-        className={`max-w-[460px] mx-auto w-full p-8 sm:p-10 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`}
-        style={cardStyles}
-      >
-        {renderCardBorder()}
-
-        {/* 1. Accent emblem */}
-        <div className="mb-4 z-10">
-          <Crown className="w-8 h-8 animate-bounce mx-auto" style={{ color: primaryColor }} />
-        </div>
-
-        {/* 2. Page titles */}
-        {renderHeader()}
-
-        {/* 3. Monogram emblem */}
-        {renderMonogramDivider()}
-
-        {/* 4. Couple Names */}
-        {renderNames()}
-
-        {/* 5. Custom Quote / Karşılama metni */}
-        {renderQuote()}
-
-        {/* 6. Geri sayım */}
-        {renderTimer()}
-
-        {/* 7. Düğün Detayları (Tarih, Yer, Adres) */}
-        {renderDetails()}
-
-        {/* 8. Program Akışı */}
-        {renderProgramTimeline()}
-
-        {/* 9. Konum, LCV & Fotoğraf yükleme butonları */}
-        {renderRsvpButton()}
-
-        {/* 10. Anı Defteri Mesajları */}
-        {renderGuestBook()}
-      </div>
+      {renderLayout()}
 
       {/* RSVP Modal */}
       <RsvpModal 
