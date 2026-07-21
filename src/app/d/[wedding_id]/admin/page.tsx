@@ -8,7 +8,7 @@ import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingA
 import { envelopeStyles } from '@/data/envelopeStyles';
 import { sealStyles } from '@/data/sealStyles';
 import { getInitials } from '@/utils/getInitials';
-import EntranceAnimation from '@/components/invitation/EntranceAnimation';
+
 
 function getTemplatePreset(id: string) {
   const num = parseInt(id.replace('template', '')) || 1;
@@ -295,6 +295,26 @@ export default function CoupleAdminPage({
     { name: 'Lavanta Bahçesi', primary: '#7c3aed', text: '#2d1b69', font: 'Playfair Display', animation: 'bokehLights', envelope: 'solid-lavender', seal: 'flower', bg: 'linear-gradient(135deg,#ede9fe,#ddd6fe)' },
   ];
 
+
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [templateCategory]);
+  
+  // Genel Bilgiler State
+  const [eventType, setEventType] = useState('Düğün');
+  const [brideName, setBrideName] = useState('');
+  const [groomName, setGroomName] = useState('');
+  const [brideParents, setBrideParents] = useState('');
+  const [groomParents, setGroomParents] = useState('');
+  const [weddingDate, setWeddingDate] = useState('');
+  const [venueName, setVenueName] = useState('');
+  const [venueAddress, setVenueAddress] = useState('');
+  const [googleMapsUrl, setGoogleMapsUrl] = useState('');
+  const [customMessage, setCustomMessage] = useState('');
+  const [quoteFontFamily, setQuoteFontFamily] = useState('');
+  const [quoteFontSize, setQuoteFontSize] = useState('text-sm');
+  const [isCopied, setIsCopied] = useState(false);
+  
   // Live preview data — reflects current state instantly without DB roundtrip
   const liveWeddingData = useMemo(() => ({
     ...wedding,
@@ -330,26 +350,6 @@ export default function CoupleAdminPage({
     showPhotos, showRsvp, showComments, showCountdown, backgroundAnimation,
     entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode, eventType
   ]);
-
-  useEffect(() => {
-    setVisibleCount(12);
-  }, [templateCategory]);
-  
-  // Genel Bilgiler State
-  const [eventType, setEventType] = useState('Düğün');
-  const [brideName, setBrideName] = useState('');
-  const [groomName, setGroomName] = useState('');
-  const [brideParents, setBrideParents] = useState('');
-  const [groomParents, setGroomParents] = useState('');
-  const [weddingDate, setWeddingDate] = useState('');
-  const [venueName, setVenueName] = useState('');
-  const [venueAddress, setVenueAddress] = useState('');
-  const [googleMapsUrl, setGoogleMapsUrl] = useState('');
-  const [customMessage, setCustomMessage] = useState('');
-  const [quoteFontFamily, setQuoteFontFamily] = useState('');
-  const [quoteFontSize, setQuoteFontSize] = useState('text-sm');
-  const [isCopied, setIsCopied] = useState(false);
-  
 
   const [isUploading, setIsUploading] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
