@@ -202,57 +202,87 @@ export default function Home() {
                   <div className="h-48 rounded-[1.5rem] mb-6 relative overflow-hidden flex items-center justify-center bg-slate-900 shadow-inner group-hover:scale-[1.03] transition-transform duration-700 ease-out">
                     {/* Visual Background Theme Previews */}
                     {tpl.slug === 'elif-kerem' && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-950 via-emerald-900 to-slate-900 opacity-90 flex flex-col items-center justify-center p-4">
-                        <div className="border border-amber-300/40 p-5 rounded-xl text-center max-w-[200px] bg-emerald-950/20 backdrop-blur-md shadow-2xl">
-                          <p className="text-[10px] text-amber-200/90 font-serif tracking-widest uppercase mb-2">DÜĞÜN DAVETİYESİ</p>
-                          <p className="text-lg font-serif text-white font-bold leading-tight">Elif & Kerem</p>
-                          <div className="w-12 h-0.5 bg-amber-300/80 mx-auto my-2.5"></div>
-                          <p className="text-[10px] text-amber-200/80 font-mono">12.09.2026</p>
+                      <div className="absolute inset-0 bg-[#0f172a] opacity-100 flex flex-col items-center justify-center p-4 overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-900/20 via-[#0f172a] to-[#0f172a]"></div>
+                        <div className="relative border border-amber-500/30 p-5 rounded-sm text-center w-[85%] bg-gradient-to-br from-[#1e293b] to-[#0f172a] shadow-[0_0_50px_rgba(217,119,6,0.15)] group-hover:scale-105 transition-transform duration-700 ease-out z-10 before:absolute before:inset-1 before:border before:border-amber-500/10 before:rounded-sm">
+                          <div className="w-10 h-10 mx-auto mb-3 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-700 p-[1px] shadow-lg">
+                            <div className="w-full h-full rounded-full bg-[#0f172a] flex items-center justify-center">
+                              <span className="text-amber-400 font-serif text-sm">EK</span>
+                            </div>
+                          </div>
+                          <p className="text-[8px] text-amber-200/80 font-serif tracking-[0.3em] uppercase mb-2">Düğün Töreni</p>
+                          <p className="text-lg font-serif text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-300 font-bold leading-tight">Elif & Kerem</p>
+                          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent mx-auto my-3"></div>
+                          <p className="text-[9px] text-amber-200/60 font-mono tracking-widest">12.09.2026</p>
                         </div>
                       </div>
                     )}
                     {tpl.slug === 'zeynep-mert' && (
-                      <div className="absolute inset-0 bg-[#fefdfa] opacity-90 flex flex-col items-center justify-center p-4">
-                        <div className="border-2 border-dashed border-emerald-800/30 p-5 rounded-full text-center w-32 h-32 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm shadow-xl">
-                          <p className="text-[9px] text-emerald-800/80 uppercase tracking-widest font-bold">KIR DÜĞÜNÜ</p>
-                          <p className="text-sm font-serif text-slate-800 font-bold leading-none my-1.5">Zeynep & Mert</p>
-                          <p className="text-[9px] text-slate-400 font-mono mt-1">20 EYL 2026</p>
+                      <div className="absolute inset-0 bg-[#f8f5f0] opacity-100 flex flex-col items-center justify-center p-4">
+                        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/linen.png')]"></div>
+                        <div className="relative border border-[#8b7355]/20 p-5 rounded-t-full rounded-b-xl text-center w-[75%] bg-white shadow-xl group-hover:-translate-y-2 group-hover:rotate-2 transition-all duration-700 z-10">
+                          <div className="text-emerald-700/60 text-xl mb-1 mt-2">🌿</div>
+                          <p className="text-[7px] text-[#8b7355] uppercase tracking-[0.2em] font-bold mb-1">Kır Düğünü</p>
+                          <p className="text-base font-serif text-[#2c3e2e] italic font-medium leading-tight my-2">Zeynep <br/> <span className="text-xs text-[#8b7355] font-sans">&</span> <br/> Mert</p>
+                          <p className="text-[7px] text-slate-400 font-sans tracking-widest mt-2 mb-2">20 EYLÜL 2026</p>
                         </div>
                       </div>
                     )}
                     {tpl.slug === 'derya-can' && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-rose-100/30 to-pink-50 opacity-90 flex flex-col items-center justify-center p-4">
-                        <div className="text-center p-5 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl max-w-[200px] border border-pink-100/50">
-                          <p className="text-[10px] text-pink-500 font-extrabold tracking-widest uppercase mb-1.5">NİŞAN GÜNÜ</p>
-                          <p className="text-sm font-bold text-slate-800">Derya & Can</p>
-                          <p className="text-[9px] text-slate-400 font-mono mt-1.5">18.10.2026</p>
+                      <div className="absolute inset-0 bg-gradient-to-br from-rose-50 to-pink-100 opacity-100 flex flex-col items-center justify-center p-4 overflow-hidden">
+                        <div className="absolute -top-4 -right-4 w-24 h-24 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+                        <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '1s'}}></div>
+                        
+                        <div className="text-center p-5 bg-white/50 backdrop-blur-xl rounded-[2rem] shadow-[0_8px_32px_rgba(251,113,133,0.15)] w-[85%] border border-white z-10 group-hover:scale-105 transition-transform duration-500">
+                          <div className="w-8 h-8 mx-auto bg-gradient-to-tr from-rose-400 to-pink-400 rounded-full flex items-center justify-center shadow-lg mb-2">
+                            <Heart className="w-4 h-4 text-white" />
+                          </div>
+                          <p className="text-[8px] text-rose-500 font-bold tracking-[0.2em] uppercase mb-1">Nişan Töreni</p>
+                          <p className="text-lg font-bold text-slate-800 tracking-tight">Derya & Can</p>
+                          <p className="text-[8px] text-slate-500 font-medium tracking-widest mt-2">18 EKİM 2026</p>
                         </div>
                       </div>
                     )}
                     {tpl.slug === 'asli-kina' && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-red-950 to-red-900 opacity-95 flex flex-col items-center justify-center p-4">
-                        <div className="border border-yellow-300/40 p-5 rounded-2xl text-center max-w-[200px] bg-red-950/40 backdrop-blur-sm shadow-2xl">
-                          <p className="text-[10px] text-yellow-300/90 tracking-widest uppercase mb-1.5 font-bold">KINA GECESİ</p>
-                          <p className="text-sm text-white font-bold font-serif">Aslı'nın Kınası</p>
-                          <p className="text-[9px] text-yellow-300/80 font-mono mt-2">22 AĞUSTOS 2026</p>
+                      <div className="absolute inset-0 bg-[#4a0404] opacity-100 flex flex-col items-center justify-center p-4 overflow-hidden">
+                        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_transparent_0%,_#000_100%),url('https://www.transparenttextures.com/patterns/black-scales.png')]"></div>
+                        <div className="border border-[#d4af37]/40 p-1 rounded-sm w-[80%] z-10 group-hover:rotate-[-2deg] group-hover:scale-105 transition-all duration-700">
+                          <div className="border border-[#d4af37]/20 p-5 rounded-sm text-center bg-[#2a0202]/80 backdrop-blur-sm">
+                            <Crown className="w-6 h-6 text-[#d4af37] mx-auto mb-2 opacity-90 drop-shadow-md" />
+                            <p className="text-[7px] text-[#d4af37]/90 tracking-[0.3em] uppercase mb-1 font-bold">Kına Gecesi</p>
+                            <p className="text-base text-[#fdfbf7] font-serif italic mb-1">Aslı'nın Kınası</p>
+                            <div className="w-8 h-[1px] bg-[#d4af37]/40 mx-auto my-2"></div>
+                            <p className="text-[7px] text-[#d4af37]/70 font-mono tracking-widest">22 AĞUSTOS 2026</p>
+                          </div>
                         </div>
                       </div>
                     )}
                     {tpl.slug === 'asya-bebek' && (
-                      <div className="absolute inset-0 bg-gradient-to-tr from-sky-50 to-pink-100 opacity-90 flex flex-col items-center justify-center p-4">
-                        <div className="text-center p-5 bg-white/80 backdrop-blur-md rounded-[2rem] max-w-[200px] border border-white shadow-xl">
-                          <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase mb-1">BABY SHOWER</p>
-                          <p className="text-sm font-bold text-slate-700">Asya Bebek Geliyor</p>
-                          <p className="text-[9px] text-slate-400 font-mono mt-2">15.11.2026</p>
+                      <div className="absolute inset-0 bg-gradient-to-b from-[#fdfbfb] to-[#ebedee] opacity-100 flex flex-col items-center justify-center p-4 overflow-hidden">
+                        <div className="absolute top-2 left-2 w-16 h-16 bg-pink-200 rounded-full mix-blend-multiply blur-xl opacity-60"></div>
+                        <div className="absolute bottom-2 right-2 w-20 h-20 bg-sky-200 rounded-full mix-blend-multiply blur-xl opacity-60"></div>
+                        
+                        <div className="text-center px-4 py-5 bg-white rounded-t-full rounded-b-3xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] w-[75%] border-[3px] border-slate-50 z-10 group-hover:translate-y-[-5px] transition-transform duration-500">
+                          <Baby className="w-8 h-8 text-sky-400 mx-auto mb-2 drop-shadow-sm" />
+                          <p className="text-[8px] text-pink-400 font-bold tracking-[0.2em] uppercase mb-1">Baby Shower</p>
+                          <p className="text-sm font-bold text-slate-700 leading-tight mb-2">Asya Bebek <br/>Geliyor</p>
+                          <div className="w-10 h-1 bg-gradient-to-r from-sky-200 to-pink-200 mx-auto rounded-full"></div>
                         </div>
                       </div>
                     )}
                     {tpl.slug === 'atlas-lansman' && (
-                      <div className="absolute inset-0 bg-[#060913] opacity-95 flex flex-col items-center justify-center p-4">
-                        <div className="border border-indigo-500/30 p-5 rounded-xl text-center max-w-[200px] bg-[#0a0f1d]/80 backdrop-blur-sm shadow-[0_0_30px_rgba(99,102,241,0.2)]">
-                          <p className="text-[9px] text-indigo-400 font-mono font-bold tracking-widest uppercase mb-1.5">INNOVATION NIGHT</p>
-                          <p className="text-sm text-white font-bold leading-tight">Atlas Innovation</p>
-                          <p className="text-[9px] text-slate-400 font-mono mt-2">25.09.2026</p>
+                      <div className="absolute inset-0 bg-[#050505] opacity-100 flex flex-col items-center justify-center p-4 overflow-hidden">
+                        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:12px_12px] opacity-30"></div>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl"></div>
+                        
+                        <div className="border border-indigo-500/40 p-5 rounded-xl text-center w-[85%] bg-gradient-to-b from-[#0a0f1d] to-[#050505] shadow-[0_0_30px_rgba(99,102,241,0.15)] z-10 group-hover:border-indigo-400/80 transition-colors duration-300 relative overflow-hidden backdrop-blur-md">
+                          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-400 to-transparent opacity-70"></div>
+                          <p className="text-[7px] text-indigo-400 font-mono font-bold tracking-[0.3em] uppercase mb-2">Innovation Night</p>
+                          <p className="text-lg text-white font-extrabold tracking-tight mb-1">ATLAS<span className="text-indigo-500">.</span></p>
+                          <div className="flex items-center justify-center gap-1.5 mt-3">
+                            <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(99,102,241,1)]"></div>
+                            <p className="text-[7px] text-slate-400 font-mono tracking-[0.2em]">25.09.2026 // VIP PASS</p>
+                          </div>
                         </div>
                       </div>
                     )}
