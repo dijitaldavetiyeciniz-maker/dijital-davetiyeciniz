@@ -8,7 +8,7 @@ import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingA
 import { envelopeStyles } from '@/data/envelopeStyles';
 import { sealStyles } from '@/data/sealStyles';
 import { getInitials } from '@/utils/getInitials';
-import { EntranceAnimation } from '@/components/invitation/EntranceAnimation';
+import EntranceAnimation from '@/components/invitation/EntranceAnimation';
 
 function getTemplatePreset(id: string) {
   const num = parseInt(id.replace('template', '')) || 1;

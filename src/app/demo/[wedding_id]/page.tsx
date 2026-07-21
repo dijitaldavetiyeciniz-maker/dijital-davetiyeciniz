@@ -9,7 +9,7 @@ import SparklesEffect from '@/components/effects/SparklesEffect';
 import HeartsEffect from '@/components/effects/HeartsEffect';
 import SnowEffect from '@/components/effects/SnowEffect';
 import BackgroundMusic from '@/components/BackgroundMusic';
-import { WeddingClientWrapper } from '@/components/invitation/WeddingClientWrapper';
+import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
 
 export default async function DemoWeddingPage({
   params,
