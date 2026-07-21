@@ -556,6 +556,16 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     );
   };
 
+  const renderMonogramDivider = () => {
+    return (
+      <div className="flex items-center justify-center space-x-3 my-4 relative z-10 opacity-80">
+        <div className="w-12 h-[1px]" style={{ backgroundColor: primaryColor }}></div>
+        <div className="text-sm font-serif italic" style={{ color: primaryColor }}>&</div>
+        <div className="w-12 h-[1px]" style={{ backgroundColor: primaryColor }}></div>
+      </div>
+    );
+  };
+
   // Render the core layout
   const backgroundDesign = wedding.background_design || wedding.envelope_bg_color || "rose-gold-silk";
 
