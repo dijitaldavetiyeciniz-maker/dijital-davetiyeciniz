@@ -1,10 +1,14 @@
+'use client';
+
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { 
   Sparkles, ArrowRight, CheckCircle2, Paintbrush, 
-  Palette, Crown, Leaf, Moon, Heart, Baby, ExternalLink
+  Palette, Crown, Leaf, Heart, Baby, ExternalLink,
+  Music, MailOpen, CalendarHeart, Gift
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Home() {
   const showcaseTemplates = [
@@ -64,227 +68,339 @@ export default function Home() {
     }
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: "easeOut" }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-rose-200">
-      <Navbar />
+    <div className="min-h-screen bg-[#fafafa] text-slate-800 font-sans selection:bg-rose-200 overflow-x-hidden relative">
+      {/* Premium Ambient Background */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-rose-100/50 mix-blend-multiply blur-[100px] opacity-70 animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-orange-100/50 mix-blend-multiply blur-[120px] opacity-60 animate-pulse" style={{ animationDuration: '10s' }} />
+        <div className="absolute top-[30%] right-[10%] w-[30%] h-[30%] rounded-full bg-pink-100/40 mix-blend-multiply blur-[90px] opacity-50 animate-pulse" style={{ animationDuration: '12s' }} />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay"></div>
+      </div>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 md:pt-44 md:pb-28 px-6 overflow-hidden relative">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-rose-100/60 rounded-full mix-blend-multiply filter blur-3xl opacity-40 pointer-events-none" />
-        
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-rose-100/80 backdrop-blur-sm text-rose-600 px-5 py-2 rounded-full text-xs font-bold mb-8 shadow-sm">
-            <Sparkles className="w-4 h-4 animate-pulse" /> Yeni Nesil Dijital Davetiye Platformu
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-[1.1] font-serif">
-            Davetiyenizi <br className="hidden md:block"/> 
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 to-orange-400">
-              Dijitale Taşıyın.
-            </span>
-          </h1>
-          
-          <p className="text-lg md:text-xl text-slate-500 mb-10 max-w-3xl mx-auto leading-relaxed">
-            Kağıt masrafına son! Etkinliğiniz için <strong>dakikalar içinde</strong> göz alıcı zarf açılış animasyonlu bir web sitesi oluşturun ve sevdiklerinize tek tıkla gönderin.
-          </p>
+      <div className="relative z-10">
+        <Navbar />
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/kayit-ol" className="bg-rose-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-rose-600 hover:-translate-y-1 transition-all shadow-xl shadow-rose-200/50 flex items-center justify-center gap-2">
-              Davetiyeni Oluştur <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link href="/demo/elif-kerem" className="bg-white text-slate-800 border-2 border-slate-200 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-50 hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
-              Demo Siteyi İncele
-            </Link>
-          </div>
-          <div className="mt-6 text-sm text-slate-400 font-medium">Kredi kartı gerekmez. Önizlemek ve denemek tamamen ücretsizdir.</div>
-        </div>
-      </section>
-
-      {/* Şablon ve Örnek Davetiye Vitrini */}
-      <section className="py-24 bg-white px-6 border-y border-slate-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 font-serif">Öne Çıkan Efsane Tasarımlar</h2>
-            <p className="text-slate-500 max-w-xl mx-auto text-sm">
-              50 adet premium konseptimiz arasından en popüler ve beğenilen şablonlardan bazılarını inceleyin.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {showcaseTemplates.map((tpl) => (
-              <div key={tpl.id} className="bg-slate-50/50 rounded-3xl p-6 border border-slate-200/60 shadow-sm hover:shadow-xl transition-all relative group flex flex-col h-full hover:bg-white">
-                {/* Event Type Badge */}
-                <div className="flex justify-between items-start mb-4">
-                  <span className="bg-rose-50 text-rose-600 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-                    {tpl.badge}
-                  </span>
-                  <div className="flex gap-1.5">
-                    {tpl.colors.map((color, idx) => (
-                      <div key={idx} className="w-4 h-4 rounded-full border border-white shadow-inner" style={{ backgroundColor: color }} />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Mini Preview Visual Placeholder (Very Premium CSS Card) */}
-                <div className="h-40 rounded-2xl mb-6 relative overflow-hidden flex items-center justify-center bg-slate-900 border border-slate-100 shadow-inner group-hover:scale-[1.02] transition-transform">
-                  {/* Visual Background Theme Previews */}
-                  {tpl.slug === 'elif-kerem' && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-950 via-emerald-900 to-slate-900 opacity-90 flex flex-col items-center justify-center p-4">
-                      <div className="border border-amber-300/40 p-4 rounded-lg text-center max-w-[180px] bg-emerald-950/20 backdrop-blur-sm">
-                        <p className="text-[10px] text-amber-200/90 font-serif tracking-widest uppercase mb-1">DÜĞÜN DAVETİYESİ</p>
-                        <p className="text-xs font-serif text-white font-bold leading-tight">Elif & Kerem</p>
-                        <div className="w-8 h-0.5 bg-amber-300 mx-auto my-1.5"></div>
-                        <p className="text-[9px] text-amber-200/80 font-mono">12.09.2026</p>
-                      </div>
-                    </div>
-                  )}
-                  {tpl.slug === 'zeynep-mert' && (
-                    <div className="absolute inset-0 bg-[#fefdfa] opacity-90 flex flex-col items-center justify-center p-4">
-                      <div className="border-2 border-dashed border-emerald-800/20 p-4 rounded-full text-center w-28 h-28 flex flex-col items-center justify-center bg-white/40">
-                        <p className="text-[8px] text-emerald-800/80 uppercase tracking-widest font-semibold">KIR DÜĞÜNÜ</p>
-                        <p className="text-xs font-serif text-slate-800 font-bold leading-none my-0.5">Zeynep & Mert</p>
-                        <p className="text-[8px] text-slate-400 font-mono mt-1">20 EYLÜL 2026</p>
-                      </div>
-                    </div>
-                  )}
-                  {tpl.slug === 'derya-can' && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-rose-100/30 to-pink-50 opacity-90 flex flex-col items-center justify-center p-4">
-                      <div className="text-center p-4 bg-white rounded-2xl shadow-sm max-w-[180px] border border-pink-100">
-                        <p className="text-[9px] text-pink-500 font-bold tracking-widest uppercase mb-1">NİŞAN GÜNÜ</p>
-                        <p className="text-xs font-bold text-slate-800">Derya & Can</p>
-                        <p className="text-[8px] text-slate-400 font-mono mt-1">18.10.2026</p>
-                      </div>
-                    </div>
-                  )}
-                  {tpl.slug === 'asli-kina' && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-red-950 to-red-900 opacity-95 flex flex-col items-center justify-center p-4">
-                      <div className="border border-yellow-300/40 p-4 rounded-xl text-center max-w-[180px] bg-red-950/40">
-                        <p className="text-[9px] text-yellow-300/90 tracking-widest uppercase mb-1">KINA GECESİ</p>
-                        <p className="text-xs text-white font-bold">Aslı'nın Kınası</p>
-                        <p className="text-[8px] text-yellow-300/80 font-mono mt-1">22 AĞUSTOS 2026</p>
-                      </div>
-                    </div>
-                  )}
-                  {tpl.slug === 'asya-bebek' && (
-                    <div className="absolute inset-0 bg-gradient-to-tr from-sky-50 to-pink-100 opacity-90 flex flex-col items-center justify-center p-4">
-                      <div className="text-center p-4 bg-white/80 backdrop-blur-sm rounded-3xl max-w-[180px] border border-slate-100">
-                        <p className="text-[9px] text-slate-400 tracking-widest uppercase mb-0.5">BABY SHOWER</p>
-                        <p className="text-xs font-bold text-slate-700">Asya Bebek Geliyor</p>
-                        <p className="text-[8px] text-slate-400 font-mono mt-1">15.11.2026</p>
-                      </div>
-                    </div>
-                  )}
-                  {tpl.slug === 'atlas-lansman' && (
-                    <div className="absolute inset-0 bg-[#0b0f19] opacity-95 flex flex-col items-center justify-center p-4">
-                      <div className="border border-indigo-500/30 p-4 rounded-lg text-center max-w-[185px] bg-[#0c1222] shadow-lg shadow-indigo-950/20">
-                        <p className="text-[8px] text-indigo-400 font-mono tracking-widest uppercase mb-1">INNOVATION NIGHT</p>
-                        <p className="text-xs text-white font-bold leading-tight">Atlas Innovation</p>
-                        <p className="text-[8px] text-slate-400 font-mono mt-1">25.09.2026</p>
-                      </div>
-                    </div>
-                  )}
-                  {/* Floating Template Icon */}
-                  <div className="absolute bottom-3 right-3 w-8 h-8 bg-white/95 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-md">
-                    {tpl.icon}
-                  </div>
-                </div>
-                
-                {/* Content */}
-                <h3 className="text-lg font-bold mb-2 text-slate-800 font-serif leading-tight">{tpl.name}</h3>
-                <p className="text-slate-500 text-xs leading-relaxed mb-6 flex-grow">{tpl.description}</p>
-
-                {/* Double CTA Buttons */}
-                <div className="grid grid-cols-2 gap-2 mt-auto">
-                  <a 
-                    href={`/d/${tpl.slug}`}
-                    target="_blank"
-                    className="py-2.5 rounded-xl font-bold text-[11px] text-center border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 transition-colors flex items-center justify-center gap-1"
-                  >
-                    Önizle <ExternalLink className="w-3 h-3" />
-                  </a>
-                  <Link 
-                    href={`/olustur?templateId=${tpl.id.replace('-baby', '')}`}
-                    className="py-2.5 rounded-xl font-bold text-[11px] text-center bg-slate-900 text-white hover:bg-rose-500 transition-colors"
-                  >
-                    Bu Şablonla Başla
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Demo Site Butonu */}
-      <section className="py-20 px-6 bg-gradient-to-br from-rose-50 to-orange-50/50 text-center">
-        <div className="max-w-3xl mx-auto bg-white rounded-[2.5rem] p-8 md:p-12 border border-rose-100 shadow-xl">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-rose-50 rounded-full mb-6">
-            <Paintbrush className="w-8 h-8 text-rose-500" />
-          </div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-3 text-slate-800 font-serif">Canlı Davetiyeyi Test Edin</h2>
-          <p className="text-slate-500 text-sm mb-8 leading-relaxed">
-            Müzik çaları, 3D zarf açılış animasyonunu, canlı geri sayım sayacını ve LCV katılım formunu canlı olarak inceleyin.
-          </p>
-          <Link 
-            href="/demo/elif-kerem" 
-            className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-8 py-4 rounded-xl shadow-lg transition-all hover:scale-102 text-sm"
+        {/* Hero Section */}
+        <section className="pt-32 pb-24 md:pt-48 md:pb-32 px-6 relative">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="max-w-5xl mx-auto text-center relative"
           >
-            Demo Davetiyeyi Aç <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </section>
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md text-rose-600 px-5 py-2.5 rounded-full text-xs font-bold mb-8 shadow-[0_4px_20px_-4px_rgba(225,29,72,0.15)] border border-rose-100"
+            >
+              <Sparkles className="w-4 h-4 animate-pulse" /> Yeni Nesil Dijital Davetiye Platformu
+            </motion.div>
+            
+            <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tight mb-8 leading-[1.1] font-serif text-slate-900">
+              Davetiyenizi <br className="hidden md:block"/> 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 to-orange-400 relative inline-block">
+                Dijitale Taşıyın.
+                <svg className="absolute w-full h-4 -bottom-1 left-0 text-orange-400/30 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="4" fill="transparent" />
+                </svg>
+              </span>
+            </h1>
+            
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed"
+            >
+              Kağıt masrafına son! Etkinliğiniz için <strong className="text-slate-800">dakikalar içinde</strong> göz alıcı zarf açılış animasyonlu bir web sitesi oluşturun ve sevdiklerinize tek tıkla gönderin.
+            </motion.p>
 
-      {/* Fiyat Özeti */}
-      <section className="py-24 px-6 bg-slate-900 text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-rose-500 rounded-full mix-blend-screen filter blur-[120px] opacity-10" />
-        
-        <div className="max-w-4xl mx-auto relative z-10">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 font-serif">Her Şey Dahil Fiyat</h2>
-            <p className="text-slate-400 text-sm">Aylık aidat yok, sürpriz yok. Sadece tek seferlik ödeme.</p>
-          </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              className="flex flex-col sm:flex-row justify-center gap-5 items-center"
+            >
+              <Link href="/kayit-ol" className="group relative bg-gradient-to-r from-rose-500 to-orange-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:-translate-y-1 transition-all shadow-[0_8px_30px_-4px_rgba(225,29,72,0.4)] flex items-center justify-center gap-2 w-full sm:w-auto overflow-hidden">
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                <span className="relative z-10 flex items-center gap-2">Davetiyeni Oluştur <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></span>
+              </Link>
+              <Link href="/demo/elif-kerem" className="bg-white/80 backdrop-blur-md text-slate-800 border border-slate-200 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:border-slate-300 hover:-translate-y-1 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 w-full sm:w-auto">
+                <ExternalLink className="w-5 h-5 text-slate-400" /> Demo Siteyi İncele
+              </Link>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="mt-8 text-sm text-slate-500 font-medium flex items-center justify-center gap-2"
+            >
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Kredi kartı gerekmez. Denemek tamamen ücretsizdir.
+            </motion.div>
+          </motion.div>
+        </section>
 
-          <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-8 md:p-12 backdrop-blur-md shadow-2xl flex flex-col md:flex-row gap-10 items-center">
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-bold mb-3 font-serif">Tüm Özellikler Aktif</h3>
-              <p className="text-slate-300 text-xs mb-6 leading-relaxed">
-                Aylık ödeme yok. Davetiyenizi oluşturun, ücretsiz önizleyin, yalnızca yayına almak istediğinizde ödeme yapın.
+        {/* Şablon ve Örnek Davetiye Vitrini */}
+        <section className="py-24 bg-white/60 backdrop-blur-xl border-y border-slate-200/50 relative">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold mb-6 font-serif text-slate-900">Öne Çıkan Efsane Tasarımlar</h2>
+              <p className="text-slate-500 max-w-2xl mx-auto text-base">
+                50 adet ultra-premium konseptimiz arasından en popüler ve beğenilen şablonları inceleyin. Kendi tarzınızı saniyeler içinde yansıtın.
               </p>
+            </div>
+
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              {showcaseTemplates.map((tpl) => (
+                <motion.div 
+                  key={tpl.id} 
+                  variants={itemVariants}
+                  className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-12px_rgba(225,29,72,0.15)] transition-all duration-500 relative group flex flex-col h-full hover:-translate-y-2 overflow-hidden"
+                >
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-rose-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  
+                  {/* Event Type Badge */}
+                  <div className="flex justify-between items-start mb-5 relative z-10">
+                    <span className="bg-slate-50 border border-slate-100 text-slate-600 text-[10px] font-extrabold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
+                      {tpl.badge}
+                    </span>
+                    <div className="flex gap-1.5 bg-white px-2 py-1.5 rounded-full shadow-sm border border-slate-50">
+                      {tpl.colors.map((color, idx) => (
+                        <div key={idx} className="w-3.5 h-3.5 rounded-full shadow-inner" style={{ backgroundColor: color }} />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Mini Preview Visual Placeholder */}
+                  <div className="h-48 rounded-[1.5rem] mb-6 relative overflow-hidden flex items-center justify-center bg-slate-900 shadow-inner group-hover:scale-[1.03] transition-transform duration-700 ease-out">
+                    {/* Visual Background Theme Previews */}
+                    {tpl.slug === 'elif-kerem' && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-950 via-emerald-900 to-slate-900 opacity-90 flex flex-col items-center justify-center p-4">
+                        <div className="border border-amber-300/40 p-5 rounded-xl text-center max-w-[200px] bg-emerald-950/20 backdrop-blur-md shadow-2xl">
+                          <p className="text-[10px] text-amber-200/90 font-serif tracking-widest uppercase mb-2">DÜĞÜN DAVETİYESİ</p>
+                          <p className="text-lg font-serif text-white font-bold leading-tight">Elif & Kerem</p>
+                          <div className="w-12 h-0.5 bg-amber-300/80 mx-auto my-2.5"></div>
+                          <p className="text-[10px] text-amber-200/80 font-mono">12.09.2026</p>
+                        </div>
+                      </div>
+                    )}
+                    {tpl.slug === 'zeynep-mert' && (
+                      <div className="absolute inset-0 bg-[#fefdfa] opacity-90 flex flex-col items-center justify-center p-4">
+                        <div className="border-2 border-dashed border-emerald-800/30 p-5 rounded-full text-center w-32 h-32 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm shadow-xl">
+                          <p className="text-[9px] text-emerald-800/80 uppercase tracking-widest font-bold">KIR DÜĞÜNÜ</p>
+                          <p className="text-sm font-serif text-slate-800 font-bold leading-none my-1.5">Zeynep & Mert</p>
+                          <p className="text-[9px] text-slate-400 font-mono mt-1">20 EYL 2026</p>
+                        </div>
+                      </div>
+                    )}
+                    {tpl.slug === 'derya-can' && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-rose-100/30 to-pink-50 opacity-90 flex flex-col items-center justify-center p-4">
+                        <div className="text-center p-5 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl max-w-[200px] border border-pink-100/50">
+                          <p className="text-[10px] text-pink-500 font-extrabold tracking-widest uppercase mb-1.5">NİŞAN GÜNÜ</p>
+                          <p className="text-sm font-bold text-slate-800">Derya & Can</p>
+                          <p className="text-[9px] text-slate-400 font-mono mt-1.5">18.10.2026</p>
+                        </div>
+                      </div>
+                    )}
+                    {tpl.slug === 'asli-kina' && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-red-950 to-red-900 opacity-95 flex flex-col items-center justify-center p-4">
+                        <div className="border border-yellow-300/40 p-5 rounded-2xl text-center max-w-[200px] bg-red-950/40 backdrop-blur-sm shadow-2xl">
+                          <p className="text-[10px] text-yellow-300/90 tracking-widest uppercase mb-1.5 font-bold">KINA GECESİ</p>
+                          <p className="text-sm text-white font-bold font-serif">Aslı'nın Kınası</p>
+                          <p className="text-[9px] text-yellow-300/80 font-mono mt-2">22 AĞUSTOS 2026</p>
+                        </div>
+                      </div>
+                    )}
+                    {tpl.slug === 'asya-bebek' && (
+                      <div className="absolute inset-0 bg-gradient-to-tr from-sky-50 to-pink-100 opacity-90 flex flex-col items-center justify-center p-4">
+                        <div className="text-center p-5 bg-white/80 backdrop-blur-md rounded-[2rem] max-w-[200px] border border-white shadow-xl">
+                          <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase mb-1">BABY SHOWER</p>
+                          <p className="text-sm font-bold text-slate-700">Asya Bebek Geliyor</p>
+                          <p className="text-[9px] text-slate-400 font-mono mt-2">15.11.2026</p>
+                        </div>
+                      </div>
+                    )}
+                    {tpl.slug === 'atlas-lansman' && (
+                      <div className="absolute inset-0 bg-[#060913] opacity-95 flex flex-col items-center justify-center p-4">
+                        <div className="border border-indigo-500/30 p-5 rounded-xl text-center max-w-[200px] bg-[#0a0f1d]/80 backdrop-blur-sm shadow-[0_0_30px_rgba(99,102,241,0.2)]">
+                          <p className="text-[9px] text-indigo-400 font-mono font-bold tracking-widest uppercase mb-1.5">INNOVATION NIGHT</p>
+                          <p className="text-sm text-white font-bold leading-tight">Atlas Innovation</p>
+                          <p className="text-[9px] text-slate-400 font-mono mt-2">25.09.2026</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Floating Template Icon */}
+                    <div className="absolute bottom-4 right-4 w-10 h-10 bg-white/95 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg border border-slate-100/50 group-hover:-translate-y-1 transition-transform">
+                      {tpl.icon}
+                    </div>
+                  </div>
+                  
+                  {/* Content */}
+                  <h3 className="text-xl font-bold mb-2 text-slate-800 font-serif leading-tight group-hover:text-rose-600 transition-colors">{tpl.name}</h3>
+                  <p className="text-slate-500 text-xs leading-relaxed mb-8 flex-grow">{tpl.description}</p>
+
+                  {/* Double CTA Buttons */}
+                  <div className="grid grid-cols-2 gap-3 mt-auto">
+                    <a 
+                      href={`/d/${tpl.slug}`}
+                      target="_blank"
+                      className="py-3 rounded-xl font-bold text-xs text-center border-2 border-slate-100 text-slate-600 bg-white hover:border-slate-300 hover:text-slate-800 transition-all flex items-center justify-center gap-1.5"
+                    >
+                      Önizle <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                    <Link 
+                      href={`/olustur?templateId=${tpl.id.replace('-baby', '')}`}
+                      className="py-3 rounded-xl font-bold text-xs text-center bg-slate-900 text-white hover:bg-rose-500 transition-colors shadow-md hover:shadow-rose-500/30"
+                    >
+                      Bu Şablonla Başla
+                    </Link>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Canlı Test Section */}
+        <section className="py-24 px-6 relative overflow-hidden">
+          <div className="absolute inset-0 bg-slate-900 -z-10"></div>
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-rose-500/20 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none -z-10" />
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-500/20 rounded-full mix-blend-screen filter blur-[100px] opacity-40 pointer-events-none -z-10" />
+
+          <div className="max-w-5xl mx-auto">
+            <div className="bg-white/5 border border-white/10 rounded-[3rem] p-10 md:p-16 backdrop-blur-2xl shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center gap-12">
+              <div className="flex-1 text-center md:text-left z-10">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-2xl mb-6 shadow-inner border border-white/10">
+                  <Paintbrush className="w-8 h-8 text-rose-400" />
+                </div>
+                <h2 className="text-3xl md:text-5xl font-bold mb-4 text-white font-serif">Ayrıcalığı <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-400">Test Edin</span></h2>
+                <p className="text-slate-300 text-base md:text-lg mb-8 leading-relaxed font-light">
+                  Müzik çaları, 3D zarf açılış animasyonunu, canlı geri sayım sayacını ve LCV katılım formunu canlı olarak inceleyin. Misafirlerinizin yaşayacağı deneyimi önceden görün.
+                </p>
+                <Link 
+                  href="/demo/elif-kerem" 
+                  className="inline-flex items-center gap-3 bg-white text-slate-900 font-extrabold px-8 py-4 rounded-2xl shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all hover:scale-105 hover:bg-rose-50"
+                >
+                  Demo Davetiyeyi Aç <ArrowRight className="w-5 h-5" />
+                </Link>
+              </div>
+
+              {/* Floating feature icons */}
+              <div className="flex-1 w-full relative h-[300px] hidden md:block">
+                <motion.div 
+                  animate={{ y: [0, -20, 0] }} 
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute top-10 left-10 w-20 h-20 bg-gradient-to-br from-rose-400 to-pink-500 rounded-3xl rotate-12 shadow-2xl flex items-center justify-center border border-white/20"
+                >
+                  <MailOpen className="w-8 h-8 text-white" />
+                </motion.div>
+                <motion.div 
+                  animate={{ y: [0, 20, 0] }} 
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  className="absolute top-32 right-10 w-24 h-24 bg-gradient-to-br from-orange-400 to-amber-500 rounded-full -rotate-12 shadow-2xl flex items-center justify-center border border-white/20"
+                >
+                  <Music className="w-10 h-10 text-white" />
+                </motion.div>
+                <motion.div 
+                  animate={{ y: [0, -15, 0] }} 
+                  transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                  className="absolute bottom-10 left-32 w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-2xl rotate-45 shadow-2xl flex items-center justify-center border border-white/20"
+                >
+                  <CalendarHeart className="w-6 h-6 text-white -rotate-45" />
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Fiyat Özeti */}
+        <section className="py-24 px-6 bg-white relative">
+          <div className="max-w-4xl mx-auto relative z-10">
+            <div className="text-center mb-16">
+              <span className="text-rose-500 font-bold tracking-widest uppercase text-xs mb-2 block">Şeffaf Fiyatlandırma</span>
+              <h2 className="text-3xl md:text-5xl font-bold mb-4 font-serif text-slate-900">Her Şey Dahil Fiyat</h2>
+              <p className="text-slate-500 text-base">Aylık aidat yok, sürpriz yok. Sadece tek seferlik ödeme ile ömür boyu kullanım.</p>
+            </div>
+
+            <div className="bg-white border-2 border-rose-100 rounded-[3rem] p-8 md:p-14 shadow-[0_20px_60px_-15px_rgba(225,29,72,0.1)] flex flex-col md:flex-row gap-12 items-center relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-rose-100 to-orange-50 rounded-bl-full -z-10 opacity-50"></div>
               
-              <div className="flex items-baseline justify-center md:justify-start gap-2">
-                <span className="text-5xl font-black text-rose-400">₺1.999</span>
-                <span className="text-slate-400 text-sm font-semibold">/ Tek Seferlik</span>
+              <div className="flex-1 text-center md:text-left">
+                <div className="inline-flex items-center justify-center p-3 bg-rose-50 rounded-2xl mb-6 text-rose-500">
+                  <Gift className="w-8 h-8" />
+                </div>
+                <h3 className="text-3xl font-bold mb-4 font-serif text-slate-900">Tüm Özellikler Aktif</h3>
+                <p className="text-slate-500 text-sm mb-8 leading-relaxed">
+                  Aylık ödeme yok. Davetiyenizi oluşturun, ücretsiz önizleyin, tasarımınızı mükemmelleştirin. Sadece yayına almak istediğinizde ödeme yapın.
+                </p>
+                
+                <div className="flex items-baseline justify-center md:justify-start gap-3">
+                  <span className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">₺1.999</span>
+                  <span className="text-slate-400 text-base font-semibold">/ Tek Seferlik</span>
+                </div>
+              </div>
+
+              <div className="flex-1 w-full bg-slate-50/80 backdrop-blur-sm rounded-[2rem] p-8 border border-slate-100 space-y-4">
+                {[
+                  "50 Premium Şablonun Tamamı",
+                  "Zarf Açılış Animasyonları",
+                  "Telegram LCV Anlık Bildirimleri",
+                  "Harita Navigasyon Entegrasyonu",
+                  "Ömür Boyu Kalıcı Davetiye Linki",
+                  "Sınırsız Fotoğraf Galerisi",
+                  "Arka Plan Müzik Çalar"
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3 text-sm">
+                    <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    </div>
+                    <span className="font-semibold text-slate-700">{item}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="flex-1 w-full bg-white/5 rounded-2xl p-6 border border-white/10 space-y-3">
-              {[
-                "50 Premium Şablonun Tamamı",
-                "Zarf Açılış Animasyonları",
-                "Telegram LCV Anlık Bildirimleri",
-                "Harita Navigasyon Entegrasyonu",
-                "Ömür Boyu Kalıcı Davetiye Linki"
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center gap-2.5 text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span className="font-semibold text-slate-200">{item}</span>
-                </div>
-              ))}
+            <div className="text-center mt-16">
+              <Link 
+                href="/kayit-ol" 
+                className="inline-flex items-center gap-2 bg-slate-900 hover:bg-rose-500 text-white font-extrabold px-12 py-5 rounded-2xl shadow-xl shadow-slate-900/20 text-base hover:-translate-y-1 transition-all duration-300"
+              >
+                Hemen Davetiyeni Oluştur <ArrowRight className="w-5 h-5" />
+              </Link>
             </div>
           </div>
+        </section>
 
-          <div className="text-center mt-12">
-            <Link 
-              href="/kayit-ol" 
-              className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-600 text-white font-extrabold px-10 py-5 rounded-2xl shadow-xl shadow-rose-900/20 text-sm hover:-translate-y-0.5 transition-all"
-            >
-              Hemen Davetiyeni Oluştur <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 }
