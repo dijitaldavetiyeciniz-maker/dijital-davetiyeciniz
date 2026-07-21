@@ -54,4 +54,4 @@ export function GlassRevealOpening({
     </div>
   );
 }
-export default GlassRevealOpening;
+

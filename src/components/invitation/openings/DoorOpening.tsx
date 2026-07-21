@@ -47,4 +47,4 @@ export function DoorOpening({
     </div>
   );
 }
-export default DoorOpening;
+

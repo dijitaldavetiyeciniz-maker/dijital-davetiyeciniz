@@ -55,4 +55,4 @@ export function RoyalHallOpening({
     </div>
   );
 }
-export default RoyalHallOpening;
+

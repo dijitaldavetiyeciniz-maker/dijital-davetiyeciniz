@@ -40,4 +40,4 @@ export function SpotlightOpening({
     </div>
   );
 }
-export default SpotlightOpening;
+

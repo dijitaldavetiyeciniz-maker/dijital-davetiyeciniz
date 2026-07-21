@@ -40,4 +40,4 @@ export function LuxuryBoxOpening({
     </div>
   );
 }
-export default LuxuryBoxOpening;
+

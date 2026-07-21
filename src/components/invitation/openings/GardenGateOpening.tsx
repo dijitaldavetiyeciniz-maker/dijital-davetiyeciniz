@@ -53,4 +53,4 @@ export function GardenGateOpening({
     </div>
   );
 }
-export default GardenGateOpening;
+

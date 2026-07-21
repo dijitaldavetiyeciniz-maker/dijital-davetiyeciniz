@@ -47,4 +47,4 @@ export function ElevatorDoorOpening({
     </div>
   );
 }
-export default ElevatorDoorOpening;
+

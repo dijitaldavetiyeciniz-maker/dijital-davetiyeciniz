@@ -42,4 +42,4 @@ export function TreasureChestOpening({
     </div>
   );
 }
-export default TreasureChestOpening;
+

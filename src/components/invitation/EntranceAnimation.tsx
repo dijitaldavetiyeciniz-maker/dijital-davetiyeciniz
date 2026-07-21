@@ -184,7 +184,7 @@ function getInvitationIntroText(eventType?: string) {
   }
 }
 
-export function EntranceAnimation({
+function EntranceAnimation({
   animationType,
   initials,
   brideName = "Gelin",

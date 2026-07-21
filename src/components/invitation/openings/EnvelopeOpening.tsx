@@ -68,4 +68,4 @@ export function EnvelopeOpening({
     </div>
   );
 }
-export default EnvelopeOpening;
+

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EntranceAnimation from './EntranceAnimation';
 import { getInitials } from '@/utils/getInitials';
 import BackgroundMusic from '@/components/BackgroundMusic';
@@ -9,10 +9,16 @@ type WeddingClientWrapperProps = {
   children: React.ReactNode;
 };
 
-export function WeddingClientWrapper({ wedding, children }: WeddingClientWrapperProps) {
+export default function WeddingClientWrapper({ wedding, children }: WeddingClientWrapperProps) {
   const [showEntrance, setShowEntrance] = useState(true);
 
-  const isPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
+  const [isPreview, setIsPreview] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('preview=true')) {
+      setIsPreview(true);
+    }
+  }, []);
 
   return (
     <>
@@ -56,4 +62,3 @@ export function WeddingClientWrapper({ wedding, children }: WeddingClientWrapper
     </>
   );
 }
-export default WeddingClientWrapper;

@@ -40,4 +40,4 @@ export function CinematicZoomOpening({
     </div>
   );
 }
-export default CinematicZoomOpening;
+

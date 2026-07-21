@@ -53,4 +53,4 @@ export function MinimalFadeOpening({
     </div>
   );
 }
-export default MinimalFadeOpening;
+

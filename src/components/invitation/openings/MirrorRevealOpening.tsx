@@ -52,4 +52,4 @@ export function MirrorRevealOpening({
     </div>
   );
 }
-export default MirrorRevealOpening;
+

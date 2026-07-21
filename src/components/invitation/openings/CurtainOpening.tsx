@@ -60,4 +60,4 @@ export function CurtainOpening({
     </div>
   );
 }
-export default CurtainOpening;
+

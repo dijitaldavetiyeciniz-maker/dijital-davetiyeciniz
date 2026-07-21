@@ -45,4 +45,4 @@ export function BookOpening({
     </div>
   );
 }
-export default BookOpening;
+
