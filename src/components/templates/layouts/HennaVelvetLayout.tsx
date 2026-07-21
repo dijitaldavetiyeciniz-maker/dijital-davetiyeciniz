@@ -1,6 +1,6 @@
 'use client';
-import React from 'react';
 import { Calendar, MapPin, Navigation, Info } from 'lucide-react';
+import { backgroundDesignRegistry, thematicAssetRegistry } from '@/lib/registries';
 
 interface LayoutProps {
   wedding: any;
@@ -38,12 +38,11 @@ export default function HennaVelvetLayout({
   renderGuestBook,
   renderQuote,
   handleMapClick,
-  cardBgColor = '#3f0712', // Koyu bordo kadife fallback rengi
+  cardBgColor = '#3f0712',
   mode = 'public'
 }: LayoutProps) {
   
   // 1. KINA GEÇİŞ VE VARYANT TESPİTİ
-  // custom_overrides.henna_variant: 'rose-gold' | 'gold' | 'copper'
   const hennaVariant = wedding.custom_overrides?.henna_variant || 'gold';
   const language = wedding.language || 'tr';
 
@@ -65,13 +64,19 @@ export default function HennaVelvetLayout({
   // Dil seçimine göre başlık
   const titleText = language === 'en' ? 'Henna Night' : 'Kına Gecesi';
 
-  // 2. KADİFE ARKA PLAN DOKU FALLBACK (Eğer görsel yüklenmezse)
+  // 2. KADİFE ARKA PLAN DOKUSU (Birincil: backgroundDesignRegistry, Fallback: radial-gradient)
+  const bgRegistry = backgroundDesignRegistry[wedding.background_design || 'solid-burgundy'] || backgroundDesignRegistry['solid-burgundy'];
+  
   const backgroundStyle: React.CSSProperties = {
-    backgroundColor: cardBgColor,
-    backgroundImage: `radial-gradient(circle at center, rgba(127, 29, 29, 0.95) 0%, rgba(63, 7, 18, 0.98) 100%)`,
-    boxShadow: 'inset 0 0 100px rgba(0,0,0,0.8)'
+    backgroundColor: bgRegistry.fallbackColor || cardBgColor,
+    backgroundImage: bgRegistry.image ? `linear-gradient(${bgRegistry.overlay}, ${bgRegistry.overlay}), url('${bgRegistry.image}')` : `radial-gradient(circle at center, rgba(127, 29, 29, 0.95) 0%, rgba(63, 7, 18, 0.98) 100%)`,
+    backgroundSize: bgRegistry.size,
+    backgroundPosition: bgRegistry.position,
+    backgroundRepeat: bgRegistry.repeat,
+    boxShadow: 'inset 0 0 100px rgba(0,0,0,0.4)'
   };
 
+  const hennaTrayAsset = thematicAssetRegistry['henna-tray'] || { src: '' };
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 
@@ -97,12 +102,16 @@ export default function HennaVelvetLayout({
               <path d="M0 0c5 5 10 5 15 0s10-5 15 0 10 5 15 0 10-5 15 0 10 5 15 0 10-5 15 0 10 5 15 0 10-5 15 0h10V0H0z"/>
             </svg>
           </div>
-          {/* Sol Alt Kına Tepsisi Süsü SVG */}
+          {/* Sol Alt Kına Tepsisi Süsü (Registry veya Fallback SVG) */}
           <div className="absolute bottom-6 left-6 rotate-[-15deg]">
-            <svg className="w-16 h-16 text-rose-400" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1" fill="none"/>
-              <circle cx="12" cy="12" r="6" fill="currentColor"/>
-            </svg>
+            {hennaTrayAsset.src ? (
+              <img src={hennaTrayAsset.src} alt="Kına Tepsisi" className="w-16 h-16 object-contain opacity-40" />
+            ) : (
+              <svg className="w-16 h-16 text-rose-400" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1" fill="none"/>
+                <circle cx="12" cy="12" r="6" fill="currentColor"/>
+              </svg>
+            )}
           </div>
           {/* Sağ Alt Kına El Motifi SVG */}
           <div className="absolute bottom-6 right-6 rotate-[15deg]">

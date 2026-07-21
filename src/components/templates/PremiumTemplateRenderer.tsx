@@ -18,6 +18,7 @@ import PhotoLuxuryLayout from './layouts/PhotoLuxuryLayout';
 import BotanicalFrameLayout from './layouts/BotanicalFrameLayout';
 import KidsThematicLayout from './layouts/KidsThematicLayout';
 import HennaVelvetLayout from './layouts/HennaVelvetLayout';
+import RoyalCircumcisionLayout from './layouts/RoyalCircumcisionLayout';
 
 interface TemplateProps {
   wedding: any;
@@ -852,6 +853,28 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
       case 'henna-velvet':
         return (
           <HennaVelvetLayout 
+            wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode}
+          />
+        );
+      case 'royal-circumcision':
+        return (
+          <RoyalCircumcisionLayout 
             wedding={wedding}
             primaryColor={primaryColor}
             textColor={textColor}
