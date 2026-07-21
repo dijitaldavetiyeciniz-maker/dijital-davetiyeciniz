@@ -47,7 +47,7 @@ export interface TypographyPreset {
 // 1. ARKA PLAN DOKULARI REGISTRY
 export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
   'white-gold-marble': {
-    image: 'https://www.transparenttextures.com/patterns/white-marble.png',
+    image: '/backgrounds/white-marble.png',
     fallbackColor: '#fcfbf7',
     overlay: 'rgba(255, 255, 255, 0.92)',
     size: 'auto',
@@ -55,7 +55,7 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     repeat: 'repeat'
   },
   'black-gold-velvet': {
-    image: 'https://www.transparenttextures.com/patterns/black-thread.png', // Fallback texture
+    image: '/backgrounds/black-thread.png', // Fallback texture
     fallbackColor: '#0a0a0a',
     overlay: 'rgba(0, 0, 0, 0.85)',
     size: 'auto',
@@ -63,7 +63,7 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     repeat: 'repeat'
   },
   'rose-gold-silk': {
-    image: 'https://www.transparenttextures.com/patterns/linen.png',
+    image: '/backgrounds/linen.png',
     fallbackColor: '#fff1ec',
     overlay: 'rgba(255, 241, 236, 0.93)',
     size: 'auto',
@@ -71,7 +71,7 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     repeat: 'repeat'
   },
   'minimal-white-paper': {
-    image: 'https://www.transparenttextures.com/patterns/paper-fibers.png',
+    image: '/backgrounds/paper-fibers.png',
     fallbackColor: '#fafafa',
     overlay: 'rgba(255, 255, 255, 0.97)',
     size: 'auto',
@@ -79,7 +79,7 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     repeat: 'repeat'
   },
   'bohemian-kraft': {
-    image: 'https://www.transparenttextures.com/patterns/cardboard-flat.png',
+    image: '/backgrounds/cardboard-flat.png',
     fallbackColor: '#ecd5b8',
     overlay: 'rgba(236, 213, 184, 0.9)',
     size: 'auto',
@@ -87,7 +87,7 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     repeat: 'repeat'
   },
   'navy-gold-night': {
-    image: 'https://www.transparenttextures.com/patterns/dark-matter.png',
+    image: '/backgrounds/black-thread.png',
     fallbackColor: '#070a12',
     overlay: 'rgba(7, 10, 18, 0.88)',
     size: 'auto',
@@ -95,7 +95,7 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     repeat: 'repeat'
   },
   'pastel-floral': {
-    image: 'https://www.transparenttextures.com/patterns/gray-floral-double.png',
+    image: '/backgrounds/gray-floral-double.png',
     fallbackColor: '#faf0f0',
     overlay: 'rgba(250, 240, 240, 0.94)',
     size: 'auto',
@@ -103,7 +103,7 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     repeat: 'repeat'
   },
   'glass-blur-modern': {
-    image: 'https://www.transparenttextures.com/patterns/canvas-paper.png',
+    image: '/backgrounds/canvas-paper.png',
     fallbackColor: '#edf2f7',
     overlay: 'rgba(255, 255, 255, 0.72)',
     size: 'auto',
@@ -111,7 +111,7 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     repeat: 'repeat'
   },
   'champagne-gold': {
-    image: 'https://www.transparenttextures.com/patterns/gray-floral-double.png',
+    image: '/backgrounds/gray-floral-double.png',
     fallbackColor: '#fbf9f4',
     overlay: 'rgba(251, 249, 244, 0.92)',
     size: 'auto',
@@ -119,7 +119,7 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     repeat: 'repeat'
   },
   'emerald-marble': {
-    image: 'https://www.transparenttextures.com/patterns/white-marble.png',
+    image: '/backgrounds/white-marble.png',
     fallbackColor: '#042f24',
     overlay: 'rgba(6, 78, 59, 0.9)',
     size: 'auto',
@@ -127,7 +127,7 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     repeat: 'repeat'
   },
   'solid-burgundy': {
-    image: 'https://www.transparenttextures.com/patterns/linen.png',
+    image: '/backgrounds/linen.png',
     fallbackColor: '#7f1d1d',
     overlay: 'rgba(127, 29, 29, 0.95)',
     size: 'auto',

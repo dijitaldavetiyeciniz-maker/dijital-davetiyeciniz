@@ -12,6 +12,7 @@ import { supabase } from '@/lib/supabase';
 import { predefinedThemes } from '@/lib/themes';
 import BackgroundAnimation from '../BackgroundAnimation';
 import { backgroundDesignRegistry } from '@/lib/registries';
+import FoldedSealLayout from './layouts/FoldedSealLayout';
 
 interface TemplateProps {
   wedding: any;
@@ -734,6 +735,27 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
       case 'full-bleed': return renderFullBleedLayout();
       case 'editorial': return renderEditorialLayout();
       case 'oriental': return renderOrientalLayout();
+      case 'folded-seal':
+        return (
+          <FoldedSealLayout 
+            wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+          />
+        );
       case 'monogram':
       default:
         return renderMonogramLayout();
