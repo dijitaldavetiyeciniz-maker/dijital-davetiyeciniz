@@ -275,6 +275,8 @@ export default function CoupleAdminPage({
   const [countdownStyle, setCountdownStyle] = useState('glass');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isAudioUploading, setIsAudioUploading] = useState(false);
+  const [customOverrides, setCustomOverrides] = useState<any>({});
+  const [photoFocalPoint, setPhotoFocalPoint] = useState<{x: number, y: number}>({ x: 50, y: 50 });
   const [toastMessage, setToastMessage] = useState('');
   const [previewDevice, setPreviewDevice] = useState<'iphone' | 'android' | 'tablet'>('iphone');
   const [activeRsvpSubTab, setActiveRsvpSubTab] = useState<'list' | 'comments'>('list');
@@ -344,12 +346,15 @@ export default function CoupleAdminPage({
     seal_style: sealStyle,
     countdown_style: countdownStyle,
     is_dark_mode: isDarkMode,
+    custom_overrides: customOverrides,
+    photo_focal_point: photoFocalPoint,
   }), [
     wedding, templateId, primaryColor, textColor, envelopeColor,
     envelopeBgColor, envelopeFlapType, sealType, sealColor,
     entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
     showPhotos, showRsvp, showComments, showCountdown, backgroundAnimation,
-    entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode, eventType
+    entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode, eventType,
+    customOverrides, photoFocalPoint
   ]);
 
   const [isUploading, setIsUploading] = useState(false);
@@ -418,6 +423,8 @@ export default function CoupleAdminPage({
       if (weddingData.seal_style) setSealStyle(weddingData.seal_style);
       if (weddingData.countdown_style) setCountdownStyle(weddingData.countdown_style);
       if (weddingData.is_dark_mode !== undefined && weddingData.is_dark_mode !== null) setIsDarkMode(weddingData.is_dark_mode);
+      if (weddingData.custom_overrides) setCustomOverrides(weddingData.custom_overrides);
+      if (weddingData.photo_focal_point) setPhotoFocalPoint(weddingData.photo_focal_point);
       
       
 
@@ -535,7 +542,9 @@ export default function CoupleAdminPage({
       envelope_style: envelopeStyle,
       seal_style: sealStyle,
       countdown_style: countdownStyle,
-      is_dark_mode: isDarkMode
+      is_dark_mode: isDarkMode,
+      custom_overrides: customOverrides,
+      photo_focal_point: photoFocalPoint
     };
 
     const { error } = await supabase

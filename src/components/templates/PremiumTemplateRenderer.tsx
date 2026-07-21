@@ -68,16 +68,17 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   };
 
   const isDarkModeActive = !!wedding.is_dark_mode;
-  const primaryColor = wedding.primary_color || palette.secondary;
-  const textColor = isDarkModeActive ? '#f8fafc' : (wedding.text_color || palette.text);
+  const overrides = wedding.custom_overrides || {};
+  const primaryColor = overrides.primary_color || wedding.primary_color || palette.secondary;
+  const textColor = isDarkModeActive ? '#f8fafc' : (overrides.text_color || wedding.text_color || palette.text);
   const cardBgColor = isDarkModeActive ? '#12131a' : palette.card;
   const mutedTextColor = isDarkModeActive ? '#94a3b8' : palette.mutedText;
 
   const bgIsLight = isDarkModeActive ? false : isColorLight(palette.background);
   const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
 
-  const headingFont = wedding.names_font_family || themeConfig.typography?.heading || 'Playfair Display';
-  const bodyFont = wedding.font_family || themeConfig.typography?.body || 'Cormorant Garamond';
+  const headingFont = overrides.names_font_family || wedding.names_font_family || themeConfig.typography?.heading || 'Playfair Display';
+  const bodyFont = overrides.font_family || wedding.font_family || themeConfig.typography?.body || 'Cormorant Garamond';
   const accentFont = themeConfig.typography?.accent || 'Great Vibes';
 
   const fontUrl = `https://fonts.googleapis.com/css2?family=${bodyFont.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
@@ -106,7 +107,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
 
   const svgNoise = `data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.055'/%3E%3C/svg%3E`;
 
-  const txtId = wedding.background_design || wedding.envelope_bg_color || themeConfig.visualDetails?.texture || 'minimal-white-paper';
+  const txtId = overrides.background_design || wedding.background_design || overrides.envelope_bg_color || wedding.envelope_bg_color || themeConfig.visualDetails?.texture || 'minimal-white-paper';
   const registryBg = backgroundDesignRegistry[txtId] || backgroundDesignRegistry['minimal-white-paper'];
 
   if (isDarkModeActive) {
@@ -741,14 +742,14 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
 
   // Render the core layout
 
-  const backgroundDesign = wedding.background_design || wedding.envelope_bg_color || "rose-gold-silk";
+  const backgroundDesign = overrides.background_design || wedding.background_design || overrides.envelope_bg_color || wedding.envelope_bg_color || "rose-gold-silk";
 
   return (
     <div 
       className={`min-h-screen w-full relative flex flex-col items-center justify-center p-4 sm:p-6 pb-28 invitation-page bg-design-${backgroundDesign} ${isDarkModeActive ? 'dark-mode' : ''}`}
       style={{ ...backgroundStyles, overflowX: 'clip' }}
     >
-      <BackgroundAnimation type={wedding.background_animation} />
+      <BackgroundAnimation type={overrides.background_animation || wedding.background_animation} />
       <link href={fontUrl} rel="stylesheet" />
       <link href={namesFontUrl} rel="stylesheet" />
       <link href={accentFontUrl} rel="stylesheet" />
