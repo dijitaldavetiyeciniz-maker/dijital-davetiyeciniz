@@ -2,6 +2,12 @@
 import React from 'react';
 import { Calendar, MapPin, Navigation } from 'lucide-react';
 
+declare module 'react' {
+  interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
+    fetchPriority?: 'high' | 'low' | 'auto';
+  }
+}
+
 interface LayoutProps {
   wedding: any;
   primaryColor: string;
@@ -83,7 +89,7 @@ export default function FullBleedPhotoLayout({
               className="w-full h-full object-cover transition-transform duration-[12000ms] ease-out motion-safe:scale-105 motion-safe:hover:scale-100"
               style={{ objectPosition }}
               loading="eager"
-              {...({ fetchPriority: 'high' } as any)}
+              fetchPriority="high"
             />
             {/* Fotoğraf üstü gradient koruması (metin okunabilirliği için) */}
             <div className={`absolute inset-0 z-10 pointer-events-none transition-opacity ${overlayColorClass}`} />

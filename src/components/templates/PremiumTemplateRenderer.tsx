@@ -23,6 +23,7 @@ import MinimalPaperLayout from './layouts/MinimalPaperLayout';
 import MagazineEditorialLayout from './layouts/MagazineEditorialLayout';
 import FullBleedPhotoLayout from './layouts/FullBleedPhotoLayout';
 import SplitScreenLayout from './layouts/SplitScreenLayout';
+import StoryTimelineLayout from './layouts/StoryTimelineLayout';
 
 interface TemplateProps {
   wedding: any;
@@ -965,6 +966,28 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
       case 'split-screen':
         return (
           <SplitScreenLayout 
+            wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode}
+          />
+        );
+      case 'story-timeline':
+        return (
+          <StoryTimelineLayout 
             wedding={wedding}
             primaryColor={primaryColor}
             textColor={textColor}
