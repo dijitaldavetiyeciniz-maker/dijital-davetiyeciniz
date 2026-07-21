@@ -21,7 +21,7 @@ export interface ThemePreset {
   recommendedBackgroundDesign: string;
   recommendedBackgroundAnimation: string;
   // Dynamic Concept Architecture
-  layoutStyle?: 'centered' | 'asymmetric' | 'botanical-border' | 'circular' | 'minimal-card' | 'fullscreen-photo';
+  layoutStyle?: 'asymmetric' | 'full-bleed' | 'monogram' | 'editorial' | 'oriental';
   decorativeIcons?: string[];
   
   // Concept Details
@@ -67,7 +67,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'black-gold-premium',
     recommendedBackgroundDesign: 'black-gold-velvet',
     recommendedBackgroundAnimation: 'goldParticles',
-    layoutStyle: 'centered',
+    layoutStyle: 'monogram',
     palette: {
       background: '#080706',
       card: '#fff8ec',
@@ -108,7 +108,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'rose-gold-romantic',
     recommendedBackgroundDesign: 'rose-gold-silk',
     recommendedBackgroundAnimation: 'rosePetals',
-    layoutStyle: 'centered',
+    layoutStyle: 'monogram',
     palette: {
       background: '#fff1ec',
       card: '#ffffff',
@@ -190,7 +190,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'royal-burgundy',
     recommendedBackgroundDesign: 'black-gold-velvet',
     recommendedBackgroundAnimation: 'goldParticles',
-    layoutStyle: 'circular',
+    layoutStyle: 'oriental',
     palette: {
       background: '#2b020a',
       card: '#ffffff',
@@ -231,7 +231,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'bohemian-garden',
     recommendedBackgroundDesign: 'bohemian-kraft',
     recommendedBackgroundAnimation: 'leafFall',
-    layoutStyle: 'botanical-border',
+    layoutStyle: 'full-bleed',
     palette: {
       background: '#f8f4ee',
       card: '#faf9f5',
@@ -272,7 +272,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'minimal-white',
     recommendedBackgroundDesign: 'minimal-white-paper',
     recommendedBackgroundAnimation: 'pearlLight',
-    layoutStyle: 'minimal-card',
+    layoutStyle: 'editorial',
     palette: {
       background: '#fafafa',
       card: '#ffffff',
@@ -354,7 +354,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'navy-gold',
     recommendedBackgroundDesign: 'navy-gold-night',
     recommendedBackgroundAnimation: 'stars',
-    layoutStyle: 'centered',
+    layoutStyle: 'monogram',
     palette: {
       background: '#070a13',
       card: '#ffffff',
@@ -395,7 +395,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'pastel-floral',
     recommendedBackgroundDesign: 'pastel-floral',
     recommendedBackgroundAnimation: 'rosePetals',
-    layoutStyle: 'botanical-border',
+    layoutStyle: 'full-bleed',
     palette: {
       background: '#faf0f0',
       card: '#ffffff',
@@ -436,7 +436,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'champagne-gold',
     recommendedBackgroundDesign: 'champagne-gold',
     recommendedBackgroundAnimation: 'goldParticles',
-    layoutStyle: 'circular',
+    layoutStyle: 'oriental',
     palette: {
       background: '#fcfbfa',
       card: '#ffffff',
@@ -477,7 +477,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'minimal-white',
     recommendedBackgroundDesign: 'minimal-white-paper',
     recommendedBackgroundAnimation: 'pearlLight',
-    layoutStyle: 'centered',
+    layoutStyle: 'monogram',
     palette: {
       background: '#fcfbf7',
       card: '#ffffff',
@@ -559,7 +559,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'glass-modern',
     recommendedBackgroundDesign: 'glass-blur-modern',
     recommendedBackgroundAnimation: 'pearlLight',
-    layoutStyle: 'minimal-card',
+    layoutStyle: 'editorial',
     palette: {
       background: '#edf2f7',
       card: 'rgba(255, 255, 255, 0.85)',
@@ -641,7 +641,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'black-gold-premium',
     recommendedBackgroundDesign: 'black-gold-velvet',
     recommendedBackgroundAnimation: 'goldParticles',
-    layoutStyle: 'circular',
+    layoutStyle: 'oriental',
     palette: {
       background: '#0a0a0a',
       card: '#ffffff',
@@ -682,7 +682,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'pastel-floral',
     recommendedBackgroundDesign: 'pastel-floral',
     recommendedBackgroundAnimation: 'rosePetals',
-    layoutStyle: 'botanical-border',
+    layoutStyle: 'full-bleed',
     palette: {
       background: '#faf8ff',
       card: '#ffffff',
@@ -723,7 +723,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'bohemian-garden',
     recommendedBackgroundDesign: 'bohemian-kraft',
     recommendedBackgroundAnimation: 'leafFall',
-    layoutStyle: 'botanical-border',
+    layoutStyle: 'full-bleed',
     palette: {
       background: '#fffbf7',
       card: '#ffffff',
@@ -764,7 +764,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'minimal-white',
     recommendedBackgroundDesign: 'minimal-white-paper',
     recommendedBackgroundAnimation: 'snowFall',
-    layoutStyle: 'minimal-card',
+    layoutStyle: 'editorial',
     palette: {
       background: '#f8fafc',
       card: '#ffffff',
@@ -805,7 +805,7 @@ export const predefinedThemes: ThemePreset[] = [
     recommendedOpeningStyle: 'black-gold-premium',
     recommendedBackgroundDesign: 'black-gold-velvet',
     recommendedBackgroundAnimation: 'goldParticles',
-    layoutStyle: 'circular',
+    layoutStyle: 'oriental',
     palette: {
       background: '#040404',
       card: '#0c0c0c',

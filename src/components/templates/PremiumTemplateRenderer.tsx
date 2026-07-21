@@ -325,40 +325,42 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderNames = () => (
-    <h1 
-      className="text-[clamp(2.5rem,8vw,4.5rem)] mb-6 mt-4 leading-[1.1] font-normal select-none relative z-10 w-full"
-      style={{ color: textColor, fontFamily: `"${headingFont}", cursive, serif` }}
-    >
-      {wedding.bride_parents && (
-        <span 
-          className="text-[10px] tracking-[0.25em] font-light mb-4 block"
-          style={{ color: textColor, opacity: 0.6, fontFamily: 'Inter, system-ui, sans-serif' }}
-        >
-          {wedding.bride_parents}
+    <div className="w-full max-w-full px-2 sm:px-4 overflow-hidden flex flex-col items-center justify-center">
+      <h1 
+        className="text-[clamp(2.5rem,8vw,4.5rem)] mb-6 mt-4 leading-[1.1] font-normal select-none relative z-10 w-full break-words whitespace-normal text-center"
+        style={{ color: textColor, fontFamily: `"${headingFont}", cursive, serif`, overflowWrap: 'break-word', wordBreak: 'break-word' }}
+      >
+        {wedding.bride_parents && (
+          <span 
+            className="text-[10px] tracking-[0.25em] font-light mb-4 block"
+            style={{ color: textColor, opacity: 0.6, fontFamily: 'Inter, system-ui, sans-serif' }}
+          >
+            {wedding.bride_parents}
+          </span>
+        )}
+        <span className="block w-full">
+          {wedding.bride_name}
         </span>
-      )}
-      <span className="block px-2">
-        {wedding.bride_name}
-      </span>
       {wedding.groom_name && (
         <>
-          <span className="text-xl my-2 block" style={{ color: primaryColor, fontFamily: 'Inter, system-ui, sans-serif' }}>
+          <span className="text-xl my-2 block w-full text-center" style={{ color: primaryColor, fontFamily: 'Inter, system-ui, sans-serif' }}>
             &
           </span>
-          <span className="block px-2">
+          <span className="block w-full">
             {wedding.groom_name}
           </span>
         </>
       )}
       {wedding.groom_parents && (
         <span 
-          className="text-[10px] tracking-[0.25em] font-light mt-3 block"
+          className="text-[10px] tracking-[0.25em] font-light mt-3 block w-full text-center"
           style={{ color: textColor, opacity: 0.6, fontFamily: 'Inter, system-ui, sans-serif' }}
         >
           {wedding.groom_parents}
         </span>
       )}
     </h1>
+    </div>
   );
 
   const renderQuote = () => wedding.custom_message && (
@@ -608,13 +610,17 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     return null;
   };
 
-  const renderCenteredLayout = () => (
+
+
+  const renderMonogramLayout = () => (
     <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-12 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
       {renderContextualDecorations()}
       {renderCardBorder()}
-      <div className="mb-4 z-10"><Crown className="w-8 h-8 mx-auto opacity-80" style={{ color: primaryColor }} /></div>
+      <div className="mb-4 z-10 text-6xl font-light italic" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
+        {groomInitial ? `${brideInitial}&${groomInitial}` : brideInitial}
+      </div>
+      <div className="w-16 h-[1px] my-6 opacity-50" style={{ backgroundColor: primaryColor }} />
       {renderHeader()}
-      {renderMonogramDivider()}
       {renderNames()}
       {renderQuote()}
       {renderTimer()}
@@ -634,24 +640,24 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
           <h3 className="font-semibold tracking-[0.2em] uppercase text-xs opacity-70" style={{ color: textColor }}>{eventTitle}</h3>
           <div className="w-8 h-[2px] my-3" style={{ backgroundColor: primaryColor }} />
         </div>
-        <div className="text-right">
-          <div className="text-4xl font-light" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
+        <div className="text-right border px-4 py-2 rounded-t-full" style={{ borderColor: `${primaryColor}40` }}>
+          <div className="text-3xl font-light" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
             {dateObj.getDate()}
           </div>
-          <div className="text-xs uppercase tracking-widest opacity-70 font-semibold" style={{ color: textColor }}>
+          <div className="text-[10px] uppercase tracking-widest opacity-70 font-semibold" style={{ color: textColor }}>
             {dateObj.toLocaleDateString('tr-TR', { month: 'short' })}
           </div>
         </div>
       </div>
       
-      <div className="relative z-10 mb-8 mt-4">
-        <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] leading-[1.1] font-normal" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
-          <span className="block px-2">{wedding.bride_name}</span>
+      <div className="relative z-10 mb-8 mt-4 w-full px-2 overflow-hidden flex flex-col justify-start">
+        <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] leading-[1.1] font-normal w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+          <span className="block">{wedding.bride_name}</span>
         </h1>
         {wedding.groom_name && (
-          <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] leading-[1.1] font-normal text-right mt-2" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
-            <span className="text-3xl mr-4 opacity-70" style={{ color: primaryColor, fontFamily: 'sans-serif' }}>&</span>
-            <span className="block px-2">{wedding.groom_name}</span>
+          <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] leading-[1.1] font-normal text-right mt-2 w-full break-words flex items-center justify-end" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+            <span className="text-3xl mr-3 opacity-50" style={{ color: primaryColor, fontFamily: 'sans-serif' }}>&</span>
+            <span className="block">{wedding.groom_name}</span>
           </h1>
         )}
       </div>
@@ -667,54 +673,64 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     </div>
   );
 
-  const renderBotanicalLayout = () => (
-    <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-14 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
+  const renderEditorialLayout = () => (
+    <div className="max-w-[600px] mx-auto w-full py-16 px-4 sm:px-8 text-center relative z-10 flex flex-col items-center bg-white shadow-xl my-8">
       {renderContextualDecorations()}
-      <div className="absolute top-0 left-0 w-full h-32 opacity-30 pointer-events-none rounded-t-3xl overflow-hidden">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full" style={{ fill: primaryColor }}>
-          <path d="M0 0 Q 50 100 100 0 Z" />
-        </svg>
-      </div>
-      {renderCardBorder()}
       
-      <div className="relative z-10 mt-6 w-full">
-        <Leaf className="w-8 h-8 mx-auto mb-6 opacity-80" style={{ color: primaryColor }} />
-        {renderNames()}
-        <div className="w-full max-w-[200px] h-[1px] mx-auto my-6" style={{ backgroundColor: primaryColor, opacity: 0.5 }} />
-        {renderHeader()}
+      <div className="w-full text-center border-b pb-4 mb-10" style={{ borderColor: `${primaryColor}30` }}>
+        <h3 className="font-bold tracking-[0.3em] uppercase text-[10px]" style={{ color: textColor }}>{eventTitle}</h3>
+        <div className="text-xs tracking-[0.2em] uppercase mt-2 opacity-60" style={{ color: textColor }}>
+          VOL I. — {dateObj.getFullYear()}
+        </div>
+      </div>
+      
+      <div className="w-full px-2 overflow-hidden mb-12">
+        <h1 className="text-[clamp(3rem,10vw,6rem)] leading-[0.9] font-black uppercase tracking-tighter w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", sans-serif` }}>
+          {wedding.bride_name}
+          {wedding.groom_name && (
+            <>
+              <br/>
+              <span className="text-4xl my-2 block opacity-40 lowercase font-light italic" style={{ fontFamily: `"${accentFont}", serif` }}>and</span>
+              {wedding.groom_name}
+            </>
+          )}
+        </h1>
+      </div>
+      
+      <div className="w-full border p-6 my-8 text-left" style={{ borderColor: `${primaryColor}20`, backgroundColor: `rgba(0,0,0,0.02)` }}>
+        <div className="flex items-center gap-4 mb-4">
+          <div className="text-4xl font-light" style={{ color: primaryColor }}>{dateObj.getDate()}</div>
+          <div>
+            <div className="text-xs font-bold uppercase tracking-widest" style={{ color: textColor }}>{dateObj.toLocaleDateString('tr-TR', { month: 'long' })}</div>
+            <div className="text-xs opacity-60" style={{ color: textColor }}>{dateObj.getFullYear()}</div>
+          </div>
+        </div>
+        {renderQuote()}
       </div>
 
-      {renderQuote()}
       {renderTimer()}
       {renderDetails()}
-      
-      <div className="absolute bottom-0 left-0 w-full h-24 opacity-30 pointer-events-none rounded-b-3xl overflow-hidden rotate-180">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full" style={{ fill: primaryColor }}>
-          <path d="M0 0 Q 50 100 100 0 Z" />
-        </svg>
-      </div>
-      
       {renderRsvpButton()}
       {renderGuestBook()}
     </div>
   );
 
-  const renderCircularLayout = () => (
+  const renderOrientalLayout = () => (
     <div className={`max-w-[500px] mx-auto w-full p-6 sm:p-10 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={cardStyles}>
       {renderContextualDecorations()}
       {renderCardBorder()}
       
-      <div className="w-[80vw] h-[80vw] max-w-[300px] max-h-[300px] mx-auto rounded-full border flex flex-col items-center justify-center relative z-10 mb-10 p-4 shadow-sm" style={{ borderColor: `${primaryColor}80`, backgroundColor: `rgba(255,255,255,0.03)` }}>
-        <div className="absolute inset-2 rounded-full border border-dashed opacity-50" style={{ borderColor: primaryColor }} />
-        <div className="scale-90 flex flex-col items-center">
+      <div className="w-full max-w-[320px] aspect-square mx-auto rounded-t-full border-2 flex flex-col items-center justify-center relative z-10 mb-10 p-6 shadow-inner" style={{ borderColor: `${primaryColor}80`, backgroundColor: `rgba(0,0,0,0.05)` }}>
+        <div className="absolute inset-2 rounded-t-full border border-dashed opacity-50" style={{ borderColor: primaryColor }} />
+        <div className="scale-90 flex flex-col items-center w-full overflow-hidden px-2 text-center">
           {renderHeader()}
-          <h1 className="text-[clamp(2rem,6vw,3.5rem)] leading-none font-normal mt-2" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+          <h1 className="text-[clamp(2rem,7vw,4rem)] leading-[1.1] font-normal mt-4 w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
             {wedding.bride_name}
           </h1>
           {wedding.groom_name && (
             <>
-              <span className="text-xl my-2 opacity-80 block" style={{ color: primaryColor, fontFamily: `"${accentFont}", cursive` }}>and</span>
-              <h1 className="text-[clamp(2rem,6vw,3.5rem)] leading-none font-normal" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+              <span className="text-2xl my-3 opacity-80 block" style={{ color: primaryColor, fontFamily: `"${accentFont}", cursive` }}>and</span>
+              <h1 className="text-[clamp(2rem,7vw,4rem)] leading-[1.1] font-normal w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
                 {wedding.groom_name}
               </h1>
             </>
@@ -725,8 +741,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
       {renderQuote()}
       {renderTimer()}
       
-      <div className="w-full rounded-2xl p-4 relative z-10" style={{ backgroundColor: `rgba(0,0,0,0.03)` }}>
-        <div className="text-xl mb-4 font-light" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>{dateStr}</div>
+      <div className="w-full rounded-2xl p-6 relative z-10 border" style={{ borderColor: `${primaryColor}30`, backgroundColor: `rgba(0,0,0,0.02)` }}>
+        <div className="text-2xl mb-4 font-light italic" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>{dateStr}</div>
         {renderDetails()}
       </div>
       
@@ -735,56 +751,27 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     </div>
   );
 
-  const renderMinimalCardLayout = () => (
-    <div className="max-w-[600px] mx-auto w-full py-16 px-4 sm:px-8 text-center relative z-10 flex flex-col items-center">
-      {renderContextualDecorations()}
-      <Infinity className="w-8 h-8 mb-8 opacity-60" style={{ color: primaryColor }} />
-      
-      <h1 className="text-[clamp(3rem,10vw,5.5rem)] mb-8 leading-[1.1] font-light tracking-wide uppercase w-full" style={{ color: textColor, fontFamily: `"${headingFont}", sans-serif` }}>
-        {wedding.bride_name} <br/>
-        {wedding.groom_name && <span className="text-3xl my-4 block opacity-60 lowercase" style={{ fontFamily: `"${accentFont}", serif`, color: primaryColor }}>and</span>}
-        {wedding.groom_name}
-      </h1>
-      
-      <div className="w-full max-w-sm flex justify-between items-center my-10 text-[10px] font-bold tracking-[0.25em] uppercase border-y py-5" style={{ borderColor: `${primaryColor}40`, color: textColor }}>
-        <span>{dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}</span>
-        <span className="opacity-40">|</span>
-        <span>{eventTitle}</span>
-        <span className="opacity-40">|</span>
-        <span>{dateObj.getFullYear()}</span>
-      </div>
-
-      {renderQuote()}
-      {renderTimer()}
-      {renderDetails()}
-      {renderRsvpButton()}
-      {renderGuestBook()}
-    </div>
-  );
-
   const renderFullBleedLayout = () => (
     <div className="w-full min-h-screen py-20 px-4 sm:px-8 text-center relative z-10 flex flex-col items-center justify-center">
       {renderContextualDecorations()}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" style={cardStyles}></div>
       
-      <div className="relative z-10 max-w-2xl mx-auto flex flex-col items-center w-full">
+      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full px-4 overflow-hidden">
         {renderHeader()}
         
-        <h1 className="text-[clamp(3.5rem,12vw,7rem)] my-8 leading-[1] font-normal w-full" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
-          {wedding.bride_name}
+        <h1 className="text-[clamp(2.5rem,10vw,6rem)] my-12 leading-[1.1] font-normal w-full break-words flex flex-wrap items-center justify-center gap-x-6 gap-y-2" style={{ color: textColor, fontFamily: `"${headingFont}", serif` }}>
+          <span>{wedding.bride_name}</span>
           {wedding.groom_name && (
             <>
-              <span className="text-4xl mx-4 opacity-70 italic" style={{ color: primaryColor, fontFamily: `"${accentFont}", serif` }}>&</span>
-              <br className="md:hidden" />
-              {wedding.groom_name}
+              <span className="text-3xl opacity-50 font-sans mx-2" style={{ color: primaryColor }}>x</span>
+              <span>{wedding.groom_name}</span>
             </>
           )}
         </h1>
         
-        <div className="w-16 h-[2px] mx-auto my-8" style={{ backgroundColor: primaryColor }} />
+        <div className="w-24 h-[2px] mx-auto my-10" style={{ backgroundColor: primaryColor }} />
         
-        <div className="text-2xl md:text-3xl font-light tracking-widest mb-12" style={{ color: textColor }}>
-          {dateObj.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\./g, ' . ')}
+        <div className="text-xl md:text-2xl font-light tracking-widest mb-12 uppercase" style={{ color: textColor }}>
+          {dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
         </div>
 
         {renderQuote()}
@@ -799,16 +786,15 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   );
 
   const renderLayout = () => {
-    const layoutStyle = themeConfig.layoutStyle || 'centered';
+    const layoutStyle = themeConfig.layoutStyle || 'monogram';
     switch (layoutStyle) {
-      case 'fullscreen-photo': return renderFullBleedLayout();
       case 'asymmetric': return renderAsymmetricLayout();
-      case 'botanical-border': return renderBotanicalLayout();
-      case 'circular': return renderCircularLayout();
-      case 'minimal-card': return renderMinimalCardLayout();
-      case 'centered':
+      case 'full-bleed': return renderFullBleedLayout();
+      case 'editorial': return renderEditorialLayout();
+      case 'oriental': return renderOrientalLayout();
+      case 'monogram':
       default:
-        return renderCenteredLayout();
+        return renderMonogramLayout();
     }
   };
 
