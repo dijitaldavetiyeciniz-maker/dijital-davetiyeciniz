@@ -327,8 +327,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   const renderNames = () => (
     <div className="w-full flex flex-col items-center justify-center" style={{ overflow: 'visible' }}>
       <h1 
-        className="text-[clamp(1.5rem,7vw,3.5rem)] mb-6 mt-4 font-normal select-none relative z-10 w-full text-center"
-        style={{ color: textColor, fontFamily: `"${headingFont}", cursive, serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}
+        className="text-[clamp(1.3rem,5vw,2.5rem)] mb-6 mt-4 font-normal select-none relative z-10 w-full text-center"
+        style={{ color: textColor, fontFamily: `"${headingFont}", cursive, serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.5em' }}
       >
         {wedding.bride_parents && (
           <span 
@@ -616,7 +616,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
     <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-12 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={{ ...cardStyles, overflow: 'visible' }}>
       {renderContextualDecorations()}
       {renderCardBorder()}
-      <div className="mb-4 z-10 text-6xl font-light italic" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
+      <div className="mb-4 z-10 text-4xl font-light italic" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
         {groomInitial ? `${brideInitial}&${groomInitial}` : brideInitial}
       </div>
       <div className="w-16 h-[1px] my-6 opacity-50" style={{ backgroundColor: primaryColor }} />
@@ -650,13 +650,13 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         </div>
       </div>
       
-      <div className="relative z-10 mb-8 mt-4 w-full flex flex-col justify-start" style={{ overflow: 'visible' }}>
-        <h1 className="text-[clamp(1.5rem,7vw,3.5rem)] font-normal w-full text-left" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}>
+      <div className="relative z-10 mb-8 mt-4 w-full flex flex-col items-center" style={{ overflow: 'visible' }}>
+        <h1 className="text-[clamp(1.3rem,5vw,2.5rem)] font-normal w-full text-center" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.5em' }}>
           <span className="block" style={{ overflow: 'visible' }}>{wedding.bride_name}</span>
         </h1>
         {wedding.groom_name && (
-          <h1 className="text-[clamp(1.5rem,7vw,3.5rem)] font-normal mt-2 w-full text-right" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}>
-            <span className="text-2xl mr-3 opacity-50" style={{ color: primaryColor, fontFamily: 'sans-serif' }}>&</span>
+          <h1 className="text-[clamp(1.3rem,5vw,2.5rem)] font-normal mt-2 w-full text-center" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.5em' }}>
+            <span className="text-lg mr-2 opacity-50" style={{ color: primaryColor, fontFamily: 'sans-serif' }}>&</span>
             <span style={{ overflow: 'visible' }}>{wedding.groom_name}</span>
           </h1>
         )}
@@ -685,12 +685,12 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
       </div>
       
       <div className="w-full mb-12" style={{ overflow: 'visible' }}>
-        <h1 className="text-[clamp(2rem,8vw,4.5rem)] leading-tight font-black uppercase tracking-tight w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", sans-serif`, overflow: 'visible', padding: '0 0.3em' }}>
+        <h1 className="text-[clamp(1.5rem,6vw,3.5rem)] leading-tight font-black uppercase tracking-tight w-full break-words text-center" style={{ color: textColor, fontFamily: `"${headingFont}", sans-serif`, overflow: 'visible', padding: '0 0.5em' }}>
           {wedding.bride_name}
           {wedding.groom_name && (
             <>
               <br/>
-              <span className="text-4xl my-2 block opacity-40 lowercase font-light italic" style={{ fontFamily: `"${accentFont}", serif` }}>and</span>
+              <span className="text-2xl my-2 block opacity-40 lowercase font-light italic" style={{ fontFamily: `"${accentFont}", serif` }}>and</span>
               {wedding.groom_name}
             </>
           )}
@@ -724,13 +724,13 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
         <div className="absolute inset-2 rounded-t-full border border-dashed opacity-50" style={{ borderColor: primaryColor }} />
         <div className="scale-90 flex flex-col items-center w-full text-center" style={{ overflow: 'visible' }}>
           {renderHeader()}
-          <h1 className="text-[clamp(1.5rem,6vw,3rem)] font-normal mt-4 w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}>
+          <h1 className="text-[clamp(1.2rem,4.5vw,2.2rem)] font-normal mt-4 w-full break-words text-center" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.5em' }}>
             {wedding.bride_name}
           </h1>
           {wedding.groom_name && (
             <>
               <span className="text-xl my-2 opacity-80 block" style={{ color: primaryColor, fontFamily: `"${accentFont}", cursive` }}>and</span>
-              <h1 className="text-[clamp(1.5rem,6vw,3rem)] font-normal w-full break-words" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}>
+              <h1 className="text-[clamp(1.2rem,4.5vw,2.2rem)] font-normal w-full break-words text-center" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.5em' }}>
                 {wedding.groom_name}
               </h1>
             </>
@@ -758,11 +758,11 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
       <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full" style={{ overflow: 'visible' }}>
         {renderHeader()}
         
-        <h1 className="text-[clamp(1.8rem,8vw,4.5rem)] my-12 font-normal w-full break-words flex flex-wrap items-center justify-center gap-x-6 gap-y-2" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.3em' }}>
+        <h1 className="text-[clamp(1.3rem,5vw,3rem)] my-12 font-normal w-full break-words flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-center" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.4, padding: '0 0.5em' }}>
           <span>{wedding.bride_name}</span>
           {wedding.groom_name && (
             <>
-              <span className="text-3xl opacity-50 font-sans mx-2" style={{ color: primaryColor }}>x</span>
+              <span className="text-xl opacity-50 font-sans mx-2" style={{ color: primaryColor }}>x</span>
               <span>{wedding.groom_name}</span>
             </>
           )}
