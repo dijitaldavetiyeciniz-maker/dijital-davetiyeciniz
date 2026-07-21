@@ -296,14 +296,14 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
   }
 
   // Monogram rendering
-  const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'G';
-  const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : 'D';
+  const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
+  const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
-  const renderMonogramDivider = () => (
+  const renderMonogram = () => (
     <div className="flex flex-col items-center justify-center my-12 opacity-80 text-center select-none z-10 relative">
-      <span className="text-3xl font-light mb-1" style={{ fontFamily: `"${accentFont}", cursive`, color: primaryColor }}>
-        {brideInitial} & {groomInitial}
-      </span>
+      <div className="flex items-center justify-center font-serif text-3xl font-light opacity-90" style={{ color: primaryColor }}>
+        {groomInitial ? `${brideInitial} & ${groomInitial}` : brideInitial}
+      </div>
       <div className="w-16 h-[1px] opacity-35 my-2" style={{ backgroundColor: primaryColor }} />
       <span className="text-[10px] uppercase tracking-[0.25em]" style={{ color: textColor, opacity: 0.6 }}>
         {eventTitle}
@@ -340,12 +340,16 @@ export default function PremiumTemplateRenderer({ wedding, templateId }: Templat
       <span className="block px-2">
         {wedding.bride_name}
       </span>
-      <span className="text-xl my-2 block" style={{ color: primaryColor, fontFamily: 'Inter, system-ui, sans-serif' }}>
-        &
-      </span>
-      <span className="block px-2">
-        {wedding.groom_name}
-      </span>
+      {wedding.groom_name && (
+        <>
+          <span className="text-xl my-2 block" style={{ color: primaryColor, fontFamily: 'Inter, system-ui, sans-serif' }}>
+            &
+          </span>
+          <span className="block px-2">
+            {wedding.groom_name}
+          </span>
+        </>
+      )}
       {wedding.groom_parents && (
         <span 
           className="text-[10px] tracking-[0.25em] font-light mt-3 block"

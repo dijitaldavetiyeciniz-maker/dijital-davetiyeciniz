@@ -1221,22 +1221,42 @@ export default function CoupleAdminPage({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Gelin / Gelin Adayı</label>
+                    <label className="block text-sm font-medium mb-1">
+                      {['Baby Shower'].includes(eventType) ? 'Anne Adı' :
+                       ['Doğum Günü', 'Sünnet'].includes(eventType) ? 'Etkinlik Sahibi' :
+                       ['Özel Davet', 'Bekarlığa Veda'].includes(eventType) ? 'Davet Sahibi (1)' : 
+                       'Gelin / Gelin Adayı'}
+                    </label>
                     <input value={brideName} onChange={e=>setBrideName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">Damat / Damat Adayı</label>
+                    <label className="block text-sm font-medium mb-1">
+                      {['Baby Shower'].includes(eventType) ? 'Baba Adı (İsteğe Bağlı)' :
+                       ['Doğum Günü', 'Sünnet'].includes(eventType) ? 'İkinci Kişi (İsteğe Bağlı)' :
+                       ['Özel Davet', 'Bekarlığa Veda'].includes(eventType) ? 'Davet Sahibi (2) (Opsiyonel)' : 
+                       'Damat / Damat Adayı'}
+                    </label>
                     <input value={groomName} onChange={e=>setGroomName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">Gelin Anne & Baba</label>
+                    <label className="block text-sm font-medium mb-1">
+                      {['Baby Shower'].includes(eventType) ? 'Anneanne & Dede (Opsiyonel)' :
+                       ['Doğum Günü', 'Sünnet'].includes(eventType) ? 'Anne & Baba Adı' :
+                       ['Özel Davet', 'Bekarlığa Veda'].includes(eventType) ? 'Ev Sahibi Detay 1' : 
+                       'Gelin Anne & Baba'}
+                    </label>
                     <input value={brideParents} onChange={e=>setBrideParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">Damat Anne & Baba</label>
+                    <label className="block text-sm font-medium mb-1">
+                      {['Baby Shower'].includes(eventType) ? 'Babaanne & Dede (Opsiyonel)' :
+                       ['Doğum Günü', 'Sünnet'].includes(eventType) ? 'Diğer Büyükler (Opsiyonel)' :
+                       ['Özel Davet', 'Bekarlığa Veda'].includes(eventType) ? 'Ev Sahibi Detay 2' : 
+                       'Damat Anne & Baba'}
+                    </label>
                     <input value={groomParents} onChange={e=>setGroomParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
                   </div>
                 </div>
