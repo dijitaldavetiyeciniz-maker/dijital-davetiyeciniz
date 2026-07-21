@@ -10,7 +10,7 @@ import HeartsEffect from '@/components/effects/HeartsEffect';
 import SnowEffect from '@/components/effects/SnowEffect';
 
 import BackgroundMusic from '@/components/BackgroundMusic';
-import { WeddingClientWrapper } from '@/components/invitation/WeddingClientWrapper';
+import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
 
 // Next.js App Router Page
 export default async function WeddingPage({
