@@ -2,6 +2,7 @@
 import { useState, useEffect, use, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
+import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
 import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2, Smartphone, Tablet, Trash2, Check, RefreshCw, Volume2, VolumeX, Eye } from 'lucide-react';
 import { getRandomQuote } from '@/lib/aiQuotes';
 import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingAnimations';
@@ -2558,10 +2559,12 @@ export default function CoupleAdminPage({
               )}
               <div className="w-full h-full bg-white/50 backdrop-blur-sm shadow-inner rounded-[2.2rem] overflow-y-auto overflow-x-hidden relative">
                 {wedding && liveWeddingData ? (
-                  <PremiumTemplateRenderer 
-                    wedding={liveWeddingData} 
-                    templateId={templateId} 
-                  />
+                  <WeddingClientWrapper key={previewKey} wedding={liveWeddingData}>
+                    <PremiumTemplateRenderer 
+                      wedding={liveWeddingData} 
+                      templateId={templateId} 
+                    />
+                  </WeddingClientWrapper>
                 ) : (
                   <div className="flex items-center justify-center h-full text-slate-400">
                     <div className="text-center">
