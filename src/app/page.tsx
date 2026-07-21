@@ -19,7 +19,9 @@ export default function Home() {
       icon: <Crown className="w-8 h-8 text-amber-500" />,
       colors: ['#dfc384', '#064e3b', '#ffffff'],
       badge: 'Lüks Düğün',
-      slug: 'elif-kerem'
+      slug: 'elif-kerem',
+      animation: 'royal-seal-premium',
+      bgDesign: 'white-gold-marble'
     },
     {
       id: 'template3',
@@ -28,7 +30,9 @@ export default function Home() {
       icon: <Leaf className="w-8 h-8 text-emerald-500" />,
       colors: ['#0f766e', '#fef3c7', '#111827'],
       badge: 'Kır Düğünü',
-      slug: 'zeynep-mert'
+      slug: 'zeynep-mert',
+      animation: 'floral-wreath',
+      bgDesign: 'bohemian-kraft'
     },
     {
       id: 'template42',
@@ -37,7 +41,9 @@ export default function Home() {
       icon: <Heart className="w-8 h-8 text-pink-500" />,
       colors: ['#db2777', '#fce7f3', '#1e293b'],
       badge: 'Nişan',
-      slug: 'derya-can'
+      slug: 'derya-can',
+      animation: 'modern-slide',
+      bgDesign: 'glass-blur-modern'
     },
     {
       id: 'template27',
@@ -46,7 +52,9 @@ export default function Home() {
       icon: <Palette className="w-8 h-8 text-red-500" />,
       colors: ['#991b1b', '#fef08a', '#fef3c7'],
       badge: 'Kına Gecesi',
-      slug: 'asli-kina'
+      slug: 'asli-kina',
+      animation: 'royal-seal-premium',
+      bgDesign: 'black-gold-velvet'
     },
     {
       id: 'template42-baby',
@@ -55,7 +63,9 @@ export default function Home() {
       icon: <Baby className="w-8 h-8 text-rose-400" />,
       colors: ['#f43f5e', '#ffe4e6', '#334155'],
       badge: 'Baby Shower',
-      slug: 'asya-bebek'
+      slug: 'asya-bebek',
+      animation: 'heart-pop',
+      bgDesign: 'pastel-floral'
     },
     {
       id: 'template2',
@@ -64,7 +74,9 @@ export default function Home() {
       icon: <Sparkles className="w-8 h-8 text-indigo-500" />,
       colors: ['#6366f1', '#0f172a', '#ffffff'],
       badge: 'Lansman',
-      slug: 'atlas-lansman'
+      slug: 'atlas-lansman',
+      animation: 'fade-up',
+      bgDesign: 'navy-gold-night'
     }
   ];
 
@@ -300,7 +312,7 @@ export default function Home() {
                   {/* Double CTA Buttons */}
                   <div className="grid grid-cols-2 gap-3 mt-auto">
                     <a 
-                      href={`/d/${tpl.slug}`}
+                      href={`/d/${tpl.slug}?preview=true&entrance_animation=${tpl.animation}&background_design=${tpl.bgDesign}`}
                       target="_blank"
                       className="py-3 rounded-xl font-bold text-xs text-center border-2 border-slate-100 text-slate-600 bg-white hover:border-slate-300 hover:text-slate-800 transition-all flex items-center justify-center gap-1.5"
                     >
