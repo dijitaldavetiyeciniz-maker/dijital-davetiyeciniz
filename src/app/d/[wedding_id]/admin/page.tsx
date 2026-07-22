@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, use, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
+import { getSmartAutoMatch } from '@/lib/autoMatch';
 import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
 import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
 import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2, Smartphone, Tablet, Trash2, Check, RefreshCw, Volume2, VolumeX, Eye } from 'lucide-react';
@@ -232,7 +233,7 @@ export default function CoupleAdminPage({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
-  const [activeTab, setActiveTab] = useState<'rsvps' | 'design' | 'payment'>('rsvps');
+  const [activeTab, setActiveTab] = useState<'rsvps' | 'design' | 'content' | 'payment'>('rsvps');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'attending' | 'not-attending'>('all');
   const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
@@ -277,6 +278,16 @@ export default function CoupleAdminPage({
   const [isAudioUploading, setIsAudioUploading] = useState(false);
   const [customOverrides, setCustomOverrides] = useState<any>({});
   const [photoFocalPoint, setPhotoFocalPoint] = useState<{x: number, y: number}>({ x: 50, y: 50 });
+
+  // Dynamically managed fields for custom layouts
+  const [newTimelineDate, setNewTimelineDate] = useState('');
+  const [newTimelineTitle, setNewTimelineTitle] = useState('');
+  const [newTimelineDesc, setNewTimelineDesc] = useState('');
+  const [newTimelineIcon, setNewTimelineIcon] = useState('heart');
+  const [newSpeakerName, setNewSpeakerName] = useState('');
+  const [newSpeakerRole, setNewSpeakerRole] = useState('');
+  const [newSpeakerCompany, setNewSpeakerCompany] = useState('');
+  const [newSponsorName, setNewSponsorName] = useState('');
   const [toastMessage, setToastMessage] = useState('');
   const [previewDevice, setPreviewDevice] = useState<'iphone' | 'android' | 'tablet'>('iphone');
   const [activeRsvpSubTab, setActiveRsvpSubTab] = useState<'list' | 'comments'>('list');
@@ -559,6 +570,111 @@ export default function CoupleAdminPage({
       alert('Hata oluştu: ' + error.message);
     }
   }
+
+  function handleApplySmartAutoMatch(customType?: string) {
+    const targetType = customType || eventType;
+    const match = getSmartAutoMatch(targetType);
+    
+    if (match.template_id) setTemplateId(match.template_id);
+    if (match.primary_color) setPrimaryColor(match.primary_color);
+    if (match.text_color) setTextColor(match.text_color);
+    if (match.envelope_bg_color) setEnvelopeBgColor(match.envelope_bg_color);
+    if (match.envelope_color) setEnvelopeColor(match.envelope_color);
+    if (match.seal_style) setSealStyle(match.seal_style);
+    if (match.font_family) setFontFamily(match.font_family);
+    if (match.names_font_family) setNamesFontFamily(match.names_font_family);
+    if (match.background_animation) setBackgroundAnimation(match.background_animation);
+    
+    setCustomOverrides((prev: any) => ({
+      ...(prev || {}),
+      ...match.custom_overrides
+    }));
+
+    alert(`'${targetType}' türüne en uygun önerilen kombinasyon başarıyla uygulandı! Lütfen kaydetmeyi unutmayın.`);
+  }
+
+  const addTimelineItem = () => {
+    if (!newTimelineTitle.trim()) {
+      alert('Başlık boş bırakılamaz.');
+      return;
+    }
+    const current = customOverrides.timeline_items || [];
+    const newItem = {
+      id: String(Date.now()),
+      date: newTimelineDate,
+      title: newTimelineTitle,
+      description: newTimelineDesc,
+      icon: newTimelineIcon
+    };
+    setCustomOverrides((prev: any) => ({
+      ...prev,
+      timeline_items: [...current, newItem]
+    }));
+    setNewTimelineDate('');
+    setNewTimelineTitle('');
+    setNewTimelineDesc('');
+  };
+
+  const removeTimelineItem = (id: string) => {
+    const current = customOverrides.timeline_items || [];
+    const filtered = current.filter((item: any) => item.id !== id);
+    setCustomOverrides((prev: any) => ({
+      ...prev,
+      timeline_items: filtered
+    }));
+  };
+
+  const addSpeaker = () => {
+    if (!newSpeakerName.trim() || !newSpeakerRole.trim()) {
+      alert('Konuşmacı adı ve unvanı zorunludur.');
+      return;
+    }
+    const current = customOverrides.speakers || [];
+    const newItem = {
+      name: newSpeakerName,
+      role: newSpeakerRole,
+      company: newSpeakerCompany
+    };
+    setCustomOverrides((prev: any) => ({
+      ...prev,
+      speakers: [...current, newItem]
+    }));
+    setNewSpeakerName('');
+    setNewSpeakerRole('');
+    setNewSpeakerCompany('');
+  };
+
+  const removeSpeaker = (idx: number) => {
+    const current = customOverrides.speakers || [];
+    const filtered = current.filter((_: any, i: number) => i !== idx);
+    setCustomOverrides((prev: any) => ({
+      ...prev,
+      speakers: filtered
+    }));
+  };
+
+  const addSponsor = () => {
+    if (!newSponsorName.trim()) {
+      alert('Sponsor adı giriniz.');
+      return;
+    }
+    const current = customOverrides.sponsors || [];
+    const newItem = { name: newSponsorName };
+    setCustomOverrides((prev: any) => ({
+      ...prev,
+      sponsors: [...current, newItem]
+    }));
+    setNewSponsorName('');
+  };
+
+  const removeSponsor = (idx: number) => {
+    const current = customOverrides.sponsors || [];
+    const filtered = current.filter((_: any, i: number) => i !== idx);
+    setCustomOverrides((prev: any) => ({
+      ...prev,
+      sponsors: filtered
+    }));
+  };
 
   function applyPreset(theme: any) {
     setTemplateId(theme.template_id);
@@ -937,6 +1053,12 @@ export default function CoupleAdminPage({
             className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'design' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
           >
             <Paintbrush className="w-4 h-4" /> Tasarım Stüdyosu
+          </button>
+          <button 
+            onClick={() => setActiveTab('content')} 
+            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'content' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          >
+            <Wand2 className="w-4 h-4" /> Özel İçerikler
           </button>
           <button 
             onClick={() => setActiveTab('payment')} 
@@ -2392,6 +2514,378 @@ export default function CoupleAdminPage({
               <button onClick={handleSaveDesign} className="mt-8 flex items-center justify-center gap-2 w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition-colors shadow-lg">
                 <Save className="w-5 h-5" /> Değişiklikleri Kaydet & Önizlemeyi Yenile
               </button>
+          </div>
+        )}
+
+        {activeTab === 'content' && (
+          <div className="space-y-8">
+            {/* 1. Smart Auto-Match Asistanı */}
+            <div className="bg-slate-50 border border-slate-200/60 p-6 rounded-2xl">
+              <div className="flex items-center gap-3 mb-3 text-left">
+                <Wand2 className="w-6 h-6 text-rose-500 animate-pulse" />
+                <h3 className="text-base font-bold text-slate-800">Sihirli Akıllı Eşleştirme (Auto-Match)</h3>
+              </div>
+              <p className="text-slate-500 text-xs leading-relaxed mb-4 text-left">
+                Seçtiğiniz etkinlik türü olan <strong>"{eventType}"</strong> için en ideal renk paletini, serif/sans-serif yazı tiplerini, zarf ve mühür stillerini tek tıkla şablona uygulayabilirsiniz. Kendi eklediğiniz zaman tüneli veya konuşmacı verileri korunur.
+              </p>
+              <div className="flex flex-wrap gap-2 justify-start">
+                <button 
+                  type="button"
+                  onClick={() => handleApplySmartAutoMatch()}
+                  className="px-4 py-2.5 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-xs font-bold transition-all shadow-md cursor-pointer"
+                >
+                  ✨ Önerilen Kombinasyonu Uygula
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    handleApplySmartAutoMatch();
+                  }}
+                  className="px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold transition-all cursor-pointer"
+                >
+                  🔄 Varsayılan Öneriye Dön
+                </button>
+              </div>
+            </div>
+
+            {/* 2. Zaman Tüneli Yönetimi */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 text-left">
+              <h3 className="text-base font-bold text-slate-800 mb-2">⏳ Zaman Tüneli & Hikaye Akışı</h3>
+              <p className="text-slate-500 text-xs mb-4">
+                Davetiyenizde tanışma, ilk buluşma, evlilik teklifi gibi dönüm noktalarını dikey bir akışta sergileyin. (Örn: Zaman Tüneli layout'u için geçerlidir).
+              </p>
+
+              {/* Mevcut Adımlar */}
+              <div className="space-y-2 mb-6">
+                {(customOverrides.timeline_items || []).length === 0 ? (
+                  <p className="text-slate-400 text-xs italic py-2">Henüz dönüm noktası eklenmemiş. Örnek kurgusal veri gösterilmektedir (Preview modunda).</p>
+                ) : (
+                  (customOverrides.timeline_items || []).map((item: any) => (
+                    <div key={item.id} className="flex justify-between items-center p-3.5 bg-slate-50 rounded-xl border border-slate-100 text-left">
+                      <div className="text-xs">
+                        <span className="font-mono text-rose-500 font-bold tracking-widest uppercase block text-[10px]">{item.date || 'Tarih Yok'}</span>
+                        <h4 className="font-bold text-slate-800 mt-0.5">{item.title}</h4>
+                        <p className="text-slate-500 font-light mt-0.5">{item.description}</p>
+                      </div>
+                      <button 
+                        type="button"
+                        onClick={() => removeTimelineItem(item.id)}
+                        className="p-1.5 hover:bg-red-50 text-red-500 rounded-lg transition-colors cursor-pointer"
+                        title="Sil"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Yeni Adım Ekleme Formu */}
+              <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/50 space-y-3">
+                <h4 className="text-xs font-bold text-slate-700">Yeni Dönüm Noktası Ekle</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Tarih / Yıl</label>
+                    <input 
+                      type="text" 
+                      placeholder="Örn: 12.04.2023"
+                      value={newTimelineDate}
+                      onChange={(e) => setNewTimelineDate(e.target.value)}
+                      className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-rose-400 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Simge/İkon</label>
+                    <select
+                      value={newTimelineIcon}
+                      onChange={(e) => setNewTimelineIcon(e.target.value)}
+                      className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none"
+                    >
+                      <option value="heart">❤️ Kalp</option>
+                      <option value="star">⭐ Yıldız</option>
+                      <option value="sparkles">✨ Parıltı</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Başlık</label>
+                  <input 
+                    type="text" 
+                    placeholder="Örn: İlk Karşılaşma"
+                    value={newTimelineTitle}
+                    onChange={(e) => setNewTimelineTitle(e.target.value)}
+                    className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-rose-400 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Kısa Açıklama</label>
+                  <textarea 
+                    placeholder="Dönüm noktasına dair kısa bir not yazın..."
+                    value={newTimelineDesc}
+                    onChange={(e) => setNewTimelineDesc(e.target.value)}
+                    rows={2}
+                    className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-rose-400 focus:outline-none"
+                  />
+                </div>
+                <button 
+                  type="button"
+                  onClick={addTimelineItem}
+                  className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer"
+                >
+                  + Listeye Ekle
+                </button>
+              </div>
+            </div>
+
+            {/* 3. Konuşmacılar & Sponsorlar */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 text-left">
+              <h3 className="text-base font-bold text-slate-800 mb-2">🎤 Konuşmacılar & Sponsorlar</h3>
+              <p className="text-slate-500 text-xs mb-4">
+                Lansman, konferans veya Demo Day gibi etkinlikleriniz için konuşmacı listesini ve marka sponsorlarını yönetin. (Örn: Modern Etkinlik layout'u için geçerlidir).
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="border border-slate-100 p-4 rounded-xl">
+                  <h4 className="text-xs font-bold text-slate-700 mb-3">Mevcut Konuşmacılar</h4>
+                  <div className="space-y-2 mb-4">
+                    {(customOverrides.speakers || []).length === 0 ? (
+                      <p className="text-slate-400 text-xs italic">Konuşmacı eklenmemiş.</p>
+                    ) : (
+                      (customOverrides.speakers || []).map((sp: any, idx: number) => (
+                        <div key={idx} className="flex justify-between items-center p-2 bg-slate-50 rounded-lg border text-xs">
+                          <div>
+                            <span className="font-bold text-slate-800">{sp.name}</span>
+                            <span className="block text-[10px] text-slate-500">{sp.role} {sp.company ? `@ ${sp.company}` : ''}</span>
+                          </div>
+                          <button type="button" onClick={() => removeSpeaker(idx)} className="text-red-500 hover:bg-red-50 p-1 rounded cursor-pointer">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  <div className="space-y-2 bg-slate-50/50 p-3 rounded-lg border border-slate-100">
+                    <input 
+                      type="text" 
+                      placeholder="Konuşmacı Adı" 
+                      value={newSpeakerName}
+                      onChange={(e) => setNewSpeakerName(e.target.value)}
+                      className="w-full bg-white border rounded p-1.5 text-xs focus:outline-none"
+                    />
+                    <input 
+                      type="text" 
+                      placeholder="Rolü / Unvanı" 
+                      value={newSpeakerRole}
+                      onChange={(e) => setNewSpeakerRole(e.target.value)}
+                      className="w-full bg-white border rounded p-1.5 text-xs focus:outline-none"
+                    />
+                    <input 
+                      type="text" 
+                      placeholder="Şirketi (İsteğe Bağlı)" 
+                      value={newSpeakerCompany}
+                      onChange={(e) => setNewSpeakerCompany(e.target.value)}
+                      className="w-full bg-white border rounded p-1.5 text-xs focus:outline-none"
+                    />
+                    <button type="button" onClick={addSpeaker} className="w-full py-1.5 bg-slate-800 text-white rounded text-xs font-bold cursor-pointer">Ekle</button>
+                  </div>
+                </div>
+
+                <div className="border border-slate-100 p-4 rounded-xl">
+                  <h4 className="text-xs font-bold text-slate-700 mb-3">Mevcut Sponsorlar</h4>
+                  <div className="space-y-2 mb-4">
+                    {(customOverrides.sponsors || []).length === 0 ? (
+                      <p className="text-slate-400 text-xs italic">Sponsor eklenmemiş.</p>
+                    ) : (
+                      (customOverrides.sponsors || []).map((sp: any, idx: number) => (
+                        <div key={idx} className="flex justify-between items-center p-2 bg-slate-50 rounded-lg border text-xs">
+                          <span className="font-bold text-slate-800">{sp.name}</span>
+                          <button type="button" onClick={() => removeSponsor(idx)} className="text-red-500 hover:bg-red-50 p-1 rounded cursor-pointer">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  <div className="space-y-2 bg-slate-50/50 p-3 rounded-lg border border-slate-100">
+                    <input 
+                      type="text" 
+                      placeholder="Sponsor Firma Adı" 
+                      value={newSponsorName}
+                      onChange={(e) => setNewSponsorName(e.target.value)}
+                      className="w-full bg-white border rounded p-1.5 text-xs focus:outline-none"
+                    />
+                    <button type="button" onClick={addSponsor} className="w-full py-1.5 bg-slate-800 text-white rounded text-xs font-bold cursor-pointer">Ekle</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 4. Mezuniyet & Parti Bilgileri */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 text-left">
+              <h3 className="text-base font-bold text-slate-800 mb-4">🎒 Mezuniyet & Parti Bilgileri</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-4 border rounded-xl space-y-3">
+                  <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">🎓 Mezuniyet Bilgileri</h4>
+                  <div>
+                    <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Fakülte</label>
+                    <input 
+                      type="text" 
+                      placeholder="Örn: Mühendislik Fakültesi"
+                      value={customOverrides.faculty || ''}
+                      onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, faculty: e.target.value }))}
+                      className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Bölüm / Program</label>
+                    <input 
+                      type="text" 
+                      placeholder="Örn: Bilgisayar Mühendisliği"
+                      value={customOverrides.department || ''}
+                      onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, department: e.target.value }))}
+                      className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Mezuniyet Yılı</label>
+                    <input 
+                      type="text" 
+                      placeholder="Örn: 2026"
+                      value={customOverrides.graduation_year || ''}
+                      onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, graduation_year: e.target.value }))}
+                      className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="p-4 border rounded-xl space-y-3">
+                  <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">🎵 Parti & DJ Detayları</h4>
+                  <div>
+                    <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Line-Up / DJ Adı</label>
+                    <input 
+                      type="text" 
+                      placeholder="Örn: DJ Pulse"
+                      value={customOverrides.dj_name || ''}
+                      onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, dj_name: e.target.value }))}
+                      className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Dress Code</label>
+                    <input 
+                      type="text" 
+                      placeholder="Örn: Black Tie / Smart Casual"
+                      value={customOverrides.dress_code || ''}
+                      onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, dress_code: e.target.value }))}
+                      className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Giriş Şartı / Yaş Sınırı</label>
+                    <input 
+                      type="text" 
+                      placeholder="Örn: 18+ Only"
+                      value={customOverrides.age_limit || ''}
+                      onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, age_limit: e.target.value }))}
+                      className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Tasarımsal Varyantlar */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 text-left">
+              <h3 className="text-base font-bold text-slate-800 mb-3">🎨 Tasarım Çeşitlemeleri</h3>
+              <p className="text-slate-500 text-xs mb-4">
+                Her layout'un kendi içindeki varyant stillerini bu alandan değiştirebilirsiniz.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Çocuk Teması Varyantı</label>
+                  <select
+                    value={customOverrides.gender_variant || 'neutral'}
+                    onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, gender_variant: e.target.value }))}
+                    className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none font-sans"
+                  >
+                    <option value="neutral">Bej/Mint (Nötr)</option>
+                    <option value="girl">Kız Çocuk</option>
+                    <option value="boy">Erkek Çocuk</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Sünnet Düğünü Varyantı</label>
+                  <select
+                    value={customOverrides.circumcision_variant || 'royal'}
+                    onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, circumcision_variant: e.target.value }))}
+                    className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none font-sans"
+                  >
+                    <option value="royal">Kraliyet Mavisi & Altın</option>
+                    <option value="velvet-nazar">Lacivert Kadife & Nazar Boncuğu</option>
+                    <option value="white-marble">Beyaz Mermer & Mavi Monogram</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Kına Gecesi Varyantı</label>
+                  <select
+                    value={customOverrides.henna_variant || 'gold'}
+                    onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, henna_variant: e.target.value }))}
+                    className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none font-sans"
+                  >
+                    <option value="gold">Sarı Altın Varak</option>
+                    <option value="rose-gold">Rose Gold Varak</option>
+                    <option value="copper">Bakır Varak</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Minimalist Renk Şeması</label>
+                  <select
+                    value={customOverrides.minimal_variant || 'gold'}
+                    onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, minimal_variant: e.target.value }))}
+                    className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none font-sans"
+                  >
+                    <option value="gold">Minimalist Altın</option>
+                    <option value="green">Koyu Yaprak Yeşili</option>
+                    <option value="black">Editoryal Siyah/Beyaz</option>
+                    <option value="earth">Toprak/Kiremit Tonları</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Dergi / Editoryal Stil</label>
+                  <select
+                    value={customOverrides.editorial_variant || 'fashion'}
+                    onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, editorial_variant: e.target.value }))}
+                    className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none font-sans"
+                  >
+                    <option value="fashion">Modern Moda Dergisi</option>
+                    <option value="newspaper">Siyah Beyaz Gazete</option>
+                    <option value="luxury">Lüks Lacivert Dergi</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] text-slate-400 font-bold uppercase mb-1">Full-Bleed Başlık Konumu</label>
+                  <select
+                    value={customOverrides.fullbleed_position || 'bottom-center'}
+                    onChange={(e) => setCustomOverrides((prev: any) => ({ ...prev, fullbleed_position: e.target.value }))}
+                    className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none font-sans"
+                  >
+                    <option value="bottom-center">Alt Merkez Bilgi Paneli</option>
+                    <option value="left-cinematic">Sol Hizalı Sinematik</option>
+                    <option value="right-monogram">Sağ Alt Monogram</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <button onClick={handleSaveDesign} className="mt-8 flex items-center justify-center gap-2 w-full bg-slate-900 text-white font-bold py-4 rounded-xl hover:bg-slate-800 transition-colors shadow-lg cursor-pointer">
+              <Save className="w-5 h-5" /> Değişiklikleri Kaydet & Önizlemeyi Yenile
+            </button>
           </div>
         )}
 

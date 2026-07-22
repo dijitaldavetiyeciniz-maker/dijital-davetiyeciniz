@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { getSmartAutoMatch } from '@/lib/autoMatch';
 import Link from 'next/link';
 import { Sparkles, Link as LinkIcon, KeyRound, Eye, EyeOff, Check, AlertCircle } from 'lucide-react';
 
@@ -119,17 +120,27 @@ function CreateForm() {
       return;
     }
 
-    // Insert Default Values into DB
+    const match = getSmartAutoMatch(eventType);
+
     const { error } = await supabase.from('weddings').insert([
       {
         user_id: user?.id,
         user_email: user?.email,
-        bride_name: 'Gelin',
-        groom_name: 'Damat',
+        bride_name: eventType === 'Kına' ? 'Gelin' : eventType === 'Sünnet' ? 'Sevgili Oğlumuz' : 'Gelin',
+        groom_name: eventType === 'Kına' ? '' : eventType === 'Sünnet' ? '' : 'Damat',
         bride_parents: '',
         groom_parents: '',
         slug: cleanSlug,
-        template_id: defaultTemplateId,
+        template_id: match.template_id,
+        primary_color: match.primary_color,
+        text_color: match.text_color,
+        envelope_bg_color: match.envelope_bg_color,
+        envelope_color: match.envelope_color,
+        seal_style: match.seal_style,
+        font_family: match.font_family,
+        names_font_family: match.names_font_family,
+        background_animation: match.background_animation,
+        custom_overrides: match.custom_overrides,
         admin_password: password,
         event_type: eventType,
         venue_name: '',
@@ -140,8 +151,6 @@ function CreateForm() {
         is_paid: false,
         entrance_animation: 'royal-seal-premium',
         envelope_style: 'classic',
-        seal_style: 'burgundy',
-        background_animation: 'golden',
         show_program: false
       }
     ]);
