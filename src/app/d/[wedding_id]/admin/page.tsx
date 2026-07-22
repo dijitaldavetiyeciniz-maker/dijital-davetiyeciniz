@@ -327,49 +327,60 @@ export default function CoupleAdminPage({
   const [quoteFontFamily, setQuoteFontFamily] = useState('');
   const [quoteFontSize, setQuoteFontSize] = useState('text-sm');
   const [isCopied, setIsCopied] = useState(false);
+  const [themes, setThemes] = useState<any[]>([]);
   
   // Live preview data — reflects current state instantly without DB roundtrip
-  const liveWeddingData = useMemo(() => ({
-    ...wedding,
-    event_type: eventType,
-    template_id: templateId,
-    primary_color: primaryColor,
-    text_color: textColor,
-    envelope_color: envelopeColor,
-    envelope_bg_color: envelopeBgColor,
-    background_design: envelopeBgColor,
-    envelope_flap_type: envelopeFlapType,
-    seal_type: sealType,
-    seal_color: sealColor,
-    entrance_type: entranceType,
-    effect_type: effectType,
-    font_family: fontFamily,
-    names_font_family: namesFontFamily,
-    use_envelope: useEnvelope,
-    show_photos: showPhotos,
-    show_rsvp: showRsvp,
-    show_comments: showComments,
-    show_countdown: showCountdown,
-    background_animation: backgroundAnimation,
-    entrance_animation: entranceAnimation,
-    envelope_style: envelopeStyle,
-    seal_style: sealStyle,
-    countdown_style: countdownStyle,
-    is_dark_mode: isDarkMode,
-    custom_overrides: customOverrides,
-    photo_focal_point: photoFocalPoint,
-  }), [
+  const liveWeddingData = useMemo(() => {
+    const activeTheme = themes.find(t => t.id === templateId || t.template_id === templateId);
+    return {
+      ...wedding,
+      event_type: eventType,
+      template_id: templateId,
+      primary_color: primaryColor,
+      text_color: textColor,
+      envelope_color: envelopeColor,
+      envelope_bg_color: envelopeBgColor,
+      background_design: envelopeBgColor,
+      envelope_flap_type: envelopeFlapType,
+      seal_type: sealType,
+      seal_color: sealColor,
+      entrance_type: entranceType,
+      effect_type: effectType,
+      font_family: fontFamily,
+      names_font_family: namesFontFamily,
+      use_envelope: useEnvelope,
+      show_photos: showPhotos,
+      show_rsvp: showRsvp,
+      show_comments: showComments,
+      show_countdown: showCountdown,
+      background_animation: backgroundAnimation,
+      entrance_animation: entranceAnimation,
+      envelope_style: envelopeStyle,
+      seal_style: sealStyle,
+      countdown_style: countdownStyle,
+      is_dark_mode: isDarkMode,
+      custom_overrides: {
+        ...customOverrides,
+        layoutStyle: customOverrides?.layoutStyle || activeTheme?.layoutStyle || 'monogram',
+        backgroundDesign: customOverrides?.backgroundDesign || activeTheme?.backgroundDesign || '',
+        thematicAssets: customOverrides?.thematicAssets || activeTheme?.thematicAssets || [],
+        animationPreset: customOverrides?.animationPreset || activeTheme?.animationPreset || '',
+        sealPreset: customOverrides?.sealPreset || activeTheme?.sealPreset || '',
+      },
+      photo_focal_point: photoFocalPoint,
+      layout_style: customOverrides?.layoutStyle || activeTheme?.layoutStyle || 'monogram',
+    };
+  }, [
     wedding, templateId, primaryColor, textColor, envelopeColor,
     envelopeBgColor, envelopeFlapType, sealType, sealColor,
     entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
     showPhotos, showRsvp, showComments, showCountdown, backgroundAnimation,
     entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode, eventType,
-    customOverrides, photoFocalPoint
+    customOverrides, photoFocalPoint, themes
   ]);
 
   const [isUploading, setIsUploading] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
-  const [themes, setThemes] = useState<any[]>([]);
 
   useEffect(() => {
     // Hazır temaları yükle

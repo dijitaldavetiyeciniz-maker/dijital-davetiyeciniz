@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, Navigation, Info, Heart } from 'lucide-react';
+import { Calendar, MapPin, Navigation, Info } from 'lucide-react';
+import { backgroundDesignRegistry } from '@/lib/registries';
 
 interface LayoutProps {
   wedding: any;
@@ -44,7 +45,6 @@ export default function BotanicalFrameLayout({
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
-  // 1. GERÇEK ZAMANLI DİKEY SAYAÇ HESAPLAMA
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isEventPassed, setIsEventPassed] = useState(false);
 
@@ -72,11 +72,10 @@ export default function BotanicalFrameLayout({
     return () => clearInterval(timer);
   }, [wedding.wedding_date]);
 
-  // Takvime Ekle (Google Calendar Link Generator)
   const getGoogleCalendarLink = () => {
     if (!wedding.wedding_date) return '#';
     const startDate = new Date(wedding.wedding_date);
-    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000); // Default: 2 hours event
+    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
     const formatCalendarDate = (date: Date) => date.toISOString().replace(/-|:|\.\d\d\d/g, "");
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle + ': ' + wedding.bride_name + ' & ' + wedding.groom_name)}&dates=${formatCalendarDate(startDate)}/${formatCalendarDate(endDate)}&details=${encodeURIComponent(wedding.custom_message || '')}&location=${encodeURIComponent(wedding.venue_name || '')}`;
   };
@@ -84,39 +83,41 @@ export default function BotanicalFrameLayout({
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 
+  // 1. DOĞAL KAĞIT / BOTANİK DOKU VE ZEMİN
+  const bgRegistry = backgroundDesignRegistry[wedding.background_design || 'fine-paper-texture'] || { fallbackColor: '#fcfdfa' };
+
   return (
     <div 
-      className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in"
+      className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in text-emerald-950"
       style={{ fontFamily: `"${bodyFont}", serif` }}
     >
+      {/* İnce Okaliptüs Yapraklı Oval Çerçeveli Kart */}
       <div 
-        className="relative rounded-[2.5rem] overflow-hidden shadow-2xl p-6 sm:p-10 text-center border flex flex-col items-center justify-between min-h-[620px]"
-        style={{ borderColor: `${primaryColor}20`, backgroundColor: cardBgColor, color: textColor }}
+        className="relative rounded-[3.5rem] overflow-hidden shadow-[0_20px_50px_rgba(21,128,61,0.15)] p-6 sm:p-10 text-center border flex flex-col items-center justify-between min-h-[640px]"
+        style={{ borderColor: `${primaryColor}25`, backgroundColor: bgRegistry.fallbackColor || cardBgColor, color: textColor }}
       >
-        
-        {/* KÖŞELERDE DEKORATİF BOTANİK YAPRAKLAR (pointer-events: none ile buton tıklamasını engellemez) */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-40">
-          {/* Top Left Leaf */}
-          <div className="absolute -top-6 -left-6 w-32 h-32 text-6xl rotate-[-15deg] motion-safe:animate-pulse">🌿</div>
-          {/* Top Right Leaf */}
-          <div className="absolute -top-6 -right-6 w-32 h-32 text-6xl rotate-[75deg] scale-x-[-1] motion-safe:animate-pulse">🌿</div>
-          {/* Bottom Left Leaf */}
-          <div className="absolute -bottom-6 -left-6 w-32 h-32 text-6xl rotate-[195deg] motion-safe:animate-pulse">🌿</div>
-          {/* Bottom Right Leaf */}
-          <div className="absolute -bottom-6 -right-6 w-32 h-32 text-6xl rotate-[105deg] scale-y-[-1] motion-safe:animate-pulse">🌿</div>
+        {/* İnce Keten/Kağıt Noise Doku */}
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(22,101,52,0.015)_1px,transparent_1px)] bg-[size:14px_14px] pointer-events-none z-0 opacity-60" />
+
+        {/* KÖŞELERDE HAFİF SALLANAN YEŞİL YAPRAK DEKORASYONLARI */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-30">
+          <div className="absolute -top-6 -left-6 text-6xl rotate-[-15deg] animate-pulse duration-[5000ms]">🌿</div>
+          <div className="absolute -top-6 -right-6 text-6xl rotate-[75deg] scale-x-[-1] animate-pulse duration-[6000ms]">🌿</div>
+          <div className="absolute -bottom-6 -left-6 text-6xl rotate-[195deg] animate-pulse duration-[4000ms]">🌿</div>
+          <div className="absolute -bottom-6 -right-6 text-6xl rotate-[105deg] scale-y-[-1] animate-pulse duration-[5000ms]">🌿</div>
         </div>
 
-        {/* İnce Şık Çerçeve (Yeşil veya Altın Varak Eşleşmesi) */}
-        <div className="absolute inset-3 rounded-[2.2rem] pointer-events-none z-0 border opacity-40" style={{ borderColor: primaryColor }} />
+        {/* Oval Çerçeve Çizgisi */}
+        <div className="absolute inset-4 rounded-[3.2rem] pointer-events-none z-0 border-2 border-dashed opacity-30" style={{ borderColor: primaryColor }} />
 
-        {/* GÜVENLİ İÇERİK ALANI (Tüm metinler z-10 katmanında toplanır) */}
+        {/* GÜVENLİ İÇERİK ALANI */}
         <div className="relative z-10 w-full flex flex-col items-center">
           
           {/* Çiçekli Mini Monogram Rozet */}
           <div className="flex flex-col items-center mb-6 select-none opacity-90">
             <div 
-              className="w-11 h-11 rounded-full border border-dashed flex items-center justify-center font-serif text-sm font-semibold relative"
-              style={{ borderColor: primaryColor, backgroundColor: 'rgba(0,0,0,0.02)' }}
+              className="w-12 h-12 rounded-full border border-dashed flex items-center justify-center font-serif text-sm font-semibold relative bg-emerald-50/50"
+              style={{ borderColor: primaryColor }}
             >
               <span className="text-[10px] text-green-700/70 absolute -top-2">🌸</span>
               <span style={{ color: primaryColor }}>
@@ -126,7 +127,7 @@ export default function BotanicalFrameLayout({
           </div>
 
           {/* Etkinlik Türü */}
-          <h3 className="font-semibold tracking-[0.25em] uppercase text-[10px] mb-4 opacity-75" style={{ color: primaryColor }}>
+          <h3 className="font-semibold tracking-[0.25em] uppercase text-[10px] mb-4 text-emerald-800">
             {eventTitle}
           </h3>
 
@@ -137,11 +138,11 @@ export default function BotanicalFrameLayout({
                 {wedding.bride_parents}
               </p>
             )}
-            <h1 className="text-2xl sm:text-3xl font-normal leading-tight select-none" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
+            <h1 className="text-3xl sm:text-4xl font-normal leading-tight" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
               {wedding.bride_name}
             </h1>
-            <div className="my-1.5 text-xs opacity-40 font-sans tracking-widest uppercase">ve</div>
-            <h1 className="text-2xl sm:text-3xl font-normal leading-tight select-none" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
+            <div className="my-1.5 text-xs opacity-50 font-sans tracking-widest uppercase">ve</div>
+            <h1 className="text-3xl sm:text-4xl font-normal leading-tight" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
               {wedding.groom_name}
             </h1>
             {wedding.groom_parents && (
@@ -151,51 +152,49 @@ export default function BotanicalFrameLayout({
             )}
           </div>
 
-          {/* Davet Sözü */}
-          {renderQuote()}
+          {/* Davet Mesajı */}
+          <div className="my-3 leading-relaxed text-sm max-w-sm italic opacity-90">
+            {renderQuote()}
+          </div>
 
-          {/* DİKEY GERÇEK ZAMANLI SAYAÇ KUTULARI */}
+          {/* DİKEY GERÇEK ZAMANLI SAYAÇ KUTULARI (Minimal/Ferah) */}
           {wedding.wedding_date && !isEventPassed && (
             <div className="flex justify-center items-center gap-2 sm:gap-3 my-6 font-sans select-none">
-              {/* Gün */}
-              <div className="flex flex-col items-center w-14 sm:w-16 py-2.5 rounded-2xl border shadow-xs" style={{ borderColor: `${primaryColor}15`, backgroundColor: 'rgba(255,255,255,0.6)' }}>
-                <span className="text-lg sm:text-xl font-bold tracking-tight" style={{ color: primaryColor }}>{timeLeft.days}</span>
-                <span className="text-[9px] uppercase tracking-wider opacity-60">Gün</span>
+              <div className="flex flex-col items-center w-14 sm:w-16 py-2.5 rounded-2xl border border-emerald-900/10 bg-emerald-50/40 backdrop-blur-xs shadow-2xs">
+                <span className="text-lg sm:text-xl font-bold tracking-tight text-emerald-800">{timeLeft.days}</span>
+                <span className="text-[9px] uppercase tracking-wider opacity-60 text-emerald-900">Gün</span>
               </div>
-              {/* Saat */}
-              <div className="flex flex-col items-center w-14 sm:w-16 py-2.5 rounded-2xl border shadow-xs" style={{ borderColor: `${primaryColor}15`, backgroundColor: 'rgba(255,255,255,0.6)' }}>
-                <span className="text-lg sm:text-xl font-bold tracking-tight" style={{ color: primaryColor }}>{timeLeft.hours}</span>
-                <span className="text-[9px] uppercase tracking-wider opacity-60">Saat</span>
+              <div className="flex flex-col items-center w-14 sm:w-16 py-2.5 rounded-2xl border border-emerald-900/10 bg-emerald-50/40 backdrop-blur-xs shadow-2xs">
+                <span className="text-lg sm:text-xl font-bold tracking-tight text-emerald-800">{timeLeft.hours}</span>
+                <span className="text-[9px] uppercase tracking-wider opacity-60 text-emerald-900">Saat</span>
               </div>
-              {/* Dakika */}
-              <div className="flex flex-col items-center w-14 sm:w-16 py-2.5 rounded-2xl border shadow-xs" style={{ borderColor: `${primaryColor}15`, backgroundColor: 'rgba(255,255,255,0.6)' }}>
-                <span className="text-lg sm:text-xl font-bold tracking-tight" style={{ color: primaryColor }}>{timeLeft.minutes}</span>
-                <span className="text-[9px] uppercase tracking-wider opacity-60">Dk</span>
+              <div className="flex flex-col items-center w-14 sm:w-16 py-2.5 rounded-2xl border border-emerald-900/10 bg-emerald-50/40 backdrop-blur-xs shadow-2xs">
+                <span className="text-lg sm:text-xl font-bold tracking-tight text-emerald-800">{timeLeft.minutes}</span>
+                <span className="text-[9px] uppercase tracking-wider opacity-60 text-emerald-900">Dk</span>
               </div>
-              {/* Saniye */}
-              <div className="flex flex-col items-center w-14 sm:w-16 py-2.5 rounded-2xl border shadow-xs" style={{ borderColor: `${primaryColor}15`, backgroundColor: 'rgba(255,255,255,0.6)' }}>
-                <span className="text-lg sm:text-xl font-bold tracking-tight" style={{ color: primaryColor }}>{timeLeft.seconds}</span>
-                <span className="text-[9px] uppercase tracking-wider opacity-60">Sn</span>
+              <div className="flex flex-col items-center w-14 sm:w-16 py-2.5 rounded-2xl border border-emerald-900/10 bg-emerald-50/40 backdrop-blur-xs shadow-2xs">
+                <span className="text-lg sm:text-xl font-bold tracking-tight text-emerald-800">{timeLeft.seconds}</span>
+                <span className="text-[9px] uppercase tracking-wider opacity-60 text-emerald-900">Sn</span>
               </div>
             </div>
           )}
 
           {isEventPassed && (
-            <div className="py-2.5 px-6 rounded-full border text-xs font-semibold my-6" style={{ borderColor: `${primaryColor}15`, color: primaryColor, backgroundColor: 'rgba(0,0,0,0.02)' }}>
+            <div className="py-2 px-6 rounded-full border text-xs font-semibold my-6 border-emerald-900/10 text-emerald-800 bg-emerald-50/30">
               🎉 Etkinlik Tarihi Tamamlandı
             </div>
           )}
 
-          {/* Tarih ve Adres Bilgileri */}
+          {/* Tarih ve Adres */}
           <div className="w-full max-w-sm text-xs font-semibold my-6 space-y-2.5">
-            <div className="flex items-center gap-3 py-2.5 px-4 rounded-xl border bg-black/5" style={{ borderColor: `${primaryColor}15` }}>
-              <Calendar className="w-4 h-4 shrink-0" style={{ color: primaryColor }} />
+            <div className="flex items-center gap-3 py-2.5 px-4 rounded-xl border border-emerald-900/10 bg-emerald-50/20">
+              <Calendar className="w-4 h-4 shrink-0 text-emerald-800" />
               <span>{dateStr} <span className="mx-1 opacity-40">|</span> {timeStr}</span>
             </div>
 
-            <div className="flex flex-col items-start gap-1 p-4 rounded-xl border bg-black/5 text-left" style={{ borderColor: `${primaryColor}15` }}>
+            <div className="flex flex-col items-start gap-1 p-4 rounded-xl border border-emerald-900/10 bg-emerald-50/20 text-left">
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 shrink-0" style={{ color: primaryColor }} />
+                <MapPin className="w-4 h-4 shrink-0 text-emerald-800" />
                 <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
               </div>
               {wedding.venue_address && (
@@ -204,65 +203,39 @@ export default function BotanicalFrameLayout({
             </div>
           </div>
 
-          {/* DOKUNMATİK UYUMLU OVAL AKSİYON BUTONLARI (MIN 48PX) */}
-          <div className="w-full max-w-sm flex flex-col gap-3 font-sans mt-4">
-            
-            {/* Buton 1: KONUMA GİT */}
+          {/* Oval Butonlar */}
+          <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
             {hasMaps && (
               <button 
                 type="button"
                 onClick={handleMapClick}
-                className="w-full h-12 rounded-full border flex items-center justify-between px-6 font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer focus-visible:ring-2 focus-visible:outline-none"
-                style={{ 
-                  borderColor: `${primaryColor}30`, 
-                  color: primaryColor,
-                  backgroundColor: 'rgba(255, 255, 255, 0.5)'
-                }}
+                className="w-full h-12 rounded-full border-2 flex items-center justify-between px-6 font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer focus-visible:ring-2 focus-visible:outline-none bg-emerald-550 border-emerald-700/20 text-emerald-800 hover:bg-emerald-50/20"
+                style={{ borderColor: primaryColor }}
               >
                 <div className="flex items-center gap-2.5">
-                  <Navigation className="w-4 h-4" />
+                  <Navigation className="w-4 h-4 text-emerald-800" />
                   <span>KONUMA GİT</span>
                 </div>
                 <span>&rarr;</span>
               </button>
             )}
 
-            {/* Buton 2: TAKVİME EKLE */}
             {wedding.wedding_date && (
               <a 
                 href={getGoogleCalendarLink()}
                 target="_blank"
                 rel="noreferrer"
-                className="w-full h-12 rounded-full border flex items-center justify-between px-6 font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer focus-visible:ring-2 focus-visible:outline-none"
-                style={{ 
-                  borderColor: `${primaryColor}30`, 
-                  color: primaryColor,
-                  backgroundColor: 'rgba(255, 255, 255, 0.5)'
-                }}
+                className="w-full h-12 rounded-full border-2 flex items-center justify-between px-6 font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer focus-visible:ring-2 focus-visible:outline-none bg-emerald-550 border-emerald-700/20 text-emerald-800 hover:bg-emerald-50/20"
+                style={{ borderColor: primaryColor }}
               >
                 <div className="flex items-center gap-2.5">
-                  <Calendar className="w-4 h-4" />
+                  <Calendar className="w-4 h-4 text-emerald-800" />
                   <span>TAKVİME EKLE</span>
                 </div>
                 <span>&rarr;</span>
               </a>
             )}
 
-            {/* Buton 3: HEDİYE BİLGİLERİ (İsteğe bağlı, eğer banka iban bilgisi verilmişse) */}
-            {wedding.bank_iban && (
-              <div 
-                className="w-full p-4 rounded-3xl border text-left text-[11px] leading-relaxed bg-amber-500/5"
-                style={{ borderColor: `${primaryColor}15` }}
-              >
-                <div className="flex items-center gap-2 font-bold mb-1" style={{ color: primaryColor }}>
-                  <Info className="w-3.5 h-3.5" />
-                  <span>HEDİYE & IBAN BİLGİLERİ</span>
-                </div>
-                <p className="opacity-90">{wedding.bank_iban}</p>
-              </div>
-            )}
-
-            {/* Buton 4: KATILIM ANKETİ / LCV BİLDİRİMİ */}
             {showRsvp && renderRsvpButton()}
           </div>
 

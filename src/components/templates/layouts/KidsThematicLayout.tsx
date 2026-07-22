@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Navigation, Gift, Sparkles } from 'lucide-react';
-import { thematicAssetRegistry } from '@/lib/registries';
 
 interface LayoutProps {
   wedding: any;
@@ -42,60 +41,117 @@ export default function KidsThematicLayout({
   cardBgColor = '#ffffff',
   mode = 'public'
 }: LayoutProps) {
-  const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : '👶';
-
-  // 1. VARYANT BELİRLEME (Öncelik: genderVariant, custom_overrides, en son metin taraması fallback)
-  const eventTypeRaw = (wedding.event_type || '').toLowerCase();
-  const overrides = wedding.custom_overrides || {};
-  const genderVariant = overrides.gender_variant || wedding.gender_variant || '';
-
-  let variant: 'girl' | 'boy' | 'neutral' = 'neutral';
-  let badgeText = 'Hoş Geldin Bebek';
-
-  if (genderVariant === 'girl' || genderVariant === 'kiz') {
-    variant = 'girl';
-  } else if (genderVariant === 'boy' || genderVariant === 'erkek') {
-    variant = 'boy';
-  } else if (genderVariant === 'neutral') {
-    variant = 'neutral';
+  // 1. VARYANT BELİRLEME
+  const presetId = wedding.template_id || '';
+  let variant: 'clouds-above' | 'little-racer' | 'blue-bear' | 'pink-princess' | 'neutral' = 'neutral';
+  
+  if (presetId === 'clouds-above') {
+    variant = 'clouds-above';
+  } else if (presetId === 'little-racer') {
+    variant = 'little-racer';
+  } else if (presetId === 'blue-bear') {
+    variant = 'blue-bear';
+  } else if (presetId === 'pink-princess') {
+    variant = 'pink-princess';
   } else {
-    // Geriye dönük metin taraması fallback
-    if (eventTypeRaw.includes('girl') || eventTypeRaw.includes('kiz') || eventTypeRaw.includes('kina')) {
-      variant = 'girl';
-    } else if (eventTypeRaw.includes('boy') || eventTypeRaw.includes('erkek') || eventTypeRaw.includes('sunnet')) {
-      variant = 'boy';
+    // Fallback parsing
+    const overrides = wedding.custom_overrides || {};
+    const gender = (overrides.gender_variant || wedding.gender_variant || '').toLowerCase();
+    if (gender === 'girl' || gender === 'kiz') {
+      variant = 'pink-princess';
+    } else if (gender === 'boy' || gender === 'erkek') {
+      variant = 'blue-bear';
+    } else {
+      variant = 'clouds-above'; // default
     }
   }
 
-  // Badge Text Kararı
+  // 2. VARYANTA ÖZEL PARAMETRELER
+  let themeColor = primaryColor || '#38bdf8';
+  let badgeText = 'Hoş Geldin Bebek';
+  let cardStyle = 'rounded-[3rem] p-8 sm:p-12 border shadow-2xl relative overflow-hidden flex flex-col items-center justify-between min-h-[600px] transition-all';
+  let backgroundDecoration: React.ReactNode = null;
+  let customCounterStyle = '';
+
+  const eventTypeRaw = (wedding.event_type || '').toLowerCase();
   if (eventTypeRaw.includes('birthday') || eventTypeRaw.includes('dogum')) {
     badgeText = 'İyi ki Doğdun';
   } else if (eventTypeRaw.includes('shower')) {
     badgeText = 'Baby Shower';
   }
 
+  const overrides = wedding.custom_overrides || {};
   if (overrides.kids_age) {
     badgeText = `${overrides.kids_age} Yaşında!`;
-  } else if (eventTypeRaw.includes('birthday') || eventTypeRaw.includes('dogum')) {
-    badgeText = '1 Yaşında!';
   }
 
-  // 2. VARYANT RENK VE STİLLERİ
-  let kidThemeColor = primaryColor || '#f472b6'; // Default pink
-  let kidBgGradient = 'from-pink-50 via-rose-50 to-pink-100';
-  let cardShadow = 'shadow-pink-200/50';
-
-  if (variant === 'boy') {
-    kidThemeColor = primaryColor || '#60a5fa'; // Blue
-    kidBgGradient = 'from-blue-50 via-sky-50 to-blue-100';
-    cardShadow = 'shadow-blue-200/50';
-  } else if (variant === 'neutral') {
-    kidThemeColor = primaryColor || '#34d399'; // Mint/Green
-    kidBgGradient = 'from-teal-50 via-amber-50 to-emerald-100';
-    cardShadow = 'shadow-emerald-200/50';
+  if (variant === 'clouds-above') {
+    themeColor = primaryColor || '#38bdf8'; // Gök Mavisi
+    cardStyle += ' bg-gradient-to-b from-[#f0f9ff] to-white border-sky-100 shadow-sky-100/50';
+    backgroundDecoration = (
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.25]">
+        {/* Floating clouds */}
+        <div className="absolute top-12 left-6 animate-pulse duration-[3000ms]">
+          <svg className="w-16 h-10 text-sky-300" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
+          </svg>
+        </div>
+        <div className="absolute top-20 right-8 animate-bounce duration-[4000ms]">
+          <svg className="w-12 h-8 text-sky-200" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
+          </svg>
+        </div>
+        {/* Balloon rising */}
+        <div className="absolute bottom-16 right-10 animate-bounce duration-[5000ms]">
+          <span className="text-4xl">🎈</span>
+        </div>
+        <div className="absolute bottom-32 left-8 animate-pulse duration-[6000ms]">
+          <span className="text-3xl">☁️</span>
+        </div>
+      </div>
+    );
+  } else if (variant === 'little-racer') {
+    themeColor = primaryColor || '#ef4444'; // Yarışçı Kırmızısı
+    cardStyle += ' bg-[#1e293b] text-white border-red-500/20 shadow-red-500/10 font-mono';
+    backgroundDecoration = (
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.15]">
+        {/* Racetrack checkered lanes */}
+        <div className="absolute inset-x-0 top-0 h-4 bg-[radial-gradient(#ffffff_20%,transparent_20%)] bg-[length:16px_16px]" />
+        <div className="absolute inset-x-0 bottom-0 h-4 bg-[radial-gradient(#ffffff_20%,transparent_20%)] bg-[length:16px_16px]" />
+        {/* Racing icons */}
+        <div className="absolute top-16 left-10 animate-pulse">
+          <span className="text-4xl">🏎️</span>
+        </div>
+        <div className="absolute bottom-20 right-10 animate-bounce">
+          <span className="text-4xl">🏁</span>
+        </div>
+      </div>
+    );
+    customCounterStyle = 'racer-counter';
+  } else if (variant === 'blue-bear') {
+    themeColor = primaryColor || '#60a5fa'; // Yumuşak Mavi
+    cardStyle += ' bg-gradient-to-b from-[#eff6ff] to-[#f8fafc] border-blue-100 shadow-blue-100/40';
+    backgroundDecoration = (
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.2]">
+        <div className="absolute top-16 left-8 text-4xl animate-bounce duration-[6000ms]">🧸</div>
+        <div className="absolute top-8 right-12 text-4xl animate-pulse">🌙</div>
+        <div className="absolute bottom-24 left-10 text-3xl">⭐</div>
+        <div className="absolute bottom-16 right-12 text-3xl animate-bounce">⭐</div>
+      </div>
+    );
+  } else if (variant === 'pink-princess') {
+    themeColor = primaryColor || '#ec4899'; // Prenses Pembesi
+    cardStyle += ' bg-gradient-to-b from-[#fdf2f8] to-white border-pink-100 shadow-pink-100/40';
+    backgroundDecoration = (
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.2]">
+        <div className="absolute top-12 left-10 text-4xl animate-bounce duration-[4000ms]">🏰</div>
+        <div className="absolute top-20 right-8 text-3xl animate-pulse">👑</div>
+        <div className="absolute bottom-24 left-8 text-3xl">🦋</div>
+        <div className="absolute bottom-16 right-10 text-4xl animate-bounce duration-[5000ms]">🌸</div>
+      </div>
+    );
   }
 
-  // 3. ASSET REGISTRY YÜKLEMESİ VE FALLBACK'LER
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 
@@ -104,95 +160,23 @@ export default function KidsThematicLayout({
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
       style={{ fontFamily: `"${bodyFont}", sans-serif` }}
     >
-      {/* Çocuk Konseptine Özel Yumuşak Bulut & Balon Degradeli Zemin Kartı */}
       <div 
-        className={`relative rounded-[3rem] overflow-hidden shadow-2xl p-8 sm:p-12 text-center border flex flex-col items-center justify-between min-h-[600px] ${cardShadow}`}
-        style={{ borderColor: `${kidThemeColor}25`, backgroundColor: cardBgColor, color: textColor }}
+        className={cardStyle}
+        style={{ borderColor: `${themeColor}25`, color: variant === 'little-racer' ? '#ffffff' : textColor }}
       >
-        
-        {/* ARKA PLAN DEKORATİF RESİMLER (pointer-events: none) */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-[0.12]">
-          {variant === 'girl' && (
-            <>
-              {/* Sol Üst Taç SVG */}
-              <div className="absolute top-8 left-8 rotate-[-12deg] motion-safe:animate-bounce">
-                <svg className="w-12 h-12 text-pink-400" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M2 22h20v-2H2v2zm1-4h18V9l-4 4-5-8-5 8-4-4v9z"/>
-                </svg>
-              </div>
-              {/* Sağ Üst Kelebek/Kalp SVG */}
-              <div className="absolute top-16 right-10 rotate-[15deg] motion-safe:animate-pulse">
-                <svg className="w-10 h-10 text-rose-300" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-              </div>
-              {/* Sol Alt Yıldız SVG */}
-              <div className="absolute bottom-16 left-12 motion-safe:animate-bounce">
-                <svg className="w-8 h-8 text-rose-200" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                </svg>
-              </div>
-              {/* Sağ Alt Çiçek SVG */}
-              <div className="absolute bottom-12 right-12 rotate-[45deg]">
-                <svg className="w-12 h-12 text-pink-300" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                </svg>
-              </div>
-            </>
-          )}
+        {backgroundDecoration}
 
-          {variant === 'boy' && (
-            <>
-              {/* Sol Üst Bulut SVG */}
-              <div className="absolute top-10 left-8 motion-safe:animate-pulse">
-                <svg className="w-14 h-10 text-sky-200" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
-                </svg>
-              </div>
-              {/* Sağ Üst Balon SVG */}
-              <div className="absolute top-12 right-12 rotate-[10deg] motion-safe:animate-bounce">
-                <svg className="w-8 h-12 text-blue-300" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2a6 6 0 00-6 6c0 3.6 3.5 6.4 5.3 7.7a1 1 0 001.4 0c1.8-1.3 5.3-4.1 5.3-7.7A6 6 0 0012 2zm0 13c-.3 0-.5-.1-.7-.2C9.5 13.5 7 11.2 7 8a5 5 0 0110 0c0 3.2-2.5 5.5-4.3 6.8-.2.1-.4.2-.7.2z"/>
-                </svg>
-              </div>
-              {/* Sol Alt Yıldız SVG */}
-              <div className="absolute bottom-16 left-12 motion-safe:animate-pulse">
-                <svg className="w-8 h-8 text-sky-200" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                </svg>
-              </div>
-            </>
-          )}
-
-          {variant === 'neutral' && (
-            <>
-              {/* Sol Üst Gökkuşağı/Yıldız SVG */}
-              <div className="absolute top-8 left-8 motion-safe:animate-pulse">
-                <svg className="w-12 h-12 text-emerald-200" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                </svg>
-              </div>
-              {/* Sağ Üst Bulut SVG */}
-              <div className="absolute top-16 right-12 rotate-[10deg]">
-                <svg className="w-12 h-10 text-amber-200" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
-                </svg>
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* GÜVENLİ İÇERİK ALANI (Tüm metinler z-10 katmanında toplanır) */}
+        {/* GÜVENLİ İÇERİK ALANI */}
         <div className="relative z-10 w-full flex flex-col items-center">
           
-          {/* Sevimli Başlık Rozeti ("1 Yaşında!", "Hoş Geldin Bebek" vb.) */}
+          {/* Rozet */}
           <div className="flex flex-col items-center mb-6 select-none">
             <div 
               className="py-1.5 px-5 rounded-full border text-[10px] font-bold tracking-widest uppercase flex items-center gap-1.5 shadow-xs"
               style={{ 
-                borderColor: `${kidThemeColor}40`, 
-                color: kidThemeColor, 
-                backgroundColor: `${kidThemeColor}08` 
+                borderColor: `${themeColor}40`, 
+                color: themeColor, 
+                backgroundColor: `${themeColor}08` 
               }}
             >
               <Sparkles className="w-3.5 h-3.5 animate-pulse" />
@@ -200,98 +184,113 @@ export default function KidsThematicLayout({
             </div>
           </div>
 
-          {/* Etkinlik Başlığı */}
-          <h3 className="font-semibold tracking-[0.25em] uppercase text-[10px] mb-4 opacity-75" style={{ color: kidThemeColor }}>
+          {/* Başlık */}
+          <h3 className="font-semibold tracking-[0.25em] uppercase text-[10px] mb-4 opacity-75 animate-pulse" style={{ color: themeColor }}>
             {eventTitle}
           </h3>
 
           {/* Çocuğun İsmi */}
           <div className="w-full mb-6">
             <h1 
-              className="text-3xl sm:text-4xl font-normal leading-tight tracking-wide w-full"
-              style={{ color: kidThemeColor, fontFamily: `"${headingFont}", cursive` }}
+              className="text-4xl sm:text-5xl font-normal leading-tight tracking-wide w-full"
+              style={{ color: themeColor, fontFamily: `"${headingFont}", cursive` }}
             >
               {wedding.bride_name || 'Bebeğimiz'}
             </h1>
             
-            {/* Eğer anne-baba adı girilmişse detay olarak göster */}
+            {/* Anne Baba Detayı */}
             {(wedding.bride_parents || wedding.groom_parents) && (
-              <p className="text-[10px] tracking-[0.25em] font-light mt-3 opacity-60 uppercase font-sans">
+              <p className="text-[9px] tracking-[0.25em] font-light mt-3 opacity-60 uppercase font-sans">
                 {wedding.bride_parents ? `ANNE: ${wedding.bride_parents}` : ''} 
                 {wedding.groom_parents ? ` • BABA: ${wedding.groom_parents}` : ''}
               </p>
             )}
           </div>
 
-          {/* Özlü Söz veya Davet Metni */}
-          {renderQuote()}
+          {/* Davet Metni */}
+          <div className="my-2 select-text max-w-sm text-center">
+            {renderQuote()}
+          </div>
 
-          {/* Sayaç */}
-          <div className="w-full my-4">
+          {/* Sayaç Paneli */}
+          <div className={`w-full my-6 p-4 rounded-3xl ${variant === 'little-racer' ? 'bg-black/40 border border-red-500/30' : 'bg-white/40 backdrop-blur-xs border border-white/50'}`}>
+            <span className="text-[9px] font-bold tracking-widest text-slate-400 block mb-2">KALAN SÜRE</span>
             {renderTimer()}
           </div>
 
-          {/* Tarih ve Adres Kartları */}
-          <div className="w-full max-w-sm text-xs font-semibold my-6 space-y-2.5">
-            <div className="flex items-center gap-3 py-3 px-5 rounded-2xl border bg-black/2" style={{ borderColor: `${kidThemeColor}15` }}>
-              <Calendar className="w-4 h-4 shrink-0" style={{ color: kidThemeColor }} />
-              <span>{dateStr} <span className="mx-1 opacity-40">|</span> {timeStr}</span>
-            </div>
-
-            <div className="flex flex-col items-start gap-1 p-4 rounded-2xl border bg-black/2 text-left" style={{ borderColor: `${kidThemeColor}15` }}>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 shrink-0" style={{ color: kidThemeColor }} />
-                <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
+          {/* Bilgi Kartları */}
+          {variant === 'little-racer' ? (
+            /* Pit-stop / Bilet Görünümü */
+            <div className="w-full max-w-sm my-6 space-y-3 font-mono text-left">
+              <div className="p-4 rounded-xl border border-red-500/20 bg-black/60 relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-red-600 text-[8px] font-bold px-2 py-0.5 rounded-bl">PIT ENTRY</div>
+                <div className="text-xs font-bold text-red-500 mb-1">🏁 TARİH & SAAT</div>
+                <div className="text-sm font-semibold">{dateStr} - {timeStr}</div>
               </div>
-              {wedding.venue_address && (
-                <p className="text-[11px] font-light opacity-80 pl-6 leading-relaxed">{wedding.venue_address}</p>
-              )}
+              <div className="p-4 rounded-xl border border-red-500/20 bg-black/60 relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-red-600 text-[8px] font-bold px-2 py-0.5 rounded-bl">PADDOCK</div>
+                <div className="text-xs font-bold text-red-500 mb-1">📍 ETKİNLİK MEKANI</div>
+                <div className="text-sm font-bold">{wedding.venue_name || 'Pit Stop Belirtilmedi'}</div>
+                {wedding.venue_address && <div className="text-[10px] opacity-75 mt-1">{wedding.venue_address}</div>}
+              </div>
             </div>
-          </div>
+          ) : (
+            /* Klasik Sevebil Kartlar */
+            <div className="w-full max-w-sm text-xs font-semibold my-6 space-y-2.5">
+              <div className="flex items-center gap-3 py-3 px-5 rounded-2xl border bg-white/50 backdrop-blur-xs" style={{ borderColor: `${themeColor}15` }}>
+                <Calendar className="w-4 h-4 shrink-0" style={{ color: themeColor }} />
+                <span>{dateStr} <span className="mx-1 opacity-40">|</span> {timeStr}</span>
+              </div>
 
-          {/* DOKUNMATİK UYUMLU SEVİMLİ OVAL BUTONLAR (MIN 48PX) */}
+              <div className="flex flex-col items-start gap-1 p-4 rounded-2xl border bg-white/50 backdrop-blur-xs text-left" style={{ borderColor: `${themeColor}15` }}>
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 shrink-0" style={{ color: themeColor }} />
+                  <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
+                </div>
+                {wedding.venue_address && (
+                  <p className="text-[11px] font-light opacity-80 pl-6 leading-relaxed">{wedding.venue_address}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Aksiyon Butonları */}
           <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
-            
-            {/* Buton 1: KONUMA GİT */}
             {hasMaps && (
               <button 
                 type="button"
                 onClick={handleMapClick}
-                className="w-full h-12 rounded-full border flex items-center justify-between px-6 font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer focus-visible:ring-2 focus-visible:outline-none"
-                style={{ 
-                  borderColor: `${kidThemeColor}30`, 
-                  color: kidThemeColor,
-                  backgroundColor: 'rgba(255, 255, 255, 0.5)'
-                }}
+                className={`w-full h-12 rounded-full border flex items-center justify-between px-6 font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer focus-visible:ring-2 focus-visible:outline-none ${variant === 'little-racer' ? 'bg-red-600 border-red-700 text-white hover:bg-red-700' : 'bg-white/80 hover:bg-white text-slate-800'}`}
+                style={variant === 'little-racer' ? {} : { borderColor: `${themeColor}30`, color: themeColor }}
               >
                 <div className="flex items-center gap-2">
                   <Navigation className="w-4 h-4" />
-                  <span>KONUMA GİT</span>
+                  <span>{variant === 'little-racer' ? 'GPS / NAVİGASYON' : 'KONUMA GİT'}</span>
                 </div>
                 <span>&rarr;</span>
               </button>
             )}
 
-            {/* Buton 2: HEDİYE / BEBEK İHTİYAÇ LİSTESİ BİLGİSİ */}
             {wedding.bank_iban && (
               <div 
-                className="w-full p-4 rounded-3xl border text-left text-[11px] leading-relaxed bg-amber-500/5"
-                style={{ borderColor: `${kidThemeColor}15` }}
+                className={`w-full p-4 rounded-3xl border text-left text-[10px] leading-relaxed ${variant === 'little-racer' ? 'bg-black/60 border-red-500/20 text-white' : 'bg-amber-500/5'}`}
+                style={variant === 'little-racer' ? {} : { borderColor: `${themeColor}15` }}
               >
-                <div className="flex items-center gap-2 font-bold mb-1" style={{ color: kidThemeColor }}>
+                <div className="flex items-center gap-2 font-bold mb-1" style={{ color: themeColor }}>
                   <Gift className="w-4 h-4 shrink-0" />
-                  <span>HEDİYE & BEBEK LİSTESİ</span>
+                  <span>{variant === 'clouds-above' ? 'BEBEK İHTİYAÇ LİSTESİ' : 'HEDİYE & IBAN'}</span>
                 </div>
                 <p className="opacity-90">{wedding.bank_iban}</p>
               </div>
             )}
 
-            {/* Buton 3: KATILIM ANKETİ / LCV BİLDİRİMİ */}
             {showRsvp && renderRsvpButton()}
           </div>
 
           {/* Anı Defteri */}
-          {renderGuestBook()}
+          <div className="w-full mt-6">
+            {renderGuestBook()}
+          </div>
         </div>
       </div>
     </div>

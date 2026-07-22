@@ -1,5 +1,5 @@
 'use client';
-import { Calendar, MapPin, Navigation, Info } from 'lucide-react';
+import { Calendar, MapPin, Navigation } from 'lucide-react';
 import { backgroundDesignRegistry, thematicAssetRegistry } from '@/lib/registries';
 
 interface LayoutProps {
@@ -42,12 +42,10 @@ export default function HennaVelvetLayout({
   mode = 'public'
 }: LayoutProps) {
   
-  // 1. KINA GEÇİŞ VE VARYANT TESPİTİ
   const hennaVariant = wedding.custom_overrides?.henna_variant || 'gold';
-  const language = wedding.language || 'tr';
-
+  
   // Metalik renk geçişleri (Gradient)
-  let metalicBorder = 'linear-gradient(135deg, #dfb76c 0%, #c5a880 50%, #dfb76c 100%)'; // Gold
+  let metalicBorder = 'linear-gradient(135deg, #dfb76c 0%, #c5a880 50%, #dfb76c 100%)'; 
   let metalicTextColor = '#dfb76c';
   let metalicTextShadow = '0 0 5px rgba(223, 183, 108, 0.4)';
 
@@ -61,19 +59,16 @@ export default function HennaVelvetLayout({
     metalicTextShadow = '0 0 5px rgba(220, 163, 115, 0.4)';
   }
 
-  // Dil seçimine göre başlık
-  const titleText = language === 'en' ? 'Henna Night' : 'Kına Gecesi';
-
-  // 2. KADİFE ARKA PLAN DOKUSU (Birincil: backgroundDesignRegistry, Fallback: radial-gradient)
+  // 2. KADİFE ARKA PLAN DOKUSU (Derin bordo kadife degrade)
   const bgRegistry = backgroundDesignRegistry[wedding.background_design || 'solid-burgundy'] || backgroundDesignRegistry['solid-burgundy'];
   
   const backgroundStyle: React.CSSProperties = {
     backgroundColor: bgRegistry.fallbackColor || cardBgColor,
-    backgroundImage: bgRegistry.image ? `linear-gradient(${bgRegistry.overlay}, ${bgRegistry.overlay}), url('${bgRegistry.image}')` : `radial-gradient(circle at center, rgba(127, 29, 29, 0.95) 0%, rgba(63, 7, 18, 0.98) 100%)`,
+    backgroundImage: bgRegistry.image ? `linear-gradient(${bgRegistry.overlay}, ${bgRegistry.overlay}), url('${bgRegistry.image}')` : `radial-gradient(circle at center, rgba(100, 10, 25, 0.95) 0%, rgba(35, 2, 8, 0.98) 100%)`,
     backgroundSize: bgRegistry.size,
     backgroundPosition: bgRegistry.position,
     backgroundRepeat: bgRegistry.repeat,
-    boxShadow: 'inset 0 0 100px rgba(0,0,0,0.4)'
+    boxShadow: 'inset 0 0 100px rgba(0,0,0,0.5)'
   };
 
   const hennaTrayAsset = thematicAssetRegistry['henna-tray'] || { src: '' };
@@ -85,122 +80,97 @@ export default function HennaVelvetLayout({
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
       style={{ fontFamily: `"${bodyFont}", serif` }}
     >
-      {/* Kadife Görünümlü Lüks Kına Kartı */}
+      {/* Kadife Görünümlü Lüks Asimetrik Kına Kartı */}
       <div 
-        className="relative rounded-[2.5rem] overflow-hidden p-6 sm:p-10 text-center border flex flex-col items-center justify-between min-h-[620px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]"
-        style={{ ...backgroundStyle, borderColor: `${metalicTextColor}30` }}
+        className="relative rounded-[2.5rem] overflow-hidden p-6 sm:p-10 text-center border flex flex-col items-center justify-between min-h-[640px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]"
+        style={{ ...backgroundStyle, borderColor: `${metalicTextColor}35` }}
       >
-        
-        {/* KADİFE NOISE OVERLAY */}
-        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none z-0 opacity-40" />
+        {/* Kadife DokuNoise Katmanı */}
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:12px_12px] pointer-events-none z-0 opacity-50" />
 
-        {/* ORYANTAL DANTEL VE SÜSLEMELER (pointer-events: none) */}
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-20">
-          {/* Top Lace Border (SVG) */}
-          <div className="absolute top-0 inset-x-0 h-10 flex justify-center text-rose-300">
-            <svg className="w-full h-8" viewBox="0 0 100 10" preserveAspectRatio="none" fill="currentColor">
-              <path d="M0 0c5 5 10 5 15 0s10-5 15 0 10 5 15 0 10-5 15 0 10 5 15 0 10-5 15 0 10 5 15 0 10-5 15 0h10V0H0z"/>
-            </svg>
-          </div>
-          {/* Sol Alt Kına Tepsisi Süsü (Registry veya Fallback SVG) */}
-          <div className="absolute bottom-6 left-6 rotate-[-15deg]">
-            {hennaTrayAsset.src ? (
-              <img src={hennaTrayAsset.src} alt="Kına Tepsisi" className="w-16 h-16 object-contain opacity-40" />
-            ) : (
-              <svg className="w-16 h-16 text-rose-400" viewBox="0 0 24 24" fill="currentColor">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1" fill="none"/>
-                <circle cx="12" cy="12" r="6" fill="currentColor"/>
-              </svg>
-            )}
-          </div>
-          {/* Sağ Alt Kına El Motifi SVG */}
-          <div className="absolute bottom-6 right-6 rotate-[15deg]">
-            <svg className="w-14 h-14 text-rose-400" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C8 6 4 9 4 13c0 4.4 3.6 8 8 8s8-3.6 8-8c0-4-4-7-8-11zm0 15c-2.2 0-4-1.8-4-4 0-1.8 1.5-3.5 4-6 2.5 2.5 4 4.2 4 6 0 2.2-1.8 4-4 4z"/>
-            </svg>
-          </div>
+        {/* Uçuşan Gül Yaprakları Animasyon Simülasyonu */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none opacity-40">
+          <div className="absolute top-10 left-1/4 animate-bounce text-red-500 duration-[5000ms]">🌹</div>
+          <div className="absolute top-20 right-1/4 animate-pulse text-red-600 duration-[4000ms]">🌹</div>
+          <div className="absolute bottom-40 left-12 animate-bounce text-red-700 duration-[6000ms]">🌹</div>
+          <div className="absolute bottom-20 right-12 animate-pulse text-red-500 duration-[5000ms]">🌹</div>
         </div>
 
-        {/* İnce Şık Metalik Varak Çerçeve */}
-        <div className="absolute inset-4 sm:inset-6 rounded-[2rem] pointer-events-none z-0 border border-transparent shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
-          <div 
-            className="absolute inset-0 rounded-[2rem] border" 
-            style={{ 
-              borderImage: `${metalicBorder} 1`,
-              borderWidth: '1.5px',
-              filter: `drop-shadow(0 0 2px ${metalicTextColor}40)`
-            }} 
-          />
-        </div>
+        {/* Lüks Çerçeve Süsleri */}
+        <div className="absolute inset-4 sm:inset-6 rounded-[2rem] pointer-events-none z-0 border" 
+             style={{ borderImage: `${metalicBorder} 1`, borderWidth: '1.5px', opacity: 0.6 }} />
 
-        {/* GÜVENLİ İÇERİK ALANI */}
+        {/* ASİMETRİK GÜVENLİ İÇERİK ALANI */}
         <div className="relative z-10 w-full flex flex-col items-center">
           
           {/* Logo / Mühür Rozeti */}
           <div className="flex flex-col items-center mb-4 select-none">
             <div 
-              className="w-12 h-12 rounded-full border flex items-center justify-center font-serif text-lg font-bold shadow-md relative bg-rose-950"
+              className="w-14 h-14 rounded-full border-2 flex items-center justify-center font-serif text-xl font-bold shadow-lg bg-rose-950/80 backdrop-blur-xs"
               style={{ borderColor: metalicTextColor, color: metalicTextColor, textShadow: metalicTextShadow }}
             >
-              👑
+              🌸
             </div>
           </div>
 
-          {/* Kına Gecesi / Henna Night Logo Başlığı */}
+          {/* Kına Gecesi Başlığı */}
           <h2 
-            className="text-2xl sm:text-3xl font-normal tracking-[0.2em] uppercase mb-4"
+            className="text-3xl sm:text-4xl font-normal tracking-[0.25em] uppercase mb-4"
             style={{ color: metalicTextColor, fontFamily: `"${headingFont}", serif`, textShadow: metalicTextShadow }}
           >
-            {titleText}
+            {eventTitle}
           </h2>
 
           {/* Gelin İsmi */}
           <div className="w-full mb-6">
             <h1 
-              className="text-3xl sm:text-4xl font-normal leading-tight tracking-wide w-full"
+              className="text-4xl sm:text-5xl font-normal leading-tight tracking-wide w-full"
               style={{ color: '#ffffff', fontFamily: `"${headingFont}", serif` }}
             >
               {wedding.bride_name}
             </h1>
             {wedding.bride_parents && (
-              <p className="text-[9px] tracking-[0.2em] font-light mt-3 opacity-75 uppercase font-sans text-rose-200">
-                {wedding.bride_parents}
+              <p className="text-[10px] tracking-[0.2em] font-light mt-3 opacity-75 uppercase font-sans text-rose-200">
+                AİLESİ: {wedding.bride_parents}
               </p>
             )}
           </div>
 
-          {/* Davet Mesajı */}
-          <div className="text-white/95 my-2 leading-relaxed text-sm">
+          {/* Asimetrik Davet Mesajı */}
+          <div className="text-rose-100 my-4 leading-relaxed text-sm max-w-sm italic">
             {renderQuote()}
           </div>
 
-          {/* Geri Sayım */}
-          <div className="w-full my-4">
+          {/* Sayaç */}
+          <div className="w-full my-4 bg-black/30 p-4 rounded-3xl border border-rose-900/30">
+            <span className="text-[9px] font-bold tracking-widest text-rose-300 block mb-2">DAVET GÜNÜNE</span>
             {renderTimer()}
           </div>
 
-          {/* Tarih ve Mekan Detayları */}
-          <div className="w-full max-w-sm text-xs font-semibold my-6 space-y-2.5 text-white">
-            <div className="flex items-center gap-3 py-2.5 px-4 rounded-xl border bg-black/35" style={{ borderColor: `${metalicTextColor}20` }}>
-              <Calendar className="w-4 h-4 shrink-0" style={{ color: metalicTextColor }} />
-              <span>{dateStr} <span className="mx-1 opacity-40">|</span> {timeStr}</span>
+          {/* ASİMETRİK SOLDA DİKEY TARİH KOMPOZİSYONU */}
+          <div className="w-full max-w-sm my-6 flex gap-4 text-left text-white items-stretch">
+            {/* Dikey Tarih Barı */}
+            <div className="w-16 flex flex-col justify-center items-center rounded-xl bg-gradient-to-b from-rose-900/60 to-black/40 border border-rose-900/20 text-center py-2 px-1">
+              <span className="text-[9px] font-bold tracking-wider text-rose-300 block">AY</span>
+              <span className="text-xl font-bold" style={{ color: metalicTextColor }}>
+                {dateObj.toLocaleDateString('tr-TR', { month: 'numeric' })}
+              </span>
+              <span className="text-lg font-bold">{dateObj.toLocaleDateString('tr-TR', { day: 'numeric' })}</span>
             </div>
-
-            <div className="flex flex-col items-start gap-1 p-4 rounded-xl border bg-black/35 text-left" style={{ borderColor: `${metalicTextColor}20` }}>
+            {/* Mekan Bilgisi Barı */}
+            <div className="flex-1 p-3 rounded-xl border bg-black/35 flex flex-col justify-center" style={{ borderColor: `${metalicTextColor}20` }}>
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 shrink-0" style={{ color: metalicTextColor }} />
-                <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
+                <span className="font-bold text-xs">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
               </div>
               {wedding.venue_address && (
-                <p className="text-[11px] font-light opacity-90 pl-6 leading-relaxed text-rose-100">{wedding.venue_address}</p>
+                <p className="text-[10px] font-light opacity-90 pl-6 leading-relaxed text-rose-200/80 mt-1">{wedding.venue_address}</p>
               )}
             </div>
           </div>
 
-          {/* OVAL AKSİYON BUTONLARI (MIN 48PX, METALİK GRADİENT) */}
+          {/* Aksiyon Butonları */}
           <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
-            
-            {/* Buton 1: KONUMA GİT */}
             {hasMaps && (
               <button 
                 type="button"
@@ -221,7 +191,6 @@ export default function HennaVelvetLayout({
               </button>
             )}
 
-            {/* Buton 2: KATILIM ANKETİ / LCV BİLDİRİMİ */}
             {showRsvp && renderRsvpButton()}
           </div>
 

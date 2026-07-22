@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, Volume2, VolumeX, Calendar, MapPin, Navigation } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Calendar, MapPin } from 'lucide-react';
+import { backgroundDesignRegistry } from '@/lib/registries';
 
 interface LayoutProps {
   wedding: any;
@@ -48,7 +49,6 @@ export default function GiantMonogramLayout({
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
-  // Audio Player States
   const audioUrl = wedding.music_url || '';
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
@@ -60,7 +60,6 @@ export default function GiantMonogramLayout({
   useEffect(() => {
     if (audioUrl) {
       audioRef.current = new Audio(audioUrl);
-      
       const audio = audioRef.current;
       
       const onLoadedMetadata = () => setDuration(audio.duration);
@@ -89,7 +88,7 @@ export default function GiantMonogramLayout({
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.play().catch(e => console.log("Ses çalma engellendi: ", e));
+      audioRef.current.play().catch(e => console.log("Audio play blocked: ", e));
       setIsPlaying(true);
     }
   };
@@ -113,37 +112,37 @@ export default function GiantMonogramLayout({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const bgRegistry = backgroundDesignRegistry[wedding.background_design || 'parchment-paper'] || { fallbackColor: '#fafafa' };
+
   return (
     <div 
-      className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in"
+      className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in text-slate-800"
       style={{ fontFamily: `"${bodyFont}", serif` }}
     >
-      {/* Kart Container */}
       <div 
-        className="relative rounded-[2.2rem] overflow-hidden shadow-2xl p-8 sm:p-12 text-center border relative flex flex-col items-center justify-between min-h-[600px]"
-        style={{ borderColor: `${primaryColor}20`, backgroundColor: cardBgColor, color: textColor }}
+        className="relative rounded-[2.2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-6 sm:p-12 text-center border flex flex-col items-center justify-between min-h-[620px]"
+        style={{ borderColor: `${primaryColor}20`, backgroundColor: bgRegistry.fallbackColor || cardBgColor, color: textColor }}
       >
-        
-        {/* PARALLAX DEV MONOGRAM (Arka Plan Katmanında, Metin Okunabilirliğini Bozmayacak Düşük Opaklıkta) */}
+        {/* PARALLAX MONOGRAM ALANI */}
         <div 
-          className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 opacity-[0.06] sm:opacity-[0.08]"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 opacity-[0.05] sm:opacity-[0.08]"
           style={{ color: primaryColor }}
         >
-          <span className="text-[14rem] sm:text-[22rem] font-serif font-light leading-none tracking-tighter">
+          <span className="text-[16rem] sm:text-[24rem] font-serif font-light leading-none tracking-tighter select-none">
             {groomInitial ? `${brideInitial}${groomInitial}` : brideInitial}
           </span>
         </div>
 
-        {/* Sol Kenar Dikey Tarih */}
+        {/* Dikey Tarih */}
         <div className="absolute left-4 top-1/2 -translate-y-1/2 hidden sm:flex flex-col items-center gap-1 z-10 font-serif opacity-70" style={{ color: primaryColor }}>
           <span className="text-sm font-bold">{dateDay}</span>
-          <span className="w-6 h-[1px]" style={{ backgroundColor: primaryColor }} />
+          <span className="w-6 h-[1.5px]" style={{ backgroundColor: primaryColor }} />
           <span className="text-xs uppercase tracking-widest">{dateObj.toLocaleDateString('tr-TR', { month: 'short' })}</span>
-          <span className="w-6 h-[1px]" style={{ backgroundColor: primaryColor }} />
+          <span className="w-6 h-[1.5px]" style={{ backgroundColor: primaryColor }} />
           <span className="text-sm font-bold">{dateYear}</span>
         </div>
 
-        {/* Başlık ve Davet Türü */}
+        {/* Başlık */}
         <div className="relative z-10 mb-6">
           <h3 className="font-semibold tracking-[0.25em] uppercase text-xs" style={{ color: primaryColor }}>
             {eventTitle}
@@ -151,7 +150,7 @@ export default function GiantMonogramLayout({
           <div className="w-12 h-[1.5px] mx-auto mt-3" style={{ backgroundColor: primaryColor }} />
         </div>
 
-        {/* İsimler Bölümü */}
+        {/* İsimler */}
         <div className="relative z-10 w-full mb-6">
           {wedding.bride_parents && (
             <p className="text-[9px] tracking-[0.2em] font-light mb-3 opacity-60 uppercase font-sans">
@@ -160,14 +159,14 @@ export default function GiantMonogramLayout({
           )}
           
           <div className="flex flex-col items-center">
-            <h1 className="text-3xl sm:text-4xl font-normal leading-tight select-none" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
+            <h1 className="text-3xl sm:text-4xl font-normal leading-tight" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
               {wedding.bride_name}
             </h1>
             
             {wedding.groom_name && (
               <>
                 <span className="text-lg my-1 opacity-50 font-serif italic" style={{ fontFamily: `"${accentFont}", cursive` }}>&</span>
-                <h1 className="text-3xl sm:text-4xl font-normal leading-tight select-none" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
+                <h1 className="text-3xl sm:text-4xl font-normal leading-tight" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
                   {wedding.groom_name}
                 </h1>
               </>
@@ -181,8 +180,8 @@ export default function GiantMonogramLayout({
           )}
         </div>
 
-        {/* AI Tırnaklı Özlü Söz */}
-        <div className="relative z-10 w-full">
+        {/* Davet Mesajı */}
+        <div className="relative z-10 w-full max-w-sm leading-relaxed text-sm italic">
           {renderQuote()}
         </div>
 
@@ -191,14 +190,14 @@ export default function GiantMonogramLayout({
           {renderTimer()}
         </div>
 
-        {/* Dikey Tarih / Mekan Detay Kartları */}
+        {/* Detay Kartları */}
         <div className="relative z-10 w-full max-w-sm space-y-3 text-xs my-6">
-          <div className="flex items-center gap-3 py-3 px-4 rounded-2xl border" style={{ borderColor: `${primaryColor}15`, backgroundColor: 'rgba(0,0,0,0.02)' }}>
-            <Calendar className="w-4 h-4 text-rose-500 shrink-0" style={{ color: primaryColor }} />
+          <div className="flex items-center gap-3 py-3 px-4 rounded-2xl border bg-black/2" style={{ borderColor: `${primaryColor}15` }}>
+            <Calendar className="w-4 h-4 shrink-0" style={{ color: primaryColor }} />
             <span className="font-semibold">{dateStr} | {timeStr}</span>
           </div>
 
-          <div className="flex flex-col items-start gap-1 p-4 rounded-2xl border text-left" style={{ borderColor: `${primaryColor}15`, backgroundColor: 'rgba(0,0,0,0.02)' }}>
+          <div className="flex flex-col items-start gap-1 p-4 rounded-2xl border bg-black/2 text-left" style={{ borderColor: `${primaryColor}15` }}>
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 shrink-0" style={{ color: primaryColor }} />
               <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
@@ -209,14 +208,13 @@ export default function GiantMonogramLayout({
           </div>
         </div>
 
-        {/* PREMIUM SES OYNATICI (Çalışan İlerleme Çubuğu & Oynat Kontrolü) */}
+        {/* SES OYNATICI MODÜLÜ */}
         {audioUrl && (
           <div 
             className="relative z-10 w-full max-w-xs border rounded-2xl p-3 flex flex-col gap-2 shadow-xs mb-8"
-            style={{ borderColor: `${primaryColor}20`, backgroundColor: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(8px)' }}
+            style={{ borderColor: `${primaryColor}20`, backgroundColor: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(8px)' }}
           >
             <div className="flex items-center justify-between gap-3">
-              {/* Oynat / Duraklat Düğmesi */}
               <button 
                 type="button"
                 onClick={togglePlay}
@@ -226,24 +224,21 @@ export default function GiantMonogramLayout({
                 {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 pl-0.5" />}
               </button>
 
-              {/* Müzik İsmi / Durum */}
               <div className="flex-1 text-left min-w-0">
-                <span className="text-[10px] uppercase font-bold tracking-widest block opacity-70">ARKA PLAN MÜZİĞİ</span>
-                <span className="text-[11px] font-medium block truncate">{isPlaying ? 'Şu an çalıyor...' : 'Müzik duraklatıldı'}</span>
+                <span className="text-[9px] uppercase font-bold tracking-widest block opacity-70">DAVETİYE MÜZİĞİ</span>
+                <span className="text-[10px] font-medium block truncate">{isPlaying ? 'Çalıyor...' : 'Müzik durdu'}</span>
               </div>
 
-              {/* Sessiz Düğmesi */}
               <button 
                 type="button"
                 onClick={toggleMute}
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+                className="transition-colors"
                 style={{ color: primaryColor }}
               >
                 {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
               </button>
             </div>
 
-            {/* İlerleme Çubuğu (Progress Slider) */}
             <div className="flex items-center gap-2 mt-1">
               <span className="text-[9px] font-mono opacity-60">{formatTime(currentTime)}</span>
               <input 
@@ -252,7 +247,7 @@ export default function GiantMonogramLayout({
                 max={duration || 100}
                 value={currentTime}
                 onChange={handleProgressChange}
-                className="flex-1 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-rose-500"
+                className="flex-1 h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer"
                 style={{ accentColor: primaryColor }}
               />
               <span className="text-[9px] font-mono opacity-60">{formatTime(duration)}</span>
@@ -260,12 +255,12 @@ export default function GiantMonogramLayout({
           </div>
         )}
 
-        {/* LCV / Konum Buton Grubu */}
+        {/* RSVP */}
         <div className="relative z-10 w-full">
           {renderRsvpButton()}
         </div>
 
-        {/* Anı Defteri Modülü */}
+        {/* Anı Defteri */}
         <div className="relative z-10 w-full mt-6">
           {renderGuestBook()}
         </div>
