@@ -2,6 +2,7 @@
 import { useState, useEffect, use, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getSmartAutoMatch } from '@/lib/autoMatch';
+import { mapEnumToDbEventType } from '@/lib/themes';
 import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
 import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
 import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2, Smartphone, Tablet, Trash2, Check, RefreshCw, Volume2, VolumeX, Eye } from 'lucide-react';
@@ -675,7 +676,7 @@ export default function CoupleAdminPage({
   };
 
   function applyPreset(theme: any) {
-    setTemplateId(theme.template_id);
+    setTemplateId(theme.template_id || theme.id);
     setPrimaryColor(theme.primary_color);
     if (theme.text_color) setTextColor(theme.text_color);
     setFontFamily(theme.font_family);
@@ -683,6 +684,20 @@ export default function CoupleAdminPage({
     if (theme.use_envelope !== undefined) setUseEnvelope(theme.use_envelope);
     if (theme.envelope_color) setEnvelopeColor(theme.envelope_color);
     
+    // update eventType state mapping English enum to DB value
+    if (theme.eventType) {
+      setEventType(mapEnumToDbEventType(theme.eventType));
+    }
+    
+    // propagate custom_overrides layout styles
+    setCustomOverrides((prev: any) => ({
+      ...prev,
+      layoutStyle: theme.layoutStyle,
+      thematicAssets: theme.thematicAssets || [],
+      animationPreset: theme.animationPreset || '',
+      sealPreset: theme.sealPreset || ''
+    }));
+
     // backgroundDesign maps to envelope_bg_color
     if (theme.recommendedBackgroundDesign) {
       setEnvelopeBgColor(theme.recommendedBackgroundDesign);
@@ -1494,10 +1509,12 @@ export default function CoupleAdminPage({
                       { id: 'wedding', label: 'Düğün' },
                       { id: 'engagement', label: 'Nişan' },
                       { id: 'henna', label: 'Kına' },
-                      { id: 'babyshower', label: 'Baby Shower' },
+                      { id: 'circumcision', label: 'Sünnet' },
+                      { id: 'baby_shower', label: 'Baby Shower' },
                       { id: 'birthday', label: 'Doğum Günü' },
                       { id: 'corporate', label: 'Kurumsal' },
-                      { id: 'minimal', label: 'Minimal' },
+                      { id: 'graduation', label: 'Mezuniyet' },
+                      { id: 'minimal', label: 'Minimalist' },
                       { id: 'luxury', label: 'Lüks' },
                       { id: 'bohemian', label: 'Bohem' }
                     ].map(cat => (
@@ -1521,12 +1538,11 @@ export default function CoupleAdminPage({
                       {(() => {
                         const filteredThemes = themes.filter(theme => {
                           if (templateCategory === 'all') return true;
-                          if (templateCategory === 'minimal') return theme.category === 'Minimalist';
-                          if (templateCategory === 'luxury') return theme.category === 'Lüks';
-                          if (templateCategory === 'bohemian') return theme.category === 'Doğal';
-                          if (templateCategory === 'engagement') return ['Doğal', 'Minimalist', 'Modern'].includes(theme.category);
-                          if (templateCategory === 'henna') return ['Klasik', 'Lüks'].includes(theme.category);
-                          return true;
+                          if (templateCategory === 'minimal' || templateCategory === 'Minimalist') return theme.category === 'Minimalist';
+                          if (templateCategory === 'luxury' || templateCategory === 'Lüks') return theme.category === 'Lüks';
+                          if (templateCategory === 'bohemian' || templateCategory === 'Bohem') return theme.category === 'Doğal';
+                          
+                          return theme.eventType === templateCategory;
                         });
 
                         if (filteredThemes.length === 0) {
@@ -1549,22 +1565,36 @@ export default function CoupleAdminPage({
                                   : 'border-slate-200 bg-white hover:bg-white/50 backdrop-blur-sm shadow-inner'
                               }`}
                             >
-                              {/* Miniature card premium mockup */}
-                              <div className="w-11 h-15 rounded-lg border flex flex-col items-center justify-between p-1 shrink-0 shadow-2xs overflow-hidden relative" style={{ 
-                                background: theme.palette?.background || '#fff', 
-                                borderColor: theme.palette?.secondary || '#c9a44d',
-                                borderWidth: '1.5px' 
+                              {/* Miniature card premium mockup / thumbnail */}
+                              <div className="w-11 h-15 rounded-lg border flex flex-col items-center justify-between shrink-0 shadow-2xs overflow-hidden relative" style={{ 
+                                 background: theme.palette?.background || '#fff', 
+                                 borderColor: theme.palette?.secondary || '#c9a44d',
+                                 borderWidth: '1.5px' 
                               }}>
-                                {/* Inner miniature card */}
-                                <div className="w-full h-full rounded-md border flex flex-col items-center justify-between p-0.5" style={{ 
-                                  background: theme.palette?.card || '#fff', 
-                                  borderColor: `${theme.palette?.secondary}35`,
-                                  borderWidth: '1px'
-                                }}>
-                                  <div className="text-[5px] leading-none scale-75 mt-0.5" style={{ color: theme.palette?.secondary }}>👑</div>
-                                  <div className="text-[6px] font-serif leading-none scale-75 font-bold" style={{ color: theme.palette?.primary }}>A & B</div>
-                                  <div className="w-3 h-0.5 mb-0.5" style={{ backgroundColor: `${theme.palette?.secondary}50` }} />
-                                </div>
+                                {theme.thumbnail ? (
+                                  <img 
+                                    src={theme.thumbnail} 
+                                    alt={theme.name} 
+                                    className="w-full h-full object-cover" 
+                                    onError={(e) => {
+                                      (e.target as any).style.display = 'none';
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="w-full h-full rounded-md border flex flex-col items-center justify-between p-0.5" style={{ 
+                                    background: theme.palette?.card || '#fff', 
+                                    borderColor: `${theme.palette?.secondary}35`,
+                                    borderWidth: '1px'
+                                  }}>
+                                    <div className="text-[5px] leading-none scale-75 mt-0.5" style={{ color: theme.palette?.secondary }}>
+                                      {theme.layoutStyle === 'kids-thematic' ? '🎈' : theme.layoutStyle === 'henna-velvet' ? '🌸' : theme.layoutStyle === 'royal-circumcision' ? '☪️' : '👑'}
+                                    </div>
+                                    <div className="text-[6px] font-serif leading-none scale-75 font-bold" style={{ color: theme.palette?.primary }}>
+                                      {theme.layoutStyle === 'kids-thematic' ? 'Bebek' : 'A & B'}
+                                    </div>
+                                    <div className="w-3 h-0.5 mb-0.5" style={{ backgroundColor: `${theme.palette?.secondary}50` }} />
+                                  </div>
+                                )}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <strong className="text-slate-800 text-[11px] font-bold block mb-0.5 truncate">{theme.name}</strong>

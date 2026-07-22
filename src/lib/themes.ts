@@ -1,11 +1,50 @@
 import { BackgroundDesign, ThematicAsset, AnimationPreset, SealPreset, TypographyPreset } from './registries';
 
-export type EventType = 'Düğün' | 'Nişan' | 'Kına' | 'Söz' | 'Baby Shower' | 'Doğum Günü' | 'Kurumsal Etkinlik' | 'Açılış / Lansman' | 'Sünnet' | 'Mezuniyet' | 'Diğer';
+export type EventType = 'wedding' | 'engagement' | 'henna' | 'circumcision' | 'baby_shower' | 'birthday' | 'corporate' | 'graduation';
+
+export const eventTypeLabels: Record<EventType, string> = {
+  wedding: "Düğün",
+  engagement: "Nişan",
+  henna: "Kına Gecesi",
+  circumcision: "Sünnet Düğünü",
+  baby_shower: "Baby Shower",
+  birthday: "Doğum Günü",
+  corporate: "Kurumsal Etkinlik",
+  graduation: "Mezuniyet Töreni",
+};
+
+export function mapDbEventTypeToEnum(dbVal: string): EventType {
+  const val = (dbVal || '').toLowerCase();
+  if (val.includes('düğün') || val.includes('wedding') || val.includes('nikah')) return 'wedding';
+  if (val.includes('nişan') || val.includes('engagement') || val.includes('söz')) return 'engagement';
+  if (val.includes('kına') || val.includes('henna')) return 'henna';
+  if (val.includes('sünnet') || val.includes('circumcision')) return 'circumcision';
+  if (val.includes('baby') || val.includes('shower')) return 'baby_shower';
+  if (val.includes('doğum') || val.includes('birthday') || val.includes('yaş')) return 'birthday';
+  if (val.includes('kurumsal') || val.includes('corporate') || val.includes('lansman') || val.includes('davet') || val.includes('özel')) return 'corporate';
+  if (val.includes('mezuniyet') || val.includes('graduation')) return 'graduation';
+  return 'wedding'; // default fallback
+}
+
+export function mapEnumToDbEventType(enumVal: EventType): string {
+  switch (enumVal) {
+    case 'wedding': return 'Düğün';
+    case 'engagement': return 'Nişan';
+    case 'henna': return 'Kına';
+    case 'circumcision': return 'Sünnet';
+    case 'baby_shower': return 'Baby Shower';
+    case 'birthday': return 'Doğum Günü';
+    case 'corporate': return 'Kurumsal Etkinlik';
+    case 'graduation': return 'Mezuniyet';
+    default: return 'Düğün';
+  }
+}
 
 export interface TemplatePreset {
   id: string;
   name: string;
-  eventType: EventType | 'all';
+  thumbnail?: string;
+  eventType: EventType;
   genderVariant?: 'girl' | 'boy' | 'neutral';
   layoutStyle: 'monogram' | 'asymmetric' | 'editorial' | 'oriental' | 'full-bleed' | 'folded-seal' | 'monogram-media' | 'photo-luxury' | 'botanical-frame' | 'kids-thematic' | 'henna-velvet' | 'royal-circumcision' | 'split-screen' | 'story-timeline' | 'modern-event' | 'minimal-paper';
   category: 'Modern' | 'Klasik' | 'Karanlık' | 'Minimalist' | 'Lüks' | 'Doğal' | 'Çocuk';
@@ -29,6 +68,11 @@ export interface TemplatePreset {
   recommendedOpeningStyle: string;
   recommendedBackgroundDesign: string;
   recommendedBackgroundAnimation: string;
+  backgroundDesign?: string;
+
+  thematicAssets?: string[];
+  animationPreset?: string;
+  sealPreset?: string;
 
   palette?: {
     background: string;
@@ -64,6 +108,328 @@ export interface TemplatePreset {
 export type ThemePreset = TemplatePreset;
 
 export const predefinedThemes: TemplatePreset[] = [
+  {
+    id: "clouds-above",
+    name: "Bulutların Üzerinde",
+    thumbnail: "/templates/thumbnails/clouds-above.webp",
+    eventType: "baby_shower",
+    layoutStyle: "kids-thematic",
+    backgroundDesign: "pastel-clouds",
+    category: "Çocuk",
+    primary_color: "#fda4af",
+    text_color: "#4c0519",
+    font_family: "Outfit",
+    background_image_url: null,
+    use_envelope: true,
+    envelope_color: "#ffe4e6",
+    envelope_bg_color: "solid-blush",
+    envelope_flap_type: "heart",
+    seal_type: "heart",
+    seal_color: "#fda4af",
+    recommendedOpeningType: "envelope",
+    recommendedOpeningStyle: "rose-gold-romantic",
+    recommendedBackgroundDesign: "solid-blush",
+    recommendedBackgroundAnimation: "rosePetals",
+    thematicAssets: ["cloud-left", "cloud-right", "balloons", "stars"],
+    animationPreset: "balloon-rise",
+    sealPreset: "heart",
+    palette: {
+      background: "#fff1f2",
+      card: "#ffffff",
+      primary: "#be123c",
+      secondary: "#fda4af",
+      accent: "#ffe4e6",
+      text: "#4c0519",
+      mutedText: "#9f1239"
+    },
+    typography: {
+      heading: "Outfit",
+      body: "Inter",
+      accent: "Allura"
+    },
+    visualDetails: {
+      border: "soft-round-border",
+      seal: "wax-heart",
+      cardShape: "rounded-2xl",
+      texture: "silk-paper"
+    }
+  },
+  {
+    id: "little-racer",
+    name: "Küçük Yarışçı",
+    thumbnail: "/templates/thumbnails/little-racer.webp",
+    eventType: "birthday",
+    layoutStyle: "kids-thematic",
+    backgroundDesign: "playful-checkered",
+    category: "Çocuk",
+    primary_color: "#ef4444",
+    text_color: "#1e293b",
+    font_family: "Outfit",
+    background_image_url: null,
+    use_envelope: true,
+    envelope_color: "#f8fafc",
+    envelope_bg_color: "minimal-white-paper",
+    envelope_flap_type: "square",
+    seal_type: "minimal-monogram",
+    seal_color: "#ef4444",
+    recommendedOpeningType: "minimalFade",
+    recommendedOpeningStyle: "minimal-white",
+    recommendedBackgroundDesign: "minimal-white-paper",
+    recommendedBackgroundAnimation: "pearlLight",
+    thematicAssets: ["race-car", "checkered-flag", "trophy"],
+    animationPreset: "car-drift",
+    sealPreset: "monogram",
+    palette: {
+      background: "#f1f5f9",
+      card: "#ffffff",
+      primary: "#ef4444",
+      secondary: "#cbd5e1",
+      accent: "#f8fafc",
+      text: "#1e293b",
+      mutedText: "#64748b"
+    },
+    typography: {
+      heading: "Outfit",
+      body: "Inter",
+      accent: "Allura"
+    },
+    visualDetails: {
+      border: "racing-stripe-border",
+      seal: "checkered-seal",
+      cardShape: "sharp-corners",
+      texture: "fine-paper"
+    }
+  },
+  {
+    id: "velvet-henna",
+    name: "Bordo Kadife Kına",
+    thumbnail: "/templates/thumbnails/velvet-henna.webp",
+    eventType: "henna",
+    layoutStyle: "henna-velvet",
+    backgroundDesign: "royal-burgundy-velvet",
+    category: "Klasik",
+    primary_color: "#be123c",
+    text_color: "#fff7ed",
+    font_family: "Cormorant Garamond",
+    background_image_url: null,
+    use_envelope: true,
+    envelope_color: "#5c0618",
+    envelope_bg_color: "velvet-burgundy",
+    envelope_flap_type: "triangle",
+    seal_type: "monogram",
+    seal_color: "#dfc384",
+    recommendedOpeningType: "curtain",
+    recommendedOpeningStyle: "royal-burgundy",
+    recommendedBackgroundDesign: "velvet-burgundy",
+    recommendedBackgroundAnimation: "goldParticles",
+    thematicAssets: ["henna-plate", "lace-border", "rose-petals"],
+    animationPreset: "petal-rain",
+    sealPreset: "crest",
+    palette: {
+      background: "#4c0519",
+      card: "#881337",
+      primary: "#dfc384",
+      secondary: "#fbbf24",
+      accent: "#fff7ed",
+      text: "#fff7ed",
+      mutedText: "#fecdd3"
+    },
+    typography: {
+      heading: "Playfair Display",
+      body: "Cormorant Garamond",
+      accent: "Great Vibes"
+    },
+    visualDetails: {
+      border: "gold-foil-lace",
+      seal: "wax-seal",
+      cardShape: "luxury-rounded",
+      texture: "dark-velvet"
+    }
+  },
+  {
+    id: "nazar-circumcision",
+    name: "Nazar Boncuklu Maşallah",
+    thumbnail: "/templates/thumbnails/nazar-circumcision.webp",
+    eventType: "circumcision",
+    layoutStyle: "royal-circumcision",
+    backgroundDesign: "royal-navy-velvet",
+    category: "Lüks",
+    primary_color: "#1d4ed8",
+    text_color: "#fffbeb",
+    font_family: "Playfair Display",
+    background_image_url: null,
+    use_envelope: true,
+    envelope_color: "#1e293b",
+    envelope_bg_color: "gold-edge",
+    envelope_flap_type: "pointed-oval",
+    seal_type: "crown",
+    seal_color: "#d4af37",
+    recommendedOpeningType: "royalHall",
+    recommendedOpeningStyle: "navy-gold",
+    recommendedBackgroundDesign: "gold-edge",
+    recommendedBackgroundAnimation: "goldParticles",
+    thematicAssets: ["evil-eye", "shahi-dome", "crescent-gold"],
+    animationPreset: "star-twinkle",
+    sealPreset: "crown",
+    palette: {
+      background: "#0f172a",
+      card: "#1e293b",
+      primary: "#fbbf24",
+      secondary: "#60a5fa",
+      accent: "#fffbeb",
+      text: "#fffbeb",
+      mutedText: "#94a3b8"
+    },
+    typography: {
+      heading: "Playfair Display",
+      body: "Lora",
+      accent: "Great Vibes"
+    },
+    visualDetails: {
+      border: "royal-gold-border",
+      seal: "gold-seal",
+      cardShape: "arched-dome",
+      texture: "velvet-paper"
+    }
+  },
+  {
+    id: "folded-tassel-linen",
+    name: "Püsküllü Keten Düğün",
+    thumbnail: "/templates/thumbnails/folded-tassel-linen.webp",
+    eventType: "wedding",
+    layoutStyle: "folded-seal",
+    backgroundDesign: "textured-linen",
+    category: "Minimalist",
+    primary_color: "#78350f",
+    text_color: "#1e293b",
+    font_family: "Montserrat",
+    background_image_url: null,
+    use_envelope: true,
+    envelope_color: "#ecd5b8",
+    envelope_bg_color: "kraft-natural",
+    envelope_flap_type: "square",
+    seal_type: "double-initials",
+    seal_color: "#78350f",
+    recommendedOpeningType: "book",
+    recommendedOpeningStyle: "bohemian-garden",
+    recommendedBackgroundDesign: "kraft-natural",
+    recommendedBackgroundAnimation: "none",
+    thematicAssets: ["hanging-tassel", "wax-seal-wax", "gold-threads"],
+    animationPreset: "tassel-swing",
+    sealPreset: "monogram",
+    palette: {
+      background: "#fafaf9",
+      card: "#f5f5f4",
+      primary: "#78350f",
+      secondary: "#d6d3d1",
+      accent: "#f5f5f4",
+      text: "#1e293b",
+      mutedText: "#57534e"
+    },
+    typography: {
+      heading: "Montserrat",
+      body: "Inter",
+      accent: "Allura"
+    },
+    visualDetails: {
+      border: "linen-border",
+      seal: "hand-pressed-wax",
+      cardShape: "clean-rectangle",
+      texture: "linen-paper"
+    }
+  },
+  {
+    id: "photo-luxury-emerald",
+    name: "Fotoğraflı Lüks Düğün",
+    thumbnail: "/templates/thumbnails/photo-luxury-emerald.webp",
+    eventType: "wedding",
+    layoutStyle: "photo-luxury",
+    backgroundDesign: "emerald-luxury-marble",
+    category: "Lüks",
+    primary_color: "#dfb76c",
+    text_color: "#022c22",
+    font_family: "Playfair Display",
+    background_image_url: null,
+    use_envelope: true,
+    envelope_color: "#064e3b",
+    envelope_bg_color: "marble-texture",
+    envelope_flap_type: "triangle",
+    seal_type: "crown",
+    seal_color: "#dfb76c",
+    recommendedOpeningType: "door",
+    recommendedOpeningStyle: "marble-gold",
+    recommendedBackgroundDesign: "marble-texture",
+    recommendedBackgroundAnimation: "goldParticles",
+    thematicAssets: ["luxury-frame", "gold-foils"],
+    animationPreset: "zoom-in-frame",
+    sealPreset: "royal-seal",
+    palette: {
+      background: "#022c22",
+      card: "#064e3b",
+      primary: "#dfb76c",
+      secondary: "#6ee7b7",
+      accent: "#f0fdf4",
+      text: "#f0fdf4",
+      mutedText: "#a7f3d0"
+    },
+    typography: {
+      heading: "Playfair Display",
+      body: "Lora",
+      accent: "Great Vibes"
+    },
+    visualDetails: {
+      border: "gold-foil-baroque",
+      seal: "crown-wax",
+      cardShape: "arched-dome",
+      texture: "marble"
+    }
+  },
+  {
+    id: "modern-tech-event",
+    name: "Modern Teknoloji Lansmanı",
+    thumbnail: "/templates/thumbnails/modern-tech-event.webp",
+    eventType: "corporate",
+    layoutStyle: "modern-event",
+    backgroundDesign: "neon-dark-mesh",
+    category: "Modern",
+    primary_color: "#06b6d4",
+    text_color: "#f8fafc",
+    font_family: "Outfit",
+    background_image_url: null,
+    use_envelope: true,
+    envelope_color: "#0f172a",
+    envelope_bg_color: "glass-effect",
+    envelope_flap_type: "square",
+    seal_type: "minimal-monogram",
+    seal_color: "#06b6d4",
+    recommendedOpeningType: "elevator",
+    recommendedOpeningStyle: "glass-modern",
+    recommendedBackgroundDesign: "glass-effect",
+    recommendedBackgroundAnimation: "neonGradient",
+    thematicAssets: ["neon-grid", "tech-orbs"],
+    animationPreset: "neon-pulse",
+    sealPreset: "neon",
+    palette: {
+      background: "#030712",
+      card: "#1f2937",
+      primary: "#06b6d4",
+      secondary: "#3b82f6",
+      accent: "#f8fafc",
+      text: "#f8fafc",
+      mutedText: "#9ca3af"
+    },
+    typography: {
+      heading: "Outfit",
+      body: "Inter",
+      accent: "Outfit"
+    },
+    visualDetails: {
+      border: "neon-stroke",
+      seal: "glowing-ring",
+      cardShape: "modern-rounded",
+      texture: "dark-mesh"
+    }
+  },
   // ============================================================
   // KATEGORİ: DÜĞÜN (EN AZ 12 ADET)
   // ============================================================
@@ -71,7 +437,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'royal-black-tie',
     name: 'Royal Black Tie',
     category: 'Lüks',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#d6a84f',
     text_color: '#0f0e0e',
     font_family: 'Cormorant Garamond',
@@ -112,7 +478,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'rose-gold-romance',
     name: 'Rose Gold Romance',
     category: 'Doğal',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#c98778',
     text_color: '#70463f',
     font_family: 'Lora',
@@ -153,7 +519,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'parisian-ivory',
     name: 'Parisian Ivory',
     category: 'Klasik',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#8c765c',
     text_color: '#2e261f',
     font_family: 'Playfair Display',
@@ -194,7 +560,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'bohemian-kraft-wedding',
     name: 'Bohemian Kraft',
     category: 'Doğal',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#a3704c',
     text_color: '#3d2b1f',
     font_family: 'Inter',
@@ -235,7 +601,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'minimal-white-wedding',
     name: 'Minimal White Ceremony',
     category: 'Minimalist',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#333333',
     text_color: '#111111',
     font_family: 'Outfit',
@@ -276,7 +642,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'luxury-marble-gold',
     name: 'Luxury Marble Gold',
     category: 'Lüks',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#dfb76c',
     text_color: '#2a251b',
     font_family: 'Playfair Display',
@@ -317,7 +683,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'moonlight-wedding',
     name: 'Moonlight Wedding',
     category: 'Modern',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#c29cf0',
     text_color: '#0f172a',
     font_family: 'Outfit',
@@ -358,7 +724,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'garden-of-roses',
     name: 'Garden of Roses',
     category: 'Doğal',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#d48888',
     text_color: '#3d2222',
     font_family: 'Lora',
@@ -399,7 +765,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'champagne-reception',
     name: 'Champagne Reception',
     category: 'Lüks',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#d4af37',
     text_color: '#332c1c',
     font_family: 'Cormorant Garamond',
@@ -440,7 +806,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'classic-ivory-wedding',
     name: 'Classic Ivory Wedding',
     category: 'Klasik',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#7a6855',
     text_color: '#2a241e',
     font_family: 'Playfair Display',
@@ -481,7 +847,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'velvet-burgundy-night',
     name: 'Velvet Burgundy Night',
     category: 'Lüks',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#c5a880',
     text_color: '#fcfbf9',
     font_family: 'Cormorant Garamond',
@@ -522,7 +888,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'wax-seal-royal',
     name: 'Mühürlü Kraliyet Daveti',
     category: 'Lüks',
-    eventType: 'Düğün',
+    eventType: 'wedding',
     primary_color: '#dfb76c',
     text_color: '#1e293b',
     font_family: 'Cormorant Garamond',
@@ -567,7 +933,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'henna-velvet-bordo',
     name: 'Bordo Kadife Kına',
     category: 'Lüks',
-    eventType: 'Kına',
+    eventType: 'henna',
     primary_color: '#fbbf24',
     text_color: '#fff7ed',
     font_family: 'Cormorant Garamond',
@@ -608,7 +974,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'henna-rose-gold',
     name: 'Rose Gold Henna Night',
     category: 'Modern',
-    eventType: 'Kına',
+    eventType: 'henna',
     primary_color: '#fb7185',
     text_color: '#4c0519',
     font_family: 'Lora',
@@ -649,7 +1015,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'henna-traditional',
     name: 'Geleneksel Kına Tepsisi',
     category: 'Klasik',
-    eventType: 'Kına',
+    eventType: 'henna',
     primary_color: '#d97706',
     text_color: '#451a03',
     font_family: 'Cormorant Garamond',
@@ -690,7 +1056,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'henna-candle',
     name: 'Mum Işığında Kına',
     category: 'Doğal',
-    eventType: 'Kına',
+    eventType: 'henna',
     primary_color: '#f59e0b',
     text_color: '#fef3c7',
     font_family: 'Lora',
@@ -731,7 +1097,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'henna-lace',
     name: 'Oryantal Altın Dantel',
     category: 'Lüks',
-    eventType: 'Kına',
+    eventType: 'henna',
     primary_color: '#dfa857',
     text_color: '#ffffff',
     font_family: 'Cinzel',
@@ -772,7 +1138,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'henna-luxury-red',
     name: 'Siyah ve Bordo Lüks Kına',
     category: 'Karanlık',
-    eventType: 'Kına',
+    eventType: 'henna',
     primary_color: '#e11d48',
     text_color: '#ffe4e6',
     font_family: 'Cormorant Garamond',
@@ -817,7 +1183,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'circumcision-royal',
     name: 'Şehzade Sünnet Daveti',
     category: 'Lüks',
-    eventType: 'Sünnet',
+    eventType: 'circumcision',
     primary_color: '#d4af37',
     text_color: '#fffbeb',
     font_family: 'Cinzel',
@@ -858,7 +1224,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'circumcision-nazar',
     name: 'Nazar Boncuklu Maşallah',
     category: 'Klasik',
-    eventType: 'Sünnet',
+    eventType: 'circumcision',
     primary_color: '#3b82f6',
     text_color: '#1e3a8a',
     font_family: 'Inter',
@@ -899,7 +1265,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'circumcision-velvet',
     name: 'Lacivert Kadife Sünnet',
     category: 'Lüks',
-    eventType: 'Sünnet',
+    eventType: 'circumcision',
     primary_color: '#f59e0b',
     text_color: '#fef3c7',
     font_family: 'Cormorant Garamond',
@@ -940,7 +1306,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'circumcision-ottoman',
     name: 'Osmanlı Sarayı Sünnet',
     category: 'Klasik',
-    eventType: 'Sünnet',
+    eventType: 'circumcision',
     primary_color: '#dfa857',
     text_color: '#451a03',
     font_family: 'Cinzel',
@@ -981,7 +1347,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'circumcision-crown',
     name: 'Altın Taçlı Sünnet',
     category: 'Lüks',
-    eventType: 'Sünnet',
+    eventType: 'circumcision',
     primary_color: '#d4af37',
     text_color: '#1e293b',
     font_family: 'Cormorant Garamond',
@@ -1022,7 +1388,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'circumcision-modern',
     name: 'Modern Mavi Monogram',
     category: 'Modern',
-    eventType: 'Sünnet',
+    eventType: 'circumcision',
     primary_color: '#2563eb',
     text_color: '#1e293b',
     font_family: 'Outfit',
@@ -1067,7 +1433,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-girl-princess',
     name: 'Pembe Prenses Sarayı',
     category: 'Çocuk',
-    eventType: 'Baby Shower',
+    eventType: 'baby_shower',
     genderVariant: 'girl',
     primary_color: '#ec4899',
     text_color: '#831843',
@@ -1109,7 +1475,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-girl-butterfly',
     name: 'Pastel Kelebek Bahçesi',
     category: 'Çocuk',
-    eventType: 'Doğum Günü',
+    eventType: 'birthday',
     genderVariant: 'girl',
     primary_color: '#a855f7',
     text_color: '#581c87',
@@ -1151,7 +1517,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-girl-crown',
     name: 'Taçlı Küçük Prenses',
     category: 'Çocuk',
-    eventType: 'Baby Shower',
+    eventType: 'baby_shower',
     genderVariant: 'girl',
     primary_color: '#f43f5e',
     text_color: '#881337',
@@ -1193,7 +1559,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-girl-toy',
     name: 'Pembe Oyuncak Dünyası',
     category: 'Çocuk',
-    eventType: 'Doğum Günü',
+    eventType: 'birthday',
     genderVariant: 'girl',
     primary_color: '#db2777',
     text_color: '#700d3d',
@@ -1235,7 +1601,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-girl-clouds',
     name: 'Masal Bulutları',
     category: 'Çocuk',
-    eventType: 'Baby Shower',
+    eventType: 'baby_shower',
     genderVariant: 'girl',
     primary_color: '#f472b6',
     text_color: '#4c0519',
@@ -1277,7 +1643,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-girl-fashion',
     name: 'Parıltılı Moda Bebek Partisi',
     category: 'Çocuk',
-    eventType: 'Doğum Günü',
+    eventType: 'birthday',
     genderVariant: 'girl',
     primary_color: '#f43f5e',
     text_color: '#4c0519',
@@ -1323,7 +1689,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-boy-racer',
     name: 'Küçük Yarışçı',
     category: 'Çocuk',
-    eventType: 'Doğum Günü',
+    eventType: 'birthday',
     genderVariant: 'boy',
     primary_color: '#2563eb',
     text_color: '#1e3a8a',
@@ -1365,7 +1731,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-boy-bear',
     name: 'Mavi Ayıcık',
     category: 'Çocuk',
-    eventType: 'Baby Shower',
+    eventType: 'baby_shower',
     genderVariant: 'boy',
     primary_color: '#60a5fa',
     text_color: '#1e3a8a',
@@ -1407,7 +1773,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-boy-clouds',
     name: 'Bulutların Üzerinde',
     category: 'Çocuk',
-    eventType: 'Doğum Günü',
+    eventType: 'birthday',
     genderVariant: 'boy',
     primary_color: '#38bdf8',
     text_color: '#0369a1',
@@ -1449,7 +1815,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-boy-space',
     name: 'Uzay Macerası',
     category: 'Çocuk',
-    eventType: 'Doğum Günü',
+    eventType: 'birthday',
     genderVariant: 'boy',
     primary_color: '#6366f1',
     text_color: '#312e81',
@@ -1491,7 +1857,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-boy-safari',
     name: 'Safari Bebek',
     category: 'Çocuk',
-    eventType: 'Baby Shower',
+    eventType: 'baby_shower',
     genderVariant: 'boy',
     primary_color: '#10b981',
     text_color: '#064e3b',
@@ -1533,7 +1899,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'baby-boy-sailor',
     name: 'Denizci Çocuk',
     category: 'Çocuk',
-    eventType: 'Doğum Günü',
+    eventType: 'birthday',
     genderVariant: 'boy',
     primary_color: '#1d4ed8',
     text_color: '#1e3a8a',
@@ -1579,7 +1945,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'engagement-blush',
     name: 'Pudra ve Rose Gold Nişan',
     category: 'Doğal',
-    eventType: 'Nişan',
+    eventType: 'engagement',
     primary_color: '#db2777',
     text_color: '#831843',
     font_family: 'Lora',
@@ -1620,7 +1986,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'engagement-emerald',
     name: 'Zümrüt Yeşili Söz',
     category: 'Lüks',
-    eventType: 'Söz',
+    eventType: 'engagement',
     primary_color: '#dfb76c',
     text_color: '#064e3b',
     font_family: 'Cormorant Garamond',
@@ -1661,7 +2027,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'engagement-minimal',
     name: 'Minimal Bej Nişan',
     category: 'Minimalist',
-    eventType: 'Nişan',
+    eventType: 'engagement',
     primary_color: '#7c6953',
     text_color: '#3e3429',
     font_family: 'Outfit',
@@ -1702,7 +2068,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'engagement-family',
     name: 'Çiçekli Aile Daveti',
     category: 'Klasik',
-    eventType: 'Söz',
+    eventType: 'engagement',
     primary_color: '#a3704c',
     text_color: '#3d2b1f',
     font_family: 'Lora',
@@ -1743,7 +2109,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'engagement-gold-frame',
     name: 'Altın Çerçeveli Söz',
     category: 'Lüks',
-    eventType: 'Söz',
+    eventType: 'engagement',
     primary_color: '#d4af37',
     text_color: '#1a1a1a',
     font_family: 'Cinzel',
@@ -1784,7 +2150,7 @@ export const predefinedThemes: TemplatePreset[] = [
     id: 'engagement-lavender',
     name: 'Lavanta Bahçesi Nişan',
     category: 'Doğal',
-    eventType: 'Nişan',
+    eventType: 'engagement',
     primary_color: '#8b5cf6',
     text_color: '#4c1d95',
     font_family: 'Lora',

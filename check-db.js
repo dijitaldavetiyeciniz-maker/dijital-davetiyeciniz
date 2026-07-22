@@ -6,7 +6,7 @@ const supabase = createClient(
 );
 
 async function checkStatus() {
-  const { data: weddings, error } = await supabase.from('weddings').select('slug, is_paid, bride_name');
+  const { data: weddings, error } = await supabase.from('weddings').select('slug, is_paid, bride_name, event_type');
   console.log("Weddings:", weddings);
 }
 

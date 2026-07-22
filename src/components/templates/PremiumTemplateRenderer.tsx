@@ -66,7 +66,31 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   })();
   const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
   const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-  const eventTitle = wedding.event_type || 'Düğün Töreni';
+  const eventTitle = (() => {
+    const rawType = (wedding.event_type || '').toLowerCase();
+    const eventTypeLabels: Record<string, string> = {
+      wedding: "Düğün Töreni",
+      engagement: "Nişan Töreni",
+      henna: "Kına Gecesi",
+      circumcision: "Sünnet Düğünü",
+      baby_shower: "Baby Shower",
+      birthday: "Doğum Günü",
+      corporate: "Kurumsal Etkinlik",
+      graduation: "Mezuniyet Töreni",
+    };
+    if (eventTypeLabels[rawType]) {
+      return eventTypeLabels[rawType];
+    }
+    if (rawType.includes('düğün') || rawType.includes('nikah')) return 'Düğün Töreni';
+    if (rawType.includes('nişan') || rawType.includes('söz')) return 'Nişan Töreni';
+    if (rawType.includes('kına')) return 'Kına Gecesi';
+    if (rawType.includes('sünnet')) return 'Sünnet Düğünü';
+    if (rawType.includes('baby') || rawType.includes('shower')) return 'Baby Shower';
+    if (rawType.includes('doğum') || rawType.includes('birthday')) return 'Doğum Günü';
+    if (rawType.includes('kurumsal') || rawType.includes('corporate') || rawType.includes('lansman') || rawType.includes('davet') || rawType.includes('özel')) return 'Kurumsal Etkinlik';
+    if (rawType.includes('mezuniyet') || rawType.includes('graduation')) return 'Mezuniyet Töreni';
+    return wedding.event_type || 'Düğün Töreni';
+  })();
 
   // Load the concept configuration
   const themeConfig = predefinedThemes.find(t => t.id === templateId) || predefinedThemes[0];
@@ -741,7 +765,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   );
 
   const renderLayout = () => {
-    const layoutStyle = themeConfig.layoutStyle || 'monogram';
+    const layoutStyle = wedding.custom_overrides?.layoutStyle || themeConfig.layoutStyle || 'monogram';
     switch (layoutStyle) {
       case 'asymmetric': return renderAsymmetricLayout();
       case 'full-bleed':
