@@ -12,6 +12,7 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "*.js", // ignore root level scratch testing scripts
   ]),
   {
     rules: {

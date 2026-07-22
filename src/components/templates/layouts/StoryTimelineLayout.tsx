@@ -51,7 +51,9 @@ export default function StoryTimelineLayout({
   cardBgColor = '#ffffff',
   mode = 'public'
 }: LayoutProps) {
-  
+  const hasMaps = !!wedding.google_maps_url;
+  const showRsvp = wedding.show_rsvp !== false;
+
   // 1. DİNAMİK TIMELINE VERİLERİ (Custom Overrides veya Fallback Varsayılan Aşamalar)
   const defaultTimelineItems: TimelineItem[] = [
     {
@@ -186,8 +188,7 @@ export default function StoryTimelineLayout({
     activeIconColor = 'text-slate-900';
   }
 
-  const hasMaps = !!wedding.google_maps_url;
-  const showRsvp = wedding.show_rsvp !== false;
+
 
   return (
     <div 

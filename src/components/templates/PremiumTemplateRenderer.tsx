@@ -109,7 +109,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
-  let cardStyles: React.CSSProperties = {
+  const cardStyles: React.CSSProperties = {
     borderColor: `${primaryColor}25`,
     fontFamily: `"${bodyFont}", serif`
   };
@@ -172,7 +172,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   };
 
   // Dynamically compile paper texture styling
-  let backgroundStyles: React.CSSProperties = {
+  const backgroundStyles: React.CSSProperties = {
     backgroundColor: isDarkModeActive ? '#090a0f' : registryBg.fallbackColor,
     backgroundImage: wedding.background_image_url 
       ? `url(${wedding.background_image_url})` 

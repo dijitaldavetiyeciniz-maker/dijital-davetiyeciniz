@@ -55,7 +55,7 @@ export default function PhotoLuxuryLayout({
   // Transparan bilgi paneli stili (Siyah, Bordo, Zümrüt Yeşili)
   const isDarkLayout = wedding.is_dark_mode || false;
   let panelBg = 'rgba(255, 255, 255, 0.9)';
-  let frameColor = 'linear-gradient(135deg, #dfb76c 0%, #c5a880 50%, #dfb76c 100%)';
+  const frameColor = 'linear-gradient(135deg, #dfb76c 0%, #c5a880 50%, #dfb76c 100%)';
 
   if (wedding.envelope_bg_color === 'black-gold-velvet') {
     panelBg = 'rgba(15, 15, 15, 0.88)';

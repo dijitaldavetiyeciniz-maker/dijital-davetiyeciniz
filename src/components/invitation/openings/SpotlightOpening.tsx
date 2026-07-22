@@ -31,7 +31,7 @@ export function SpotlightOpening({
           {introText || "Davetlimizsiniz"}
         </span>
         <h3 
-          style={{ color: styleConfig.palette.palette ? styleConfig.palette.text : '#ffffff' }}
+          style={{ color: styleConfig.palette.text || '#ffffff' }}
           className="font-serif text-2xl md:text-4xl drop-shadow-lg leading-tight"
         >
           {brideName} <span style={{ color: styleConfig.palette.secondary }}>&</span> {groomName}

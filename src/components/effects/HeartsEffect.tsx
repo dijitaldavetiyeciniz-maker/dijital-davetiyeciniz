@@ -12,20 +12,21 @@ interface HeartProps {
 }
 
 export default function HeartsEffect({ color = '#ef4444' }: { color?: string }) {
-  const [hearts, setHearts] = useState<HeartProps[]>([]);
-
-  useEffect(() => {
-    // Sadece client tarafında rastgele değerler oluştur (hydration uyumsuzluğunu önlemek için)
-    const newHearts = Array.from({ length: 15 }).map((_, i) => ({
-      id: i,
-      size: Math.random() * 20 + 10, // 10px - 30px
-      left: Math.random() * 100, // %0 - %100
-      animationDuration: Math.random() * 10 + 10, // 10s - 20s
-      animationDelay: Math.random() * 5, // 0s - 5s
-      color: color,
-    }));
-    setHearts(newHearts);
-  }, [color]);
+  const [hearts] = useState<HeartProps[]>(() =>
+    Array.from({ length: 15 }).map((_, i) => {
+      const seed1 = i * 19 + 7.89;
+      const seed2 = i * 31 + 4.56;
+      const seed3 = i * 47 + 1.23;
+      return {
+        id: i,
+        size: (Math.abs(Math.sin(seed1)) * 20) + 10,
+        left: Math.abs(Math.sin(seed2)) * 100,
+        animationDuration: (Math.abs(Math.sin(seed3)) * 10) + 10,
+        animationDelay: Math.abs(Math.sin(i * 13)) * 5,
+        color: color,
+      };
+    })
+  );
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-[5]">

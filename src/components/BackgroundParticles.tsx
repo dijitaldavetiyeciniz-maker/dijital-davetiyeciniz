@@ -31,9 +31,13 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
         {Array.from({ length: c.count }).map((_, i) => {
           const style: any = { '--i': i };
           if (!c.noPos) {
-            style.left = `${Math.random() * 100}%`;
+            const seedX = i * 17 + 3.14;
+            const seedY = i * 29 + 1.61;
+            const randomX = (Math.sin(seedX) * 10000) % 1;
+            const randomY = (Math.sin(seedY) * 10000) % 1;
+            style.left = `${Math.abs(randomX) * 100}%`;
             if (['bokehLights', 'pearlSparkle', 'mistCloud', 'candleFlicker', 'neonGradient'].includes(animationType)) {
-              style.top = `${Math.random() * 100}%`;
+              style.top = `${Math.abs(randomY) * 100}%`;
             }
           }
           return (

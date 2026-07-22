@@ -218,12 +218,8 @@ function EntranceAnimation({
   const isCurtainType = typeConfig.id === 'curtain';
 
   useEffect(() => {
-    setOpened(false);
-    setDoorOpened(false);
-    let autoOpenTimer: NodeJS.Timeout;
-
     // Auto-open curtain after 1.5 seconds
-    autoOpenTimer = setTimeout(() => {
+    const autoOpenTimer = setTimeout(() => {
       setOpened(true);
     }, 1500);
 

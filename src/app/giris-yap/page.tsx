@@ -18,7 +18,10 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -53,21 +56,30 @@ export default function LoginPage() {
           style={{ background: 'radial-gradient(circle, #f59e0b 0%, transparent 70%)', filter: 'blur(60px)' }} />
         
         {/* Floating stars */}
-        {mounted && Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-white"
-            style={{
-              width: Math.random() * 2 + 1 + 'px',
-              height: Math.random() * 2 + 1 + 'px',
-              top: Math.random() * 100 + '%',
-              left: Math.random() * 100 + '%',
-              opacity: Math.random() * 0.5 + 0.1,
-              animation: `pulse ${Math.random() * 3 + 2}s ease-in-out infinite`,
-              animationDelay: Math.random() * 2 + 's'
-            }}
-          />
-        ))}
+        {mounted && Array.from({ length: 20 }).map((_, i) => {
+          const seedX = i * 23 + 4.56;
+          const seedY = i * 47 + 7.89;
+          const rX = (Math.sin(seedX) * 10000) % 1;
+          const rY = (Math.sin(seedY) * 10000) % 1;
+          const rSize = (Math.sin(i * 13) * 1) + 1.5;
+          const rDelay = Math.sin(i * 31) * 2;
+          const rDur = Math.sin(i * 19) * 3 + 2;
+          return (
+            <div
+              key={i}
+              className="absolute rounded-full bg-white"
+              style={{
+                width: `${Math.abs(rSize)}px`,
+                height: `${Math.abs(rSize)}px`,
+                top: `${Math.abs(rY) * 100}%`,
+                left: `${Math.abs(rX) * 100}%`,
+                opacity: 0.4,
+                animation: `pulse ${Math.abs(rDur)}s ease-in-out infinite`,
+                animationDelay: `${Math.abs(rDelay)}s`
+              }}
+            />
+          );
+        })}
       </div>
 
       {/* Left decorative panel */}

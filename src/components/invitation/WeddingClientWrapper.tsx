@@ -13,13 +13,13 @@ type WeddingClientWrapperProps = {
 export default function WeddingClientWrapper({ wedding, children, mode = 'public' }: WeddingClientWrapperProps) {
   const [showEntrance, setShowEntrance] = useState(true);
 
-  const [isPreview, setIsPreview] = useState(mode === 'preview');
-
-  useEffect(() => {
+  const [isPreview] = useState(() => {
+    if (mode === 'preview') return true;
     if (typeof window !== 'undefined' && window.location.search.includes('preview=true')) {
-      setIsPreview(true);
+      return true;
     }
-  }, []);
+    return false;
+  });
 
   return (
     <>

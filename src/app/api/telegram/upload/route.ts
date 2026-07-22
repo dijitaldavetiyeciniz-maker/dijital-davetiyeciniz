@@ -18,10 +18,14 @@ export async function POST(request: Request) {
       .eq('id', wedding_id)
       .single();
 
+    if (error || !wedding) {
+      return NextResponse.json({ error: 'Bu davetiye bulunamadı.' }, { status: 404 });
+    }
+
     const isCustomBot = wedding.telegram_bot_token && wedding.telegram_bot_token.includes(':');
     const botToken = isCustomBot ? wedding.telegram_bot_token : process.env.TELEGRAM_BOT_TOKEN;
 
-    if (error || !wedding || !botToken || !wedding.telegram_chat_id) {
+    if (!botToken || !wedding.telegram_chat_id) {
       return NextResponse.json({ error: 'Bu davetiye için Telegram entegrasyonu (Chat ID) yapılandırılmamış.' }, { status: 400 });
     }
 

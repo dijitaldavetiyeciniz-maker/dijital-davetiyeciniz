@@ -44,6 +44,9 @@ export default function MagazineEditorialLayout({
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
+  const hasMaps = !!wedding.google_maps_url;
+  const showRsvp = wedding.show_rsvp !== false;
+
   // 1. VARYANT TESPİTİ
   // custom_overrides.editorial_variant: 'fashion' | 'newspaper' | 'luxury'
   const variant = wedding.custom_overrides?.editorial_variant || 'fashion';
@@ -63,7 +66,7 @@ export default function MagazineEditorialLayout({
   let containerBg = 'bg-[#fcfbf9]';
   let titleColor = primaryColor || '#0f172a';
   let borderLine = 'border-slate-200';
-  let fontSelection = `font-serif`;
+  const fontSelection = `font-serif`;
 
   if (variant === 'newspaper') {
     containerBg = 'bg-[#f8f6f0]'; // Gazete saman kağıdı rengi

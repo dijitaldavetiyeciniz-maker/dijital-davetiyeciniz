@@ -18,6 +18,10 @@ export async function GET(request: Request) {
       .eq('id', wedding_id)
       .single();
 
+    if (!wedding) {
+      return new NextResponse('Davetiye bulunamadı', { status: 404 });
+    }
+
     const isCustomBot = wedding.telegram_bot_token && wedding.telegram_bot_token.includes(':');
     const token = isCustomBot ? wedding.telegram_bot_token : process.env.TELEGRAM_BOT_TOKEN;
 

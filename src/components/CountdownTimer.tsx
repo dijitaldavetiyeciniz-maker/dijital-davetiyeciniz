@@ -10,14 +10,26 @@ export default function CountdownTimer({
   primaryColor?: string;
   styleType?: 'glass' | 'minimal' | 'digital' | 'circular' | 'neon' | 'elegant';
 }) {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [isPast, setIsPast] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(() => {
+    if (!targetDate) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    const distance = new Date(targetDate).getTime() - new Date().getTime();
+    if (isNaN(distance) || distance < 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    return {
+      days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+      minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+      seconds: Math.floor((distance % (1000 * 60)) / 1000)
+    };
+  });
+
+  const [isPast, setIsPast] = useState(() => {
+    if (!targetDate) return true;
+    const distance = new Date(targetDate).getTime() - new Date().getTime();
+    return isNaN(distance) || distance < 0;
+  });
 
   useEffect(() => {
-    if (!targetDate) {
-      setIsPast(true);
-      return;
-    }
+    if (!targetDate) return;
 
     const timer = setInterval(() => {
       const now = new Date().getTime();

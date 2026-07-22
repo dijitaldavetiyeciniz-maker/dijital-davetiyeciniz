@@ -310,9 +310,7 @@ export default function CoupleAdminPage({
   ];
 
 
-  useEffect(() => {
-    setVisibleCount(12);
-  }, [templateCategory]);
+
   
   // Genel Bilgiler State
   const [eventType, setEventType] = useState('Düğün');
@@ -1506,7 +1504,10 @@ export default function CoupleAdminPage({
                       <button
                         key={cat.id}
                         type="button"
-                        onClick={() => setTemplateCategory(cat.id)}
+                        onClick={() => {
+                          setTemplateCategory(cat.id);
+                          setVisibleCount(12);
+                        }}
                         className={`px-3 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap transition-all ${templateCategory === cat.id ? 'bg-rose-500 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
                       >
                         {cat.label}

@@ -1,13 +1,13 @@
 import { BackgroundDesign, ThematicAsset, AnimationPreset, SealPreset, TypographyPreset } from './registries';
 
-export type EventType = 'Düğün' | 'Nişan' | 'Kına' | 'Söz' | 'Baby Shower' | 'Doğum Günü' | 'Kurumsal Etkinlik' | 'Açılış / Lansman' | 'Diğer';
+export type EventType = 'Düğün' | 'Nişan' | 'Kına' | 'Söz' | 'Baby Shower' | 'Doğum Günü' | 'Kurumsal Etkinlik' | 'Açılış / Lansman' | 'Sünnet' | 'Mezuniyet' | 'Diğer';
 
 export interface TemplatePreset {
   id: string;
   name: string;
   eventType: EventType | 'all';
   genderVariant?: 'girl' | 'boy' | 'neutral';
-  layoutStyle: 'monogram' | 'asymmetric' | 'editorial' | 'oriental' | 'full-bleed' | 'folded-seal' | 'monogram-media' | 'photo-luxury' | 'botanical-frame' | 'kids-thematic' | 'henna-velvet' | 'royal-circumcision' | 'split-screen' | 'story-timeline' | 'modern-event';
+  layoutStyle: 'monogram' | 'asymmetric' | 'editorial' | 'oriental' | 'full-bleed' | 'folded-seal' | 'monogram-media' | 'photo-luxury' | 'botanical-frame' | 'kids-thematic' | 'henna-velvet' | 'royal-circumcision' | 'split-screen' | 'story-timeline' | 'modern-event' | 'minimal-paper';
   category: 'Modern' | 'Klasik' | 'Karanlık' | 'Minimalist' | 'Lüks' | 'Doğal' | 'Çocuk';
   
   background_image_url: string | null;

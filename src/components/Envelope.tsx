@@ -379,7 +379,7 @@ export default function Envelope({
   const renderEnvelope = (hasRibbon = false) => {
     const envStyle = getEnvelopeStyle(envelopeColor);
     let flapStyle: React.CSSProperties = { ...envStyle.flap };
-    let flapClass = 'absolute top-0 left-0 right-0 origin-top z-20 drop-shadow-xl';
+    const flapClass = 'absolute top-0 left-0 right-0 origin-top z-20 drop-shadow-xl';
 
     // 9 envelope flap shapes:
     switch (envelopeFlapType) {
