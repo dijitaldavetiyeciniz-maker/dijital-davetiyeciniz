@@ -91,7 +91,82 @@ export default function StoryTimelineLayout({
     }
   ];
 
-  const timelineItems: TimelineItem[] = wedding.custom_overrides?.timeline_items || defaultTimelineItems;
+  const hasCustomItems = !!wedding.custom_overrides?.timeline_items && wedding.custom_overrides.timeline_items.length > 0;
+  
+  if (!hasCustomItems && mode === 'public') {
+    return (
+      <div 
+        className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
+        style={{ fontFamily: `"${bodyFont}", serif` }}
+      >
+        <div 
+          className="relative rounded-[2.5rem] overflow-hidden p-6 sm:p-10 border flex flex-col items-center justify-between min-h-[400px] shadow-2xl bg-[#faf9f6]"
+          style={{ borderColor: 'rgba(0,0,0,0.05)', color: textColor }}
+        >
+          <div className="text-center w-full mb-8">
+            <span className="text-[10px] font-sans font-bold tracking-[0.3em] uppercase opacity-60" style={{ color: primaryColor }}>
+              WELCOME
+            </span>
+            <h1 
+              className="text-3xl sm:text-4xl font-normal tracking-wide mt-2" 
+              style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}
+            >
+              {wedding.bride_name} & {wedding.groom_name}
+            </h1>
+            <div className="w-12 h-[1px] bg-slate-300 mx-auto mt-4" />
+          </div>
+
+          <div className="my-2 leading-relaxed text-sm font-light italic max-w-sm text-center">
+            {renderQuote()}
+          </div>
+
+          <div className="w-full mt-8 pt-8 border-t border-slate-200/60">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left text-xs font-semibold">
+              <div className="flex items-center gap-3 py-2.5 px-4 rounded-xl border bg-black/5" style={{ borderColor: 'rgba(0,0,0,0.05)' }}>
+                <Calendar className="w-4 h-4 shrink-0" style={{ color: primaryColor }} />
+                <span>{dateStr} | {timeStr}</span>
+              </div>
+              <div className="flex flex-col gap-1 p-3.5 rounded-xl border bg-black/5">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 shrink-0" style={{ color: primaryColor }} />
+                  <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
+                </div>
+                {wedding.venue_address && (
+                  <p className="text-[11px] font-light opacity-80 pl-6 leading-relaxed text-slate-600">{wedding.venue_address}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full max-w-sm flex flex-col gap-3 mt-6">
+            {hasMaps && (
+              <button 
+                type="button"
+                onClick={handleMapClick}
+                className="w-full h-12 rounded-full border flex items-center justify-between px-6 font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:bg-slate-50 active:scale-98 cursor-pointer focus-visible:ring-2 focus-visible:outline-none"
+                style={{ 
+                  borderColor: `${primaryColor}40`, 
+                  color: primaryColor,
+                  backgroundColor: 'rgba(255, 255, 255, 0.4)'
+                }}
+              >
+                <span>KONUMA GİT</span>
+                <span>&rarr;</span>
+              </button>
+            )}
+            {showRsvp && renderRsvpButton()}
+          </div>
+
+          <div className="w-full mt-6">
+            {renderTimer()}
+            {renderGuestBook()}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const timelineItems: TimelineItem[] = hasCustomItems ? wedding.custom_overrides.timeline_items : defaultTimelineItems;
 
   // 2. TIMELINE STİLİ (Metalik, Botanik, Minimal)
   // custom_overrides.timeline_style: 'metallic' | 'botanical' | 'minimal'

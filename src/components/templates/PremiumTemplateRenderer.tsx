@@ -24,6 +24,7 @@ import MagazineEditorialLayout from './layouts/MagazineEditorialLayout';
 import FullBleedPhotoLayout from './layouts/FullBleedPhotoLayout';
 import SplitScreenLayout from './layouts/SplitScreenLayout';
 import StoryTimelineLayout from './layouts/StoryTimelineLayout';
+import ModernEventLayout from './layouts/ModernEventLayout';
 
 interface TemplateProps {
   wedding: any;
@@ -988,6 +989,28 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
       case 'story-timeline':
         return (
           <StoryTimelineLayout 
+            wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode}
+          />
+        );
+      case 'modern-event':
+        return (
+          <ModernEventLayout 
             wedding={wedding}
             primaryColor={primaryColor}
             textColor={textColor}

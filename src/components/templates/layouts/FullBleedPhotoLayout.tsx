@@ -2,12 +2,6 @@
 import React from 'react';
 import { Calendar, MapPin, Navigation } from 'lucide-react';
 
-declare module 'react' {
-  interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
-    fetchPriority?: 'high' | 'low' | 'auto';
-  }
-}
-
 interface LayoutProps {
   wedding: any;
   primaryColor: string;
