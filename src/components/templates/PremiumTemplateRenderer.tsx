@@ -144,13 +144,18 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   let effectiveBackground = themeConfig?.defaultBackground || 'minimal-white';
   
   if (themeConfig?.backgroundOptions && Array.isArray(themeConfig.backgroundOptions)) {
-    const variant = themeConfig.backgroundOptions.find(v => v.id === requestedBg);
-    if (variant) {
-      effectiveBackground = variant.id;
-      selectedVariant = variant;
-    } else if (themeConfig.backgroundOptions.length > 0) {
-      effectiveBackground = themeConfig.backgroundOptions[0].id;
-      selectedVariant = themeConfig.backgroundOptions[0];
+    if (requestedBg === 'none') {
+      effectiveBackground = 'none';
+      selectedVariant = null;
+    } else {
+      const variant = themeConfig.backgroundOptions.find(v => v.id === requestedBg);
+      if (variant) {
+        effectiveBackground = variant.id;
+        selectedVariant = variant;
+      } else if (themeConfig.backgroundOptions.length > 0) {
+        effectiveBackground = themeConfig.backgroundOptions[0].id;
+        selectedVariant = themeConfig.backgroundOptions[0];
+      }
     }
   }
   
@@ -690,7 +695,7 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
   const renderLayout = () => {
     const layoutStyle = wedding.custom_overrides?.layoutStyle || themeConfig.layoutStyle || 'monogram';
     const commonProps = {
-    selectedBackground, wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick };
+    selectedBackground, wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick, cardBgColor };
     switch (layoutStyle) {
       case 'cinematic-poster':
         return (
@@ -1284,7 +1289,9 @@ case 'asymmetric':
       className={`min-h-screen w-full relative flex flex-col font-sans transition-colors duration-1000 bg-design-${effectiveBackground} ${(isDarkModeActive && !selectedBackground?.image && !selectedBackground?.background) ? 'dark-mode' : ''} ${!isFullBleed ? 'items-center justify-center p-4 sm:p-6 pb-28 invitation-page' : ''}`}
       data-testid="invitation-scene-root"
       style={{
-        backgroundColor: !selectedBackground?.background?.includes('/') ? selectedBackground?.background : undefined,
+        backgroundColor: selectedBackground === null 
+          ? cardBgColor 
+          : (!selectedBackground?.background?.includes('/') ? selectedBackground?.background : undefined),
         backgroundImage: selectedBackground?.image 
           ? `url("${selectedBackground.image}")` 
           : (selectedBackground?.background?.includes('/') ? `url("${selectedBackground.background}")` : undefined),
