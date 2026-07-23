@@ -1264,15 +1264,11 @@ case 'asymmetric':
       className={`min-h-screen w-full relative flex flex-col font-sans transition-colors duration-1000 bg-design-${effectiveBackground} ${isDarkModeActive ? 'dark-mode' : ''} ${!isFullBleed ? 'items-center justify-center p-4 sm:p-6 pb-28 invitation-page' : ''}`}
       data-testid="invitation-scene-root"
       style={{
-        backgroundColor: selectedBackground?.backgroundColor ?? undefined,
-        backgroundImage: selectedBackground?.image 
-          ? `url("${selectedBackground.image}")` 
+        background: selectedBackground?.image 
+          ? `${(!selectedBackground?.background?.includes('/') ? selectedBackground?.background : 'transparent')} url("${selectedBackground.image}")`
           : (selectedBackground?.background?.includes('/') 
               ? `url("${selectedBackground.background}")` 
-              : undefined),
-        background: selectedBackground?.image || selectedBackground?.background?.includes('/') 
-          ? undefined 
-          : (selectedBackground?.background || selectedVariant?.background),
+              : (selectedBackground?.background || selectedVariant?.background)),
         backgroundSize: selectedBackground?.backgroundSize ?? 'cover',
         backgroundPosition: selectedBackground?.backgroundPosition ?? 'center',
         backgroundRepeat: selectedBackground?.backgroundRepeat ?? 'no-repeat',

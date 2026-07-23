@@ -597,7 +597,7 @@
 
 /* Gece Modu (Dark Mode) Global Ayarları */
 .invitation-page.dark-mode {
-  background: #0f0f12 !important;
+  background: #0f0f12;
   color: #fff8ec !important;
 }
 .invitation-page.dark-mode .invitation-card {
