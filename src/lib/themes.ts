@@ -204,10 +204,20 @@ export interface TemplateBackgroundVariant {
   name: string;
   preview: string;
   background: string;
+  image?: string;
+  backgroundColor?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string;
+  backgroundRepeat?: string;
   overlayStyle?: string;
+  overlayEffect?: string;
   sideDecoration?: string;
+  sideDeco?: string;
   cornerDecoration?: string;
+  cornerDeco?: string;
   frameStyle?: string;
+  ornamentSet?: string;
+  fallbackColor?: string;
   colorPalette?: Partial<TemplateColorPalette>;
 }
 
