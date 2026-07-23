@@ -153,6 +153,8 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
       selectedVariant = themeConfig.backgroundOptions[0];
     }
   }
+  
+  const selectedBackground = selectedVariant;
 
   // Merge color palettes
   const basePalette = themeConfig?.colorPalette || themeConfig?.palette || {
