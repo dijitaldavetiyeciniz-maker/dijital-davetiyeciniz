@@ -121,6 +121,7 @@ export default function GiantMonogramLayout({
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif`, color: textColor || '#1e293b' }}
     >
       <div 
+        data-testid="invitation-card-surface"
         className="relative rounded-[2.2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-6 sm:p-12 text-center border flex flex-col items-center justify-between min-h-[620px]"
         style={{ borderColor: `${primaryColor}20`, backgroundColor: cardBgColor || bgRegistry.fallbackColor, color: textColor || '#1e293b' }}
       >

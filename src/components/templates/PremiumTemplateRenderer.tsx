@@ -64,6 +64,7 @@ import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
 import LavenderGardenLayout from './layouts/LavenderGardenLayout';
 import EmeraldEleganceLayout from './layouts/EmeraldEleganceLayout';
+import InvitationActionRow from './InvitationActionRow';
 
 
 
@@ -185,10 +186,12 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   const primaryColor = overrides.primary_color || wedding.primary_color || (effectivePalette as any).primary || '#111111';
   
   const customDesignOverrides = wedding.custom_overrides?.design || {};
+  const sceneBackgroundColor = customDesignOverrides.sceneBackgroundColor || effectivePalette.background || '#f8fafc';
   const overridesCardBg = customDesignOverrides.cardBgColor;
   const cardBgColorFallback = overridesCardBg || (isDarkModeActive ? '#12131a' : (effectivePalette.surface || (effectivePalette as any).card || '#ffffff'));
   const cardBgColorRaw = overridesCardBg || cardBgColorFallback || '#ffffff';
   const cardOpacity = customDesignOverrides.cardOpacity !== undefined ? (customDesignOverrides.cardOpacity / 100) : 0.94;
+  const cardBlur = customDesignOverrides.cardBlur ?? 0;
   
   let rawTextColor = isDarkModeActive ? '#f8fafc' : (overrides.text_color || wedding.text_color || effectivePalette.primaryText || '#333333');
   let effectiveTextBg = cardOpacity > 0.4 ? cardBgColorRaw : (effectiveBackground === 'none' ? '#ffffff' : (effectivePalette.background || '#ffffff'));
@@ -244,6 +247,12 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
 
   const cardRgba = hexToRgba(cardBgColorRaw, cardOpacity);
   const cardBgColor = cardRgba;
+
+  const cardSurfaceStyle: React.CSSProperties = {
+    backgroundColor: cardBgColor,
+    backdropFilter: cardBlur > 0 ? `blur(${cardBlur}px)` : undefined,
+    WebkitBackdropFilter: cardBlur > 0 ? `blur(${cardBlur}px)` : undefined,
+  };
 
   const svgNoise = `data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.055'/%3E%3C/svg%3E`;
 
@@ -519,106 +528,49 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   );
 
   const renderRsvpButton = () => {
-    const showRsvp = wedding.show_rsvp !== false;
-    const showPhotos = wedding.show_photos !== false;
-
     return (
-      <div className="w-full mt-10 mb-6 flex flex-col items-center gap-6 relative z-10" style={{
-        fontFamily: bodyFontFamily
-      }}>
-        {showRsvp && (
-          <div 
-            className="px-6 py-2.5 rounded-full border text-[11px] font-bold tracking-[0.2em] uppercase max-w-sm text-center select-none"
-            style={{ 
-              borderColor: `${primaryColor}60`, 
-              color: textColor,
-              backgroundColor: textIsLight ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)'
-            }}
-          >
-            LÜTFEN KATILIM DURUMUNUZU BİLDİRİNİZ
-          </div>
-        )}
-
-        {/* Buttons Grid */}
-        <div className="flex justify-center items-start gap-8 md:gap-12 mt-2">
-          {/* Button 1: TAKVİME EKLE (Replaces Konum) */}
-          <button 
-            onClick={handleAddToCalendar}
-            className="flex flex-col items-center gap-2 group transition-transform active:scale-95 cursor-pointer"
-          >
-            <div 
-              className="w-16 h-16 rounded-full flex items-center justify-center border shadow-md bg-white hover:bg-slate-50 transition-colors"
-              style={{ borderColor: `${primaryColor}20`, color: primaryColor }}
-            >
-              <Calendar className="w-6 h-6" />
-            </div>
-            <span 
-              className="text-[10px] font-bold tracking-[0.15em] uppercase opacity-80"
-              style={{ color: textColor }}
-            >
-              TAKVİME EKLE
-            </span>
-          </button>
-
-          {/* Button 2: LCV/KATILIM */}
-          {showRsvp && (
-            <button 
-              onClick={() => setIsRsvpOpen(true)}
-              className="flex flex-col items-center gap-2 group transition-transform active:scale-95 cursor-pointer"
-            >
-              <div 
-                className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg text-white transition-opacity hover:opacity-90"
-                style={{ backgroundColor: primaryColor }}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <span 
-                className="text-[10px] font-bold tracking-[0.15em] uppercase opacity-80"
-                style={{ color: textColor }}
-              >
-                LCV/KATILIM
-              </span>
-            </button>
-          )}
-
-          {/* Button 3: FOTOĞRAF YÜKLE */}
-          {showPhotos && (
-            <div className="flex flex-col items-center">
-              <input 
-                type="file" 
-                accept="image/*" 
-                id="inline-photo-upload" 
-                className="hidden" 
-                onChange={handleGuestPhotoUpload} 
-                disabled={isUploading}
-              />
-              <label 
-                htmlFor="inline-photo-upload" 
-                className="flex flex-col items-center gap-2 group cursor-pointer transition-transform active:scale-95"
-              >
-                <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center border shadow-md bg-white hover:bg-slate-50 transition-colors"
-                  style={{ borderColor: `${primaryColor}20`, color: primaryColor }}
-                >
-                  {isUploading ? (
-                    <Loader2 className="w-6 h-6 animate-spin" />
-                  ) : (
-                    <Camera className="w-6 h-6" />
-                  )}
-                </div>
-                <span 
-                  className="text-[10px] font-bold tracking-[0.15em] uppercase text-center max-w-[80px] opacity-80"
-                  style={{ color: textColor }}
-                >
-                  FOTOĞRAF YÜKLE
-                </span>
-              </label>
-            </div>
-          )}
-        </div>
-      </div>
+      <InvitationActionRow
+        primaryColor={primaryColor}
+        textColor={textColor}
+        textIsLight={textIsLight}
+        showRsvp={wedding.show_rsvp !== false}
+        showPhotos={wedding.show_photos !== false}
+        showLocation={true}
+        showCalendar={!!wedding.wedding_date}
+        onRsvpClick={() => setIsRsvpOpen(true)}
+        onMapClick={handleMapClick}
+        onCalendarClick={handleAddToCalendar}
+        onPhotoUpload={async (file) => {
+          if (mode === 'preview') {
+            alert("Önizleme Modu: Fotoğraf yükleme simülasyonu başarılı! (Gerçek yükleme için davetiyeyi kaydedip yayındaki sayfadan yükleme yapın.) 📸❤️");
+            return;
+          }
+          setIsUploading(true);
+      
+          const formData = new FormData();
+          formData.append('photo', file);
+          formData.append('wedding_id', wedding.id);
+      
+          try {
+            const res = await fetch('/api/telegram/upload', {
+              method: 'POST',
+              body: formData,
+            });
+            const data = await res.json();
+            if (data.success) {
+              alert('Fotoğrafınız başarıyla yüklendi, teşekkür ederiz! ❤️');
+            } else {
+              alert('Fotoğraf yüklenirken bir hata oluştu.');
+            }
+          } catch (error) {
+            console.error('Upload error:', error);
+            alert('Fotoğraf yüklenirken bir hata oluştu.');
+          } finally {
+            setIsUploading(false);
+          }
+        }}
+        isUploading={isUploading}
+      />
     );
   };
 
@@ -721,7 +673,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   const renderLayout = () => {
     const layoutStyle = wedding.custom_overrides?.layoutStyle || themeConfig.layoutStyle || 'monogram';
     const commonProps = {
-    selectedBackground, wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick, cardBgColor };
+    selectedBackground, wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick, cardBgColor, cardBlur, cardSurfaceStyle };
     switch (layoutStyle) {
       case 'cinematic-poster':
         return (
@@ -1316,7 +1268,7 @@ case 'asymmetric':
       data-testid="invitation-scene-root"
       style={{
         backgroundColor: selectedBackground === null 
-          ? cardBgColor 
+          ? sceneBackgroundColor 
           : (!selectedBackground?.background?.includes('/') ? selectedBackground?.background : undefined),
         backgroundImage: selectedBackground?.image 
           ? `url("${selectedBackground.image}")` 

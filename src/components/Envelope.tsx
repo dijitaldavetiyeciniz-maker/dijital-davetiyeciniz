@@ -21,6 +21,9 @@ interface EnvelopeProps {
   musicUrl?: string | null;
   musicAutoplay?: boolean;
   backgroundAnimation?: string;
+  eventType?: string;
+  eventTitle?: string;
+  weddingDate?: string;
 }
 
 export default function Envelope({ 
@@ -37,8 +40,24 @@ export default function Envelope({
   fontFamily = 'Montserrat',
   musicUrl,
   musicAutoplay = true,
-  backgroundAnimation = 'none'
+  backgroundAnimation = 'none',
+  eventType = 'wedding',
+  eventTitle,
+  weddingDate,
 }: EnvelopeProps) {
+  const displayTitle = eventTitle || (() => {
+    const typeMap: Record<string, string> = {
+      wedding: 'Düğün Daveti',
+      engagement: 'Nişan Daveti',
+      henna: 'Kına Gecesi',
+      circumcision: 'Sünnet Merasimi',
+      baby_shower: 'Baby Shower',
+      birthday: 'Doğum Günü',
+      corporate: 'Kurumsal Etkinlik',
+      graduation: 'Mezuniyet Töreni',
+    };
+    return typeMap[eventType] || 'Davetlisiniz';
+  })();
   const [isOpened, setIsOpened] = useState(() => {
     const isPreview = typeof window !== 'undefined' && window.location.search.includes('preview=true');
     if (isPreview && typeof window !== 'undefined' && window.sessionStorage.getItem('preview_envelope_opened') === 'true') {
@@ -135,7 +154,7 @@ export default function Envelope({
     if (typeof document !== 'undefined') {
       const audio = document.getElementById('bg-audio') as HTMLAudioElement;
       if (audio) {
-        audio.play().catch(err => console.log('Autoplay play error:', err));
+        audio.play().catch(err => { if (process.env.NODE_ENV === 'development') console.log('Autoplay play error:', err) });
       }
     }
 
@@ -545,7 +564,7 @@ export default function Envelope({
             <span className="text-amber-600 font-serif tracking-[0.2em] text-xs uppercase mb-2">Özel Davet</span>
             <h2 className="text-2xl md:text-3xl text-slate-800 my-4 leading-relaxed" style={{ fontFamily: `"${fontFamily}", sans-serif` }}>{brideName} & {groomName}</h2>
             <div className="w-12 h-[1px] bg-amber-500 my-2"></div>
-            <p className="text-[10px] text-slate-400 tracking-widest uppercase">Düğün Törenimize Davetlisiniz</p>
+            <p className="text-[10px] text-slate-400 tracking-widest uppercase">{displayTitle}</p>
           </div>
         </div>
 
@@ -1026,7 +1045,7 @@ export default function Envelope({
                     {brideName} & {groomName}
                   </div>
                   <div className="w-12 h-px mx-auto my-2" style={{ backgroundColor: goldColor }} />
-                  <div className="text-[9px] text-slate-400 tracking-widest uppercase">Düğün Davetiyesi</div>
+                  <div className="text-[9px] text-slate-400 tracking-widest uppercase">{displayTitle}</div>
                 </motion.div>
 
                 {/* Side shadows */}
@@ -1179,7 +1198,7 @@ export default function Envelope({
               
               <div className="text-center mt-4">
                 <Crown className="w-6 h-6 mx-auto mb-2 text-[#dfc384]/80" />
-                <span className="text-[9px] tracking-[0.25em] text-[#b0945a] uppercase font-semibold">Düğün Davetiyesi</span>
+                <span className="text-[9px] tracking-[0.25em] text-[#b0945a] uppercase font-semibold">{displayTitle}</span>
               </div>
               
               <div className="text-center my-auto">
@@ -1645,7 +1664,18 @@ export default function Envelope({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {entranceComponent}
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={handleOpen}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOpen(); } }}
+              className="fixed inset-0 cursor-pointer z-50 pointer-events-auto"
+              aria-label="Davetiyeyi açmak için dokununuz"
+            >
+              <div className="pointer-events-none w-full h-full flex items-center justify-center">
+                {entranceComponent}
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

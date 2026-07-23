@@ -245,7 +245,9 @@ export default function CoupleAdminPage({
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
   const [textColor, setTextColor] = useState('#1e293b'); // Yeni eklenen metin rengi
   const [cardBgColor, setCardBgColor] = useState('#ffffff'); // Kart Zemin Rengi
-  const [cardOpacity, setCardOpacity] = useState(90); // Kart Şeffaflığı (0-100)
+  const [cardOpacity, setCardOpacity] = useState(90); // Kart Opaklığı (0-100)
+  const [cardBlur, setCardBlur] = useState(0); // Kart Bulanıklığı (px)
+  const [sceneBackgroundColor, setSceneBackgroundColor] = useState('#f8f7f4'); // Dış Sahne Rengi
   const [envelopeColor, setEnvelopeColor] = useState('#e6d5c3');
   const [envelopeBgColor, setEnvelopeBgColor] = useState('slate');
   const [envelopeFlapType, setEnvelopeFlapType] = useState('triangle');
@@ -535,6 +537,19 @@ export default function CoupleAdminPage({
   }
 
   async function handleSaveDesign() {
+    // Zorunlu alan validasyonu
+    const validationErrors: string[] = [];
+    if (!brideName?.trim() && !groomName?.trim()) validationErrors.push('Gelin/Damat isim(ler)i');
+    if (!weddingDate) validationErrors.push('Etkinlik tarihi');
+    if (!venueName?.trim()) validationErrors.push('Mekan adı');
+    if (!templateId) validationErrors.push('Şablon seçimi');
+    if (!eventType) validationErrors.push('Etkinlik türü');
+    
+    if (validationErrors.length > 0) {
+      alert('⚠️ Lütfen aşağıdaki zorunlu alanları tamamlayın:\n\n• ' + validationErrors.join('\n• '));
+      return;
+    }
+
     const payload: any = {
       template_id: templateId,
       primary_color: primaryColor,
@@ -576,7 +591,14 @@ export default function CoupleAdminPage({
       seal_style: sealStyle,
       countdown_style: countdownStyle,
       is_dark_mode: isDarkMode,
-      custom_overrides: customOverrides,
+      custom_overrides: {
+        ...customOverrides,
+        design: {
+          ...customOverrides?.design,
+          cardBgColor,
+          cardOpacity,
+        }
+      },
       photo_focal_point: photoFocalPoint
     };
 
@@ -586,7 +608,7 @@ export default function CoupleAdminPage({
       .eq('id', wedding.id);
       
     if (!error) {
-      alert('Tüm ayarlar başarıyla kaydedildi!');
+      alert('✅ Tüm ayarlar başarıyla kaydedildi!');
       setPreviewKey(Date.now()); // Iframe'i yenile
     } else {
       alert('Hata oluştu: ' + error.message);
@@ -1951,18 +1973,8 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                
-                
-                {/* DEBUG ZEMIN */}
-                {process.env.NODE_ENV === 'development' && (
-                  <div className="bg-black text-lime-400 p-4 rounded-xl text-xs font-mono mb-4 whitespace-pre-wrap overflow-auto">
-                    <div className="font-bold text-white mb-2">DEBUG: Arka Plan Akışı</div>
-                    <div>Seçilen şablon: {templateId}</div>
-                    <div>Form state backgroundDesign: {customOverrides?.design?.backgroundDesign || 'Yok'}</div>
-                    <div>Top level backgroundDesign: {customOverrides?.backgroundDesign || 'Yok'}</div>
-                    <div>Renderer'a gönderilen liveWeddingData: {liveWeddingData.custom_overrides?.design?.backgroundDesign || 'Yok'}</div>
-                  </div>
-                )}
+
+
 
                 {/* Şablona Uyumlu Arka Plan (Zemin) Sistemi */}
                 {(() => {

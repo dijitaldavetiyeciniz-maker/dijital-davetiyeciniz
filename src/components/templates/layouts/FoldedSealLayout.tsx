@@ -58,6 +58,7 @@ export default function FoldedSealLayout({
     >
       {/* Çapraz Katlanmış Davetiye ve 3D Gölgeli Kenarlar */}
       <div 
+        data-testid="invitation-card-surface"
         className="relative rounded-[2rem] overflow-hidden shadow-[0_30px_70px_-15px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.4)] border border-amber-900/10 flex flex-col md:flex-row items-stretch"
         style={{ backgroundColor: cardBgColor || bgRegistry.fallbackColor }}
       >
