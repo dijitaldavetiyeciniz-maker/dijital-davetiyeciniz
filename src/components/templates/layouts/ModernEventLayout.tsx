@@ -134,7 +134,7 @@ export default function ModernEventLayout({
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
-      style={{ fontFamily: `"${bodyFont}", sans-serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}
     >
       <div 
         className={`relative rounded-[2.5rem] overflow-hidden p-6 sm:p-10 border flex flex-col justify-between min-h-[640px] shadow-2xl transition-all duration-500 ${containerBg}`}

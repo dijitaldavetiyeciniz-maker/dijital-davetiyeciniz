@@ -74,7 +74,7 @@ export default function PhotoLuxuryLayout({
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in text-slate-800"
-      style={{ fontFamily: `"${bodyFont}", serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       <div className="relative rounded-[2.5rem] overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] bg-slate-950 border border-white/5">
         

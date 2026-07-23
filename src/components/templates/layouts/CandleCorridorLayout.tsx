@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function CandleCorridorLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function CandleCorridorLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full min-h-screen bg-[#111] text-[#fcd34d] p-6 flex flex-col items-center justify-center">
+    <div className="w-full min-h-screen text-[#fcd34d] p-6 flex flex-col items-center justify-center" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
       <div className="w-full max-w-md border border-[#fcd34d]/30 p-8 rounded-t-full shadow-[0_0_50px_rgba(252,211,77,0.1)] text-center relative overflow-hidden">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-16 h-16 rounded-full bg-[#fcd34d] blur-[40px] opacity-30"></div>
         <h1 className="text-4xl mt-20 mb-4" style={{ fontFamily: `"${headingFont}", serif` }}>{wedding.bride_name}</h1>

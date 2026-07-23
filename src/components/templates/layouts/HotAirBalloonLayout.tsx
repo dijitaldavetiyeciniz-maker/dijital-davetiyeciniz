@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function HotAirBalloonLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function HotAirBalloonLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-sky-200 to-white text-slate-700 p-6 flex flex-col items-center">
+    <div className="w-full min-h-screen bg-gradient-to-b from-sky-200 to-white text-slate-700 p-6 flex flex-col items-center" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
       <div className="w-full max-w-lg bg-white/40 backdrop-blur-md rounded-[3rem] p-8 shadow-xl text-center relative mt-20 border border-white">
         <div className="absolute -top-16 left-1/2 -translate-x-1/2 text-7xl animate-bounce">🎈</div>
         <h3 className="text-xs uppercase tracking-[0.3em] font-bold text-sky-600 mb-6 mt-4">Gökyüzü Yolculuğu</h3>

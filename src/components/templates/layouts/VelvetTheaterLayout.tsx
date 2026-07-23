@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function VelvetTheaterLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function VelvetTheaterLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-md mx-auto bg-[#0F172A] text-white p-4 shadow-2xl overflow-hidden rounded-[3rem] border border-blue-900/50 relative">
+    <div className="w-full max-w-md mx-auto text-white p-4 shadow-2xl overflow-hidden rounded-[3rem] border border-blue-900/50 relative" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
       <div className="absolute top-0 left-0 w-full h-32 bg-blue-900/30 blur-2xl"></div>
       <div className="relative z-10 text-center py-12 px-6">
         <h3 className="text-[10px] tracking-widest uppercase text-blue-300 font-bold mb-4">Sünnet Töreni</h3>

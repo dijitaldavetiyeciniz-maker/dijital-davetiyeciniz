@@ -98,9 +98,9 @@ export default function StoryTimelineLayout({
   
   if (!hasCustomItems && mode === 'public') {
     return (
-      <div 
+    <div 
         className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
-        style={{ fontFamily: `"${bodyFont}", serif` }}
+        style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
       >
         <div 
           className="relative rounded-[2.5rem] overflow-hidden p-6 sm:p-10 border flex flex-col items-center justify-between min-h-[400px] shadow-2xl bg-[#faf9f6]"

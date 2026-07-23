@@ -62,7 +62,7 @@ export default function BotanicalCeramicLayout({
   return (
     <div 
       className="min-h-screen w-full flex flex-col lg:flex-row relative z-10 animate-fade-in"
-      style={{ fontFamily: `"${bodyFont}", sans-serif`, backgroundColor: mainBg, color: computedTextColor }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`, backgroundColor: mainBg, color: computedTextColor }}
       data-testid="layout-botanical-ceramic"
     >
       {/* Left Column: Botanical & Image */}

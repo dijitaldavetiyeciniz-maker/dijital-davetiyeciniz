@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function PrinceThroneRoomLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function PrinceThroneRoomLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-md mx-auto bg-gradient-to-b from-[#1a237e] to-[#0d47a1] text-white p-4 shadow-2xl rounded-t-full border-8 border-b-0 border-[#ffd54f]">
+    <div className="w-full max-w-md mx-auto bg-gradient-to-b from-[#1a237e] to-[#0d47a1] text-white p-4 shadow-2xl rounded-t-full border-8 border-b-0 border-[#ffd54f]" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
       <div className="bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] p-8 pt-24 text-center">
         <div className="text-4xl mb-4">👑</div>
         <h3 className="text-xs text-[#ffd54f] tracking-widest uppercase mb-8 font-bold">Şehzade Sünnet Töreni</h3>

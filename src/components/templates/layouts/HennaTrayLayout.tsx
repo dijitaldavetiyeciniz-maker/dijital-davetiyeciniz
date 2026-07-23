@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function HennaTrayLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function HennaTrayLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-sm mx-auto p-4 flex flex-col items-center text-center">
+    <div className="w-full max-w-sm mx-auto p-4 flex flex-col items-center text-center" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
       <div className="w-64 h-64 rounded-full border-[12px] flex flex-col items-center justify-center shadow-xl mb-8 bg-[#800020] text-[#FFD700]" style={{ borderColor: primaryColor }}>
         <h3 className="text-[10px] tracking-widest uppercase mb-2">KINA</h3>
         <h1 className="text-3xl" style={{ fontFamily: `"${headingFont}", serif` }}>{wedding.bride_name}</h1>

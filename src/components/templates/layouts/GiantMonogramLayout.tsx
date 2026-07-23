@@ -117,7 +117,7 @@ export default function GiantMonogramLayout({
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in text-slate-800"
-      style={{ fontFamily: `"${bodyFont}", serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       <div 
         className="relative rounded-[2.2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-6 sm:p-12 text-center border flex flex-col items-center justify-between min-h-[620px]"

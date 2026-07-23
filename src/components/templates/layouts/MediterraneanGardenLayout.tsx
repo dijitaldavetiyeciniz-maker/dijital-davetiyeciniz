@@ -1,9 +1,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function MediterraneanGardenLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function MediterraneanGardenLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-lg mx-auto bg-[#F8F9FA] border-x-[16px] border-[#0ea5e9] min-h-[80vh] p-8 text-center shadow-lg relative overflow-hidden" style={{ color: textColor }}>
+    <div className="w-full max-w-lg mx-auto border-x-[16px] border-[#0ea5e9] min-h-[80vh] p-8 text-center shadow-lg relative overflow-hidden" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
       <div className="absolute top-0 left-0 w-full h-32 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] opacity-10 pointer-events-none"></div>
       
       <div className="relative z-10 pt-10">

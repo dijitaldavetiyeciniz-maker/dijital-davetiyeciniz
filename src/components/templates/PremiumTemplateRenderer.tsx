@@ -663,7 +663,8 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
   
   const renderLayout = () => {
     const layoutStyle = wedding.custom_overrides?.layoutStyle || themeConfig.layoutStyle || 'monogram';
-    const commonProps = { wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick };
+    const commonProps = {
+    selectedBackground, wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick };
     switch (layoutStyle) {
       case 'cinematic-poster':
         return (
@@ -1255,22 +1256,114 @@ case 'asymmetric':
   return (
     <div 
       className={`min-h-screen w-full relative flex flex-col font-sans transition-colors duration-1000 bg-design-${effectiveBackground} ${isDarkModeActive ? 'dark-mode' : ''} ${!isFullBleed ? 'items-center justify-center p-4 sm:p-6 pb-28 invitation-page' : ''}`}
-      style={{ 
-        ...(selectedVariant?.background ? { background: selectedVariant.background } : { ...backgroundStyles }), 
-        overflowX: 'clip' 
+      data-testid="invitation-scene-root"
+      style={{
+        backgroundColor: selectedBackground?.backgroundColor ?? undefined,
+        backgroundImage: selectedBackground?.image 
+          ? `url("${selectedBackground.image}")` 
+          : (selectedBackground?.background?.includes('/') 
+              ? `url("${selectedBackground.background}")` 
+              : undefined),
+        background: selectedBackground?.image || selectedBackground?.background?.includes('/') 
+          ? undefined 
+          : (selectedBackground?.background || selectedVariant?.background),
+        backgroundSize: selectedBackground?.backgroundSize ?? 'cover',
+        backgroundPosition: selectedBackground?.backgroundPosition ?? 'center',
+        backgroundRepeat: selectedBackground?.backgroundRepeat ?? 'no-repeat',
+        ...(!selectedBackground?.background && !selectedBackground?.image && !selectedVariant?.background ? backgroundStyles : {}),
+        overflowX: 'clip'
       }}
     >
-      <BackgroundAnimation type={overrides.background_animation || wedding.background_animation} />
+      <BackgroundAnimation type={selectedBackground?.ornamentSet || overrides.background_animation || wedding.background_animation} disableDefault={!!selectedBackground} />
+      
+<style dangerouslySetInnerHTML={{ __html: `
+  /* Overlays */
+  .bg-overlay-gold-sparkle-soft { background-image: radial-gradient(circle at center, rgba(255,215,0,0.15) 0%, transparent 70%), url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"); }
+  .bg-overlay-gold-sparkle-strong { background-image: radial-gradient(circle at center, rgba(255,215,0,0.3) 0%, transparent 80%), url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"); }
+  .bg-overlay-rose-glow { background-image: radial-gradient(circle at 50% 30%, rgba(255,182,193,0.3) 0%, transparent 60%); }
+  .bg-overlay-warm-glow { background-image: radial-gradient(circle at 50% 50%, rgba(255,248,220,0.4) 0%, transparent 70%); }
+  .bg-overlay-sunlight-glow { background-image: radial-gradient(circle at 10% 10%, rgba(255,255,200,0.6) 0%, transparent 50%), radial-gradient(circle at 90% 90%, rgba(255,200,100,0.2) 0%, transparent 50%); }
+  .bg-overlay-paper-texture { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"); mix-blend-mode: multiply; }
+  .bg-overlay-ceramic-texture { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.01' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E"); }
+  .bg-overlay-starlight { background-image: radial-gradient(1px 1px at 10% 20%, white 100%, transparent), radial-gradient(2px 2px at 40% 60%, rgba(255,255,255,0.8) 100%, transparent), radial-gradient(1.5px 1.5px at 80% 30%, white 100%, transparent), radial-gradient(2.5px 2.5px at 70% 80%, rgba(255,255,255,0.9) 100%, transparent), radial-gradient(1px 1px at 30% 90%, white 100%, transparent); background-size: 200px 200px; }
+  .bg-overlay-garden-glow { background-image: radial-gradient(circle at 20% 80%, rgba(144,238,144,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(144,238,144,0.1) 0%, transparent 40%); }
+  .bg-overlay-linen-texture { background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px); mix-blend-mode: multiply; }
+  .bg-overlay-palace-arch { background-image: radial-gradient(ellipse at top, rgba(255,215,0,0.1) 0%, transparent 60%); border-top: 20px solid rgba(255,215,0,0.05); border-radius: 50% 50% 0 0 / 10% 10% 0 0; }
+  .bg-overlay-moon-stars { background-image: radial-gradient(circle at 80% 20%, rgba(255,255,200,0.4) 0%, rgba(255,255,200,0.1) 20%, transparent 40%); }
+  .bg-overlay-cyber-glow { background-image: radial-gradient(circle at 50% 50%, rgba(0,255,255,0.1) 0%, transparent 60%); mix-blend-mode: screen; }
+
+  /* Side Decorations */
+  .bg-side-left-marble-gold { background-image: linear-gradient(to right, rgba(212,175,55,0.2) 0%, transparent 100%); border-left: 4px solid rgba(212,175,55,0.3); }
+  .bg-side-right-marble-gold { background-image: linear-gradient(to left, rgba(212,175,55,0.2) 0%, transparent 100%); border-right: 4px solid rgba(212,175,55,0.3); }
+  .bg-side-left-marble-gold-dark { background-image: linear-gradient(to right, rgba(212,175,55,0.4) 0%, transparent 100%); border-left: 6px solid rgba(212,175,55,0.5); }
+  .bg-side-right-marble-gold-dark { background-image: linear-gradient(to left, rgba(212,175,55,0.4) 0%, transparent 100%); border-right: 6px solid rgba(212,175,55,0.5); }
+  .bg-side-left-rose-silk { background-image: linear-gradient(to right, rgba(255,182,193,0.3) 0%, transparent 100%); }
+  .bg-side-right-rose-silk { background-image: linear-gradient(to left, rgba(255,182,193,0.3) 0%, transparent 100%); }
+  .bg-side-left-botanical-leaves { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200'%3E%3Cpath d='M0,50 Q40,40 50,0 Q60,40 100,50 Q60,60 50,100 Q40,60 0,50' fill='rgba(34,139,34,0.05)'/%3E%3C/svg%3E"); background-size: cover; }
+  .bg-side-right-botanical-leaves { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200'%3E%3Cpath d='M0,50 Q40,40 50,0 Q60,40 100,50 Q60,60 50,100 Q40,60 0,50' fill='rgba(34,139,34,0.05)'/%3E%3C/svg%3E"); background-size: cover; transform: scaleX(-1); }
+  .bg-side-left-velvet-curtain { background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 40%, transparent 100%); border-left: 15px solid rgba(139,0,0,0.3); }
+  .bg-side-right-velvet-curtain { background: linear-gradient(to left, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 40%, transparent 100%); border-right: 15px solid rgba(139,0,0,0.3); }
+  .bg-side-left-velvet-curtain-burgundy { background: linear-gradient(to right, rgba(60,0,10,0.7) 0%, rgba(60,0,10,0.2) 50%, transparent 100%); border-left: 20px solid rgba(139,0,0,0.4); }
+  .bg-side-right-velvet-curtain-burgundy { background: linear-gradient(to left, rgba(60,0,10,0.7) 0%, rgba(60,0,10,0.2) 50%, transparent 100%); border-right: 20px solid rgba(139,0,0,0.4); }
+  .bg-side-left-royal-curtain { background: linear-gradient(to right, rgba(212,175,55,0.4) 0%, rgba(212,175,55,0.1) 40%, transparent 100%); border-left: 10px solid rgba(212,175,55,0.6); }
+  .bg-side-right-royal-curtain { background: linear-gradient(to left, rgba(212,175,55,0.4) 0%, rgba(212,175,55,0.1) 40%, transparent 100%); border-right: 10px solid rgba(212,175,55,0.6); }
+  .bg-side-left-digital-grid { background-image: linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px; mask-image: linear-gradient(to right, black 0%, transparent 100%); }
+  .bg-side-right-digital-grid { background-image: linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px; mask-image: linear-gradient(to left, black 0%, transparent 100%); }
+
+  /* Frame Styles */
+  .border-frame-thin-gold { border: 1px solid rgba(212,175,55,0.5); outline: 1px solid rgba(212,175,55,0.2); outline-offset: 4px; }
+  .border-frame-thick-gold { border: 4px double rgba(212,175,55,0.6); }
+  .border-frame-gold-border { border: 2px solid #d4af37; border-radius: 8px; box-shadow: inset 0 0 20px rgba(212,175,55,0.2); }
+  .border-frame-sparkle-frame { border: 2px dotted rgba(255,192,203,0.8); border-radius: 16px; }
+  .border-frame-book-pages { border-right: 8px solid rgba(0,0,0,0.1); border-bottom: 8px solid rgba(0,0,0,0.15); border-radius: 4px 12px 12px 4px; }
+
+  /* Corner Decorations */
+  .bg-corner-tl-gold-crest { background: radial-gradient(circle at 0% 0%, rgba(212,175,55,0.4) 0%, transparent 60%); }
+  .bg-corner-tr-gold-crest { background: radial-gradient(circle at 100% 0%, rgba(212,175,55,0.4) 0%, transparent 60%); }
+  .bg-corner-bl-gold-crest { background: radial-gradient(circle at 0% 100%, rgba(212,175,55,0.4) 0%, transparent 60%); }
+  .bg-corner-br-gold-crest { background: radial-gradient(circle at 100% 100%, rgba(212,175,55,0.4) 0%, transparent 60%); }
+  .bg-corner-tl-floral-corners { background: radial-gradient(circle at 0% 0%, rgba(255,182,193,0.3) 0%, transparent 70%); }
+  .bg-corner-tr-floral-corners { background: radial-gradient(circle at 100% 0%, rgba(255,182,193,0.3) 0%, transparent 70%); }
+  .bg-corner-bl-floral-corners { background: radial-gradient(circle at 0% 100%, rgba(255,182,193,0.3) 0%, transparent 70%); }
+  .bg-corner-br-floral-corners { background: radial-gradient(circle at 100% 100%, rgba(255,182,193,0.3) 0%, transparent 70%); }
+`}} />
+
       <link href={fontUrl} rel="stylesheet" />
       <link href={namesFontUrl} rel="stylesheet" />
       <link href={accentFontUrl} rel="stylesheet" />
 
+      
       {wedding.background_image_url && (
         <div className="absolute inset-0 bg-black/45 z-0 pointer-events-none" />
       )}
 
       {/* Main Premium Invitation Card Box */}
-      {renderLayout()}
+      <div data-testid="invitation-layout-root" className="relative z-[20]">
+        {renderLayout()}
+      </div>
+
+      
+      {/* Visual Scene Layers based on selectedBackground */}
+      {effOverlay && (
+        <div className={`absolute inset-0 pointer-events-none z-[10] mix-blend-overlay bg-overlay-${effOverlay}`} />
+      )}
+      {effSide && (
+        <>
+          <div className={`absolute top-0 left-0 bottom-0 w-16 md:w-48 pointer-events-none z-[10] bg-side-left-${effSide}`} />
+          <div className={`absolute top-0 right-0 bottom-0 w-16 md:w-48 pointer-events-none z-[10] bg-side-right-${effSide}`} />
+        </>
+      )}
+      {effCorner && (
+        <>
+          <div className={`absolute top-0 left-0 w-32 h-32 md:w-64 md:h-64 pointer-events-none z-[10] bg-corner-tl-${effCorner}`} />
+          <div className={`absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 pointer-events-none z-[10] bg-corner-tr-${effCorner}`} />
+          <div className={`absolute bottom-0 left-0 w-32 h-32 md:w-64 md:h-64 pointer-events-none z-[10] bg-corner-bl-${effCorner}`} />
+          <div className={`absolute bottom-0 right-0 w-32 h-32 md:w-64 md:h-64 pointer-events-none z-[10] bg-corner-br-${effCorner}`} />
+        </>
+      )}
+      {effFrame && (
+        <div className={`absolute inset-2 md:inset-6 pointer-events-none z-[10] border-frame-${effFrame}`} />
+      )}
 
       {/* RSVP Modal */}
       <RsvpModal 

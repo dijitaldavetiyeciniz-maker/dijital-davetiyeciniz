@@ -60,8 +60,8 @@ export default function LuxuryHotelLayout({
 
   return (
     <div 
-      className="min-h-screen w-full flex flex-col md:flex-row bg-[#0a0a0a] text-neutral-200 overflow-hidden font-sans"
-      style={{ fontFamily: `"${bodyFont}", sans-serif` }}
+      className="min-h-screen w-full flex flex-col md:flex-row text-neutral-200 overflow-hidden font-sans"
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}
       data-testid="layout-luxury-hotel"
     >
       {/* LEFT: GRAND PHOTO (Split Screen) */}

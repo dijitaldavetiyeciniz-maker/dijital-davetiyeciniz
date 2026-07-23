@@ -53,7 +53,7 @@ export default function FoldedSealLayout({
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 transition-all duration-700 ease-out animate-fade-in text-slate-800"
-      style={{ fontFamily: `"${bodyFont}", serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* Çapraz Katlanmış Davetiye ve 3D Gölgeli Kenarlar */}
       <div 

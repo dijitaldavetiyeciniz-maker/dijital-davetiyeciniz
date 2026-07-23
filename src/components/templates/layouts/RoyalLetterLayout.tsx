@@ -62,8 +62,8 @@ export default function RoyalLetterLayout({
 
   return (
     <div 
-      className="min-h-screen w-full relative overflow-x-hidden font-serif selection:bg-amber-900/20 selection:text-amber-950 flex flex-col items-center"
-      style={{ backgroundColor: '#1a1814', color: readableTextColor, fontFamily: `"${bodyFont}", serif` }}
+      className="min-h-screen w-full relative overflow-x-hidden font-serif selection:/20 selection:text-amber-950 flex flex-col items-center"
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), backgroundColor: '#1a1814', color: readableTextColor, fontFamily: `"${bodyFont}", serif` }}
       data-testid="layout-royal-letter"
     >
       {/* Background Ambience */}

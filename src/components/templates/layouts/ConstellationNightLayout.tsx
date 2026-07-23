@@ -69,9 +69,8 @@ export default function ConstellationNightLayout({
 
   return (
     <div 
-      className="min-h-screen w-full relative bg-slate-950 overflow-x-hidden text-sky-50 flex"
-      style={{ 
-        fontFamily: `"${bodyFont}", sans-serif`,
+      className="min-h-screen w-full relative overflow-x-hidden text-sky-50 flex"
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`,
         backgroundColor: mainBg,
         backgroundImage: 'radial-gradient(circle at 50% 0%, #0f1b3d 0%, #030712 80%)'
       }}

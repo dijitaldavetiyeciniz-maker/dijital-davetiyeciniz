@@ -204,6 +204,10 @@ export interface TemplateBackgroundVariant {
   name: string;
   preview: string;
   background: string;
+  overlayStyle?: string;
+  sideDecoration?: string;
+  cornerDecoration?: string;
+  frameStyle?: string;
   colorPalette?: Partial<TemplateColorPalette>;
 }
 
@@ -286,78 +290,1252 @@ export interface TemplatePreset {
 export type ThemePreset = TemplatePreset;
 
 
-export const COMMON_BACKGROUNDS = {
-  MARBLE_LIGHT: {
-    id: 'marble-light',
-    name: 'Beyaz Altın Mermer',
-    preview: '/backgrounds/marble-gold-light.png',
-    background: 'url(/backgrounds/marble-gold-light.png)',
-    colorPalette: { background: '#ffffff', surface: '#ffffff', primaryText: '#1f2937', secondaryText: '#4b5563' }
+
+
+// --- AUTO GENERATED 120+ BACKGROUNDS ---
+export const WEDDING_BACKGROUNDS: TemplateBackgroundVariant[] = [
+  {
+    "id": "emerald-gold-marble",
+    "name": "Zümrüt Yeşili Mermer",
+    "image": "/backgrounds/wedding/emerald-gold-marble.webp",
+    "preview": "/backgrounds/wedding/emerald-gold-marble.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "emerald-gold",
+    "fallbackColor": "#002211"
   },
-  MARBLE_DARK: {
-    id: 'marble-dark',
-    name: 'Siyah Altın Mermer',
-    preview: '/backgrounds/marble-gold-dark.png',
-    background: 'url(/backgrounds/marble-gold-dark.png)',
-    colorPalette: { background: '#111827', surface: '#1f2937', primaryText: '#f3f4f6', secondaryText: '#9ca3af', surfaceSecondary: '#374151' }
+  {
+    "id": "rose-gold-marble-texture-2",
+    "name": "Rose Gold Marble",
+    "image": "/backgrounds/wedding/rose-gold-marble-texture-2.webp",
+    "preview": "/backgrounds/wedding/rose-gold-marble-texture-2.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
   },
-  MARBLE_SAGE: {
-    id: 'marble-sage',
-    name: 'Zümrüt Yeşili Mermer',
-    preview: '/backgrounds/marble-gold-sage.png',
-    background: 'url(/backgrounds/marble-gold-sage.png)',
-    colorPalette: { background: '#064e3b', surface: '#065f46', primaryText: '#ecfdf5', secondaryText: '#a7f3d0' }
+  {
+    "id": "burgundy-velvet-texture-3",
+    "name": "Burgundy Velvet Texture",
+    "image": "/backgrounds/wedding/burgundy-velvet-texture-3.webp",
+    "preview": "/backgrounds/wedding/burgundy-velvet-texture-3.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
   },
-  CANVAS_PAPER: {
-    id: 'canvas-paper',
-    name: 'Kanvas Kağıt',
-    preview: '/backgrounds/canvas-paper.png',
-    background: 'url(/backgrounds/canvas-paper.png) repeat',
-    colorPalette: { background: '#fdfbf7' }
+  {
+    "id": "forest-green-background-4",
+    "name": "Forest Green Background",
+    "image": "/backgrounds/wedding/forest-green-background-4.webp",
+    "preview": "/backgrounds/wedding/forest-green-background-4.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
   },
-  CARDBOARD: {
-    id: 'cardboard-flat',
-    name: 'Kraft Kağıt',
-    preview: '/backgrounds/cardboard-flat.png',
-    background: 'url(/backgrounds/cardboard-flat.png)',
-    colorPalette: { background: '#d4bfa5', primaryText: '#4a3f35', secondaryText: '#6b5c51' }
+  {
+    "id": "art-deco-stage-5",
+    "name": "Art Deco Stage",
+    "image": "/backgrounds/wedding/art-deco-stage-5.webp",
+    "preview": "/backgrounds/wedding/art-deco-stage-5.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
   },
-  LINEN: {
-    id: 'linen',
-    name: 'Keten Kumaş',
-    preview: '/backgrounds/linen.png',
-    background: 'url(/backgrounds/linen.png)',
-    colorPalette: { background: '#f5f5f5' }
+  {
+    "id": "parchment-paper-texture-6",
+    "name": "Parchment Paper Texture",
+    "image": "/backgrounds/wedding/parchment-paper-texture-6.webp",
+    "preview": "/backgrounds/wedding/parchment-paper-texture-6.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
   },
-  NIGHT_SKY: {
-    id: 'night-sky',
-    name: 'Koyu Gece Gökyüzü',
-    preview: 'linear-gradient(to bottom, #020617, #0f172a)',
-    background: 'linear-gradient(to bottom, #020617, #0f172a)',
-    colorPalette: { background: '#020617', primaryText: '#ffffff', secondaryText: '#cbd5e1', surface: '#0f172a' }
+  {
+    "id": "onyx-stone-texture-7",
+    "name": "Onyx Stone Texture",
+    "image": "/backgrounds/wedding/onyx-stone-texture-7.webp",
+    "preview": "/backgrounds/wedding/onyx-stone-texture-7.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
   },
-  SOFT_PINK: {
-    id: 'soft-pink',
-    name: 'Pastel Pembe',
-    preview: 'linear-gradient(to bottom right, #fdf2f8, #fbcfe8)',
-    background: 'linear-gradient(to bottom right, #fdf2f8, #fbcfe8)',
-    colorPalette: { background: '#fdf2f8', primaryText: '#831843' }
+  {
+    "id": "champagne-satin-texture-8",
+    "name": "Champagne Satin Texture",
+    "image": "/backgrounds/wedding/champagne-satin-texture-8.webp",
+    "preview": "/backgrounds/wedding/champagne-satin-texture-8.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
   },
-  ROYAL_VELVET: {
-    id: 'royal-velvet',
-    name: 'Kraliyet Kadifesi',
-    preview: 'linear-gradient(135deg, #4c0519 0%, #7f1d1d 100%)',
-    background: 'linear-gradient(135deg, #4c0519 0%, #7f1d1d 100%)',
-    colorPalette: { background: '#4c0519', primaryText: '#fef2f2', secondaryText: '#fca5a5' }
+  {
+    "id": "olive-and-lemon-garden-background-9",
+    "name": "Olive And Lemon",
+    "image": "/backgrounds/wedding/olive-and-lemon-garden-background-9.webp",
+    "preview": "/backgrounds/wedding/olive-and-lemon-garden-background-9.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
   },
-  MINIMAL_WHITE: {
-    id: 'minimal-white',
-    name: 'Saf Beyaz',
-    preview: '#ffffff',
-    background: '#ffffff',
-    colorPalette: { background: '#ffffff', primaryText: '#000000', secondaryText: '#4b5563' }
+  {
+    "id": "art-deco-stage-10",
+    "name": "Art Deco Stage",
+    "image": "/backgrounds/wedding/art-deco-stage-10.webp",
+    "preview": "/backgrounds/wedding/art-deco-stage-10.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "gold-foil-paper-texture-11",
+    "name": "Gold Foil Paper",
+    "image": "/backgrounds/wedding/gold-foil-paper-texture-11.webp",
+    "preview": "/backgrounds/wedding/gold-foil-paper-texture-11.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "travertine-premium-texture-12",
+    "name": "Travertine Premium Texture",
+    "image": "/backgrounds/wedding/travertine-premium-texture-12.webp",
+    "preview": "/backgrounds/wedding/travertine-premium-texture-12.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "champagne-satin-texture-13",
+    "name": "Champagne Satin Texture",
+    "image": "/backgrounds/wedding/champagne-satin-texture-13.webp",
+    "preview": "/backgrounds/wedding/champagne-satin-texture-13.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "tropical-leaves-background-14",
+    "name": "Tropical Leaves Background",
+    "image": "/backgrounds/wedding/tropical-leaves-background-14.webp",
+    "preview": "/backgrounds/wedding/tropical-leaves-background-14.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "navy-gold-night-background-15",
+    "name": "Navy Gold Night",
+    "image": "/backgrounds/wedding/navy-gold-night-background-15.webp",
+    "preview": "/backgrounds/wedding/navy-gold-night-background-15.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "parchment-paper-texture-16",
+    "name": "Parchment Paper Texture",
+    "image": "/backgrounds/wedding/parchment-paper-texture-16.webp",
+    "preview": "/backgrounds/wedding/parchment-paper-texture-16.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "black-gold-marble-17",
+    "name": "Black Gold Marble",
+    "image": "/backgrounds/wedding/black-gold-marble-17.webp",
+    "preview": "/backgrounds/wedding/black-gold-marble-17.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "black-velvet-texture-18",
+    "name": "Black Velvet Texture",
+    "image": "/backgrounds/wedding/black-velvet-texture-18.webp",
+    "preview": "/backgrounds/wedding/black-velvet-texture-18.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "spring-flowers-background-19",
+    "name": "Spring Flowers Background",
+    "image": "/backgrounds/wedding/spring-flowers-background-19.webp",
+    "preview": "/backgrounds/wedding/spring-flowers-background-19.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "starry-night-background-20",
+    "name": "Starry Night Background",
+    "image": "/backgrounds/wedding/starry-night-background-20.webp",
+    "preview": "/backgrounds/wedding/starry-night-background-20.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "diamond-sparkle-background-21",
+    "name": "Diamond Sparkle Background",
+    "image": "/backgrounds/wedding/diamond-sparkle-background-21.webp",
+    "preview": "/backgrounds/wedding/diamond-sparkle-background-21.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "travertine-premium-texture-22",
+    "name": "Travertine Premium Texture",
+    "image": "/backgrounds/wedding/travertine-premium-texture-22.webp",
+    "preview": "/backgrounds/wedding/travertine-premium-texture-22.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "black-velvet-texture-23",
+    "name": "Black Velvet Texture",
+    "image": "/backgrounds/wedding/black-velvet-texture-23.webp",
+    "preview": "/backgrounds/wedding/black-velvet-texture-23.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "tropical-leaves-background-24",
+    "name": "Tropical Leaves Background",
+    "image": "/backgrounds/wedding/tropical-leaves-background-24.webp",
+    "preview": "/backgrounds/wedding/tropical-leaves-background-24.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "art-deco-stage-25",
+    "name": "Art Deco Stage",
+    "image": "/backgrounds/wedding/art-deco-stage-25.webp",
+    "preview": "/backgrounds/wedding/art-deco-stage-25.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "parchment-paper-texture-26",
+    "name": "Parchment Paper Texture",
+    "image": "/backgrounds/wedding/parchment-paper-texture-26.webp",
+    "preview": "/backgrounds/wedding/parchment-paper-texture-26.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "travertine-premium-texture-27",
+    "name": "Travertine Premium Texture",
+    "image": "/backgrounds/wedding/travertine-premium-texture-27.webp",
+    "preview": "/backgrounds/wedding/travertine-premium-texture-27.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "black-velvet-texture-28",
+    "name": "Black Velvet Texture",
+    "image": "/backgrounds/wedding/black-velvet-texture-28.webp",
+    "preview": "/backgrounds/wedding/black-velvet-texture-28.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "forest-green-background-29",
+    "name": "Forest Green Background",
+    "image": "/backgrounds/wedding/forest-green-background-29.webp",
+    "preview": "/backgrounds/wedding/forest-green-background-29.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "navy-gold-night-background-30",
+    "name": "Navy Gold Night",
+    "image": "/backgrounds/wedding/navy-gold-night-background-30.webp",
+    "preview": "/backgrounds/wedding/navy-gold-night-background-30.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "parchment-paper-texture-31",
+    "name": "Parchment Paper Texture",
+    "image": "/backgrounds/wedding/parchment-paper-texture-31.webp",
+    "preview": "/backgrounds/wedding/parchment-paper-texture-31.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "emerald-green-gold-marble-texture-32",
+    "name": "Emerald Green Gold",
+    "image": "/backgrounds/wedding/emerald-green-gold-marble-texture-32.webp",
+    "preview": "/backgrounds/wedding/emerald-green-gold-marble-texture-32.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "navy-blue-velvet-texture-33",
+    "name": "Navy Blue Velvet",
+    "image": "/backgrounds/wedding/navy-blue-velvet-texture-33.webp",
+    "preview": "/backgrounds/wedding/navy-blue-velvet-texture-33.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "olive-and-lemon-garden-background-34",
+    "name": "Olive And Lemon",
+    "image": "/backgrounds/wedding/olive-and-lemon-garden-background-34.webp",
+    "preview": "/backgrounds/wedding/olive-and-lemon-garden-background-34.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "neon-tech-stage-35",
+    "name": "Neon Tech Stage",
+    "image": "/backgrounds/wedding/neon-tech-stage-35.webp",
+    "preview": "/backgrounds/wedding/neon-tech-stage-35.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
   }
-};
+];
+
+export const ENGAGEMENT_BACKGROUNDS: TemplateBackgroundVariant[] = [
+  {
+    "id": "pink-gold-sparkles-1",
+    "name": "Pink Gold Sparkles",
+    "image": "/backgrounds/engagement/pink-gold-sparkles-1.webp",
+    "preview": "/backgrounds/engagement/pink-gold-sparkles-1.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "rose-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "white-floral-garden-2",
+    "name": "White Floral Garden",
+    "image": "/backgrounds/engagement/white-floral-garden-2.webp",
+    "preview": "/backgrounds/engagement/white-floral-garden-2.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "cream-velvet-texture-3",
+    "name": "Cream Velvet Texture",
+    "image": "/backgrounds/engagement/cream-velvet-texture-3.webp",
+    "preview": "/backgrounds/engagement/cream-velvet-texture-3.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "soft-pink-marble-texture-4",
+    "name": "Soft Pink Marble",
+    "image": "/backgrounds/engagement/soft-pink-marble-texture-4.webp",
+    "preview": "/backgrounds/engagement/soft-pink-marble-texture-4.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "pink-gold-sparkles-5",
+    "name": "Pink Gold Sparkles",
+    "image": "/backgrounds/engagement/pink-gold-sparkles-5.webp",
+    "preview": "/backgrounds/engagement/pink-gold-sparkles-5.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "rose-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "pink-roses-background-6",
+    "name": "Pink Roses Background",
+    "image": "/backgrounds/engagement/pink-roses-background-6.webp",
+    "preview": "/backgrounds/engagement/pink-roses-background-6.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "cream-velvet-texture-7",
+    "name": "Cream Velvet Texture",
+    "image": "/backgrounds/engagement/cream-velvet-texture-7.webp",
+    "preview": "/backgrounds/engagement/cream-velvet-texture-7.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "white-cream-marble-8",
+    "name": "White Cream Marble",
+    "image": "/backgrounds/engagement/white-cream-marble-8.webp",
+    "preview": "/backgrounds/engagement/white-cream-marble-8.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "rose-gold-luxury-texture-9",
+    "name": "Rose Gold Luxury",
+    "image": "/backgrounds/engagement/rose-gold-luxury-texture-9.webp",
+    "preview": "/backgrounds/engagement/rose-gold-luxury-texture-9.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "rose-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "pink-roses-background-10",
+    "name": "Pink Roses Background",
+    "image": "/backgrounds/engagement/pink-roses-background-10.webp",
+    "preview": "/backgrounds/engagement/pink-roses-background-10.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "soft-pink-velvet-11",
+    "name": "Soft Pink Velvet",
+    "image": "/backgrounds/engagement/soft-pink-velvet-11.webp",
+    "preview": "/backgrounds/engagement/soft-pink-velvet-11.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "white-cream-marble-12",
+    "name": "White Cream Marble",
+    "image": "/backgrounds/engagement/white-cream-marble-12.webp",
+    "preview": "/backgrounds/engagement/white-cream-marble-12.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "pink-gold-sparkles-13",
+    "name": "Pink Gold Sparkles",
+    "image": "/backgrounds/engagement/pink-gold-sparkles-13.webp",
+    "preview": "/backgrounds/engagement/pink-gold-sparkles-13.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "rose-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "pink-roses-background-14",
+    "name": "Pink Roses Background",
+    "image": "/backgrounds/engagement/pink-roses-background-14.webp",
+    "preview": "/backgrounds/engagement/pink-roses-background-14.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "soft-pink-velvet-15",
+    "name": "Soft Pink Velvet",
+    "image": "/backgrounds/engagement/soft-pink-velvet-15.webp",
+    "preview": "/backgrounds/engagement/soft-pink-velvet-15.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  }
+];
+
+export const HENNA_BACKGROUNDS: TemplateBackgroundVariant[] = [
+  {
+    "id": "burgundy-silk-1",
+    "name": "Burgundy Silk 1",
+    "image": "/backgrounds/henna/burgundy-silk-1.webp",
+    "preview": "/backgrounds/henna/burgundy-silk-1.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "oriental-gold-ornaments-on-red-2",
+    "name": "Oriental Gold Ornaments",
+    "image": "/backgrounds/henna/oriental-gold-ornaments-on-red-2.webp",
+    "preview": "/backgrounds/henna/oriental-gold-ornaments-on-red-2.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "dark-red-oriental-tiles-3",
+    "name": "Dark Red Oriental",
+    "image": "/backgrounds/henna/dark-red-oriental-tiles-3.webp",
+    "preview": "/backgrounds/henna/dark-red-oriental-tiles-3.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "dark-red-luxury-texture-4",
+    "name": "Dark Red Luxury",
+    "image": "/backgrounds/henna/dark-red-luxury-texture-4.webp",
+    "preview": "/backgrounds/henna/dark-red-luxury-texture-4.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "deep-red-velvet-texture-5",
+    "name": "Deep Red Velvet",
+    "image": "/backgrounds/henna/deep-red-velvet-texture-5.webp",
+    "preview": "/backgrounds/henna/deep-red-velvet-texture-5.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "traditional-henna-pattern-gold-6",
+    "name": "Traditional Henna Pattern",
+    "image": "/backgrounds/henna/traditional-henna-pattern-gold-6.webp",
+    "preview": "/backgrounds/henna/traditional-henna-pattern-gold-6.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "oriental-lace-red-background-7",
+    "name": "Oriental Lace Red",
+    "image": "/backgrounds/henna/oriental-lace-red-background-7.webp",
+    "preview": "/backgrounds/henna/oriental-lace-red-background-7.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "dark-red-luxury-texture-8",
+    "name": "Dark Red Luxury",
+    "image": "/backgrounds/henna/dark-red-luxury-texture-8.webp",
+    "preview": "/backgrounds/henna/dark-red-luxury-texture-8.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "burgundy-silk-9",
+    "name": "Burgundy Silk 9",
+    "image": "/backgrounds/henna/burgundy-silk-9.webp",
+    "preview": "/backgrounds/henna/burgundy-silk-9.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "oriental-gold-ornaments-on-red-10",
+    "name": "Oriental Gold Ornaments",
+    "image": "/backgrounds/henna/oriental-gold-ornaments-on-red-10.webp",
+    "preview": "/backgrounds/henna/oriental-gold-ornaments-on-red-10.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "oriental-lace-red-background-11",
+    "name": "Oriental Lace Red",
+    "image": "/backgrounds/henna/oriental-lace-red-background-11.webp",
+    "preview": "/backgrounds/henna/oriental-lace-red-background-11.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "red-gold-sparks-12",
+    "name": "Red Gold Sparks",
+    "image": "/backgrounds/henna/red-gold-sparks-12.webp",
+    "preview": "/backgrounds/henna/red-gold-sparks-12.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "deep-red-velvet-texture-13",
+    "name": "Deep Red Velvet",
+    "image": "/backgrounds/henna/deep-red-velvet-texture-13.webp",
+    "preview": "/backgrounds/henna/deep-red-velvet-texture-13.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "oriental-gold-ornaments-on-red-14",
+    "name": "Oriental Gold Ornaments",
+    "image": "/backgrounds/henna/oriental-gold-ornaments-on-red-14.webp",
+    "preview": "/backgrounds/henna/oriental-gold-ornaments-on-red-14.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "oriental-lace-red-background-15",
+    "name": "Oriental Lace Red",
+    "image": "/backgrounds/henna/oriental-lace-red-background-15.webp",
+    "preview": "/backgrounds/henna/oriental-lace-red-background-15.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  }
+];
+
+export const CIRCUMCISION_BACKGROUNDS: TemplateBackgroundVariant[] = [
+  {
+    "id": "navy-blue-gold-ornaments-1",
+    "name": "Navy Blue Gold",
+    "image": "/backgrounds/circumcision/navy-blue-gold-ornaments-1.webp",
+    "preview": "/backgrounds/circumcision/navy-blue-gold-ornaments-1.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "ottoman-palace-interior-2",
+    "name": "Ottoman Palace Interior",
+    "image": "/backgrounds/circumcision/ottoman-palace-interior-2.webp",
+    "preview": "/backgrounds/circumcision/ottoman-palace-interior-2.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "traditional-ottoman-pattern-blue-3",
+    "name": "Traditional Ottoman Pattern",
+    "image": "/backgrounds/circumcision/traditional-ottoman-pattern-blue-3.webp",
+    "preview": "/backgrounds/circumcision/traditional-ottoman-pattern-blue-3.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "blue-starry-night-gold-4",
+    "name": "Blue Starry Night",
+    "image": "/backgrounds/circumcision/blue-starry-night-gold-4.webp",
+    "preview": "/backgrounds/circumcision/blue-starry-night-gold-4.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "navy-blue-gold-ornaments-5",
+    "name": "Navy Blue Gold",
+    "image": "/backgrounds/circumcision/navy-blue-gold-ornaments-5.webp",
+    "preview": "/backgrounds/circumcision/navy-blue-gold-ornaments-5.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "palace-archway-blue-gold-6",
+    "name": "Palace Archway Blue",
+    "image": "/backgrounds/circumcision/palace-archway-blue-gold-6.webp",
+    "preview": "/backgrounds/circumcision/palace-archway-blue-gold-6.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "traditional-ottoman-pattern-blue-7",
+    "name": "Traditional Ottoman Pattern",
+    "image": "/backgrounds/circumcision/traditional-ottoman-pattern-blue-7.webp",
+    "preview": "/backgrounds/circumcision/traditional-ottoman-pattern-blue-7.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "blue-starry-night-gold-8",
+    "name": "Blue Starry Night",
+    "image": "/backgrounds/circumcision/blue-starry-night-gold-8.webp",
+    "preview": "/backgrounds/circumcision/blue-starry-night-gold-8.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "navy-blue-gold-ornaments-9",
+    "name": "Navy Blue Gold",
+    "image": "/backgrounds/circumcision/navy-blue-gold-ornaments-9.webp",
+    "preview": "/backgrounds/circumcision/navy-blue-gold-ornaments-9.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "ottoman-palace-interior-10",
+    "name": "Ottoman Palace Interior",
+    "image": "/backgrounds/circumcision/ottoman-palace-interior-10.webp",
+    "preview": "/backgrounds/circumcision/ottoman-palace-interior-10.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "traditional-ottoman-pattern-blue-11",
+    "name": "Traditional Ottoman Pattern",
+    "image": "/backgrounds/circumcision/traditional-ottoman-pattern-blue-11.webp",
+    "preview": "/backgrounds/circumcision/traditional-ottoman-pattern-blue-11.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "crescent-moon-and-stars-blue-12",
+    "name": "Crescent Moon And",
+    "image": "/backgrounds/circumcision/crescent-moon-and-stars-blue-12.webp",
+    "preview": "/backgrounds/circumcision/crescent-moon-and-stars-blue-12.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "blue-velvet-gold-13",
+    "name": "Blue Velvet Gold",
+    "image": "/backgrounds/circumcision/blue-velvet-gold-13.webp",
+    "preview": "/backgrounds/circumcision/blue-velvet-gold-13.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "gold-sparkles",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "ottoman-palace-interior-14",
+    "name": "Ottoman Palace Interior",
+    "image": "/backgrounds/circumcision/ottoman-palace-interior-14.webp",
+    "preview": "/backgrounds/circumcision/ottoman-palace-interior-14.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "traditional-ottoman-pattern-blue-15",
+    "name": "Traditional Ottoman Pattern",
+    "image": "/backgrounds/circumcision/traditional-ottoman-pattern-blue-15.webp",
+    "preview": "/backgrounds/circumcision/traditional-ottoman-pattern-blue-15.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  }
+];
+
+export const KIDS_BACKGROUNDS: TemplateBackgroundVariant[] = [
+  {
+    "id": "pastel-confetti-1",
+    "name": "Pastel Confetti 1",
+    "image": "/backgrounds/kids/pastel-confetti-1.webp",
+    "preview": "/backgrounds/kids/pastel-confetti-1.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "teddy-bear-in-clouds-2",
+    "name": "Teddy Bear In",
+    "image": "/backgrounds/kids/teddy-bear-in-clouds-2.webp",
+    "preview": "/backgrounds/kids/teddy-bear-in-clouds-2.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "cute-safari-jungle-background-3",
+    "name": "Cute Safari Jungle",
+    "image": "/backgrounds/kids/cute-safari-jungle-background-3.webp",
+    "preview": "/backgrounds/kids/cute-safari-jungle-background-3.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "astronaut-baby-room-4",
+    "name": "Astronaut Baby Room",
+    "image": "/backgrounds/kids/astronaut-baby-room-4.webp",
+    "preview": "/backgrounds/kids/astronaut-baby-room-4.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "underwater-cute-ocean-background-5",
+    "name": "Underwater Cute Ocean",
+    "image": "/backgrounds/kids/underwater-cute-ocean-background-5.webp",
+    "preview": "/backgrounds/kids/underwater-cute-ocean-background-5.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "magical-fairy-tale-room-6",
+    "name": "Magical Fairy Tale",
+    "image": "/backgrounds/kids/magical-fairy-tale-room-6.webp",
+    "preview": "/backgrounds/kids/magical-fairy-tale-room-6.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "pastel-confetti-7",
+    "name": "Pastel Confetti 7",
+    "image": "/backgrounds/kids/pastel-confetti-7.webp",
+    "preview": "/backgrounds/kids/pastel-confetti-7.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "pastel-clouds-sky-8",
+    "name": "Pastel Clouds Sky",
+    "image": "/backgrounds/kids/pastel-clouds-sky-8.webp",
+    "preview": "/backgrounds/kids/pastel-clouds-sky-8.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "cute-safari-jungle-background-9",
+    "name": "Cute Safari Jungle",
+    "image": "/backgrounds/kids/cute-safari-jungle-background-9.webp",
+    "preview": "/backgrounds/kids/cute-safari-jungle-background-9.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "astronaut-baby-room-10",
+    "name": "Astronaut Baby Room",
+    "image": "/backgrounds/kids/astronaut-baby-room-10.webp",
+    "preview": "/backgrounds/kids/astronaut-baby-room-10.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "underwater-cute-ocean-background-11",
+    "name": "Underwater Cute Ocean",
+    "image": "/backgrounds/kids/underwater-cute-ocean-background-11.webp",
+    "preview": "/backgrounds/kids/underwater-cute-ocean-background-11.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "cute-rainbow-background-12",
+    "name": "Cute Rainbow Background",
+    "image": "/backgrounds/kids/cute-rainbow-background-12.webp",
+    "preview": "/backgrounds/kids/cute-rainbow-background-12.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "pastel-colors-background-13",
+    "name": "Pastel Colors Background",
+    "image": "/backgrounds/kids/pastel-colors-background-13.webp",
+    "preview": "/backgrounds/kids/pastel-colors-background-13.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "teddy-bear-in-clouds-14",
+    "name": "Teddy Bear In",
+    "image": "/backgrounds/kids/teddy-bear-in-clouds-14.webp",
+    "preview": "/backgrounds/kids/teddy-bear-in-clouds-14.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "cute-safari-jungle-background-15",
+    "name": "Cute Safari Jungle",
+    "image": "/backgrounds/kids/cute-safari-jungle-background-15.webp",
+    "preview": "/backgrounds/kids/cute-safari-jungle-background-15.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "astronaut-baby-room-16",
+    "name": "Astronaut Baby Room",
+    "image": "/backgrounds/kids/astronaut-baby-room-16.webp",
+    "preview": "/backgrounds/kids/astronaut-baby-room-16.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "underwater-cute-ocean-background-17",
+    "name": "Underwater Cute Ocean",
+    "image": "/backgrounds/kids/underwater-cute-ocean-background-17.webp",
+    "preview": "/backgrounds/kids/underwater-cute-ocean-background-17.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "cute-rainbow-background-18",
+    "name": "Cute Rainbow Background",
+    "image": "/backgrounds/kids/cute-rainbow-background-18.webp",
+    "preview": "/backgrounds/kids/cute-rainbow-background-18.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "pastel-colors-background-19",
+    "name": "Pastel Colors Background",
+    "image": "/backgrounds/kids/pastel-colors-background-19.webp",
+    "preview": "/backgrounds/kids/pastel-colors-background-19.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "teddy-bear-in-clouds-20",
+    "name": "Teddy Bear In",
+    "image": "/backgrounds/kids/teddy-bear-in-clouds-20.webp",
+    "preview": "/backgrounds/kids/teddy-bear-in-clouds-20.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "cute-safari-jungle-background-21",
+    "name": "Cute Safari Jungle",
+    "image": "/backgrounds/kids/cute-safari-jungle-background-21.webp",
+    "preview": "/backgrounds/kids/cute-safari-jungle-background-21.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "space-galaxy-cute-kids-22",
+    "name": "Space Galaxy Cute",
+    "image": "/backgrounds/kids/space-galaxy-cute-kids-22.webp",
+    "preview": "/backgrounds/kids/space-galaxy-cute-kids-22.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "stars",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "mermaid-pastel-sea-23",
+    "name": "Mermaid Pastel Sea",
+    "image": "/backgrounds/kids/mermaid-pastel-sea-23.webp",
+    "preview": "/backgrounds/kids/mermaid-pastel-sea-23.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "cute-rainbow-background-24",
+    "name": "Cute Rainbow Background",
+    "image": "/backgrounds/kids/cute-rainbow-background-24.webp",
+    "preview": "/backgrounds/kids/cute-rainbow-background-24.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "pastel-confetti-25",
+    "name": "Pastel Confetti 25",
+    "image": "/backgrounds/kids/pastel-confetti-25.webp",
+    "preview": "/backgrounds/kids/pastel-confetti-25.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  }
+];
+
+export const CORPORATE_BACKGROUNDS: TemplateBackgroundVariant[] = [
+  {
+    "id": "clean-white-architectural-1",
+    "name": "Clean White Architectural",
+    "image": "/backgrounds/corporate/clean-white-architectural-1.webp",
+    "preview": "/backgrounds/corporate/clean-white-architectural-1.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "neon-grid-tech-background-2",
+    "name": "Neon Grid Tech",
+    "image": "/backgrounds/corporate/neon-grid-tech-background-2.webp",
+    "preview": "/backgrounds/corporate/neon-grid-tech-background-2.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "clean-white-paper-texture-3",
+    "name": "Clean White Paper",
+    "image": "/backgrounds/corporate/clean-white-paper-texture-3.webp",
+    "preview": "/backgrounds/corporate/clean-white-paper-texture-3.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "dark-brushed-metal-texture-4",
+    "name": "Dark Brushed Metal",
+    "image": "/backgrounds/corporate/dark-brushed-metal-texture-4.webp",
+    "preview": "/backgrounds/corporate/dark-brushed-metal-texture-4.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "modern-minimal-office-background-5",
+    "name": "Modern Minimal Office",
+    "image": "/backgrounds/corporate/modern-minimal-office-background-5.webp",
+    "preview": "/backgrounds/corporate/modern-minimal-office-background-5.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "neon-grid-tech-background-6",
+    "name": "Neon Grid Tech",
+    "image": "/backgrounds/corporate/neon-grid-tech-background-6.webp",
+    "preview": "/backgrounds/corporate/neon-grid-tech-background-6.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "clean-white-paper-texture-7",
+    "name": "Clean White Paper",
+    "image": "/backgrounds/corporate/clean-white-paper-texture-7.webp",
+    "preview": "/backgrounds/corporate/clean-white-paper-texture-7.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "dark-brushed-metal-texture-8",
+    "name": "Dark Brushed Metal",
+    "image": "/backgrounds/corporate/dark-brushed-metal-texture-8.webp",
+    "preview": "/backgrounds/corporate/dark-brushed-metal-texture-8.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  }
+];
+
+export const GRADUATION_BACKGROUNDS: TemplateBackgroundVariant[] = [
+  {
+    "id": "graduation-confetti-background-1",
+    "name": "Graduation Confetti Background",
+    "image": "/backgrounds/graduation/graduation-confetti-background-1.webp",
+    "preview": "/backgrounds/graduation/graduation-confetti-background-1.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "black-graduation-texture-2",
+    "name": "Black Graduation Texture",
+    "image": "/backgrounds/graduation/black-graduation-texture-2.webp",
+    "preview": "/backgrounds/graduation/black-graduation-texture-2.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "library-books-background-3",
+    "name": "Library Books Background",
+    "image": "/backgrounds/graduation/library-books-background-3.webp",
+    "preview": "/backgrounds/graduation/library-books-background-3.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "blue-starry-night-gold-4",
+    "name": "Blue Starry Night",
+    "image": "/backgrounds/graduation/blue-starry-night-gold-4.webp",
+    "preview": "/backgrounds/graduation/blue-starry-night-gold-4.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "gold-confetti-celebration-5",
+    "name": "Gold Confetti Celebration",
+    "image": "/backgrounds/graduation/gold-confetti-celebration-5.webp",
+    "preview": "/backgrounds/graduation/gold-confetti-celebration-5.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "black-graduation-texture-6",
+    "name": "Black Graduation Texture",
+    "image": "/backgrounds/graduation/black-graduation-texture-6.webp",
+    "preview": "/backgrounds/graduation/black-graduation-texture-6.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  },
+  {
+    "id": "university-hall-background-7",
+    "name": "University Hall Background",
+    "image": "/backgrounds/graduation/university-hall-background-7.webp",
+    "preview": "/backgrounds/graduation/university-hall-background-7.webp",
+    "backgroundSize": "cover",
+    "backgroundPosition": "center",
+    "ornamentSet": "none",
+    "fallbackColor": "#1a1a1a"
+  }
+];
+
+
+export function getBackgroundsForCategory(category: string, eventType?: string): TemplateBackgroundVariant[] {
+  // If eventType is provided and matches a known one, use it
+  if (eventType === 'wedding') return WEDDING_BACKGROUNDS;
+  if (eventType === 'engagement') return ENGAGEMENT_BACKGROUNDS;
+  if (eventType === 'henna') return HENNA_BACKGROUNDS;
+  if (eventType === 'circumcision') return CIRCUMCISION_BACKGROUNDS;
+  if (eventType === 'baby_shower' || eventType === 'birthday') return KIDS_BACKGROUNDS;
+  if (eventType === 'corporate') return CORPORATE_BACKGROUNDS;
+  if (eventType === 'graduation') return GRADUATION_BACKGROUNDS;
+  
+  // Otherwise try to guess from category
+  const lowerCat = category ? category.toLowerCase() : '';
+  if (lowerCat.includes('nişan') || lowerCat.includes('söz')) return ENGAGEMENT_BACKGROUNDS;
+  if (lowerCat.includes('kına')) return HENNA_BACKGROUNDS;
+  if (lowerCat.includes('sünnet')) return CIRCUMCISION_BACKGROUNDS;
+  if (lowerCat.includes('çocuk') || lowerCat.includes('bebek')) return KIDS_BACKGROUNDS;
+  if (lowerCat.includes('kurumsal')) return CORPORATE_BACKGROUNDS;
+  if (lowerCat.includes('mezuniyet')) return GRADUATION_BACKGROUNDS;
+  
+  return WEDDING_BACKGROUNDS; // Default
+}
 
 export const predefinedThemes: TemplatePreset[] = [
   {
@@ -547,7 +1725,7 @@ export const predefinedThemes: TemplatePreset[] = [
       ]
     },
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.ROYAL_VELVET, COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "royal-velvet"
   },
   {
@@ -823,7 +2001,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.SOFT_PINK, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.MINIMAL_WHITE],
+    
     "defaultBackground": "soft-pink"
   },
   {
@@ -913,7 +2091,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.SOFT_PINK, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.MINIMAL_WHITE],
+    
     "defaultBackground": "soft-pink"
   },
   {
@@ -1003,7 +2181,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.SOFT_PINK, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.MINIMAL_WHITE],
+    
     "defaultBackground": "soft-pink"
   },
   {
@@ -1093,7 +2271,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.SOFT_PINK, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.MINIMAL_WHITE],
+    
     "defaultBackground": "soft-pink"
   },
   {
@@ -1187,7 +2365,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.ROYAL_VELVET, COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "royal-velvet"
   },
   {
@@ -1277,7 +2455,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.MARBLE_SAGE, COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER],
+    
     "defaultBackground": "marble-light"
   },
   {
@@ -1367,7 +2545,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "minimal-white"
   },
   {
@@ -1548,7 +2726,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.CARDBOARD, COMMON_BACKGROUNDS.LINEN, COMMON_BACKGROUNDS.MARBLE_SAGE],
+    
     "defaultBackground": "canvas-paper"
   },
   {
@@ -1637,7 +2815,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "minimal-white"
   },
   {
@@ -1726,7 +2904,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "minimal-white"
   },
   {
@@ -1816,7 +2994,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "minimal-white"
   },
   {
@@ -1978,7 +3156,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.CARDBOARD, COMMON_BACKGROUNDS.LINEN, COMMON_BACKGROUNDS.MARBLE_SAGE],
+    
     "defaultBackground": "canvas-paper"
   },
   {
@@ -2060,7 +3238,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.ROYAL_VELVET, COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "royal-velvet"
   },
   {
@@ -2222,7 +3400,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "minimal-white"
   },
   {
@@ -2304,7 +3482,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.MARBLE_SAGE, COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER],
+    
     "defaultBackground": "marble-light"
   },
   {
@@ -2466,7 +3644,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.CARDBOARD, COMMON_BACKGROUNDS.LINEN, COMMON_BACKGROUNDS.MARBLE_SAGE],
+    
     "defaultBackground": "canvas-paper"
   },
   {
@@ -2548,7 +3726,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.MARBLE_SAGE, COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER],
+    
     "defaultBackground": "marble-light"
   },
   {
@@ -2790,7 +3968,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.MARBLE_SAGE, COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER],
+    
     "defaultBackground": "marble-light"
   },
   {
@@ -2872,7 +4050,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.ROYAL_VELVET, COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "royal-velvet"
   },
   {
@@ -2954,7 +4132,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.ROYAL_VELVET, COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "royal-velvet"
   },
   {
@@ -3036,7 +4214,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.MARBLE_SAGE, COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER],
+    
     "defaultBackground": "marble-light"
   },
   {
@@ -3118,7 +4296,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.NIGHT_SKY, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.ROYAL_VELVET],
+    
     "defaultBackground": "night-sky"
   },
   {
@@ -3200,7 +4378,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.MARBLE_SAGE, COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER],
+    
     "defaultBackground": "marble-light"
   },
   {
@@ -3282,7 +4460,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.ROYAL_VELVET, COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "royal-velvet"
   },
   {
@@ -3364,7 +4542,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.MARBLE_SAGE, COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER],
+    
     "defaultBackground": "marble-light"
   },
   {
@@ -3446,7 +4624,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.ROYAL_VELVET, COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "royal-velvet"
   },
   {
@@ -3528,7 +4706,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.MARBLE_SAGE, COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER],
+    
     "defaultBackground": "marble-light"
   },
   {
@@ -3610,7 +4788,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.ROYAL_VELVET, COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "royal-velvet"
   },
   {
@@ -3697,7 +4875,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.SOFT_PINK, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.MINIMAL_WHITE],
+    
     "defaultBackground": "soft-pink"
   },
   {
@@ -3784,7 +4962,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.SOFT_PINK, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.MINIMAL_WHITE],
+    
     "defaultBackground": "soft-pink"
   },
   {
@@ -3960,7 +5138,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.SOFT_PINK, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.MINIMAL_WHITE],
+    
     "defaultBackground": "soft-pink"
   },
   {
@@ -4124,7 +5302,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.SOFT_PINK, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.MINIMAL_WHITE],
+    
     "defaultBackground": "soft-pink"
   },
   {
@@ -4206,7 +5384,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.CARDBOARD, COMMON_BACKGROUNDS.LINEN, COMMON_BACKGROUNDS.MARBLE_SAGE],
+    
     "defaultBackground": "canvas-paper"
   },
   {
@@ -4288,7 +5466,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.MARBLE_SAGE, COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER],
+    
     "defaultBackground": "marble-light"
   },
   {
@@ -4370,7 +5548,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "minimal-white"
   },
   {
@@ -4452,7 +5630,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.ROYAL_VELVET, COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "royal-velvet"
   },
   {
@@ -4534,7 +5712,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MARBLE_LIGHT, COMMON_BACKGROUNDS.MARBLE_DARK, COMMON_BACKGROUNDS.MARBLE_SAGE, COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER],
+    
     "defaultBackground": "marble-light"
   },
   {
@@ -4616,7 +5794,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.CARDBOARD, COMMON_BACKGROUNDS.LINEN, COMMON_BACKGROUNDS.MARBLE_SAGE],
+    
     "defaultBackground": "canvas-paper"
   },
   {
@@ -4680,7 +5858,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "minimal-white"
   },
   {
@@ -4744,7 +5922,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.CARDBOARD, COMMON_BACKGROUNDS.LINEN, COMMON_BACKGROUNDS.MARBLE_SAGE],
+    
     "defaultBackground": "canvas-paper"
   },
   {
@@ -5056,7 +6234,7 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.CARDBOARD, COMMON_BACKGROUNDS.LINEN, COMMON_BACKGROUNDS.MARBLE_SAGE],
+    
     "defaultBackground": "canvas-paper"
   },
   {
@@ -5120,7 +6298,18 @@ export const predefinedThemes: TemplatePreset[] = [
       }
     ],
     "mediaSupport": "background",
-    "backgroundOptions": [COMMON_BACKGROUNDS.MINIMAL_WHITE, COMMON_BACKGROUNDS.CANVAS_PAPER, COMMON_BACKGROUNDS.LINEN],
+    
     "defaultBackground": "minimal-white"
   }
 ];
+
+predefinedThemes.forEach(theme => {
+  if (theme.mediaSupport === 'background' || theme.mediaSupport === 'cover') {
+    theme.backgroundOptions = getBackgroundsForCategory(theme.category, theme.eventType);
+    if (theme.backgroundOptions && theme.backgroundOptions.length > 0) {
+      if (!theme.defaultBackground) {
+        theme.defaultBackground = theme.backgroundOptions[0].id;
+      }
+    }
+  }
+});

@@ -59,9 +59,8 @@ export default function PolaroidStoryLayout({
 
   return (
     <div 
-      className="min-h-screen w-full relative overflow-x-hidden font-sans text-stone-800 selection:bg-rose-200"
-      style={{ 
-        fontFamily: `"${bodyFont}", sans-serif`,
+      className="min-h-screen w-full relative overflow-x-hidden font-sans text-stone-800 selection:"
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`,
         backgroundColor: mainBg,
         backgroundImage: `radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px)`,
         backgroundSize: '24px 24px' 

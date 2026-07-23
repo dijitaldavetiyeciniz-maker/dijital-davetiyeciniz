@@ -3,9 +3,9 @@ import React from 'react';
 import { Calendar, MapPin, Wine } from 'lucide-react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function ParisianApartmentLayout({ wedding, primaryColor, textColor, headingFont, bodyFont, dateStr, timeStr, renderRsvpButton, renderGuestBook }: any) {
+export default function ParisianApartmentLayout({ wedding, primaryColor, textColor, headingFont, bodyFont, dateStr, timeStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-2xl mx-auto min-h-screen bg-[#FDFBF7] p-4 sm:p-8 flex flex-col items-center">
+    <div className="w-full max-w-2xl mx-auto min-h-screen p-4 sm:p-8 flex flex-col items-center" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
       <div className="w-full h-full border-x-4 border-t-8 border-b-4 rounded-t-[5rem] p-8 flex flex-col items-center relative overflow-hidden" style={{ borderColor: primaryColor }}>
         {/* Balcony Grill SVG */}
         <div className="absolute bottom-0 w-full h-32 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #000 2px, transparent 2px)', backgroundSize: '10px 10px' }}></div>

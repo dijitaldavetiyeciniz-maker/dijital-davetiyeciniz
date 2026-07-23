@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function GoldFrameGalleryLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function GoldFrameGalleryLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-4xl mx-auto bg-slate-900 text-white p-8 md:p-16 relative">
+    <div className="w-full max-w-4xl mx-auto text-white p-8 md:p-16 relative" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
       <div className="border-[12px] p-6 md:p-12 relative z-10 text-center" style={{ borderColor: '#D4AF37' }}>
         <h3 className="text-xs uppercase font-bold tracking-widest text-[#D4AF37] mb-8">Söz Merasimi</h3>
         <h1 className="text-5xl md:text-7xl font-serif mb-6">{wedding.bride_name} <br/><span className="text-2xl text-[#D4AF37] italic">&</span><br/> {wedding.groom_name}</h1>

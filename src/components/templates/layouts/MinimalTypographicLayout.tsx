@@ -56,7 +56,7 @@ export default function MinimalTypographicLayout({
   return (
     <div 
       className="min-h-screen w-full relative flex flex-col justify-between overflow-x-hidden font-sans selection:bg-current selection:text-white"
-      style={{ backgroundColor: mainBg, color: textColor || '#111', fontFamily: `"${bodyFont}", sans-serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), backgroundColor: mainBg, color: textColor || '#111', fontFamily: `"${bodyFont}", sans-serif` }}
     >
       {/* Structural Grid lines for Swiss aesthetic */}
       <div className="absolute inset-0 pointer-events-none grid grid-cols-4 lg:grid-cols-12 gap-4 px-6 lg:px-12 opacity-[0.04]">

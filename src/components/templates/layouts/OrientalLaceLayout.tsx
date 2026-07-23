@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function OrientalLaceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function OrientalLaceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-lg mx-auto bg-white p-6 sm:p-12 relative shadow-lg" style={{ color: textColor }}>
+    <div className="w-full max-w-lg mx-auto p-6 sm:p-12 relative shadow-lg" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
       <div className="absolute inset-4 border-2 border-dotted pointer-events-none rounded-xl opacity-30" style={{ borderColor: primaryColor }}></div>
       <div className="absolute inset-6 border border-solid pointer-events-none rounded-lg opacity-20" style={{ borderColor: primaryColor }}></div>
       <div className="text-center relative z-10 py-12">

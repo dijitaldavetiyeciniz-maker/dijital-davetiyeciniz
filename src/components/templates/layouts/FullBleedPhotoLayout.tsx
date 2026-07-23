@@ -71,7 +71,7 @@ export default function FullBleedPhotoLayout({
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
-      style={{ fontFamily: `"${bodyFont}", serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* FULL-BLEED KART (Ekranı kaplayan dikey fotoğraf veya şık fallback) */}
       <div className="relative rounded-[2.5rem] overflow-hidden min-h-[660px] sm:min-h-[720px] flex flex-col justify-end bg-slate-950 border border-white/5 shadow-2xl">

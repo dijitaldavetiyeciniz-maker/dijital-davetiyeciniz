@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function EngagementTableLayout({ wedding, primaryColor, textColor, headingFont, dateStr, timeStr, renderRsvpButton, renderGuestBook }: any) {
+export default function EngagementTableLayout({ wedding, primaryColor, textColor, headingFont, dateStr, timeStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-xl mx-auto bg-[#FFF5F3] text-slate-800 shadow-lg border p-2 relative" style={{ borderColor: primaryColor }}>
+    <div className="w-full max-w-xl mx-auto text-slate-800 shadow-lg border p-2 relative" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), borderColor: primaryColor }}>
       <div className="border border-dashed p-10 flex flex-col items-center text-center" style={{ borderColor: primaryColor }}>
         <h3 className="text-xs uppercase tracking-widest font-bold opacity-60 mb-8">Nişan Merasimi & Yemek</h3>
         <h1 className="text-4xl sm:text-5xl mb-4" style={{ fontFamily: `"${headingFont}", serif`, color: primaryColor }}>{wedding.bride_name}</h1>

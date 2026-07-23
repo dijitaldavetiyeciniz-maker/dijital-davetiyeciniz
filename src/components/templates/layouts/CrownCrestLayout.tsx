@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function CrownCrestLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function CrownCrestLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-sm mx-auto bg-white p-6 shadow-2xl border border-yellow-500/20 text-center relative overflow-hidden" style={{ color: textColor }}>
+    <div className="w-full max-w-sm mx-auto p-6 shadow-2xl border border-yellow-500/20 text-center relative overflow-hidden" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
       <div className="w-full h-48 bg-gradient-to-b from-yellow-50 to-white absolute top-0 left-0 pointer-events-none"></div>
       <div className="relative z-10 pt-10">
         <div className="w-24 h-24 mx-auto border-2 border-yellow-500 rounded-full flex items-center justify-center mb-6 shadow-md bg-white">

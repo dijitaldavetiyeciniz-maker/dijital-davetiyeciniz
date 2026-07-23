@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function MinimalCeremonyLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function MinimalCeremonyLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-md mx-auto bg-[#F7F5F0] min-h-[80vh] flex flex-col items-center justify-center p-12 text-center" style={{ color: textColor }}>
+    <div className="w-full max-w-md mx-auto min-h-[80vh] flex flex-col items-center justify-center p-12 text-center" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
       <h1 className="text-3xl font-light mb-12 tracking-widest uppercase" style={{ fontFamily: `"${headingFont}", sans-serif` }}>
         <span className="block mb-4">{wedding.bride_name}</span>
         <span className="block text-sm opacity-40 mb-4">+</span>

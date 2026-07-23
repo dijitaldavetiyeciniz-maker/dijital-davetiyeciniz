@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function OttomanGardenLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function OttomanGardenLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-lg mx-auto bg-[#FDFBF7] p-8 shadow-xl text-center border-[20px] border-[#134E4A] relative">
+    <div className="w-full max-w-lg mx-auto p-8 shadow-xl text-center border-[20px] border-[#134E4A] relative" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
       <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
       <div className="relative z-10">
         <div className="text-3xl mb-4">🌷</div>

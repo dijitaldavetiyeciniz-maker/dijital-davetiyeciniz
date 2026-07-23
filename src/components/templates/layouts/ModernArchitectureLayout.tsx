@@ -60,7 +60,7 @@ export default function ModernArchitectureLayout({
   return (
     <div 
       className="min-h-screen w-full relative overflow-hidden flex flex-col md:grid md:grid-cols-12"
-      style={{ backgroundColor: mainBg, color: contrastText, fontFamily: `"${bodyFont}", sans-serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), backgroundColor: mainBg, color: contrastText, fontFamily: `"${bodyFont}", sans-serif` }}
       data-testid="layout-modern-architecture"
     >
       {/* BAUHAUS GEOMETRIC DECORATIONS */}

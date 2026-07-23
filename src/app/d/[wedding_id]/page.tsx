@@ -92,8 +92,24 @@ export default async function WeddingPage({
   const useEnvelope = wedding.use_envelope !== false;
   
   let effectComponent = null;
-  const bgAnim = wedding.background_animation || '';
-  const effType = wedding.effect_type || '';
+  const customBgId = wedding?.custom_overrides?.design?.backgroundDesign;
+  let bgAnim = wedding.background_animation || '';
+  let effType = wedding.effect_type || '';
+  
+  if (customBgId) {
+     const themes = require('@/lib/themes').predefinedThemes;
+     const allBgs = themes.flatMap((t: any) => t.backgroundOptions || []);
+     const bg = allBgs.find((b: any) => b.id === customBgId);
+     
+     if (bg?.ornamentSet) {
+        bgAnim = bg.ornamentSet;
+        effType = ''; // override effect if ornamentSet is provided
+     } else if (bg) {
+        bgAnim = ''; // disable default if bg is selected but has no ornamentSet
+        effType = '';
+     }
+  }
+  
 
   if (bgAnim === 'rosePetals' || effType === 'hearts') {
     effectComponent = <HeartsEffect color={wedding.primary_color} />;

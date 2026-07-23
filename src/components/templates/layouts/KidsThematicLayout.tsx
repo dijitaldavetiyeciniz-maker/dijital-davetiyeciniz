@@ -158,7 +158,7 @@ export default function KidsThematicLayout({
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
-      style={{ fontFamily: `"${bodyFont}", sans-serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}
     >
       <div 
         className={cardStyle}

@@ -340,8 +340,8 @@ export default function CoupleAdminPage({
       primary_color: primaryColor,
       text_color: textColor,
       envelope_color: envelopeColor,
-      envelope_bg_color: envelopeBgColor,
-      background_design: envelopeBgColor,
+      
+      
       envelope_flap_type: envelopeFlapType,
       seal_type: sealType,
       seal_color: sealColor,
@@ -363,7 +363,7 @@ export default function CoupleAdminPage({
       custom_overrides: {
         ...customOverrides,
         layoutStyle: customOverrides?.layoutStyle || activeTheme?.layoutStyle || 'monogram',
-        backgroundDesign: customOverrides?.backgroundDesign || activeTheme?.backgroundDesign || '',
+        backgroundDesign: customOverrides?.design?.backgroundDesign || customOverrides?.backgroundDesign || activeTheme?.backgroundDesign || '',
         thematicAssets: customOverrides?.thematicAssets || activeTheme?.thematicAssets || [],
         animationPreset: customOverrides?.animationPreset || activeTheme?.animationPreset || '',
         sealPreset: customOverrides?.sealPreset || activeTheme?.sealPreset || '',
@@ -529,7 +529,7 @@ export default function CoupleAdminPage({
       primary_color: primaryColor,
       text_color: textColor,
       envelope_color: envelopeColor,
-      envelope_bg_color: envelopeBgColor,
+      
       envelope_flap_type: envelopeFlapType,
       seal_type: sealType,
       seal_color: sealColor,
@@ -1938,6 +1938,18 @@ export default function CoupleAdminPage({
                 </div>
 
                 
+                
+                {/* DEBUG ZEMIN */}
+                {process.env.NODE_ENV === 'development' && (
+                  <div className="bg-black text-lime-400 p-4 rounded-xl text-xs font-mono mb-4 whitespace-pre-wrap overflow-auto">
+                    <div className="font-bold text-white mb-2">DEBUG: Arka Plan Akışı</div>
+                    <div>Seçilen şablon: {templateId}</div>
+                    <div>Form state backgroundDesign: {customOverrides?.design?.backgroundDesign || 'Yok'}</div>
+                    <div>Top level backgroundDesign: {customOverrides?.backgroundDesign || 'Yok'}</div>
+                    <div>Renderer'a gönderilen liveWeddingData: {liveWeddingData.custom_overrides?.design?.backgroundDesign || 'Yok'}</div>
+                  </div>
+                )}
+
                 {/* Şablona Uyumlu Arka Plan (Zemin) Sistemi */}
                 {(() => {
                   const activePreset = themes.find((t: any) => t.id === templateId);
@@ -1974,7 +1986,7 @@ export default function CoupleAdminPage({
                             >
                               <div 
                                 className="h-16 w-full bg-cover bg-center" 
-                                style={{ background: bg.background }}
+                                style={{ background: bg.preview || bg.background }}
                               />
                               <div className="p-2 text-[10px] font-bold text-center bg-white text-slate-700">
                                 {bg.name}

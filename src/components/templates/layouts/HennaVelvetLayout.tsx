@@ -78,7 +78,7 @@ export default function HennaVelvetLayout({
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
-      style={{ fontFamily: `"${bodyFont}", serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* Kadife Görünümlü Lüks Asimetrik Kına Kartı */}
       <div 

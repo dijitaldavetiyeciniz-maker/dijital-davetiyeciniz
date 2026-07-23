@@ -82,7 +82,7 @@ export default function SplitScreenLayout({
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
-      style={{ fontFamily: `"${bodyFont}", serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* Split Kart Container */}
       <div className="relative rounded-[2.2rem] overflow-hidden shadow-2xl bg-white border border-black/5 min-h-[600px]">

@@ -62,8 +62,8 @@ export default function FashionMagazineLayout({
 
   return (
     <div 
-      className="relative min-h-screen w-full bg-zinc-950 text-white overflow-x-hidden animate-fade-in selection:bg-white/30"
-      style={{ fontFamily: `"${bodyFont}", sans-serif` }}
+      className="relative min-h-screen w-full text-white overflow-x-hidden animate-fade-in selection:bg-white/30"
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}
       data-testid="layout-fashion-magazine"
     >
       {/* FULL BLEED BACKGROUND IMAGE */}

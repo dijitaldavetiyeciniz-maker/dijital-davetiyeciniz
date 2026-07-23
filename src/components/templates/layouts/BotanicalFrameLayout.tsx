@@ -89,7 +89,7 @@ export default function BotanicalFrameLayout({
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in text-emerald-950"
-      style={{ fontFamily: `"${bodyFont}", serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* İnce Okaliptüs Yapraklı Oval Çerçeveli Kart */}
       <div 

@@ -60,8 +60,8 @@ export default function CinematicPosterLayout({
 
   return (
     <div 
-      className="min-h-screen w-full bg-slate-950 text-white font-sans flex flex-col lg:flex-row overflow-hidden relative"
-      style={{ fontFamily: `"${bodyFont}", sans-serif`, backgroundColor: mainBg }}
+      className="min-h-screen w-full text-white font-sans flex flex-col lg:flex-row overflow-hidden relative"
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`, backgroundColor: mainBg }}
       data-testid="layout-cinematic-poster"
     >
       {/* SİNEMATİK ÜST BAR */}

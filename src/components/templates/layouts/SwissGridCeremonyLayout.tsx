@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function SwissGridCeremonyLayout({ wedding, primaryColor, textColor, dateStr, timeStr, renderRsvpButton, renderGuestBook }: any) {
+export default function SwissGridCeremonyLayout({ wedding, primaryColor, textColor, dateStr, timeStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-5xl mx-auto bg-white p-8 sm:p-12 font-sans" style={{ color: textColor }}>
+    <div className="w-full max-w-5xl mx-auto p-8 sm:p-12 font-sans" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 border-t-4 pt-4" style={{ borderColor: primaryColor }}>
         <div className="md:col-span-3 text-xs uppercase tracking-widest font-bold">
           <p className="mb-2">01 — Gelin & Damat</p>

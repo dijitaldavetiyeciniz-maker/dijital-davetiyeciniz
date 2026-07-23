@@ -58,8 +58,8 @@ export default function ArtDecoTheaterLayout({
 
   return (
     <div 
-      className="min-h-screen w-full relative z-10 animate-fade-in flex flex-col lg:flex-row bg-[#050505] overflow-x-hidden selection:bg-[#D4AF37] selection:text-black"
-      style={{ fontFamily: `"${bodyFont}", sans-serif` }}
+      className="min-h-screen w-full relative z-10 animate-fade-in flex flex-col lg:flex-row overflow-x-hidden selection:bg-[#D4AF37] selection:text-black"
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}
       data-testid="layout-art-deco-theater"
     >
       {/* Background Decorative Pattern */}

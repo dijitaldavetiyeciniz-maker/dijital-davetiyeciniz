@@ -81,7 +81,7 @@ export default function MinimalPaperLayout({
   return (
     <div 
       className="max-w-[520px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
-      style={{ fontFamily: `"${bodyFont}", serif` }}
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* İnce Kırık Beyaz / Pamuklu Kağıt Kart Zemin */}
       <div 

@@ -61,8 +61,8 @@ export default function DestinationBoardingPassLayout({
 
   return (
     <div 
-      className="min-h-screen w-full relative flex items-center justify-center p-4 md:p-12 overflow-hidden bg-[#f0f4f8]"
-      style={{ fontFamily: `"${bodyFont}", sans-serif`, color: textColor || '#1e293b' }}
+      className="min-h-screen w-full relative flex items-center justify-center p-4 md:p-12 overflow-hidden"
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`, color: textColor || '#1e293b' }}
       data-testid="layout-destination-boarding-pass"
     >
       {/* Background Map Pattern */}

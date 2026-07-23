@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function FairyTalePalaceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function FairyTalePalaceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-md mx-auto bg-gradient-to-b from-pink-100 to-pink-50 shadow-2xl border-4 border-pink-200 rounded-t-[8rem] text-center p-8 relative overflow-hidden text-pink-900">
+    <div className="w-full max-w-md mx-auto bg-gradient-to-b from-pink-100 to-pink-50 shadow-2xl border-4 border-pink-200 rounded-t-[8rem] text-center p-8 relative overflow-hidden text-pink-900" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
       <div className="absolute top-10 left-1/2 -translate-x-1/2 text-6xl opacity-50">🏰</div>
       <div className="relative z-10 pt-20">
         <h3 className="text-xs uppercase font-bold tracking-widest mb-6">Bir Varmış Bir Yokmuş...</h3>

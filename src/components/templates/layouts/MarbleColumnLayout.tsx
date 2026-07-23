@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function MarbleColumnLayout({ wedding, primaryColor, textColor, headingFont, dateObj, renderRsvpButton, renderGuestBook }: any) {
+export default function MarbleColumnLayout({ wedding, primaryColor, textColor, headingFont, dateObj, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white flex flex-col md:flex-row shadow-2xl overflow-hidden min-h-[600px]">
+    <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row shadow-2xl overflow-hidden min-h-[600px]" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
       <div className="w-full md:w-5/12 bg-slate-100 relative p-8 flex flex-col items-center justify-center border-r" style={{ borderColor: primaryColor }}>
         <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/white-marble.png")' }}></div>
         <div className="w-32 h-64 border-x border-t rounded-t-full relative z-10 flex items-center justify-center bg-white shadow-lg" style={{ borderColor: primaryColor }}>

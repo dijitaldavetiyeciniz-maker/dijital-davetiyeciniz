@@ -2,9 +2,9 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function FloralFamilyLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook }: any) {
+export default function FloralFamilyLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
   return (
-    <div className="w-full max-w-lg mx-auto bg-white p-8 text-center rounded-[4rem] shadow-xl relative overflow-hidden" style={{ color: textColor }}>
+    <div className="w-full max-w-lg mx-auto p-8 text-center rounded-[4rem] shadow-xl relative overflow-hidden" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
       <div className="absolute top-0 left-0 w-full h-32 bg-green-50 rounded-t-[4rem] pointer-events-none"></div>
       <div className="relative z-10 pt-10">
         <h3 className="text-xs uppercase tracking-widest font-bold mb-6 text-green-700">Aile Arası Nişan</h3>
