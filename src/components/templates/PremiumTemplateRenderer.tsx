@@ -155,6 +155,10 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   }
   
   const selectedBackground = selectedVariant;
+  const effOverlay = selectedBackground?.overlayEffect;
+  const effSide = selectedBackground?.sideDeco;
+  const effCorner = selectedBackground?.cornerDeco;
+  const effFrame = selectedBackground?.frameStyle;
 
   // Merge color palettes
   const basePalette = themeConfig?.colorPalette || themeConfig?.palette || {
