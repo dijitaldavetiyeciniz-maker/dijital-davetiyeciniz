@@ -1551,8 +1551,8 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "cinematic-poster",
     "name": "Sinematik Film Afişi",
-    "thumbnail": "/templates/thumbnails/cinematic-poster.webp",
-    "mobileThumbnail": "/templates/thumbnails/cinematic-poster-mobile.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
+    "mobileThumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "wedding",
     "layoutStyle": "cinematic-poster",
     "layoutMode": "full-bleed",
@@ -1645,8 +1645,8 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "royal-letter",
     "name": "Kraliyet Mektubu",
-    "thumbnail": "/templates/thumbnails/royal-letter.webp",
-    "mobileThumbnail": "/templates/thumbnails/royal-letter-mobile.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
+    "mobileThumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "wedding",
     "layoutStyle": "royal-letter",
     "layoutMode": "full-bleed",
@@ -1741,8 +1741,8 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "polaroid-story",
     "name": "Polaroid Aşk Hikâyesi",
-    "thumbnail": "/templates/thumbnails/polaroid-story.webp",
-    "mobileThumbnail": "/templates/thumbnails/polaroid-story-mobile.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
+    "mobileThumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "wedding",
     "layoutStyle": "polaroid-story",
     "layoutMode": "full-bleed",
@@ -1833,8 +1833,8 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "constellation-night",
     "name": "Gece Yıldızları Altında",
-    "thumbnail": "/templates/thumbnails/constellation-night.webp",
-    "mobileThumbnail": "/templates/thumbnails/constellation-night-mobile.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
+    "mobileThumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "wedding",
     "layoutStyle": "constellation-night",
     "layoutMode": "full-bleed",
@@ -1926,7 +1926,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "clouds-above",
     "name": "Bulutların Üzerinde",
-    "thumbnail": "/templates/thumbnails/clouds-above.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "baby_shower",
     "layoutStyle": "kids-thematic",
     "layoutMode": "full-bleed",
@@ -2017,7 +2017,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "little-racer",
     "name": "Küçük Yarışçı",
-    "thumbnail": "/templates/thumbnails/little-racer.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "birthday",
     "layoutStyle": "kids-thematic",
     "layoutMode": "full-bleed",
@@ -2107,7 +2107,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "blue-bear",
     "name": "Mavi Ayıcık",
-    "thumbnail": "/templates/thumbnails/blue-bear.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "baby_shower",
     "layoutStyle": "kids-thematic",
     "layoutMode": "full-bleed",
@@ -2197,7 +2197,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "pink-princess",
     "name": "Pembe Prenses",
-    "thumbnail": "/templates/thumbnails/pink-princess.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "birthday",
     "layoutStyle": "kids-thematic",
     "layoutMode": "full-bleed",
@@ -2287,7 +2287,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "velvet-henna",
     "name": "Bordo Kadife Kına",
-    "thumbnail": "/templates/thumbnails/velvet-henna.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "henna",
     "layoutStyle": "velvet-curtain",
     "layoutMode": "full-bleed",
@@ -2381,7 +2381,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "nazar-circumcision",
     "name": "Nazar Boncuklu Maşallah",
-    "thumbnail": "/templates/thumbnails/nazar-circumcision.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "circumcision",
     "layoutStyle": "botanical-ceramic",
     "layoutMode": "full-bleed",
@@ -2471,7 +2471,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "folded-tassel-linen",
     "name": "Püsküllü Keten Düğün",
-    "thumbnail": "/templates/thumbnails/folded-tassel-linen.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "wedding",
     "layoutStyle": "fabric-press",
     "layoutMode": "full-bleed",
@@ -2561,7 +2561,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "photo-luxury-emerald",
     "name": "Fotoğraflı Lüks Düğün",
-    "thumbnail": "/templates/thumbnails/photo-luxury-emerald.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "wedding",
     "layoutStyle": "photo-luxury",
     "layoutMode": "full-bleed",
@@ -2648,7 +2648,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "botanical-garden",
     "name": "Botanik Bahçe",
-    "thumbnail": "/templates/thumbnails/botanical-garden.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "wedding",
     "layoutStyle": "botanical-frame",
     "layoutMode": "full-bleed",
@@ -2742,7 +2742,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "giant-monogram-classic",
     "name": "Dev Monogram",
-    "thumbnail": "/templates/thumbnails/giant-monogram.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "wedding",
     "layoutStyle": "monogram-media",
     "layoutMode": "full-bleed",
@@ -2831,7 +2831,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "modern-tech-event",
     "name": "Modern Teknoloji Lansmanı",
-    "thumbnail": "/templates/thumbnails/modern-tech-event.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "corporate",
     "layoutStyle": "modern-event",
     "layoutMode": "full-bleed",
@@ -2920,7 +2920,7 @@ export const predefinedThemes: TemplatePreset[] = [
   {
     "id": "graduation-ceremony",
     "name": "Mezuniyet Töreni",
-    "thumbnail": "/templates/thumbnails/graduation-ceremony.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "eventType": "graduation",
     "layoutStyle": "modern-event",
     "layoutMode": "full-bleed",
@@ -3048,7 +3048,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "rounded-luxury",
       "texture": "dark-velvet"
     },
-    "thumbnail": "/templates/thumbnails/royal-black-tie.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3128,7 +3128,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "silk-paper"
     },
-    "thumbnail": "/templates/thumbnails/rose-gold-romance.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3210,7 +3210,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "clean-rectangle",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/parisian-ivory.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3292,7 +3292,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "rough-edges",
       "texture": "kraft"
     },
-    "thumbnail": "/templates/thumbnails/bohemian-kraft-wedding.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3372,7 +3372,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "clean-rectangle",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/minimal-white-wedding.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3454,7 +3454,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "rounded-luxury",
       "texture": "marble"
     },
-    "thumbnail": "/templates/thumbnails/luxury-marble-gold.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3536,7 +3536,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "rounded-luxury",
       "texture": "dark-space"
     },
-    "thumbnail": "/templates/thumbnails/moonlight-wedding.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3616,7 +3616,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "silk-paper"
     },
-    "thumbnail": "/templates/thumbnails/garden-of-roses.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3698,7 +3698,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "royal-rounded",
       "texture": "metallic"
     },
-    "thumbnail": "/templates/thumbnails/champagne-reception.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3780,7 +3780,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "clean-rectangle",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/classic-ivory-wedding.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3860,7 +3860,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "royal-rounded",
       "texture": "dark-velvet"
     },
-    "thumbnail": "/templates/thumbnails/velvet-burgundy-night.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -3940,7 +3940,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "royal-rounded",
       "texture": "linen"
     },
-    "thumbnail": "/templates/thumbnails/wax-seal-royal.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4022,7 +4022,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "royal-rounded",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/henna-traditional.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4104,7 +4104,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "dark-velvet"
     },
-    "thumbnail": "/templates/thumbnails/henna-candle.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4186,7 +4186,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "rounded-luxury",
       "texture": "dark-velvet"
     },
-    "thumbnail": "/templates/thumbnails/henna-lace.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4268,7 +4268,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "royal-rounded",
       "texture": "dark-velvet"
     },
-    "thumbnail": "/templates/thumbnails/henna-luxury-red.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4350,7 +4350,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "royal-rounded",
       "texture": "dark-space"
     },
-    "thumbnail": "/templates/thumbnails/circumcision-royal.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4432,7 +4432,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/circumcision-nazar.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4514,7 +4514,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "royal-rounded",
       "texture": "dark-space"
     },
-    "thumbnail": "/templates/thumbnails/circumcision-velvet.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4596,7 +4596,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "royal-rounded",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/circumcision-ottoman.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4678,7 +4678,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "rounded-luxury",
       "texture": "marble"
     },
-    "thumbnail": "/templates/thumbnails/circumcision-crown.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4760,7 +4760,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "clean-rectangle",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/circumcision-modern.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4843,7 +4843,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "silk-paper"
     },
-    "thumbnail": "/templates/thumbnails/baby-girl-princess.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -4930,7 +4930,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "silk-paper"
     },
-    "thumbnail": "/templates/thumbnails/baby-girl-crown.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5017,7 +5017,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "silk-paper"
     },
-    "thumbnail": "/templates/thumbnails/baby-girl-clouds.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5098,7 +5098,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/baby-boy-racer.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5193,7 +5193,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/baby-boy-clouds.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5274,7 +5274,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "dark-space"
     },
-    "thumbnail": "/templates/thumbnails/baby-boy-space.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5356,7 +5356,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "silk-paper"
     },
-    "thumbnail": "/templates/thumbnails/engagement-blush.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5438,7 +5438,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "royal-rounded",
       "texture": "marble"
     },
-    "thumbnail": "/templates/thumbnails/engagement-emerald.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5520,7 +5520,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "clean-rectangle",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/engagement-minimal.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5602,7 +5602,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "clean-rectangle",
       "texture": "fine-paper"
     },
-    "thumbnail": "/templates/thumbnails/engagement-family.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5684,7 +5684,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "rounded-luxury",
       "texture": "marble"
     },
-    "thumbnail": "/templates/thumbnails/engagement-gold-frame.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5766,7 +5766,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "cardShape": "soft-rounded",
       "texture": "silk-paper"
     },
-    "thumbnail": "/templates/thumbnails/engagement-lavender.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5830,7 +5830,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "text": "#0f172a",
       "mutedText": "#64748b"
     },
-    "thumbnail": "/templates/thumbnails/modern-architecture.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5894,7 +5894,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "text": "#14532d",
       "mutedText": "#15803d"
     },
-    "thumbnail": "/templates/thumbnails/botanical-ceramic.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -5958,7 +5958,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "text": "#451a03",
       "mutedText": "#78350f"
     },
-    "thumbnail": "/templates/thumbnails/luxury-hotel.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -6020,7 +6020,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "text": "#082f49",
       "mutedText": "#0369a1"
     },
-    "thumbnail": "/templates/thumbnails/destination-boarding-pass.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -6082,7 +6082,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "text": "#000000",
       "mutedText": "#666666"
     },
-    "thumbnail": "/templates/thumbnails/fashion-magazine.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -6144,7 +6144,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "text": "#f8fafc",
       "mutedText": "#94a3b8"
     },
-    "thumbnail": "/templates/thumbnails/art-deco-theater.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -6206,7 +6206,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "text": "#1e3a8a",
       "mutedText": "#2563eb"
     },
-    "thumbnail": "/templates/thumbnails/mediterranean-garden.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",
@@ -6270,7 +6270,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "text": "#000000",
       "mutedText": "#525252"
     },
-    "thumbnail": "/templates/thumbnails/minimal-typographic.webp",
+    "thumbnail": "/templates/thumbnails/.jpeg",
     "designSignature": {
       "composition": "premium-upgraded",
       "desktopGrid": "flexible",

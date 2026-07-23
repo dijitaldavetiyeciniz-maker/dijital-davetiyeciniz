@@ -189,9 +189,24 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
   const bodyFont = overrides.font_family || wedding.font_family || themeConfig.typography?.body || 'Cormorant Garamond';
   const accentFont = themeConfig.typography?.accent || 'Great Vibes';
 
-  const fontUrl = `https://fonts.googleapis.com/css2?family=${bodyFont.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
-  const namesFontUrl = `https://fonts.googleapis.com/css2?family=${headingFont.replace(/ /g, '+')}:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap`;
-  const accentFontUrl = `https://fonts.googleapis.com/css2?family=${accentFont.replace(/ /g, '+')}&display=swap`;
+  const getFontFamily = (fontName: string, fallback: string) => {
+    const map: Record<string, string> = {
+      'Cormorant Garamond': 'var(--font-cormorant)',
+      'Great Vibes': 'var(--font-great-vibes)',
+      'Montserrat': 'var(--font-montserrat)',
+      'Outfit': 'var(--font-outfit)',
+      'Lora': 'var(--font-lora)',
+      'Cinzel': 'var(--font-cinzel)',
+      'Playfair Display': 'var(--font-playfair)',
+      'Inter': 'var(--font-inter)',
+      'Caveat': 'var(--font-caveat)'
+    };
+    return map[fontName] ? `${map[fontName]}, ${fallback}` : `"${fontName}", ${fallback}`;
+  };
+
+  const bodyFontFamily = getFontFamily(bodyFont, 'serif');
+  const headingFontFamily = getFontFamily(headingFont, 'cursive, serif');
+  const accentFontFamily = getFontFamily(accentFont, 'cursive');
 
   const hexToRgba = (hex: string, alpha: number) => {
     let c = hex.replace('#', '');
@@ -206,7 +221,7 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
 
   const cardStyles: React.CSSProperties = {
     borderColor: `${primaryColor}25`,
-    fontFamily: `"${bodyFont}", serif`
+    fontFamily: bodyFontFamily
   };
 
   const cardBgColorRaw = cardBgColor || '#ffffff';
@@ -378,7 +393,7 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
     <div className="w-full flex flex-col items-center justify-center" style={{ overflow: 'visible' }}>
       <h1 
         className="text-2xl sm:text-3xl md:text-4xl mb-6 mt-4 font-normal select-none relative z-10 w-full text-center"
-        style={{ color: textColor, fontFamily: `"${headingFont}", cursive, serif`, overflow: 'visible', lineHeight: 1.5, whiteSpace: 'nowrap' }}
+        style={{ color: textColor, fontFamily: headingFontFamily, overflow: 'visible', lineHeight: 1.5, whiteSpace: 'nowrap' }}
       >
         {wedding.bride_parents && (
           <span 
@@ -419,7 +434,7 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
       style={{ 
         color: textColor, 
         opacity: 0.9,
-        fontFamily: `"${bodyFont}", serif`
+        fontFamily: bodyFontFamily
       }}
     >
       "{wedding.custom_message}"
@@ -474,7 +489,9 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
     const showPhotos = wedding.show_photos !== false;
 
     return (
-      <div className="w-full mt-10 mb-6 flex flex-col items-center gap-6 relative z-10 font-sans">
+      <div className="w-full mt-10 mb-6 flex flex-col items-center gap-6 relative z-10" style={{
+        fontFamily: bodyFontFamily
+      }}>
         {showRsvp && (
           <div 
             className="px-6 py-2.5 rounded-full border text-[11px] font-bold tracking-[0.2em] uppercase max-w-sm text-center select-none"
@@ -1329,9 +1346,7 @@ case 'asymmetric':
   .bg-corner-br-floral-corners { background: radial-gradient(circle at 100% 100%, rgba(255,182,193,0.3) 0%, transparent 70%); }
 `}} />
 
-      <link href={fontUrl} rel="stylesheet" />
-      <link href={namesFontUrl} rel="stylesheet" />
-      <link href={accentFontUrl} rel="stylesheet" />
+
 
       
       {wedding.background_image_url && (

@@ -13,6 +13,12 @@
   --font-cormorant: var(--font-cormorant);
   --font-great-vibes: var(--font-great-vibes);
   --font-montserrat: var(--font-montserrat);
+  --font-outfit: var(--font-outfit);
+  --font-lora: var(--font-lora);
+  --font-cinzel: var(--font-cinzel);
+  --font-playfair: var(--font-playfair);
+  --font-inter: var(--font-inter);
+  --font-caveat: var(--font-caveat);
 }
 
 @media (prefers-color-scheme: dark) {
