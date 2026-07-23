@@ -4,7 +4,7 @@ import { Calendar, MapPin, Navigation, Heart, Camera, Clock } from 'lucide-react
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -42,7 +42,7 @@ export default function PolaroidStoryLayout({
   handleMapClick,
   cardBgColor = '#eae7e0',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   const themeRose = primaryColor || '#e11d48';
   const mainBg = cardBgColor || '#eae7e0';
 

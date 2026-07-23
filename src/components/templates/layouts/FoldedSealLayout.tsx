@@ -3,7 +3,7 @@ import React from 'react';
 import { Calendar, MapPin, Navigation } from 'lucide-react';
 import { backgroundDesignRegistry } from '@/lib/registries';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -39,7 +39,7 @@ export default function FoldedSealLayout({
   renderQuote,
   handleMapClick,
   cardBgColor = '#fcfbfa'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   const dateDay = String(dateObj.getDate()).padStart(2, '0');
   const dateMonth = String(dateObj.getMonth() + 1).padStart(2, '0');
   const dateYear = String(dateObj.getFullYear()).substring(2);

@@ -2,7 +2,7 @@
 import { Calendar, MapPin, Navigation } from 'lucide-react';
 import { backgroundDesignRegistry, thematicAssetRegistry } from '@/lib/registries';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -40,7 +40,7 @@ export default function HennaVelvetLayout({
   handleMapClick,
   cardBgColor = '#3f0712',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   
   const hennaVariant = wedding.custom_overrides?.henna_variant || 'gold';
   

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Navigation, Sparkles } from 'lucide-react';
 import { backgroundDesignRegistry, thematicAssetRegistry } from '@/lib/registries';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -41,7 +41,7 @@ export default function RoyalCircumcisionLayout({
   handleMapClick,
   cardBgColor = '#0b1329',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   
   const language = wedding.language || 'tr';
   const themeColor = primaryColor || '#dfb76c'; // Gold

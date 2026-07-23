@@ -4,7 +4,7 @@ import { Calendar, MapPin, Navigation, Compass, Moon, Star, Sparkles } from 'luc
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -42,7 +42,7 @@ export default function ConstellationNightLayout({
   handleMapClick,
   cardBgColor = '#030712',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   const themeCyan = primaryColor || '#38bdf8';
   const mainBg = cardBgColor || '#030712';
   

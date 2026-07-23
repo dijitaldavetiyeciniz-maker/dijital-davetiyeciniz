@@ -4,7 +4,7 @@ import { Calendar, MapPin, Navigation, Leaf, Flower2, Sparkles } from 'lucide-re
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -42,7 +42,7 @@ export default function BotanicalCeramicLayout({
   handleMapClick,
   cardBgColor = '#fdfbf7',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   const overrides = wedding.custom_overrides || {};
   const focalX = overrides.photoFocalPoint?.x ?? wedding.photo_focal_point?.x ?? 50;
   const focalY = overrides.photoFocalPoint?.y ?? wedding.photo_focal_point?.y ?? 50;

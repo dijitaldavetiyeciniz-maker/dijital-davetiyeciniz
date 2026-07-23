@@ -4,7 +4,7 @@ import { Calendar, MapPin, Navigation, Clock } from 'lucide-react';
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -42,7 +42,7 @@ export default function PhotoLuxuryLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 

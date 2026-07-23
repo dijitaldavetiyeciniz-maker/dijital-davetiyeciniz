@@ -13,7 +13,7 @@ interface TimelineItem {
   location?: string;
 }
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -51,7 +51,7 @@ export default function StoryTimelineLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 

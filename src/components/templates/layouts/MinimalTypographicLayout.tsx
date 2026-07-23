@@ -3,7 +3,7 @@ import React from 'react';
 import { Calendar, MapPin, Navigation, ArrowRight } from 'lucide-react';
 import SafeImage from '@/components/ui/SafeImage';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -41,7 +41,7 @@ export default function MinimalTypographicLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   const couplePhoto = wedding.bride_photo_url || wedding.groom_photo_url || wedding.background_image_url || '';
   const mainBg = cardBgColor || '#ffffff';
   

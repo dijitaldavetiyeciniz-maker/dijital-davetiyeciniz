@@ -4,7 +4,7 @@ import { Calendar, MapPin, ArrowDownRight } from 'lucide-react';
 import { getReadableTextColor } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -42,7 +42,7 @@ export default function ModernArchitectureLayout({
   handleMapClick,
   cardBgColor = '#F4F4F0',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   const couplePhoto = wedding.bride_photo_url || wedding.groom_photo_url || wedding.background_image_url || '';
   
   const overrides = wedding.custom_overrides || {};

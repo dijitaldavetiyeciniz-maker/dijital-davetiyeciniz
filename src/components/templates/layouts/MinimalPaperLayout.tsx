@@ -3,7 +3,7 @@ import React from 'react';
 import { Calendar, MapPin, Navigation } from 'lucide-react';
 import { backgroundDesignRegistry } from '@/lib/registries';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -41,7 +41,7 @@ export default function MinimalPaperLayout({
   handleMapClick,
   cardBgColor = '#fcfbf7', // Krem rengi kağıt fallback
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 

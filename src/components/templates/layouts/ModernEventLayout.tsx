@@ -14,7 +14,7 @@ interface Sponsor {
   logoUrl?: string;
 }
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -52,7 +52,7 @@ export default function ModernEventLayout({
   handleMapClick,
   cardBgColor = '#090d16',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   
   // 1. ETKİNLİK VARYANT TESPİTİ
   const presetId = wedding.template_id || '';

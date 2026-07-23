@@ -4,7 +4,7 @@ import { Calendar, MapPin, Navigation, Sparkles, Scroll, ChevronDown, Award } fr
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -42,7 +42,7 @@ export default function RoyalLetterLayout({
   handleMapClick,
   cardBgColor = '#fdfbf7',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   const [isUnrolled, setIsUnrolled] = useState(false);
 
   useEffect(() => {

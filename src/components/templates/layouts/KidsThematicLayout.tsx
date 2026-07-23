@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Navigation, Gift, Sparkles } from 'lucide-react';
 
-interface LayoutProps {
+interface LayoutProps {\n  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
@@ -40,7 +40,7 @@ export default function KidsThematicLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-}: LayoutProps) {
+, selectedBackground}: LayoutProps) {
   // 1. VARYANT BELİRLEME
   const presetId = wedding.template_id || '';
   let variant: 'clouds-above' | 'little-racer' | 'blue-bear' | 'pink-princess' | 'neutral' = 'neutral';
