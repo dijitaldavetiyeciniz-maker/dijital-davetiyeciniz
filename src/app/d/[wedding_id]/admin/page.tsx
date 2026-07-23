@@ -1610,23 +1610,26 @@ export default function CoupleAdminPage({
                               }`}
                             >
                               {/* Top Banner with Thumbnail & Tags */}
-                              <div className="relative w-full h-36 rounded-xl border overflow-hidden bg-slate-900 mb-3 flex items-center justify-center border-slate-200">
-                                {theme.thumbnail ? (
-                                  <SafeImage 
+                              <div className="relative w-full h-36 rounded-xl border overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 mb-3 flex items-center justify-center border-slate-200 text-white">
+                                {/* Fallback Text always rendered behind */}
+                                <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center p-4 z-0">
+                                  <span className="text-3xl mb-2">
+                                    {theme.layoutStyle === 'cinematic-poster' ? '🎬' : theme.layoutStyle === 'royal-letter' ? '📜' : theme.layoutStyle === 'polaroid-story' ? '📸' : theme.layoutStyle === 'constellation-night' ? '🌌' : '👑'}
+                                  </span>
+                                  <span className="text-xs font-bold tracking-widest uppercase text-center">{theme.name}</span>
+                                </div>
+
+                                {/* Image rendered on top, hidden if error */}
+                                {theme.thumbnail && (
+                                  /* eslint-disable-next-line @next/next/no-img-element */
+                                  <img 
                                     src={theme.thumbnail} 
                                     alt={theme.name} 
-                                    className="w-full h-full object-cover" 
+                                    className="w-full h-full object-cover relative z-10" 
                                     onError={(e) => {
                                       (e.target as any).style.display = 'none';
                                     }}
                                   />
-                                ) : (
-                                  <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white">
-                                    <span className="text-3xl mb-2">
-                                      {theme.layoutStyle === 'cinematic-poster' ? '🎬' : theme.layoutStyle === 'royal-letter' ? '📜' : theme.layoutStyle === 'polaroid-story' ? '📸' : theme.layoutStyle === 'constellation-night' ? '🌌' : '👑'}
-                                    </span>
-                                    <span className="text-xs font-bold tracking-widest uppercase">{theme.name}</span>
-                                  </div>
                                 )}
 
                                 {/* Floating Composition Tag */}
@@ -1986,7 +1989,10 @@ export default function CoupleAdminPage({
                             >
                               <div 
                                 className="h-16 w-full bg-cover bg-center" 
-                                style={{ background: bg.preview || bg.background }}
+                                style={{ 
+                                  backgroundImage: (bg.preview || bg.image) ? `url("${bg.preview || bg.image}")` : (bg.background?.includes('/') ? `url("${bg.background}")` : undefined),
+                                  backgroundColor: bg.backgroundColor || bg.background 
+                                }}
                               />
                               <div className="p-2 text-[10px] font-bold text-center bg-white text-slate-700">
                                 {bg.name}
