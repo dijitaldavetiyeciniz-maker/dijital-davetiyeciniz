@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import CountdownTimer from '../CountdownTimer';
 import RsvpModal from '../RsvpModal';
-import { isColorLight } from '@/lib/colorUtils';
+import { isColorLight, getContrastRatio, getReadableTextColor } from '@/lib/colorUtils';
 import { getBackgroundStyle, isBackgroundLight } from '@/lib/backgrounds';
 import { supabase } from '@/lib/supabase';
 import { predefinedThemes } from '@/lib/themes';
@@ -183,14 +183,25 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   
   // Try to respect user overrides, otherwise use effectivePalette
   const primaryColor = overrides.primary_color || wedding.primary_color || (effectivePalette as any).primary || '#111111';
-  const textColor = isDarkModeActive ? '#f8fafc' : (overrides.text_color || wedding.text_color || effectivePalette.primaryText || '#333333');
+  
   const customDesignOverrides = wedding.custom_overrides?.design || {};
   const overridesCardBg = customDesignOverrides.cardBgColor;
   const cardBgColorFallback = overridesCardBg || (isDarkModeActive ? '#12131a' : (effectivePalette.surface || (effectivePalette as any).card || '#ffffff'));
+  const cardBgColorRaw = overridesCardBg || cardBgColorFallback || '#ffffff';
+  const cardOpacity = customDesignOverrides.cardOpacity !== undefined ? (customDesignOverrides.cardOpacity / 100) : 0.94;
+  
+  let rawTextColor = isDarkModeActive ? '#f8fafc' : (overrides.text_color || wedding.text_color || effectivePalette.primaryText || '#333333');
+  let effectiveTextBg = cardOpacity > 0.4 ? cardBgColorRaw : (effectiveBackground === 'none' ? '#ffffff' : (effectivePalette.background || '#ffffff'));
+  const contrastRatio = getContrastRatio(rawTextColor, effectiveTextBg);
+  if (contrastRatio < 3.0) {
+    rawTextColor = getReadableTextColor(effectiveTextBg, '#ffffff', '#1e293b');
+  }
+  const textColor = rawTextColor;
+
   const mutedTextColor = isDarkModeActive ? '#94a3b8' : (effectivePalette.secondaryText || effectivePalette.mutedText || '#666666');
 
   const bgIsLight = isDarkModeActive ? false : isColorLight(effectivePalette.background || '#ffffff');
-const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
+  const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
 
   const headingFont = overrides.names_font_family || wedding.names_font_family || themeConfig.typography?.heading || 'Playfair Display';
   const bodyFont = overrides.font_family || wedding.font_family || themeConfig.typography?.body || 'Cormorant Garamond';
@@ -231,8 +242,6 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
     fontFamily: bodyFontFamily
   };
 
-  const cardBgColorRaw = overridesCardBg || cardBgColorFallback || '#ffffff';
-  const cardOpacity = customDesignOverrides.cardOpacity !== undefined ? (customDesignOverrides.cardOpacity / 100) : 0.94;
   const cardRgba = hexToRgba(cardBgColorRaw, cardOpacity);
   const cardBgColor = cardRgba;
 
@@ -449,6 +458,23 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
     </p>
   );
 
+  const handleAddToCalendar = () => {
+    if (!wedding.wedding_date) return;
+    try {
+      const dateObj = new Date(wedding.wedding_date);
+      const startStr = dateObj.toISOString().replace(/-|:|\.\d+/g, '');
+      const endObj = new Date(dateObj.getTime() + 4 * 60 * 60 * 1000); // 4 hours later
+      const endStr = endObj.toISOString().replace(/-|:|\.\d+/g, '');
+      const title = encodeURIComponent(`${wedding.bride_name} & ${wedding.groom_name} - ${eventTitle}`);
+      const location = encodeURIComponent(wedding.venue_address || wedding.venue_name || '');
+      
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startStr}/${endStr}&details=&location=${location}&sf=true&output=xml`;
+      window.open(url, '_blank');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const renderTimer = () => wedding.wedding_date && wedding.show_countdown !== false && (
     <div className="my-6 relative z-10">
       <CountdownTimer 
@@ -515,22 +541,22 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
 
         {/* Buttons Grid */}
         <div className="flex justify-center items-start gap-8 md:gap-12 mt-2">
-          {/* Button 1: KONUM */}
+          {/* Button 1: TAKVİME EKLE (Replaces Konum) */}
           <button 
-            onClick={handleMapClick}
+            onClick={handleAddToCalendar}
             className="flex flex-col items-center gap-2 group transition-transform active:scale-95 cursor-pointer"
           >
             <div 
               className="w-16 h-16 rounded-full flex items-center justify-center border shadow-md bg-white hover:bg-slate-50 transition-colors"
               style={{ borderColor: `${primaryColor}20`, color: primaryColor }}
             >
-              <MapPin className="w-6 h-6" />
+              <Calendar className="w-6 h-6" />
             </div>
             <span 
               className="text-[10px] font-bold tracking-[0.15em] uppercase opacity-80"
               style={{ color: textColor }}
             >
-              KONUM
+              TAKVİME EKLE
             </span>
           </button>
 
