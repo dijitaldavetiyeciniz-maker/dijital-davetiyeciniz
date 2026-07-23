@@ -73,7 +73,7 @@ export default function DestinationBoardingPassLayout({
       }} />
 
       {/* Main Boarding Pass Container */}
-      <div className="relative w-full max-w-[1100px] flex flex-col md:flex-row rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.15)] bg-white z-10 overflow-hidden transform transition-all duration-700 hover:scale-[1.01]">
+      <div data-testid="invitation-card-surface" className="relative w-full max-w-[1100px] flex flex-col md:flex-row rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.15)] bg-white z-10 overflow-hidden transform transition-all duration-700 hover:scale-[1.01]">
         
         {/* Left / Main Section */}
         <div className="flex-1 relative flex flex-col">

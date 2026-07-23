@@ -369,7 +369,9 @@ export default function CoupleAdminPage({
         design: {
           ...customOverrides?.design,
           cardBgColor,
-          cardOpacity
+          cardOpacity,
+          cardBlur,
+          sceneBackgroundColor,
         },
         layoutStyle: customOverrides?.layoutStyle || activeTheme?.layoutStyle || 'monogram',
         backgroundDesign: customOverrides?.design?.backgroundDesign || customOverrides?.backgroundDesign || activeTheme?.backgroundDesign || '',
@@ -386,7 +388,7 @@ export default function CoupleAdminPage({
     entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
     showPhotos, showRsvp, showComments, showCountdown, backgroundAnimation,
     entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode, eventType,
-    customOverrides, photoFocalPoint, themes, cardBgColor, cardOpacity
+    customOverrides, photoFocalPoint, themes, cardBgColor, cardOpacity, cardBlur, sceneBackgroundColor
   ]);
 
   const [isUploading, setIsUploading] = useState(false);
@@ -3316,13 +3318,6 @@ export default function CoupleAdminPage({
                 <Tablet className="w-3.5 h-3.5" />
               </button>
             </div>
-
-            <button 
-              onClick={handleReplayAnimation}
-              className="bg-rose-500 hover:bg-rose-600 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-colors shrink-0"
-            >
-              <RefreshCw className="w-3 h-3 animate-spin-slow" /> Yenile
-            </button>
           </div>
 
           <div className="w-full flex justify-center">
