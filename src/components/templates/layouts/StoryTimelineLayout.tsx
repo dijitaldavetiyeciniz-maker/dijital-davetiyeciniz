@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { Calendar, MapPin, Navigation, Heart, Star, Sparkles, Map } from 'lucide-react';
+import SafeImage from '@/components/ui/SafeImage';
 
 interface TimelineItem {
   id: string;
@@ -273,11 +274,10 @@ export default function StoryTimelineLayout({
                     {/* Adım Fotoğrafı */}
                     {item.imageUrl && (
                       <div className="w-full h-32 rounded-lg overflow-hidden mb-3 bg-slate-100">
-                        <img 
+                        <SafeImage 
                           src={item.imageUrl} 
                           alt={item.title}
                           className="w-full h-full object-cover"
-                          loading="lazy"
                         />
                       </div>
                     )}

@@ -5,7 +5,8 @@ import { getSmartAutoMatch } from '@/lib/autoMatch';
 import { mapEnumToDbEventType } from '@/lib/themes';
 import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
 import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
-import { Lock, Users, MessageSquare, Paintbrush, CreditCard, Save, Wand2, Music, Copy, ExternalLink, Share2, Smartphone, Tablet, Trash2, Check, RefreshCw, Volume2, VolumeX, Eye } from 'lucide-react';
+import { Heart, Upload, Link as LinkIcon, Download, Smartphone, Share2, Sparkles, MapPin, Search, Grid, Eye, CheckCircle2, Navigation, Wand2, Calendar, Clock, Lock, ShieldAlert, Monitor, Type, Palette, ArrowRight, Save, Shield, Settings, Info, Music, StopCircle, RefreshCw, X, Users, MessageSquare, Paintbrush, CreditCard, Copy, ExternalLink, Tablet, Trash2, Check, Volume2, VolumeX } from 'lucide-react';
+import SafeImage from '@/components/ui/SafeImage';
 import { getRandomQuote } from '@/lib/aiQuotes';
 import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingAnimations';
 import { envelopeStyles } from '@/data/envelopeStyles';
@@ -686,11 +687,29 @@ export default function CoupleAdminPage({
     }));
   };
 
-  function applyPreset(theme: any) {
+  function applyPreset(theme: any, selectedVariant?: any) {
     setTemplateId(theme.template_id || theme.id);
-    setPrimaryColor(theme.primary_color);
-    if (theme.text_color) setTextColor(theme.text_color);
+    
+    // Choose active color palette (Selected variant or theme default colorPalette)
+    const palette = selectedVariant?.colorPalette || theme.colorPalette;
+    
+    if (palette) {
+      if (palette.background) setEnvelopeBgColor(palette.background);
+      if (palette.primaryText) setPrimaryColor(palette.accent || palette.primaryText);
+      if (palette.secondaryText) setTextColor(palette.primaryText || palette.secondaryText);
+      if (palette.border) setSealColor(palette.accent || palette.border);
+    } else {
+      setPrimaryColor(theme.primary_color);
+      if (theme.text_color) setTextColor(theme.text_color);
+      if (theme.recommendedBackgroundDesign) {
+        setEnvelopeBgColor(theme.recommendedBackgroundDesign);
+      } else if (theme.envelope_bg_color) {
+        setEnvelopeBgColor(theme.envelope_bg_color);
+      }
+    }
+
     setFontFamily(theme.font_family);
+    if (theme.names_font_family) setNamesFontFamily(theme.names_font_family);
     setBgImageUrl(theme.background_image_url || '');
     if (theme.use_envelope !== undefined) setUseEnvelope(theme.use_envelope);
     if (theme.envelope_color) setEnvelopeColor(theme.envelope_color);
@@ -700,22 +719,38 @@ export default function CoupleAdminPage({
       setEventType(mapEnumToDbEventType(theme.eventType));
     }
     
-    // propagate custom_overrides layout styles
-    setCustomOverrides((prev: any) => ({
-      ...prev,
-      layoutStyle: theme.layoutStyle,
-      thematicAssets: theme.thematicAssets || [],
-      animationPreset: theme.animationPreset || '',
-      sealPreset: theme.sealPreset || ''
-    }));
+    // PRESERVE CONTENT OVERRIDES, RESET DESIGN OVERRIDES
+    setCustomOverrides((prev: any) => {
+      const preservedContent = prev?.content || {
+        timelineItems: prev?.timelineItems || [],
+        speakers: prev?.speakers || [],
+        sponsors: prev?.sponsors || [],
+        gallery: prev?.gallery || [],
+        customTexts: prev?.customTexts || {},
+      };
 
-    // backgroundDesign maps to envelope_bg_color
-    if (theme.recommendedBackgroundDesign) {
-      setEnvelopeBgColor(theme.recommendedBackgroundDesign);
-    } else if (theme.envelope_bg_color) {
-      setEnvelopeBgColor(theme.envelope_bg_color);
-    }
-    
+      return {
+        content: preservedContent,
+        design: {
+          layoutStyle: theme.layoutStyle,
+          backgroundDesign: theme.defaultBackground || theme.backgroundDesign || theme.recommendedBackgroundDesign || '',
+          colorPalette: palette || theme.colorPalette || null,
+          thematicAssets: theme.thematicAssets || [],
+          animationPreset: theme.animationPreset || theme.recommendedBackgroundAnimation || '',
+          sealPreset: theme.sealPreset || theme.seal_type || '',
+          selectedColorVariantId: selectedVariant?.id || '',
+        },
+        // top-level backward compatibility keys:
+        layoutStyle: theme.layoutStyle,
+        thematicAssets: theme.thematicAssets || [],
+        animationPreset: theme.animationPreset || theme.recommendedBackgroundAnimation || '',
+        sealPreset: theme.sealPreset || theme.seal_type || '',
+        timelineItems: preservedContent.timelineItems,
+        speakers: preservedContent.speakers,
+        sponsors: preservedContent.sponsors,
+      };
+    });
+
     if (theme.envelope_flap_type) setEnvelopeFlapType(theme.envelope_flap_type);
     if (theme.seal_type) setSealType(theme.seal_type);
     if (theme.seal_color) setSealColor(theme.seal_color);
@@ -1545,13 +1580,13 @@ export default function CoupleAdminPage({
 
                   {/* Filtered Concept-Based Themes List */}
                   <div className="space-y-3">
-                    <div className="max-h-[520px] overflow-y-auto border rounded-2xl p-3 bg-white/50 backdrop-blur-sm shadow-inner grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="max-h-[600px] overflow-y-auto border rounded-2xl p-4 bg-white/60 backdrop-blur-sm shadow-inner grid grid-cols-1 md:grid-cols-2 gap-4">
                       {(() => {
                         const filteredThemes = themes.filter(theme => {
                           if (templateCategory === 'all') return true;
                           if (templateCategory === 'minimal' || templateCategory === 'Minimalist') return theme.category === 'Minimalist';
                           if (templateCategory === 'luxury' || templateCategory === 'Lüks') return theme.category === 'Lüks';
-                          if (templateCategory === 'bohemian' || templateCategory === 'Bohem') return theme.category === 'Doğal';
+                          if (templateCategory === 'bohemian' || templateCategory === 'Doğal') return theme.category === 'Doğal';
                           
                           return theme.eventType === templateCategory;
                         });
@@ -1562,28 +1597,22 @@ export default function CoupleAdminPage({
 
                         return filteredThemes.map(theme => {
                           const isActive = templateId === theme.id || templateId === theme.template_id;
+                          const compTag = theme.designSignature?.composition || theme.layoutStyle || 'Ortalanmış';
+                          const isPhotoHero = theme.designSignature?.heroElement === 'photo';
+
                           return (
-                            <button
+                            <div
                               key={theme.id}
-                              type="button"
-                              onClick={() => {
-                                setTemplateId(theme.template_id);
-                                applyPreset(theme);
-                              }}
-                              className={`flex items-start gap-3 p-3 rounded-xl border text-left transition-all hover:bg-white ${
+                              className={`flex flex-col justify-between p-4 rounded-2xl border text-left transition-all bg-white relative shadow-sm hover:shadow-md ${
                                 isActive 
-                                  ? 'border-rose-500 bg-rose-50/5 shadow-xs ring-2 ring-rose-100' 
-                                  : 'border-slate-200 bg-white hover:bg-white/50 backdrop-blur-sm shadow-inner'
+                                  ? 'border-rose-500 ring-2 ring-rose-300/40 bg-rose-50/10' 
+                                  : 'border-slate-200 hover:border-slate-300'
                               }`}
                             >
-                              {/* Miniature card premium mockup / thumbnail */}
-                              <div className="w-11 h-15 rounded-lg border flex flex-col items-center justify-between shrink-0 shadow-2xs overflow-hidden relative" style={{ 
-                                 background: theme.palette?.background || '#fff', 
-                                 borderColor: theme.palette?.secondary || '#c9a44d',
-                                 borderWidth: '1.5px' 
-                              }}>
+                              {/* Top Banner with Thumbnail & Tags */}
+                              <div className="relative w-full h-36 rounded-xl border overflow-hidden bg-slate-900 mb-3 flex items-center justify-center border-slate-200">
                                 {theme.thumbnail ? (
-                                  <img 
+                                  <SafeImage 
                                     src={theme.thumbnail} 
                                     alt={theme.name} 
                                     className="w-full h-full object-cover" 
@@ -1592,31 +1621,86 @@ export default function CoupleAdminPage({
                                     }}
                                   />
                                 ) : (
-                                  <div className="w-full h-full rounded-md border flex flex-col items-center justify-between p-0.5" style={{ 
-                                    background: theme.palette?.card || '#fff', 
-                                    borderColor: `${theme.palette?.secondary}35`,
-                                    borderWidth: '1px'
-                                  }}>
-                                    <div className="text-[5px] leading-none scale-75 mt-0.5" style={{ color: theme.palette?.secondary }}>
-                                      {theme.layoutStyle === 'kids-thematic' ? '🎈' : theme.layoutStyle === 'henna-velvet' ? '🌸' : theme.layoutStyle === 'royal-circumcision' ? '☪️' : '👑'}
-                                    </div>
-                                    <div className="text-[6px] font-serif leading-none scale-75 font-bold" style={{ color: theme.palette?.primary }}>
-                                      {theme.layoutStyle === 'kids-thematic' ? 'Bebek' : 'A & B'}
-                                    </div>
-                                    <div className="w-3 h-0.5 mb-0.5" style={{ backgroundColor: `${theme.palette?.secondary}50` }} />
+                                  <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white">
+                                    <span className="text-3xl mb-2">
+                                      {theme.layoutStyle === 'cinematic-poster' ? '🎬' : theme.layoutStyle === 'royal-letter' ? '📜' : theme.layoutStyle === 'polaroid-story' ? '📸' : theme.layoutStyle === 'constellation-night' ? '🌌' : '👑'}
+                                    </span>
+                                    <span className="text-xs font-bold tracking-widest uppercase">{theme.name}</span>
                                   </div>
                                 )}
+
+                                {/* Floating Composition Tag */}
+                                <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+                                  <span className="py-0.5 px-2 rounded-md bg-black/60 backdrop-blur-xs text-[9px] font-mono font-bold text-white uppercase tracking-wider">
+                                    {compTag}
+                                  </span>
+                                  <span className="py-0.5 px-2 rounded-md bg-rose-600/90 text-[9px] font-mono font-bold text-white uppercase">
+                                    {isPhotoHero ? '📷 Fotoğraflı' : '🎨 Tasarım'}
+                                  </span>
+                                </div>
+
+                                {isActive && (
+                                  <span className="absolute top-2 right-2 py-1 px-2.5 rounded-full bg-rose-500 text-white text-[10px] font-bold shadow-md flex items-center gap-1">
+                                    ✓ Aktif Şablon
+                                  </span>
+                                )}
                               </div>
-                              <div className="flex-1 min-w-0">
-                                <strong className="text-slate-800 text-[11px] font-bold block mb-0.5 truncate">{theme.name}</strong>
-                                <span className="inline-block text-[8px] font-bold uppercase tracking-wider text-slate-400 font-mono">{theme.category}</span>
+
+                              {/* Details Info */}
+                              <div className="mb-3">
+                                <div className="flex items-center justify-between mb-1">
+                                  <strong className="text-slate-900 text-sm font-bold truncate">{theme.name}</strong>
+                                  <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 font-mono">{theme.category}</span>
+                                </div>
+
+                                {theme.visualContract?.desktopComposition && (
+                                  <p className="text-[10px] text-slate-500 line-clamp-2 leading-relaxed font-light">
+                                    {theme.visualContract.desktopComposition}
+                                  </p>
+                                )}
                               </div>
-                              {isActive && (
-                                <span className="w-4 h-4 rounded-full bg-rose-500 text-white flex items-center justify-center text-[9px] font-bold shrink-0 self-center">
-                                  ✓
-                                </span>
+
+                              {/* Color Variants Chips (If Available) */}
+                              {theme.colorVariants && theme.colorVariants.length > 0 && (
+                                <div className="mb-3 pt-2 border-t border-slate-100">
+                                  <span className="text-[9px] font-bold tracking-widest uppercase text-slate-400 block mb-1.5">RENK VARYANTLARI</span>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {theme.colorVariants.map((variant: any) => (
+                                      <button
+                                        key={variant.id}
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          applyPreset(theme, variant);
+                                        }}
+                                        className="py-1 px-2 rounded-lg border text-[9px] font-bold transition-colors flex items-center gap-1.5 bg-slate-50 hover:bg-white border-slate-200"
+                                      >
+                                        <span 
+                                          className="w-2.5 h-2.5 rounded-full border border-black/10 inline-block" 
+                                          style={{ backgroundColor: variant.colorPalette?.accent || variant.colorPalette?.background }} 
+                                        />
+                                        <span>{variant.name}</span>
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
                               )}
-                            </button>
+
+                              {/* Action Buttons */}
+                              <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                                <button
+                                  type="button"
+                                  onClick={() => applyPreset(theme)}
+                                  className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs ${
+                                    isActive
+                                      ? 'bg-rose-500 text-white hover:bg-rose-600'
+                                      : 'bg-slate-900 text-white hover:bg-slate-800'
+                                  }`}
+                                >
+                                  <span>{isActive ? '✓ Uygulandı' : 'Bu Tasarımı Kullan'}</span>
+                                </button>
+                              </div>
+                            </div>
                           );
                         });
                       })()}
@@ -1853,25 +1937,58 @@ export default function CoupleAdminPage({
                   </div>
                 </div>
 
-                {/* Birleşik Arka Plan (Zemin Tasarımı) */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">Arka Plan (Zemin Tasarımı)</label>
-                  <select value={envelopeBgColor} onChange={e => setEnvelopeBgColor(e.target.value)} className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner text-sm">
-                    <option value="white-gold-marble">⚪ Beyaz Altın Mermer</option>
-                    <option value="marble-gold">🏛️ Altın Damarlı Mermer</option>
-                    <option value="black-marble">⚫ Siyah Altın Mermer</option>
-                    <option value="emerald-marble">🌲 Zümrüt Yeşili Mermer</option>
-                    <option value="silver-marble">🩶 Gümüş & Beyaz Mermer</option>
-                    <option value="black-gold-velvet">⚫ Siyah Gold Kadife</option>
-                    <option value="rose-gold-silk">🌸 Rose Gold İpek</option>
-                    <option value="minimal-white-paper">📄 Minimal Beyaz Kağıt</option>
-                    <option value="bohemian-kraft">📦 Bohem Kraft Kağıt</option>
-                    <option value="navy-gold-night">🌌 Lacivert Gold Gece</option>
-                    <option value="pastel-floral">💐 Pastel Çiçekli</option>
-                    <option value="glass-blur-modern">🔮 Modern Cam Reveal</option>
-                    <option value="champagne-gold">🥂 Şampanya Gold Lüks</option>
-                  </select>
-                </div>
+                
+                {/* Şablona Uyumlu Arka Plan (Zemin) Sistemi */}
+                {(() => {
+                  const activePreset = themes.find((t: any) => t.id === templateId);
+                  if (activePreset?.mediaSupport === 'none') {
+                    return (
+                      <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+                        <span className="text-2xl mb-2 block">🖼️</span>
+                        <h4 className="text-sm font-bold text-slate-800">Sabit Kompozisyon</h4>
+                        <p className="text-xs text-slate-500 mt-1 leading-relaxed">Bu şablon, kompozisyona özel sabit bir arka plan kullanır. Zemin değişikliği desteklenmemektedir.</p>
+                      </div>
+                    );
+                  }
+
+                  if (activePreset?.backgroundOptions && activePreset.backgroundOptions.length > 0) {
+                    const currentBg = customOverrides?.design?.backgroundDesign || activePreset.defaultBackground || activePreset.backgroundOptions[0].id;
+                    
+                    return (
+                      <div className="space-y-3">
+                        <label className="block text-sm font-bold text-slate-800">Şablona Uyumlu Arka Plan</label>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                          {activePreset.backgroundOptions.map((bg: any) => (
+                            <button
+                              key={bg.id}
+                              onClick={() => {
+                                setCustomOverrides((prev: any) => ({
+                                  ...prev,
+                                  design: {
+                                    ...prev?.design,
+                                    backgroundDesign: bg.id
+                                  }
+                                }));
+                              }}
+                              className={`group relative overflow-hidden rounded-xl border-2 transition-all ${currentBg === bg.id ? 'border-rose-500 shadow-md ring-2 ring-rose-200' : 'border-slate-200 hover:border-slate-300'}`}
+                            >
+                              <div 
+                                className="h-16 w-full bg-cover bg-center" 
+                                style={{ background: bg.background }}
+                              />
+                              <div className="p-2 text-[10px] font-bold text-center bg-white text-slate-700">
+                                {bg.name}
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  }
+                  
+                  return null;
+                })()}
+
 
               </div>
 

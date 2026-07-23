@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
-import { Calendar, MapPin, Navigation } from 'lucide-react';
+import { Calendar, MapPin, Navigation, Clock } from 'lucide-react';
+import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
+import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
   wedding: any;
@@ -79,12 +81,12 @@ export default function PhotoLuxuryLayout({
         {/* EN-BOY ORANI KORUNMUŞ FOTOĞRAF ALANI */}
         <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden z-0 bg-slate-950">
           {couplePhoto ? (
-            <img 
+            <SafeImage 
               src={couplePhoto} 
               alt="Çift Fotoğrafı"
               className="w-full h-full object-cover transition-all duration-700 ease-out hover:scale-105"
               style={{ objectPosition }}
-              loading="lazy"
+              isHero={true}
             />
           ) : (
             // Lüks Fallback Degradesi

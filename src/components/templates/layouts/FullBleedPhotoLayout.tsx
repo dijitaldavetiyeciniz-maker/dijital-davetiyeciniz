@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
-import { Calendar, MapPin, Navigation } from 'lucide-react';
+import { Calendar, MapPin, Navigation, Ticket, Sparkles, MoveRight } from 'lucide-react';
+import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
+import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
   wedding: any;
@@ -77,13 +79,12 @@ export default function FullBleedPhotoLayout({
         {/* Full-bleed Görsel Katmanı */}
         {couplePhoto ? (
           <div className="absolute inset-0 z-0">
-            <img 
+            <SafeImage 
               src={couplePhoto} 
               alt="Full Bleed Couple"
               className="w-full h-full object-cover transition-transform duration-[12000ms] ease-out motion-safe:scale-105 motion-safe:hover:scale-100"
               style={{ objectPosition }}
-              loading="eager"
-              fetchPriority="high"
+              isHero={true}
             />
             {/* Fotoğraf üstü gradient koruması (metin okunabilirliği için) */}
             <div className={`absolute inset-0 z-10 pointer-events-none transition-opacity ${overlayColorClass}`} />

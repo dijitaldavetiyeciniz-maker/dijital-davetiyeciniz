@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
-import { Calendar, MapPin, Navigation } from 'lucide-react';
+import { Calendar, MapPin, Navigation, MoveRight } from 'lucide-react';
+import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
+import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
   wedding: any;
@@ -95,12 +97,12 @@ export default function SplitScreenLayout({
             }`}
           >
             {couplePhoto ? (
-              <img 
+              <SafeImage 
                 src={couplePhoto} 
                 alt="Split Screen Couple"
                 className="w-full h-full object-cover transition-transform duration-700 hover:scale-103"
                 style={{ objectPosition }}
-                loading="lazy"
+                isHero={true}
               />
             ) : (
               // Fotoğrafsız durumda gösterilecek asimetrik premium fallback

@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { Calendar, MapPin, Navigation } from 'lucide-react';
+import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
   wedding: any;
@@ -108,12 +109,12 @@ export default function MagazineEditorialLayout({
           {/* Asimetrik Sol Blok: Fotoğraf veya Büyük Fallback Monogram */}
           <div className="sm:col-span-7 relative aspect-[4/5] sm:aspect-auto sm:h-[320px] rounded-2xl overflow-hidden bg-slate-900 border border-black/5 z-10">
             {couplePhoto ? (
-              <img 
+              <SafeImage 
                 src={couplePhoto} 
                 alt="Editorial Couple"
                 className="w-full h-full object-cover"
                 style={{ objectPosition }}
-                loading="lazy"
+                isHero={true}
               />
             ) : (
               // Fotoğraf olmadığında gösterilecek modern fallback monogram

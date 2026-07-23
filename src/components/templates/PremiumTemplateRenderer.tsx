@@ -25,6 +25,47 @@ import FullBleedPhotoLayout from './layouts/FullBleedPhotoLayout';
 import SplitScreenLayout from './layouts/SplitScreenLayout';
 import StoryTimelineLayout from './layouts/StoryTimelineLayout';
 import ModernEventLayout from './layouts/ModernEventLayout';
+import CinematicPosterLayout from './layouts/CinematicPosterLayout';
+import RoyalLetterLayout from './layouts/RoyalLetterLayout';
+import PolaroidStoryLayout from './layouts/PolaroidStoryLayout';
+import ConstellationNightLayout from './layouts/ConstellationNightLayout';
+import ModernArchitectureLayout from './layouts/ModernArchitectureLayout';
+import BotanicalCeramicLayout from './layouts/BotanicalCeramicLayout';
+import LuxuryHotelLayout from './layouts/LuxuryHotelLayout';
+import DestinationBoardingPassLayout from './layouts/DestinationBoardingPassLayout';
+import FashionMagazineLayout from './layouts/FashionMagazineLayout';
+import ArtDecoTheaterLayout from './layouts/ArtDecoTheaterLayout';
+import MediterraneanGardenLayout from './layouts/MediterraneanGardenLayout';
+import MinimalTypographicLayout from './layouts/MinimalTypographicLayout';
+import ParisianApartmentLayout from './layouts/ParisianApartmentLayout';
+import SwissGridCeremonyLayout from './layouts/SwissGridCeremonyLayout';
+import CocktailMenuLayout from './layouts/CocktailMenuLayout';
+import FabricPressLayout from './layouts/FabricPressLayout';
+import MarbleColumnLayout from './layouts/MarbleColumnLayout';
+import GalaNightLayout from './layouts/GalaNightLayout';
+import VelvetCurtainLayout from './layouts/VelvetCurtainLayout';
+import HennaTrayLayout from './layouts/HennaTrayLayout';
+import CandleCorridorLayout from './layouts/CandleCorridorLayout';
+import OrientalLaceLayout from './layouts/OrientalLaceLayout';
+import PrinceThroneRoomLayout from './layouts/PrinceThroneRoomLayout';
+import NazarDomeLayout from './layouts/NazarDomeLayout';
+import VelvetTheaterLayout from './layouts/VelvetTheaterLayout';
+import OttomanGardenLayout from './layouts/OttomanGardenLayout';
+import CrownCrestLayout from './layouts/CrownCrestLayout';
+import ModernGeometricMonogramLayout from './layouts/ModernGeometricMonogramLayout';
+import FashionEditorialLayout from './layouts/FashionEditorialLayout';
+import FairyTalePalaceLayout from './layouts/FairyTalePalaceLayout';
+import CrownJewelBoxLayout from './layouts/CrownJewelBoxLayout';
+import StorybookLayout from './layouts/StorybookLayout';
+import HotAirBalloonLayout from './layouts/HotAirBalloonLayout';
+import EngagementTableLayout from './layouts/EngagementTableLayout';
+import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
+import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
+import FloralFamilyLayout from './layouts/FloralFamilyLayout';
+import LavenderGardenLayout from './layouts/LavenderGardenLayout';
+import EmeraldEleganceLayout from './layouts/EmeraldEleganceLayout';
+
+
 
 interface TemplateProps {
   wedding: any;
@@ -94,25 +135,49 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
 
   // Load the concept configuration
   const themeConfig = predefinedThemes.find(t => t.id === templateId) || predefinedThemes[0];
-  const palette = themeConfig.palette || {
+  
+  const overrides = wedding.custom_overrides || {};
+  
+  // -- BACKGROUND SELECTION LOGIC --
+  let requestedBg = overrides.design?.backgroundDesign || overrides.background_design || wedding.background_design;
+  let selectedVariant = null;
+  let effectiveBackground = themeConfig?.defaultBackground || 'minimal-white';
+  
+  if (themeConfig?.backgroundOptions && Array.isArray(themeConfig.backgroundOptions)) {
+    const variant = themeConfig.backgroundOptions.find(v => v.id === requestedBg);
+    if (variant) {
+      effectiveBackground = variant.id;
+      selectedVariant = variant;
+    } else if (themeConfig.backgroundOptions.length > 0) {
+      effectiveBackground = themeConfig.backgroundOptions[0].id;
+      selectedVariant = themeConfig.backgroundOptions[0];
+    }
+  }
+
+  // Merge color palettes
+  const basePalette = themeConfig?.colorPalette || themeConfig?.palette || {
     background: '#faf7f2',
-    card: '#ffffff',
+    surface: '#ffffff',
     primary: '#111111',
-    secondary: '#d8c7b2',
-    accent: '#f5efe8',
-    text: '#3f3832',
-    mutedText: '#7b7066'
+    primaryText: '#3f3832',
+    secondaryText: '#7b7066',
+  };
+  
+  const effectivePalette = {
+    ...basePalette,
+    ...selectedVariant?.colorPalette
   };
 
   const isDarkModeActive = !!wedding.is_dark_mode;
-  const overrides = wedding.custom_overrides || {};
-  const primaryColor = overrides.primary_color || wedding.primary_color || palette.secondary;
-  const textColor = isDarkModeActive ? '#f8fafc' : (overrides.text_color || wedding.text_color || palette.text);
-  const cardBgColor = isDarkModeActive ? '#12131a' : palette.card;
-  const mutedTextColor = isDarkModeActive ? '#94a3b8' : palette.mutedText;
+  
+  // Try to respect user overrides, otherwise use effectivePalette
+  const primaryColor = overrides.primary_color || wedding.primary_color || (effectivePalette as any).primary || '#111111';
+  const textColor = isDarkModeActive ? '#f8fafc' : (overrides.text_color || wedding.text_color || effectivePalette.primaryText || '#333333');
+  const cardBgColor = isDarkModeActive ? '#12131a' : (effectivePalette.surface || (effectivePalette as any).card || '#ffffff');
+  const mutedTextColor = isDarkModeActive ? '#94a3b8' : (effectivePalette.secondaryText || effectivePalette.mutedText || '#666666');
 
-  const bgIsLight = isDarkModeActive ? false : isColorLight(palette.background);
-  const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
+  const bgIsLight = isDarkModeActive ? false : isColorLight(effectivePalette.background || '#ffffff');
+const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
 
   const headingFont = overrides.names_font_family || wedding.names_font_family || themeConfig.typography?.heading || 'Playfair Display';
   const bodyFont = overrides.font_family || wedding.font_family || themeConfig.typography?.body || 'Cormorant Garamond';
@@ -591,183 +656,249 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
 
 
 
-  const renderMonogramLayout = () => (
-    <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-12 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={{ ...cardStyles, overflow: 'visible' }}>
-      {renderContextualDecorations()}
-      {renderCardBorder()}
-      <div className="mb-4 z-10 text-4xl font-light italic" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
-        {groomInitial ? `${brideInitial}&${groomInitial}` : brideInitial}
-      </div>
-      <div className="w-16 h-[1px] my-6 opacity-50" style={{ backgroundColor: primaryColor }} />
-      {renderHeader()}
-      {renderNames()}
-      {renderQuote()}
-      {renderTimer()}
-      {renderDetails()}
-      {renderProgramTimeline()}
-      {renderRsvpButton()}
-      {renderGuestBook()}
-    </div>
-  );
-
-  const renderAsymmetricLayout = () => (
-    <div className={`max-w-[500px] mx-auto w-full p-8 sm:p-12 text-left relative z-10 border shadow-2xl my-8 flex flex-col ${cardShapeClass}`} style={{ ...cardStyles, overflow: 'visible' }}>
-      {renderContextualDecorations()}
-      {renderCardBorder()}
-      <div className="w-full flex justify-between items-start mb-12 relative z-10">
-        <div>
-          <h3 className="font-semibold tracking-[0.2em] uppercase text-xs opacity-70" style={{ color: textColor }}>{eventTitle}</h3>
-          <div className="w-8 h-[2px] my-3" style={{ backgroundColor: primaryColor }} />
-        </div>
-        <div className="text-right border px-4 py-2 rounded-t-full" style={{ borderColor: `${primaryColor}40` }}>
-          <div className="text-3xl font-light" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
-            {dateObj.getDate()}
-          </div>
-          <div className="text-[10px] uppercase tracking-widest opacity-70 font-semibold" style={{ color: textColor }}>
-            {dateObj.toLocaleDateString('tr-TR', { month: 'short' })}
-          </div>
-        </div>
-      </div>
-      
-      <div className="relative z-10 mb-8 mt-4 w-full flex flex-col items-center" style={{ overflow: 'visible' }}>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal w-full text-center" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.5, whiteSpace: 'nowrap' }}>
-          {wedding.bride_name}
-        </h1>
-        {wedding.groom_name && (
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-normal mt-2 w-full text-center" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.5, whiteSpace: 'nowrap' }}>
-            <span className="text-sm mr-2 opacity-50" style={{ color: primaryColor, fontFamily: 'sans-serif' }}>&</span>
-            {wedding.groom_name}
-          </h1>
-        )}
-      </div>
-      
-      {renderQuote()}
-      {renderTimer()}
-      
-      <div className="mt-8 pt-8 border-t relative z-10" style={{ borderColor: `${primaryColor}40` }}>
-        {renderDetails()}
-      </div>
-      {renderRsvpButton()}
-      {renderGuestBook()}
-    </div>
-  );
-
-  const renderEditorialLayout = () => (
-    <div className="max-w-[600px] mx-auto w-full py-16 px-4 sm:px-8 text-center relative z-10 flex flex-col items-center bg-white shadow-xl my-8">
-      {renderContextualDecorations()}
-      
-      <div className="w-full text-center border-b pb-4 mb-10" style={{ borderColor: `${primaryColor}30` }}>
-        <h3 className="font-bold tracking-[0.3em] uppercase text-[10px]" style={{ color: textColor }}>{eventTitle}</h3>
-        <div className="text-xs tracking-[0.2em] uppercase mt-2 opacity-60" style={{ color: textColor }}>
-          VOL I. — {dateObj.getFullYear()}
-        </div>
-      </div>
-      
-      <div className="w-full mb-12 text-center" style={{ overflow: 'visible' }}>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl leading-tight font-black uppercase tracking-tight" style={{ color: textColor, fontFamily: `"${headingFont}", sans-serif`, overflow: 'visible', whiteSpace: 'nowrap' }}>
-          {wedding.bride_name}
-          {wedding.groom_name && (
-            <>
-              <br/>
-              <span className="text-lg my-2 block opacity-40 lowercase font-light italic" style={{ fontFamily: `"${accentFont}", serif`, whiteSpace: 'nowrap' }}>and</span>
-              {wedding.groom_name}
-            </>
-          )}
-        </h1>
-      </div>
-      
-      <div className="w-full border p-6 my-8 text-left" style={{ borderColor: `${primaryColor}20`, backgroundColor: `rgba(0,0,0,0.02)` }}>
-        <div className="flex items-center gap-4 mb-4">
-          <div className="text-4xl font-light" style={{ color: primaryColor }}>{dateObj.getDate()}</div>
-          <div>
-            <div className="text-xs font-bold uppercase tracking-widest" style={{ color: textColor }}>{dateObj.toLocaleDateString('tr-TR', { month: 'long' })}</div>
-            <div className="text-xs opacity-60" style={{ color: textColor }}>{dateObj.getFullYear()}</div>
-          </div>
-        </div>
-        {renderQuote()}
-      </div>
-
-      {renderTimer()}
-      {renderDetails()}
-      {renderRsvpButton()}
-      {renderGuestBook()}
-    </div>
-  );
-
-  const renderOrientalLayout = () => (
-    <div className={`max-w-[500px] mx-auto w-full p-6 sm:p-10 text-center relative z-10 border shadow-2xl my-8 flex flex-col items-center ${cardShapeClass}`} style={{ ...cardStyles, overflow: 'visible' }}>
-      {renderContextualDecorations()}
-      {renderCardBorder()}
-      
-      <div className="w-full max-w-[320px] aspect-square mx-auto rounded-t-full border-2 flex flex-col items-center justify-center relative z-10 mb-10 p-6 shadow-inner" style={{ borderColor: `${primaryColor}80`, backgroundColor: `rgba(0,0,0,0.05)` }}>
-        <div className="absolute inset-2 rounded-t-full border border-dashed opacity-50" style={{ borderColor: primaryColor }} />
-        <div className="scale-90 flex flex-col items-center w-full text-center" style={{ overflow: 'visible' }}>
-          {renderHeader()}
-          <h1 className="text-xl sm:text-2xl font-normal mt-4 w-full text-center" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.5, whiteSpace: 'nowrap' }}>
-            {wedding.bride_name}
-          </h1>
-          {wedding.groom_name && (
-            <>
-              <span className="text-base my-2 opacity-80 block" style={{ color: primaryColor, fontFamily: `"${accentFont}", cursive` }}>and</span>
-              <h1 className="text-xl sm:text-2xl font-normal w-full text-center" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.5, whiteSpace: 'nowrap' }}>
-                {wedding.groom_name}
-              </h1>
-            </>
-          )}
-        </div>
-      </div>
-
-      {renderQuote()}
-      {renderTimer()}
-      
-      <div className="w-full rounded-2xl p-6 relative z-10 border" style={{ borderColor: `${primaryColor}30`, backgroundColor: `rgba(0,0,0,0.02)` }}>
-        <div className="text-2xl mb-4 font-light italic" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>{dateStr}</div>
-        {renderDetails()}
-      </div>
-      
-      {renderRsvpButton()}
-      {renderGuestBook()}
-    </div>
-  );
-
-  const renderFullBleedLayout = () => (
-    <div className="w-full min-h-screen py-20 px-4 sm:px-8 text-center relative z-10 flex flex-col items-center justify-center">
-      {renderContextualDecorations()}
-      
-      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center w-full" style={{ overflow: 'visible' }}>
-        {renderHeader()}
-        
-        <h1 className="text-2xl sm:text-3xl md:text-4xl my-12 font-normal w-full text-center" style={{ color: textColor, fontFamily: `"${headingFont}", serif`, overflow: 'visible', lineHeight: 1.5, whiteSpace: 'nowrap' }}>
-          {wedding.bride_name}
-          {wedding.groom_name && (
-            <>
-              <span className="text-base opacity-50 font-sans mx-2" style={{ color: primaryColor }}>x</span>
-              {wedding.groom_name}
-            </>
-          )}
-        </h1>
-        
-        <div className="w-24 h-[2px] mx-auto my-10" style={{ backgroundColor: primaryColor }} />
-        
-        <div className="text-xl md:text-2xl font-light tracking-widest mb-12 uppercase" style={{ color: textColor }}>
-          {dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
-        </div>
-
-        {renderQuote()}
-        {renderTimer()}
-        <div className="w-full max-w-md mx-auto mt-8">
-          {renderDetails()}
-        </div>
-        {renderRsvpButton()}
-        {renderGuestBook()}
-      </div>
-    </div>
-  );
-
+  
+  
+  
+  
+  
   const renderLayout = () => {
     const layoutStyle = wedding.custom_overrides?.layoutStyle || themeConfig.layoutStyle || 'monogram';
+    const commonProps = { wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick };
     switch (layoutStyle) {
-      case 'asymmetric': return renderAsymmetricLayout();
+      case 'cinematic-poster':
+        return (
+          <CinematicPosterLayout 
+            wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode}
+          />
+        );
+      case 'royal-letter':
+        return (
+          <RoyalLetterLayout 
+            wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode}
+          />
+        );
+      case 'polaroid-story':
+        return (
+          <PolaroidStoryLayout 
+            wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode}
+          />
+        );
+      case 'constellation-night':
+        return (
+          <ConstellationNightLayout 
+            wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode}
+          />
+        );
+      
+      case 'modern-architecture':
+        return <ModernArchitectureLayout             wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode} />;
+      case 'botanical-ceramic':
+        return <BotanicalCeramicLayout             wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode} />;
+      case 'luxury-hotel':
+        return <LuxuryHotelLayout             wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode} />;
+      case 'destination-boarding-pass':
+        return <DestinationBoardingPassLayout             wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode} />;
+      case 'fashion-magazine':
+        return <FashionMagazineLayout             wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode} />;
+      case 'art-deco-theater':
+        return <ArtDecoTheaterLayout             wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode} />;
+      case 'mediterranean-garden':
+        return <MediterraneanGardenLayout             wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode} />;
+      case 'minimal-typographic':
+        return <MinimalTypographicLayout             wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode} />;
+case 'asymmetric': 
       case 'full-bleed':
         return (
           <FullBleedPhotoLayout 
@@ -812,7 +943,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
             mode={mode}
           />
         );
-      case 'oriental': return renderOrientalLayout();
+      case 'oriental': 
       case 'folded-seal':
         return (
           <FoldedSealLayout 
@@ -1054,20 +1185,80 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
             mode={mode}
           />
         );
-      case 'monogram':
+            
+      case 'giant-monogram':
+        return (
+          <GiantMonogramLayout
+            wedding={wedding}
+            primaryColor={primaryColor}
+            textColor={textColor}
+            headingFont={headingFont}
+            bodyFont={bodyFont}
+            accentFont={accentFont}
+            dateObj={dateObj}
+            dateStr={dateStr}
+            timeStr={timeStr}
+            eventTitle={eventTitle}
+            renderTimer={renderTimer}
+            renderRsvpButton={renderRsvpButton}
+            renderGuestBook={renderGuestBook}
+            renderQuote={renderQuote}
+            handleMapClick={handleMapClick}
+            cardBgColor={cardBgColor}
+            mode={mode}
+          />
+        );
+      
+      case 'parisian-apartment': return <ParisianApartmentLayout {...commonProps} />;
+      case 'swiss-grid': return <SwissGridCeremonyLayout {...commonProps} />;
+      case 'cocktail-menu': return <CocktailMenuLayout {...commonProps} />;
+      case 'fabric-press': return <FabricPressLayout {...commonProps} />;
+      case 'marble-column': return <MarbleColumnLayout {...commonProps} dateObj={dateObj} />;
+      case 'gala-night': return <GalaNightLayout {...commonProps} />;
+      case 'velvet-curtain': return <VelvetCurtainLayout {...commonProps} />;
+      case 'henna-tray': return <HennaTrayLayout {...commonProps} />;
+      case 'candle-corridor': return <CandleCorridorLayout {...commonProps} />;
+      case 'oriental-lace': return <OrientalLaceLayout {...commonProps} />;
+      case 'prince-throne-room': return <PrinceThroneRoomLayout {...commonProps} />;
+      case 'nazar-dome': return <NazarDomeLayout {...commonProps} />;
+      case 'velvet-theater': return <VelvetTheaterLayout {...commonProps} />;
+      case 'ottoman-garden': return <OttomanGardenLayout {...commonProps} />;
+      case 'crown-crest': return <CrownCrestLayout {...commonProps} />;
+      case 'modern-geometric-monogram': return <ModernGeometricMonogramLayout {...commonProps} />;
+      case 'fashion-editorial': return <FashionEditorialLayout {...commonProps} />;
+      case 'fairy-tale-palace': return <FairyTalePalaceLayout {...commonProps} />;
+      case 'crown-jewel-box': return <CrownJewelBoxLayout {...commonProps} />;
+      case 'storybook': return <StorybookLayout {...commonProps} />;
+      case 'hot-air-balloon': return <HotAirBalloonLayout {...commonProps} />;
+      case 'engagement-table': return <EngagementTableLayout {...commonProps} />;
+      case 'minimal-ceremony': return <MinimalCeremonyLayout {...commonProps} />;
+      case 'gold-frame-gallery': return <GoldFrameGalleryLayout {...commonProps} />;
+      case 'floral-family': return <FloralFamilyLayout {...commonProps} />;
+      case 'lavender-garden': return <LavenderGardenLayout {...commonProps} />;
+      case 'emerald-elegance': return <EmeraldEleganceLayout {...commonProps} />;
       default:
-        return renderMonogramLayout();
+        if (process.env.NODE_ENV === 'development') {
+          throw new Error(`Missing premium layout mapping for preset: ${templateId}`);
+        }
+        return (
+          <div className="p-8 text-center bg-red-50 text-red-500 rounded-2xl border border-red-200 m-8">
+            Uyumsuz şablon eşleştirmesi: {templateId}
+          </div>
+        );
     }
   };
 
   // Render the core layout
 
-  const backgroundDesign = overrides.background_design || wedding.background_design || overrides.envelope_bg_color || wedding.envelope_bg_color || "rose-gold-silk";
+  const isFullBleed = themeConfig.layoutMode === 'full-bleed';
 
   return (
     <div 
-      className={`min-h-screen w-full relative flex flex-col items-center justify-center p-4 sm:p-6 pb-28 invitation-page bg-design-${backgroundDesign} ${isDarkModeActive ? 'dark-mode' : ''}`}
-      style={{ ...backgroundStyles, overflowX: 'clip' }}
+      className={`min-h-screen w-full relative flex flex-col font-sans transition-colors duration-1000 bg-design-${effectiveBackground} ${isDarkModeActive ? 'dark-mode' : ''} ${!isFullBleed ? 'items-center justify-center p-4 sm:p-6 pb-28 invitation-page' : ''}`}
+      style={{ 
+        ...(selectedVariant?.background ? { background: selectedVariant.background } : { ...backgroundStyles }), 
+        overflowX: 'clip' 
+      }}
     >
       <BackgroundAnimation type={overrides.background_animation || wedding.background_animation} />
       <link href={fontUrl} rel="stylesheet" />
