@@ -22,6 +22,8 @@ interface LayoutProps {
   renderQuote: () => React.ReactNode;
   handleMapClick: () => void;
   cardBgColor?: string;
+  cardBlur?: number;
+  cardSurfaceStyle?: React.CSSProperties;
   mode?: 'preview' | 'public';
 }
 
@@ -42,6 +44,8 @@ export default function ConstellationNightLayout({
   renderQuote,
   handleMapClick,
   cardBgColor = '#030712',
+  cardBlur = 0,
+  cardSurfaceStyle,
   mode = 'public'
 , selectedBackground}: LayoutProps) {
   const themeCyan = primaryColor || '#38bdf8';
@@ -72,7 +76,7 @@ export default function ConstellationNightLayout({
     <div 
       className="min-h-screen w-full relative overflow-x-hidden flex"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`,
-        backgroundColor: mainBg,
+        ...cardSurfaceStyle,
         backgroundImage: 'radial-gradient(circle at 50% 0%, #0f1b3d 0%, #030712 80%)',
         color: textColor || '#f0f9ff'
       }}

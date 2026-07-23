@@ -460,6 +460,8 @@ export default function CoupleAdminPage({
         setCustomOverrides(weddingData.custom_overrides);
         if (weddingData.custom_overrides.design?.cardBgColor) setCardBgColor(weddingData.custom_overrides.design.cardBgColor);
         if (weddingData.custom_overrides.design?.cardOpacity !== undefined) setCardOpacity(weddingData.custom_overrides.design.cardOpacity);
+        if (weddingData.custom_overrides.design?.sceneBackgroundColor) setSceneBackgroundColor(weddingData.custom_overrides.design.sceneBackgroundColor);
+        if (weddingData.custom_overrides.design?.cardBlur !== undefined) setCardBlur(weddingData.custom_overrides.design.cardBlur);
       }
       if (weddingData.photo_focal_point) setPhotoFocalPoint(weddingData.photo_focal_point);
       
@@ -2044,11 +2046,67 @@ export default function CoupleAdminPage({
                           </div>
                         </div>
 
+                        {currentBg === 'none' && (
+                          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mt-3">
+                            <label className="block text-xs font-bold text-slate-700 mb-2">Dış Sahne Rengi</label>
+                            <div className="flex items-center gap-3">
+                              <input
+                                type="color"
+                                value={sceneBackgroundColor}
+                                onChange={e => {
+                                  const color = e.target.value;
+                                  setSceneBackgroundColor(color);
+                                  setCustomOverrides((prev: any) => ({
+                                    ...prev,
+                                    design: { ...prev?.design, sceneBackgroundColor: color }
+                                  }));
+                                }}
+                                className="w-10 h-10 rounded cursor-pointer border border-slate-300"
+                                title="Dış Sahne Rengi"
+                              />
+                              <div>
+                                <p className="text-xs font-semibold text-slate-700">Arka Plan Rengi</p>
+                                <p className="text-[10px] text-slate-500">Görsel seçili değilken sayfanın arka plan rengi</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Dış Sahne Rengi - sadece "Görsel Yok" seçildiğinde */}
+                        {currentBg === 'none' && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                            <label className="block text-sm font-bold text-blue-900 mb-3">
+                              🎨 Dış Sahne Arka Plan Rengi
+                              <span className="block text-xs font-normal text-blue-600 mt-0.5">Görsel seçilmediğinde sayfanın arka plan rengini belirleyin.</span>
+                            </label>
+                            <div className="flex items-center gap-3">
+                              <input
+                                type="color"
+                                value={sceneBackgroundColor}
+                                onChange={e => {
+                                  const color = e.target.value;
+                                  setSceneBackgroundColor(color);
+                                  setCustomOverrides((prev: any) => ({
+                                    ...prev,
+                                    design: { ...prev?.design, sceneBackgroundColor: color }
+                                  }));
+                                }}
+                                className="w-12 h-12 rounded-xl cursor-pointer border-2 border-blue-300"
+                                title="Dış Sahne Rengi"
+                              />
+                              <div>
+                                <p className="text-sm font-semibold text-blue-900">Seçilen: <span className="font-mono text-blue-700">{sceneBackgroundColor}</span></p>
+                                <p className="text-xs text-blue-600 mt-0.5">Ön izlemede anında değişim görürsünüz.</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
                         {/* Kart Rengi ve Şeffaflığı */}
                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
                           <label className="block text-sm font-bold text-slate-800">
-                            Davetiye (Kart) Zemin Ayarları
-                            <span className="block text-xs font-normal text-slate-500 mt-0.5">Yazıların bulunduğu orta kartın rengini ve şeffaflığını ayarlayın. (Görsel Yok seçiliyse Genel Sayfa Rengini değiştirir)</span>
+                            Davetiye Kart Yüzeyi
+                            <span className="block text-xs font-normal text-slate-500 mt-0.5">%0 = tamamen şeffaf, %100 = katı renk. Cam Efekti kart yüzeyini bulanıklaştırır.</span>
                           </label>
                           <div className="flex items-center gap-4">
                             <div>
@@ -2072,7 +2130,7 @@ export default function CoupleAdminPage({
                             </div>
                             <div className="flex-1">
                               <div className="flex justify-between mb-1">
-                                <span className="text-xs font-bold text-slate-600">Kart Şeffaflığı</span>
+                                <span className="text-xs font-bold text-slate-600">Kart Opaklığı</span>
                                 <span className="text-xs font-bold text-slate-600">%{cardOpacity}</span>
                               </div>
                               <input 
@@ -2097,6 +2155,27 @@ export default function CoupleAdminPage({
                                 <span className="text-[10px] text-slate-400">Tam Şeffaf</span>
                                 <span className="text-[10px] text-slate-400">Katı Renk</span>
                               </div>
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between mb-1">
+                                <span className="text-xs font-bold text-slate-600">Kart Bulanıklığı (Cam Efekti)</span>
+                                <span className="text-xs font-bold text-slate-600">{cardBlur}px</span>
+                              </div>
+                              <input
+                                type="range"
+                                min="0"
+                                max="20"
+                                value={cardBlur}
+                                onChange={e => {
+                                  const blur = parseInt(e.target.value);
+                                  setCardBlur(blur);
+                                  setCustomOverrides((prev: any) => ({
+                                    ...prev,
+                                    design: { ...prev?.design, cardBlur: blur }
+                                  }));
+                                }}
+                                className="w-full accent-rose-500"
+                              />
                             </div>
                           </div>
                         </div>

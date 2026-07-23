@@ -21,6 +21,8 @@ interface LayoutProps {
   renderQuote: () => React.ReactNode;
   handleMapClick: () => void;
   cardBgColor?: string;
+  cardBlur?: number;
+  cardSurfaceStyle?: React.CSSProperties;
   mode?: 'preview' | 'public';
 }
 
@@ -41,6 +43,8 @@ export default function GiantMonogramLayout({
   renderQuote,
   handleMapClick,
   cardBgColor = '#ffffff',
+  cardBlur = 0,
+  cardSurfaceStyle,
   mode = 'public'
 , selectedBackground}: LayoutProps) {
   const dateDay = String(dateObj.getDate()).padStart(2, '0');
@@ -123,7 +127,7 @@ export default function GiantMonogramLayout({
       <div 
         data-testid="invitation-card-surface"
         className="relative rounded-[2.2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-6 sm:p-12 text-center border flex flex-col items-center justify-between min-h-[620px]"
-        style={{ borderColor: `${primaryColor}20`, backgroundColor: cardBgColor || bgRegistry.fallbackColor, color: textColor || '#1e293b' }}
+        style={{ ...cardSurfaceStyle, borderColor: `${primaryColor}20`, color: textColor || '#1e293b' }}
       >
         {/* PARALLAX MONOGRAM ALANI */}
         <div 

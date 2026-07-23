@@ -21,6 +21,8 @@ interface LayoutProps {
   renderQuote: () => React.ReactNode;
   handleMapClick: () => void;
   cardBgColor?: string;
+  cardBlur?: number;
+  cardSurfaceStyle?: React.CSSProperties;
 }
 
 export default function FoldedSealLayout({
@@ -39,8 +41,11 @@ export default function FoldedSealLayout({
   renderGuestBook,
   renderQuote,
   handleMapClick,
-  cardBgColor = '#fcfbfa'
-, selectedBackground}: LayoutProps) {
+  cardBgColor = '#fcfbfa',
+  cardBlur = 0,
+  cardSurfaceStyle,
+  selectedBackground
+}: LayoutProps) {
   const dateDay = String(dateObj.getDate()).padStart(2, '0');
   const dateMonth = String(dateObj.getMonth() + 1).padStart(2, '0');
   const dateYear = String(dateObj.getFullYear()).substring(2);
@@ -60,7 +65,7 @@ export default function FoldedSealLayout({
       <div 
         data-testid="invitation-card-surface"
         className="relative rounded-[2rem] overflow-hidden shadow-[0_30px_70px_-15px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.4)] border border-amber-900/10 flex flex-col md:flex-row items-stretch"
-        style={{ backgroundColor: cardBgColor || bgRegistry.fallbackColor }}
+        style={{ ...cardSurfaceStyle }}
       >
         {/* Keten Noise Dokusu */}
         <div className="absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:10px_10px] pointer-events-none z-0 opacity-60" />
