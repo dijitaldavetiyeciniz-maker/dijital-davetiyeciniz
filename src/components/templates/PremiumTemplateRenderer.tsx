@@ -1261,14 +1261,13 @@ case 'asymmetric':
 
   return (
     <div 
-      className={`min-h-screen w-full relative flex flex-col font-sans transition-colors duration-1000 bg-design-${effectiveBackground} ${isDarkModeActive ? 'dark-mode' : ''} ${!isFullBleed ? 'items-center justify-center p-4 sm:p-6 pb-28 invitation-page' : ''}`}
+      className={`min-h-screen w-full relative flex flex-col font-sans transition-colors duration-1000 bg-design-${effectiveBackground} ${(isDarkModeActive && !selectedBackground?.image && !selectedBackground?.background) ? 'dark-mode' : ''} ${!isFullBleed ? 'items-center justify-center p-4 sm:p-6 pb-28 invitation-page' : ''}`}
       data-testid="invitation-scene-root"
       style={{
-        background: selectedBackground?.image 
-          ? `${(!selectedBackground?.background?.includes('/') ? selectedBackground?.background : 'transparent')} url("${selectedBackground.image}")`
-          : (selectedBackground?.background?.includes('/') 
-              ? `url("${selectedBackground.background}")` 
-              : (selectedBackground?.background || selectedVariant?.background)),
+        backgroundColor: !selectedBackground?.background?.includes('/') ? selectedBackground?.background : undefined,
+        backgroundImage: selectedBackground?.image 
+          ? `url("${selectedBackground.image}")` 
+          : (selectedBackground?.background?.includes('/') ? `url("${selectedBackground.background}")` : undefined),
         backgroundSize: selectedBackground?.backgroundSize ?? 'cover',
         backgroundPosition: selectedBackground?.backgroundPosition ?? 'center',
         backgroundRepeat: selectedBackground?.backgroundRepeat ?? 'no-repeat',
