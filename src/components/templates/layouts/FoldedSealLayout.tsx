@@ -53,13 +53,13 @@ export default function FoldedSealLayout({
 
   return (
     <div 
-      className="max-w-[550px] mx-auto w-full my-8 relative z-10 transition-all duration-700 ease-out animate-fade-in text-slate-800"
-      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
+      className="max-w-[550px] mx-auto w-full my-8 relative z-10 transition-all duration-700 ease-out animate-fade-in"
+      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif`, color: textColor || '#1e293b' }}
     >
       {/* Çapraz Katlanmış Davetiye ve 3D Gölgeli Kenarlar */}
       <div 
         className="relative rounded-[2rem] overflow-hidden shadow-[0_30px_70px_-15px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.4)] border border-amber-900/10 flex flex-col md:flex-row items-stretch"
-        style={{ backgroundColor: bgRegistry.fallbackColor || cardBgColor }}
+        style={{ backgroundColor: cardBgColor || bgRegistry.fallbackColor }}
       >
         {/* Keten Noise Dokusu */}
         <div className="absolute inset-0 bg-[radial-gradient(rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:10px_10px] pointer-events-none z-0 opacity-60" />
@@ -134,7 +134,7 @@ export default function FoldedSealLayout({
             </div>
 
             {/* Davet Metni */}
-            <div className="text-slate-700 my-3 leading-relaxed text-sm italic max-w-sm">
+            <div className="my-3 leading-relaxed text-sm italic max-w-sm" style={{ color: textColor || '#334155' }}>
               {renderQuote()}
             </div>
 

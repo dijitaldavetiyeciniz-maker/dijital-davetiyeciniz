@@ -111,37 +111,40 @@ export default function DestinationBoardingPassLayout({
             {/* Flight Details */}
             <div className="flex-1 flex flex-col justify-center relative z-10">
               <div className="flex items-center justify-between mb-8">
-                <div className="text-center">
-                  <h2 className="text-4xl md:text-6xl font-black text-slate-800" style={{ fontFamily: `"${headingFont}", sans-serif` }}>{originCode}</h2>
-                  <p className="text-sm text-slate-500 font-medium uppercase mt-1">{wedding.bride_name}</p>
-                </div>
-                
-                <div className="flex-1 flex flex-col items-center px-4">
-                  <div className="w-full h-[2px] bg-slate-200 relative flex items-center justify-center">
-                    <PlaneTakeoff className="w-6 h-6 absolute text-slate-400" style={{ color: brandColor }} />
-                  </div>
-                  <p className="text-[10px] uppercase font-bold tracking-widest mt-3 text-slate-400">Direct Flight</p>
+                <div className="flex-1 flex flex-col items-center">
+                  <h2 className="text-4xl md:text-6xl font-black" style={{ fontFamily: `"${headingFont}", sans-serif`, color: textColor || '#1e293b' }}>{originCode}</h2>
+                  <div className="w-16 h-[2px] bg-slate-200 mt-2 mb-4" />
+                  <p className="text-xs tracking-widest uppercase opacity-60 font-bold" style={{ color: textColor || '#1e293b' }}>Origin</p>
+                  <p className="text-sm md:text-base font-semibold" style={{ color: textColor || '#1e293b' }}>{wedding.bride_name}</p>
                 </div>
 
-                <div className="text-center">
-                  <h2 className="text-4xl md:text-6xl font-black text-slate-800" style={{ fontFamily: `"${headingFont}", sans-serif` }}>{destCode}</h2>
-                  <p className="text-sm text-slate-500 font-medium uppercase mt-1">{wedding.groom_name}</p>
+                <div className="flex-1 flex flex-col items-center justify-center relative">
+                  <div className="w-full h-[2px] border-t-2 border-dashed border-slate-200 absolute top-1/2 -translate-y-1/2 z-0" />
+                  <div className="bg-white px-4 relative z-10 text-slate-300">
+                    <Plane className="w-6 h-6 sm:w-8 sm:h-8" style={{ color: primaryColor }} />
+                  </div>
+                </div>
+
+                <div className="flex-1 flex flex-col items-end text-right z-10">
+                  <h2 className="text-4xl md:text-6xl font-black" style={{ fontFamily: `"${headingFont}", sans-serif`, color: textColor || '#1e293b' }}>{destCode}</h2>
+                  <div className="w-16 h-[2px] bg-slate-200 mt-2 mb-4" />
+                  <p className="text-xs tracking-widest uppercase opacity-60 font-bold" style={{ color: textColor || '#1e293b' }}>Destination</p>
+                  <p className="text-sm md:text-base font-semibold" style={{ color: textColor || '#1e293b' }}>{wedding.groom_name}</p>
                 </div>
               </div>
 
-              {/* Data Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8 bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-12 w-full max-w-md mx-auto text-center border-t border-b border-slate-100 py-6">
                 <div>
-                  <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-1">Date</p>
-                  <p className="font-bold text-slate-800 text-sm md:text-base">{dateStr}</p>
+                  <p className="text-[10px] tracking-widest uppercase opacity-50 font-bold mb-1" style={{ color: textColor || '#1e293b' }}>Date</p>
+                  <p className="font-bold text-sm md:text-base" style={{ color: textColor || '#1e293b' }}>{dateStr}</p>
+                </div>
+                <div className="border-l border-r border-slate-100">
+                  <p className="text-[10px] tracking-widest uppercase opacity-50 font-bold mb-1" style={{ color: textColor || '#1e293b' }}>Boarding Time</p>
+                  <p className="font-bold text-sm md:text-base" style={{ color: textColor || '#1e293b' }}>{timeStr}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-1">Time</p>
-                  <p className="font-bold text-slate-800 text-sm md:text-base">{timeStr}</p>
-                </div>
-                <div className="col-span-2">
-                  <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold mb-1">Gate / Venue</p>
-                  <p className="font-bold text-slate-800 text-sm md:text-base truncate">{wedding.venue_name || 'TBD'}</p>
+                  <p className="text-[10px] tracking-widest uppercase opacity-50 font-bold mb-1" style={{ color: textColor || '#1e293b' }}>Gate / Venue</p>
+                  <p className="font-bold text-sm md:text-base truncate" style={{ color: textColor || '#1e293b' }}>{wedding.venue_name || 'TBD'}</p>
                 </div>
               </div>
 

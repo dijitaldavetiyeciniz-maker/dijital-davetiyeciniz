@@ -179,7 +179,9 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   // Try to respect user overrides, otherwise use effectivePalette
   const primaryColor = overrides.primary_color || wedding.primary_color || (effectivePalette as any).primary || '#111111';
   const textColor = isDarkModeActive ? '#f8fafc' : (overrides.text_color || wedding.text_color || effectivePalette.primaryText || '#333333');
-  const cardBgColor = isDarkModeActive ? '#12131a' : (effectivePalette.surface || (effectivePalette as any).card || '#ffffff');
+  const customDesignOverrides = wedding.custom_overrides?.design || {};
+  const overridesCardBg = customDesignOverrides.cardBgColor;
+  const cardBgColorFallback = overridesCardBg || (isDarkModeActive ? '#12131a' : (effectivePalette.surface || (effectivePalette as any).card || '#ffffff'));
   const mutedTextColor = isDarkModeActive ? '#94a3b8' : (effectivePalette.secondaryText || effectivePalette.mutedText || '#666666');
 
   const bgIsLight = isDarkModeActive ? false : isColorLight(effectivePalette.background || '#ffffff');
@@ -224,9 +226,10 @@ const textIsLight = isDarkModeActive ? true : isColorLight(textColor);
     fontFamily: bodyFontFamily
   };
 
-  const cardBgColorRaw = cardBgColor || '#ffffff';
-  const cardOpacity = 0.94;
+  const cardBgColorRaw = overridesCardBg || cardBgColorFallback || '#ffffff';
+  const cardOpacity = customDesignOverrides.cardOpacity !== undefined ? (customDesignOverrides.cardOpacity / 100) : 0.94;
   const cardRgba = hexToRgba(cardBgColorRaw, cardOpacity);
+  const cardBgColor = cardRgba;
 
   const svgNoise = `data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.055'/%3E%3C/svg%3E`;
 

@@ -70,10 +70,11 @@ export default function ConstellationNightLayout({
 
   return (
     <div 
-      className="min-h-screen w-full relative overflow-x-hidden text-sky-50 flex"
+      className="min-h-screen w-full relative overflow-x-hidden flex"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`,
         backgroundColor: mainBg,
-        backgroundImage: 'radial-gradient(circle at 50% 0%, #0f1b3d 0%, #030712 80%)'
+        backgroundImage: 'radial-gradient(circle at 50% 0%, #0f1b3d 0%, #030712 80%)',
+        color: textColor || '#f0f9ff'
       }}
       data-testid="layout-constellation-night"
     >

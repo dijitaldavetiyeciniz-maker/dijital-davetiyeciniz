@@ -244,6 +244,8 @@ export default function CoupleAdminPage({
   const [templateId, setTemplateId] = useState('template1');
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
   const [textColor, setTextColor] = useState('#1e293b'); // Yeni eklenen metin rengi
+  const [cardBgColor, setCardBgColor] = useState('#ffffff'); // Kart Zemin Rengi
+  const [cardOpacity, setCardOpacity] = useState(90); // Kart Şeffaflığı (0-100)
   const [envelopeColor, setEnvelopeColor] = useState('#e6d5c3');
   const [envelopeBgColor, setEnvelopeBgColor] = useState('slate');
   const [envelopeFlapType, setEnvelopeFlapType] = useState('triangle');
@@ -362,6 +364,11 @@ export default function CoupleAdminPage({
       is_dark_mode: isDarkMode,
       custom_overrides: {
         ...customOverrides,
+        design: {
+          ...customOverrides?.design,
+          cardBgColor,
+          cardOpacity
+        },
         layoutStyle: customOverrides?.layoutStyle || activeTheme?.layoutStyle || 'monogram',
         backgroundDesign: customOverrides?.design?.backgroundDesign || customOverrides?.backgroundDesign || activeTheme?.backgroundDesign || '',
         thematicAssets: customOverrides?.thematicAssets || activeTheme?.thematicAssets || [],
@@ -377,7 +384,7 @@ export default function CoupleAdminPage({
     entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
     showPhotos, showRsvp, showComments, showCountdown, backgroundAnimation,
     entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode, eventType,
-    customOverrides, photoFocalPoint, themes
+    customOverrides, photoFocalPoint, themes, cardBgColor, cardOpacity
   ]);
 
   const [isUploading, setIsUploading] = useState(false);
@@ -445,7 +452,11 @@ export default function CoupleAdminPage({
       if (weddingData.seal_style) setSealStyle(weddingData.seal_style);
       if (weddingData.countdown_style) setCountdownStyle(weddingData.countdown_style);
       if (weddingData.is_dark_mode !== undefined && weddingData.is_dark_mode !== null) setIsDarkMode(weddingData.is_dark_mode);
-      if (weddingData.custom_overrides) setCustomOverrides(weddingData.custom_overrides);
+      if (weddingData.custom_overrides) {
+        setCustomOverrides(weddingData.custom_overrides);
+        if (weddingData.custom_overrides.design?.cardBgColor) setCardBgColor(weddingData.custom_overrides.design.cardBgColor);
+        if (weddingData.custom_overrides.design?.cardOpacity !== undefined) setCardOpacity(weddingData.custom_overrides.design.cardOpacity);
+      }
       if (weddingData.photo_focal_point) setPhotoFocalPoint(weddingData.photo_focal_point);
       
       
@@ -1970,35 +1981,110 @@ export default function CoupleAdminPage({
                     const currentBg = customOverrides?.design?.backgroundDesign || activePreset.defaultBackground || activePreset.backgroundOptions[0].id;
                     
                     return (
-                      <div className="space-y-3">
-                        <label className="block text-sm font-bold text-slate-800">Şablona Uyumlu Arka Plan</label>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                          {activePreset.backgroundOptions.map((bg: any) => (
+                      <div className="space-y-6">
+                        <div>
+                          <label className="block text-sm font-bold text-slate-800 mb-2">Şablona Uyumlu Arka Plan</label>
+                          <div className="flex overflow-x-auto pb-3 gap-2 hide-scrollbar">
                             <button
-                              key={bg.id}
+                              key="none"
                               onClick={() => {
                                 setCustomOverrides((prev: any) => ({
                                   ...prev,
                                   design: {
                                     ...prev?.design,
-                                    backgroundDesign: bg.id
+                                    backgroundDesign: 'none'
                                   }
                                 }));
                               }}
-                              className={`group relative overflow-hidden rounded-xl border-2 transition-all ${currentBg === bg.id ? 'border-rose-500 shadow-md ring-2 ring-rose-200' : 'border-slate-200 hover:border-slate-300'}`}
+                              className={`group relative h-12 w-12 shrink-0 rounded-xl border-2 transition-all flex flex-col items-center justify-center bg-white ${currentBg === 'none' ? 'border-rose-500 shadow-md ring-2 ring-rose-200' : 'border-slate-200 hover:border-slate-300'}`}
+                              title="Görsel Yok (Düz Renk)"
                             >
-                              <div 
-                                className="h-16 w-full bg-cover bg-center" 
-                                style={{ 
-                                  backgroundImage: (bg.preview || bg.image) ? `url("${bg.preview || bg.image}")` : (bg.background?.includes('/') ? `url("${bg.background}")` : undefined),
-                                  backgroundColor: bg.backgroundColor || bg.background 
-                                }}
-                              />
-                              <div className="p-2 text-[10px] font-bold text-center bg-white text-slate-700">
-                                {bg.name}
+                              <div className="w-5 h-5 rounded-full border border-slate-200 bg-slate-50 flex items-center justify-center">
+                                <span className="text-slate-400 text-[9px] text-center font-bold">X</span>
                               </div>
                             </button>
-                          ))}
+                            {activePreset.backgroundOptions.map((bg: any) => (
+                              <button
+                                key={bg.id}
+                                onClick={() => {
+                                  setCustomOverrides((prev: any) => ({
+                                    ...prev,
+                                    design: {
+                                      ...prev?.design,
+                                      backgroundDesign: bg.id
+                                    }
+                                  }));
+                                }}
+                                className={`group relative h-12 w-12 shrink-0 overflow-hidden rounded-xl border-2 transition-all ${currentBg === bg.id ? 'border-rose-500 shadow-md ring-2 ring-rose-200' : 'border-slate-200 hover:border-slate-300'}`}
+                                title={bg.name}
+                              >
+                                <div 
+                                  className="h-full w-full bg-cover bg-center" 
+                                  style={{ 
+                                    backgroundImage: (bg.preview || bg.image) ? `url("${bg.preview || bg.image}")` : (bg.background?.includes('/') ? `url("${bg.background}")` : undefined),
+                                    backgroundColor: bg.backgroundColor || bg.background 
+                                  }}
+                                />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Kart Rengi ve Şeffaflığı */}
+                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+                          <label className="block text-sm font-bold text-slate-800">
+                            Davetiye (Kart) Zemin Ayarları
+                            <span className="block text-xs font-normal text-slate-500 mt-0.5">Yazıların bulunduğu orta kartın rengini ve şeffaflığını ayarlayın. (Görsel Yok seçiliyse Genel Sayfa Rengini değiştirir)</span>
+                          </label>
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <input 
+                                type="color" 
+                                value={cardBgColor} 
+                                onChange={e => {
+                                  const color = e.target.value;
+                                  setCardBgColor(color);
+                                  setCustomOverrides((prev: any) => ({
+                                    ...prev,
+                                    design: {
+                                      ...prev?.design,
+                                      cardBgColor: color
+                                    }
+                                  }));
+                                }}
+                                className="w-12 h-12 rounded cursor-pointer border border-slate-300" 
+                                title="Kart Zemin Rengi"
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between mb-1">
+                                <span className="text-xs font-bold text-slate-600">Kart Şeffaflığı</span>
+                                <span className="text-xs font-bold text-slate-600">%{cardOpacity}</span>
+                              </div>
+                              <input 
+                                type="range" 
+                                min="0" 
+                                max="100" 
+                                value={cardOpacity} 
+                                onChange={e => {
+                                  const op = parseInt(e.target.value);
+                                  setCardOpacity(op);
+                                  setCustomOverrides((prev: any) => ({
+                                    ...prev,
+                                    design: {
+                                      ...prev?.design,
+                                      cardOpacity: op
+                                    }
+                                  }));
+                                }}
+                                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-rose-500"
+                              />
+                              <div className="flex justify-between mt-1">
+                                <span className="text-[10px] text-slate-400">Tam Şeffaf</span>
+                                <span className="text-[10px] text-slate-400">Katı Renk</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     );

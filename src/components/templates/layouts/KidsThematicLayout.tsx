@@ -88,7 +88,7 @@ export default function KidsThematicLayout({
 
   if (variant === 'clouds-above') {
     themeColor = primaryColor || '#38bdf8'; // Gök Mavisi
-    cardStyle += ' bg-gradient-to-b from-[#f0f9ff] to-white border-sky-100 shadow-sky-100/50';
+    cardStyle += ' border-sky-100 shadow-sky-100/50';
     backgroundDecoration = (
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.25]">
         {/* Floating clouds */}
@@ -113,7 +113,7 @@ export default function KidsThematicLayout({
     );
   } else if (variant === 'little-racer') {
     themeColor = primaryColor || '#ef4444'; // Yarışçı Kırmızısı
-    cardStyle += ' bg-[#1e293b] text-white border-red-500/20 shadow-red-500/10 font-mono';
+    cardStyle += ' text-white border-red-500/20 shadow-red-500/10 font-mono';
     backgroundDecoration = (
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.15]">
         {/* Racetrack checkered lanes */}
@@ -131,7 +131,7 @@ export default function KidsThematicLayout({
     customCounterStyle = 'racer-counter';
   } else if (variant === 'blue-bear') {
     themeColor = primaryColor || '#60a5fa'; // Yumuşak Mavi
-    cardStyle += ' bg-gradient-to-b from-[#eff6ff] to-[#f8fafc] border-blue-100 shadow-blue-100/40';
+    cardStyle += ' border-blue-100 shadow-blue-100/40';
     backgroundDecoration = (
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.2]">
         <div className="absolute top-16 left-8 text-4xl animate-bounce duration-[6000ms]">🧸</div>
@@ -142,7 +142,7 @@ export default function KidsThematicLayout({
     );
   } else if (variant === 'pink-princess') {
     themeColor = primaryColor || '#ec4899'; // Prenses Pembesi
-    cardStyle += ' bg-gradient-to-b from-[#fdf2f8] to-white border-pink-100 shadow-pink-100/40';
+    cardStyle += ' border-pink-100 shadow-pink-100/40';
     backgroundDecoration = (
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.2]">
         <div className="absolute top-12 left-10 text-4xl animate-bounce duration-[4000ms]">🏰</div>
@@ -163,7 +163,7 @@ export default function KidsThematicLayout({
     >
       <div 
         className={cardStyle}
-        style={{ borderColor: `${themeColor}25`, color: variant === 'little-racer' ? '#ffffff' : textColor }}
+        style={{ backgroundColor: cardBgColor, borderColor: `${themeColor}25`, color: textColor || (variant === 'little-racer' ? '#ffffff' : '#334155') }}
       >
         {backgroundDecoration}
 
