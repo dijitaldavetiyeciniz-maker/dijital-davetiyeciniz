@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, Volume2, VolumeX, Calendar, MapPin } from 'lucide-react';
 import { backgroundDesignRegistry } from '@/lib/registries';
 
-interface LayoutProps {\n  selectedBackground?: any;
+interface LayoutProps {
+  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;

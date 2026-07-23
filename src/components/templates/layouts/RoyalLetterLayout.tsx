@@ -4,7 +4,8 @@ import { Calendar, MapPin, Navigation, Sparkles, Scroll, ChevronDown, Award } fr
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 
-interface LayoutProps {\n  selectedBackground?: any;
+interface LayoutProps {
+  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;

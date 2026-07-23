@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Navigation, Gift, Sparkles } from 'lucide-react';
 
-interface LayoutProps {\n  selectedBackground?: any;
+interface LayoutProps {
+  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;

@@ -4,7 +4,8 @@ import { Calendar, MapPin, ArrowDownRight } from 'lucide-react';
 import { getReadableTextColor } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 
-interface LayoutProps {\n  selectedBackground?: any;
+interface LayoutProps {
+  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;

@@ -2,7 +2,8 @@
 import { Calendar, MapPin, Navigation } from 'lucide-react';
 import { backgroundDesignRegistry, thematicAssetRegistry } from '@/lib/registries';
 
-interface LayoutProps {\n  selectedBackground?: any;
+interface LayoutProps {
+  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;

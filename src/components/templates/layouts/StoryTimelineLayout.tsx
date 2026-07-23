@@ -13,7 +13,8 @@ interface TimelineItem {
   location?: string;
 }
 
-interface LayoutProps {\n  selectedBackground?: any;
+interface LayoutProps {
+  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;

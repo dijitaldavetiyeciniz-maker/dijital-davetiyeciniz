@@ -4,7 +4,8 @@ import { Calendar, MapPin, Navigation, Ticket, Sparkles, MoveRight } from 'lucid
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 
-interface LayoutProps {\n  selectedBackground?: any;
+interface LayoutProps {
+  selectedBackground?: any;
   wedding: any;
   primaryColor: string;
   textColor: string;
