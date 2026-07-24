@@ -93,7 +93,7 @@ export default function GiantMonogramLayout({
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.play().catch(e => console.log("Audio play blocked: ", e));
+      audioRef.current.play().catch(e => { if (process.env.NODE_ENV === 'development') console.log("Audio play blocked: ", e); });
       setIsPlaying(true);
     }
   };

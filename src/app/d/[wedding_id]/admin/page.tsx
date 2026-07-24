@@ -804,6 +804,9 @@ export default function CoupleAdminPage({
     if (theme.recommendedBackgroundAnimation) {
       setBackgroundAnimation(theme.recommendedBackgroundAnimation);
     }
+    if (theme.recommendedSeal || theme.sealPreset) {
+      setSealType(theme.recommendedSeal || theme.sealPreset || '');
+    }
   }
 
   function resetOpeningToRecommended() {
@@ -813,6 +816,7 @@ export default function CoupleAdminPage({
       if (activeTheme.recommendedOpeningStyle) setEnvelopeStyle(activeTheme.recommendedOpeningStyle);
       if (activeTheme.recommendedBackgroundDesign) setEnvelopeBgColor(activeTheme.recommendedBackgroundDesign);
       if (activeTheme.recommendedBackgroundAnimation) setBackgroundAnimation(activeTheme.recommendedBackgroundAnimation);
+      if (activeTheme.recommendedSeal || activeTheme.sealPreset) setSealType(activeTheme.recommendedSeal || activeTheme.sealPreset || '');
       setUserChangedOpeningType(false);
     }
   }

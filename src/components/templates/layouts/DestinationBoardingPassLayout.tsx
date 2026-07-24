@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { PlaneTakeoff, PlaneLanding, Calendar, MapPin, Navigation, Ticket, Map, QrCode } from 'lucide-react';
+import { PlaneTakeoff, PlaneLanding, Plane, Calendar, MapPin, Navigation, Ticket, Map, QrCode } from 'lucide-react';
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 

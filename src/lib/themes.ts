@@ -203,7 +203,7 @@ export interface TemplateBackgroundVariant {
   id: string;
   name: string;
   preview: string;
-  background: string;
+  background?: string;
   image?: string;
   backgroundColor?: string;
   backgroundSize?: string;
@@ -249,6 +249,8 @@ export interface TemplatePreset {
 
   recommendedOpeningType: string;
   recommendedOpeningStyle: string;
+  recommendedOpeningPalette?: string;
+  recommendedSeal?: string;
   recommendedBackgroundDesign: string;
   recommendedBackgroundAnimation: string;
   backgroundDesign?: string;
