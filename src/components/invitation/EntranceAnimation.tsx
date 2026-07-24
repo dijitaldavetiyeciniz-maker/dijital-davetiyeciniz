@@ -19,8 +19,14 @@ import { CinematicZoomOpening } from "./openings/CinematicZoomOpening";
 import { SpotlightOpening } from "./openings/SpotlightOpening";
 import { StarryNightOpening } from "./openings/StarryNightOpening";
 import { ElevatorDoorOpening } from "./openings/ElevatorDoorOpening";
-import { RoyalHallOpening } from "./openings/RoyalHallOpening";
 import { MinimalFadeOpening } from "./openings/MinimalFadeOpening";
+import { CloudBaloonOpening } from "./openings/CloudBaloonOpening";
+import { TeddyBearOpening } from "./openings/TeddyBearOpening";
+import { CinematicFilmOpening } from "./openings/CinematicFilmOpening";
+import { RoyalParchmentOpening } from "./openings/RoyalParchmentOpening";
+import { BotanicalBlossomOpening } from "./openings/BotanicalBlossomOpening";
+import { HennaVelvetGateOpening } from "./openings/HennaVelvetGateOpening";
+import { NazarDomeOpening } from "./openings/NazarDomeOpening";
 
 type EntranceAnimationProps = {
   animationType: string; // matches id in entranceAnimationTypes
@@ -288,6 +294,20 @@ function EntranceAnimation({
       case "photoCover":
       case "sealOnly":
         return "✨ İÇERİ GİRMEK İÇİN DOKUNUN ✨";
+      case "cloudBaloon":
+        return "☁️ BULUTA DOKUNUN ☁️";
+      case "teddyBear":
+        return "🧸 AYICIĞA DOKUNUN 🧸";
+      case "cinematicFilm":
+        return "🎬 SİNEMAYI BAŞLATMAK İÇİN DOKUNUN 🎬";
+      case "royalParchment":
+        return "📜 KRALİYET MÜHRÜNÜ AÇMAK İÇİN DOKUNUN 📜";
+      case "botanicalBlossom":
+        return "🌿 BAHÇE KAPISINI AÇMAK İÇİN DOKUNUN 🌿";
+      case "hennaVelvetGate":
+        return "🍷 KINA GECESİNİ AÇMAK İÇİN DOKUNUN 🍷";
+      case "nazarDome":
+        return "🧿 MAŞALLAH ROZETİNE DOKUNUN 🧿";
       default:
         return "✨ DEVAM ETMEK İÇİN DOKUNUN ✨";
     }
@@ -297,8 +317,8 @@ function EntranceAnimation({
     const commonProps = {
       opened,
       initials,
-      brideName,
-      groomName,
+      brideName: brideName || '',
+      groomName: groomName || '',
       eventDate,
       styleConfig,
       customSealStyle: sealStyle,
@@ -341,6 +361,20 @@ function EntranceAnimation({
         return <PhotoCoverOpening {...commonProps} />;
       case "sealOnly":
         return <SealOnlyOpening {...commonProps} />;
+      case "cloudBaloon":
+        return <CloudBaloonOpening {...commonProps} />;
+      case "teddyBear":
+        return <TeddyBearOpening {...commonProps} />;
+      case "cinematicFilm":
+        return <CinematicFilmOpening {...commonProps} />;
+      case "royalParchment":
+        return <RoyalParchmentOpening {...commonProps} />;
+      case "botanicalBlossom":
+        return <BotanicalBlossomOpening {...commonProps} />;
+      case "hennaVelvetGate":
+        return <HennaVelvetGateOpening {...commonProps} />;
+      case "nazarDome":
+        return <NazarDomeOpening {...commonProps} />;
       case "minimalFade":
       default:
         return <MinimalFadeOpening {...commonProps} />;

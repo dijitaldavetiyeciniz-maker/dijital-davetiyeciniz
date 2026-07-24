@@ -1262,21 +1262,25 @@ case 'asymmetric':
 
   const isFullBleed = themeConfig.layoutMode === 'full-bleed';
 
+  const isNoBackground = requestedBg === 'none' || effectiveBackground === 'none';
+
   return (
     <div 
-      className={`min-h-screen w-full relative flex flex-col font-sans transition-colors duration-1000 bg-design-${effectiveBackground} ${(isDarkModeActive && !selectedBackground?.image && !selectedBackground?.background) ? 'dark-mode' : ''} ${!isFullBleed ? 'items-center justify-center p-4 sm:p-6 pb-28 invitation-page' : ''}`}
+      className={`min-h-screen w-full relative flex flex-col font-sans transition-colors duration-1000 ${!isNoBackground ? `bg-design-${effectiveBackground}` : ''} ${(isDarkModeActive && !selectedBackground?.image && !selectedBackground?.background) ? 'dark-mode' : ''} ${!isFullBleed ? 'items-center justify-center p-4 sm:p-6 pb-28 invitation-page' : ''}`}
       data-testid="invitation-scene-root"
       style={{
-        backgroundColor: selectedBackground === null 
+        backgroundColor: isNoBackground 
           ? sceneBackgroundColor 
-          : (!selectedBackground?.background?.includes('/') ? selectedBackground?.background : undefined),
-        backgroundImage: selectedBackground?.image 
-          ? `url("${selectedBackground.image}")` 
-          : (selectedBackground?.background?.includes('/') ? `url("${selectedBackground.background}")` : undefined),
+          : (selectedBackground?.background && !selectedBackground.background.includes('/') ? selectedBackground.background : sceneBackgroundColor),
+        backgroundImage: isNoBackground 
+          ? (wedding.background_image_url ? `url("${wedding.background_image_url}")` : 'none')
+          : (selectedBackground?.image 
+              ? `url("${selectedBackground.image}")` 
+              : (selectedBackground?.background?.includes('/') ? `url("${selectedBackground.background}")` : (wedding.background_image_url ? `url("${wedding.background_image_url}")` : undefined))),
         backgroundSize: selectedBackground?.backgroundSize ?? 'cover',
         backgroundPosition: selectedBackground?.backgroundPosition ?? 'center',
         backgroundRepeat: selectedBackground?.backgroundRepeat ?? 'no-repeat',
-        ...(!selectedBackground?.background && !selectedBackground?.image && !selectedVariant?.background ? backgroundStyles : {}),
+        ...(!isNoBackground && !selectedBackground?.background && !selectedBackground?.image && !selectedVariant?.background ? backgroundStyles : {}),
         overflowX: 'clip'
       }}
     >

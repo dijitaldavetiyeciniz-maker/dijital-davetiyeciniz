@@ -110,6 +110,48 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     description: "Süzülen zarif bir mühür ile açılış başlatılır.",
     icon: "seal",
   },
+  {
+    id: "cloudBaloon",
+    name: "☁️ Bulut ve Balon Açılışı",
+    description: "Bulutlar, uçan balonlar ve tatlı yıldızlarla sevimli çocuk açılışı.",
+    icon: "cloud",
+  },
+  {
+    id: "teddyBear",
+    name: "🧸 Sevimli Ayıcık Rozeti",
+    description: "Tatlı ayıcık rozeti ve yumuşak bulut parıltısı ile açılış.",
+    icon: "teddy",
+  },
+  {
+    id: "cinematicFilm",
+    name: "🎬 Sinematik Film Perdesi",
+    description: "Film perdesi, projektör ışığı ve afiş reveal ile görkemli açılış.",
+    icon: "cinema",
+  },
+  {
+    id: "royalParchment",
+    name: "📜 Kraliyet Mektubu & Mühür",
+    description: "Kraliyet parşömeni, altın mühür ve kurdele çözülmesi.",
+    icon: "royal",
+  },
+  {
+    id: "botanicalBlossom",
+    name: "🌿 Çiçekli Bahçe Kapısı",
+    description: "Açılan çiçek taçları ve botanik bahçe kapısı reveal.",
+    icon: "flower",
+  },
+  {
+    id: "hennaVelvetGate",
+    name: "🍷 Bordo Kadife Perde & Gül",
+    description: "Bordo kadife perde, oryantal parıltı ve uçuşan gül yaprakları.",
+    icon: "henna",
+  },
+  {
+    id: "nazarDome",
+    name: "🧿 Nazar Boncuğu & Şehzade Kubbe",
+    description: "Maşallah rozeti, nazar boncuğu ve şehzade kubbe açılışı.",
+    icon: "nazar",
+  },
 ];
 
 export const entranceAnimationStyles: EntranceAnimationStyle[] = [

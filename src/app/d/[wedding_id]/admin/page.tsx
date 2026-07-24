@@ -589,6 +589,7 @@ export default function CoupleAdminPage({
       template_id: templateId,
       primary_color: primaryColor,
       text_color: textColor,
+      scene_background_color: sceneBackgroundColor,
       envelope_color: envelopeColor,
       
       envelope_flap_type: envelopeFlapType,
@@ -3496,10 +3497,13 @@ export default function CoupleAdminPage({
               </button>
             </div>
 
-            {/* Modal Body: Compact List */}
-            <div className="p-4 overflow-y-auto space-y-2">
-              {entranceAnimationTypes.map((type) => {
-                const isSelected = entranceAnimation === type.id;
+            {/* Modal Body: Grouped List */}
+            <div className="p-4 overflow-y-auto space-y-4 max-h-[60vh]">
+              {(() => {
+                const activeTheme = themes.find(t => t.template_id === templateId || t.id === templateId) || themes[0];
+                const recType = activeTheme?.recommendedOpeningType || 'envelope';
+                const compatList = activeTheme?.compatibleOpeningAnimations || [recType];
+
                 const getEmojiIcon = (iconId: string) => {
                   switch (iconId) {
                     case "envelope": return "✉️";
@@ -3515,48 +3519,112 @@ export default function CoupleAdminPage({
                     case "spotlight": return "🔦";
                     case "stars": return "🌌";
                     case "minimal": return "🌫️";
-                    case "hall": return "🏛️";
-                    case "elevator": return "🏢";
+                    case "cloud": return "☁️";
+                    case "teddy": return "🧸";
+                    case "cinema": return "🎬";
+                    case "royal": return "📜";
+                    case "flower": return "🌿";
+                    case "henna": return "🍷";
+                    case "nazar": return "🧿";
                     default: return "✨";
                   }
                 };
-                return (
-                  <div
-                    key={type.id}
-                    className={`flex items-center justify-between p-3 rounded-2xl border transition-all ${
-                      isSelected 
-                        ? 'border-rose-500 bg-rose-50/5 shadow-xs ring-1 ring-rose-100' 
-                        : 'border-slate-100 bg-white/50 backdrop-blur-sm shadow-inner/40 hover:bg-white/50 backdrop-blur-sm shadow-inner'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-lg shadow-2xs">
-                        {getEmojiIcon(type.icon)}
-                      </div>
-                      <div>
-                        <strong className="text-slate-800 text-[11px] font-bold block">{type.name}</strong>
-                        <p className="text-[10px] text-slate-500 mt-0.5 leading-normal max-w-xs">{type.description}</p>
-                      </div>
-                    </div>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEntranceAnimation(type.id);
-                        setUserChangedOpeningType(true);
-                        setIsAnimationModalOpen(false);
-                      }}
-                      className={`px-3 py-1.5 text-[10px] font-bold rounded-xl transition-all ${
+                const renderItem = (type: any, isRecommended = false) => {
+                  const isSelected = entranceAnimation === type.id;
+                  const isCompatible = compatList.includes(type.id);
+
+                  return (
+                    <div
+                      key={type.id}
+                      className={`flex items-center justify-between p-3 rounded-2xl border transition-all ${
                         isSelected 
-                          ? 'bg-rose-500 text-white hover:bg-rose-600 shadow-xs' 
-                          : 'bg-white border border-slate-200 hover:bg-white/50 backdrop-blur-sm shadow-inner text-slate-700'
+                          ? 'border-rose-500 bg-rose-50/20 ring-2 ring-rose-200' 
+                          : isRecommended
+                          ? 'border-amber-400 bg-amber-50/20'
+                          : 'border-slate-200 bg-white hover:bg-slate-50'
                       }`}
                     >
-                      {isSelected ? 'Seçildi' : 'Seç'}
-                    </button>
-                  </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xl shadow-xs shrink-0">
+                          {getEmojiIcon(type.icon)}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <strong className="text-slate-800 text-xs font-bold">{type.name}</strong>
+                            {isRecommended && (
+                              <span className="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded-full border border-amber-300">
+                                ✨ Şablona Önerilen
+                              </span>
+                            )}
+                            {!isRecommended && !isCompatible && (
+                              <span className="bg-slate-100 text-slate-500 text-[9px] font-medium px-2 py-0.5 rounded-full">
+                                Önerilmiyor
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[10px] text-slate-500 mt-0.5 leading-normal max-w-xs">{type.description}</p>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEntranceAnimation(type.id);
+                          setUserChangedOpeningType(true);
+                          setIsAnimationModalOpen(false);
+                        }}
+                        className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                          isSelected 
+                            ? 'bg-rose-500 text-white shadow-md' 
+                            : 'bg-white border border-slate-200 hover:bg-rose-50 text-slate-700'
+                        }`}
+                      >
+                        {isSelected ? 'Seçildi ✓' : 'Seç'}
+                      </button>
+                    </div>
+                  );
+                };
+
+                const recItem = entranceAnimationTypes.find(t => t.id === recType);
+                const compatItems = entranceAnimationTypes.filter(t => t.id !== recType && compatList.includes(t.id));
+                const otherItems = entranceAnimationTypes.filter(t => t.id !== recType && !compatList.includes(t.id));
+
+                return (
+                  <>
+                    {recItem && (
+                      <div>
+                        <h4 className="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1">
+                          🌟 Şablon İçin En Uyumlu Animasyon
+                        </h4>
+                        {renderItem(recItem, true)}
+                      </div>
+                    )}
+
+                    {compatItems.length > 0 && (
+                      <div className="pt-2">
+                        <h4 className="text-xs font-bold text-slate-700 mb-2">
+                          🎨 Uyumlu Alternatifler
+                        </h4>
+                        <div className="space-y-2">
+                          {compatItems.map(t => renderItem(t, false))}
+                        </div>
+                      </div>
+                    )}
+
+                    {otherItems.length > 0 && (
+                      <div className="pt-2">
+                        <h4 className="text-xs font-bold text-slate-400 mb-2">
+                          💡 Tüm Diğer Animasyon Türleri
+                        </h4>
+                        <div className="space-y-2">
+                          {otherItems.map(t => renderItem(t, false))}
+                        </div>
+                      </div>
+                    )}
+                  </>
                 );
-              })}
+              })()}
             </div>
             
             {/* Modal Footer */}
