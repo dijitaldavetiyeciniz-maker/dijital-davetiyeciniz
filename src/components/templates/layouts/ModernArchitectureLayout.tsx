@@ -65,7 +65,7 @@ export default function ModernArchitectureLayout({ wedding,
       data-testid="layout-modern-architecture"
     >
       {/* BAUHAUS GEOMETRIC DECORATIONS */}
-      <div data-testid="invitation-card-surface" 
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" 
         className="hidden md:block absolute top-[10%] left-[45%] w-32 h-32 rounded-full mix-blend-multiply opacity-80 z-0 pointer-events-none transition-transform duration-1000 hover:scale-110"
         style={{ ...cardSurfaceStyle,  backgroundColor: accent }}
       />

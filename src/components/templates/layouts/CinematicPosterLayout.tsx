@@ -66,7 +66,7 @@ export default function CinematicPosterLayout({ wedding,
       data-testid="layout-cinematic-poster"
     >
       {/* SİNEMATİK ÜST BAR */}
-      <div data-testid="invitation-card-surface" className="absolute top-0 inset-x-0 w-full bg-gradient-to-r from-red-950/80 via-black to-red-950/80 py-2 px-6 flex items-center justify-between border-b border-red-500/20 text-[9px] sm:text-xs font-mono tracking-[0.3em] text-red-400 select-none z-50" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute top-0 inset-x-0 w-full bg-gradient-to-r from-red-950/80 via-black to-red-950/80 py-2 px-6 flex items-center justify-between border-b border-red-500/20 text-[9px] sm:text-xs font-mono tracking-[0.3em] text-red-400 select-none z-50" style={cardSurfaceStyle}>
         <div className="flex items-center gap-2 font-bold">
           <Film className="w-4 h-4 animate-pulse" />
           <span>DIRECTOR'S CUT PREMIERE</span>

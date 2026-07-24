@@ -5,7 +5,7 @@ import CountdownTimer from '../../CountdownTimer';
 export default function OrientalLaceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-lg mx-auto p-6 sm:p-12 relative shadow-lg" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
-      <div data-testid="invitation-card-surface" className="absolute inset-4 border-2 border-dotted pointer-events-none rounded-xl opacity-30" style={{ ...cardSurfaceStyle,  borderColor: primaryColor }}></div>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute inset-4 border-2 border-dotted pointer-events-none rounded-xl opacity-30" style={{ ...cardSurfaceStyle,  borderColor: primaryColor }}></div>
       <div className="absolute inset-6 border border-solid pointer-events-none rounded-lg opacity-20" style={{ borderColor: primaryColor }}></div>
       <div className="text-center relative z-10 py-12">
         <svg className="w-20 h-20 mx-auto mb-6 opacity-90" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1" style={{ color: primaryColor }}>

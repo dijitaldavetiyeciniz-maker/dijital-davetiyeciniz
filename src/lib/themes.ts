@@ -5937,7 +5937,6 @@ export const predefinedThemes: TemplatePreset[] = [
     "font_family": "Cormorant Garamond",
     "recommendedOpeningType": "botanicalBlossom",
     "compatibleOpeningAnimations": ["botanicalBlossom", "gardenGate", "book", "minimalFade"],
-    "compatibleOpeningAnimations": ["envelope","curtain","door","gardenGate","book","minimalFade"],
     "recommendedOpeningStyle": "classic",
     "recommendedBackgroundDesign": "watercolor-wash",
     "recommendedBackgroundAnimation": "none",

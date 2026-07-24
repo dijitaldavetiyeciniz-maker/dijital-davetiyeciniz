@@ -7,7 +7,7 @@ import { PartyPopper } from 'lucide-react';
 export default function HotAirBalloonLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardBgColor, cardSurfaceStyle }: any) {
   return (
     <div className="w-full min-h-screen flex flex-col items-center p-6" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), backgroundColor: !selectedBackground?.background ? '#e0f2fe' : undefined }}>
-      <div data-testid="invitation-card-surface" className="w-full max-w-lg backdrop-blur-md rounded-[3rem] p-8 shadow-xl text-center relative mt-20 border" style={{ ...cardSurfaceStyle,  backgroundColor: cardBgColor || 'rgba(255,255,255,0.4)', borderColor: 'rgba(255,255,255,0.3)', color: textColor || '#334155' }}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="w-full max-w-lg backdrop-blur-md rounded-[3rem] p-8 shadow-xl text-center relative mt-20 border" style={{ ...cardSurfaceStyle,  backgroundColor: cardBgColor || 'rgba(255,255,255,0.4)', borderColor: 'rgba(255,255,255,0.3)', color: textColor || '#334155' }}>
         <div className="absolute -top-16 left-1/2 -translate-x-1/2 animate-bounce bg-white/80 p-4 rounded-full shadow-lg">
           <PartyPopper className="w-10 h-10 text-sky-500" />
         </div>

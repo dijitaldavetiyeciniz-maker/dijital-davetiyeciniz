@@ -75,7 +75,7 @@ export default function FullBleedPhotoLayout({ wedding,
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* FULL-BLEED KART (Ekranı kaplayan dikey fotoğraf veya şık fallback) */}
-      <div data-testid="invitation-card-surface" className="relative rounded-[2.5rem] overflow-hidden min-h-[660px] sm:min-h-[720px] flex flex-col justify-end bg-slate-950 border border-white/5 shadow-2xl" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="relative rounded-[2.5rem] overflow-hidden min-h-[660px] sm:min-h-[720px] flex flex-col justify-end bg-slate-950 border border-white/5 shadow-2xl" style={cardSurfaceStyle}>
         
         {/* Full-bleed Görsel Katmanı */}
         {couplePhoto ? (

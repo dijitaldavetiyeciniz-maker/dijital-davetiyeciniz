@@ -96,7 +96,7 @@ export default function ModernEventLayout({ wedding,
     decorativeOverlay = (
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-25">
         {/* Floating mortarboard caps and diploma scrolls */}
-        <div data-testid="invitation-card-surface" className="absolute top-12 left-10 text-3xl animate-bounce duration-[4000ms]" style={cardSurfaceStyle}>🎓</div>
+        <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute top-12 left-10 text-3xl animate-bounce duration-[4000ms]" style={cardSurfaceStyle}>🎓</div>
         <div className="absolute top-24 right-10 text-4xl animate-pulse">📜</div>
         <div className="absolute bottom-40 left-8 text-2xl animate-bounce">📜</div>
         <div className="absolute bottom-20 right-12 text-3xl animate-pulse duration-[5000ms]">🎓</div>

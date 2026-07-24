@@ -19,6 +19,7 @@ import { CinematicZoomOpening } from "./openings/CinematicZoomOpening";
 import { SpotlightOpening } from "./openings/SpotlightOpening";
 import { StarryNightOpening } from "./openings/StarryNightOpening";
 import { ElevatorDoorOpening } from "./openings/ElevatorDoorOpening";
+import { RoyalHallOpening } from "./openings/RoyalHallOpening";
 import { MinimalFadeOpening } from "./openings/MinimalFadeOpening";
 import { CloudBaloonOpening } from "./openings/CloudBaloonOpening";
 import { TeddyBearOpening } from "./openings/TeddyBearOpening";

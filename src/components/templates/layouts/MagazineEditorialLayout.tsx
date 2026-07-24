@@ -86,7 +86,7 @@ export default function MagazineEditorialLayout({ wedding,
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* Dergi Kapağı Kartı (Asimetrik CSS Grid Yapısı) */}
-      <div data-testid="invitation-card-surface" 
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" 
         className={`relative rounded-[2rem] overflow-hidden p-6 sm:p-10 border flex flex-col justify-between min-h-[640px] shadow-2xl transition-colors duration-500 ${containerBg}`}
         style={{ ...cardSurfaceStyle,  borderColor: variant === 'luxury' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', color: textColor }}
       >

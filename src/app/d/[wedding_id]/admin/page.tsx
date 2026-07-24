@@ -589,7 +589,6 @@ export default function CoupleAdminPage({
       template_id: templateId,
       primary_color: primaryColor,
       text_color: textColor,
-      scene_background_color: sceneBackgroundColor,
       envelope_color: envelopeColor,
       
       envelope_flap_type: envelopeFlapType,
@@ -631,8 +630,15 @@ export default function CoupleAdminPage({
         ...customOverrides,
         design: {
           ...customOverrides?.design,
+          sceneBackgroundColor,
           cardBgColor,
           cardOpacity,
+          cardBlur,
+          cardSurface: {
+            color: cardBgColor,
+            opacity: cardOpacity,
+            blur: cardBlur,
+          }
         }
       },
       photo_focal_point: photoFocalPoint

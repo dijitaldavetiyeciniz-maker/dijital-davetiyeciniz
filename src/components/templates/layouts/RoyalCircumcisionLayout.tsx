@@ -68,7 +68,7 @@ export default function RoyalCircumcisionLayout({ wedding,
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* Nazar Boncuklu Maşallah Sünnet Davetiye Kartı */}
-      <div data-testid="invitation-card-surface" 
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" 
         className="relative rounded-[2.5rem] overflow-hidden p-6 sm:p-10 text-center border flex flex-col items-center justify-between min-h-[640px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)]"
         style={{ ...cardSurfaceStyle,  ...backgroundStyle, borderColor: `${themeColor}35` }}
       >

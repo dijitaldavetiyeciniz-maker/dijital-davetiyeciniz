@@ -5,7 +5,7 @@ import CountdownTimer from '../../CountdownTimer';
 export default function HennaTrayLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-sm mx-auto p-4 flex flex-col items-center text-center" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
-      <div data-testid="invitation-card-surface" className="w-64 h-64 rounded-full border-[12px] flex flex-col items-center justify-center shadow-xl mb-8 bg-[#800020] text-[#FFD700]" style={{ ...cardSurfaceStyle,  borderColor: primaryColor }}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="w-64 h-64 rounded-full border-[12px] flex flex-col items-center justify-center shadow-xl mb-8 bg-[#800020] text-[#FFD700]" style={{ ...cardSurfaceStyle,  borderColor: primaryColor }}>
         <h3 className="text-[10px] tracking-widest uppercase mb-2">KINA</h3>
         <h1 className="text-3xl" style={{ fontFamily: `"${headingFont}", serif` }}>{wedding.bride_name}</h1>
       </div>

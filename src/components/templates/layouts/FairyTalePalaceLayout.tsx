@@ -7,7 +7,7 @@ import { Castle } from 'lucide-react';
 export default function FairyTalePalaceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-md mx-auto bg-gradient-to-b from-pink-100 to-pink-50 shadow-2xl border-4 border-pink-200 rounded-t-[8rem] text-center p-8 relative overflow-hidden text-pink-900" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
-      <div data-testid="invitation-card-surface" className="absolute top-10 left-1/2 -translate-x-1/2 opacity-50" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute top-10 left-1/2 -translate-x-1/2 opacity-50" style={cardSurfaceStyle}>
         <Castle className="w-12 h-12 text-pink-400" />
       </div>
       <div className="relative z-10 pt-20">

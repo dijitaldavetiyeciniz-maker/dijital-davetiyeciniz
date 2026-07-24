@@ -5,7 +5,7 @@ import CountdownTimer from '../../CountdownTimer';
 export default function GalaNightLayout({ wedding, primaryColor, textColor, headingFont, dateStr, timeStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-xl mx-auto text-white p-2 sm:p-4" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
-      <div data-testid="invitation-card-surface" className="border border-white/20 p-8 sm:p-12 h-full flex flex-col items-center text-center relative" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="border border-white/20 p-8 sm:p-12 h-full flex flex-col items-center text-center relative" style={cardSurfaceStyle}>
         <div className="absolute top-4 left-4 w-4 h-4 border-t border-l border-white/50"></div>
         <div className="absolute top-4 right-4 w-4 h-4 border-t border-r border-white/50"></div>
         <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-white/50"></div>

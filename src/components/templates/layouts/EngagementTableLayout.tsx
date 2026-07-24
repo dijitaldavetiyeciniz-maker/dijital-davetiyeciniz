@@ -5,7 +5,7 @@ import CountdownTimer from '../../CountdownTimer';
 export default function EngagementTableLayout({ wedding, primaryColor, textColor, headingFont, dateStr, timeStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-xl mx-auto text-slate-800 shadow-lg border p-2 relative" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), borderColor: primaryColor }}>
-      <div data-testid="invitation-card-surface" className="border border-dashed p-10 flex flex-col items-center text-center" style={{ ...cardSurfaceStyle,  borderColor: primaryColor }}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="border border-dashed p-10 flex flex-col items-center text-center" style={{ ...cardSurfaceStyle,  borderColor: primaryColor }}>
         <h3 className="text-xs uppercase tracking-widest font-bold opacity-60 mb-8">Nişan Merasimi & Yemek</h3>
         <h1 className="text-4xl sm:text-5xl mb-4" style={{ fontFamily: `"${headingFont}", serif`, color: primaryColor }}>{wedding.bride_name}</h1>
         <div className="text-lg opacity-50 italic font-serif my-2">&</div>

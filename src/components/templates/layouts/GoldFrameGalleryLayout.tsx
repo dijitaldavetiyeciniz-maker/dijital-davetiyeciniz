@@ -5,7 +5,7 @@ import CountdownTimer from '../../CountdownTimer';
 export default function GoldFrameGalleryLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-4xl mx-auto text-white p-8 md:p-16 relative" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
-      <div data-testid="invitation-card-surface" className="border-[12px] p-6 md:p-12 relative z-10 text-center" style={{ ...cardSurfaceStyle,  borderColor: '#D4AF37' }}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="border-[12px] p-6 md:p-12 relative z-10 text-center" style={{ ...cardSurfaceStyle,  borderColor: '#D4AF37' }}>
         <h3 className="text-xs uppercase font-bold tracking-widest text-[#D4AF37] mb-8">Söz Merasimi</h3>
         <h1 className="text-5xl md:text-7xl font-serif mb-6">{wedding.bride_name} <br/><span className="text-2xl text-[#D4AF37] italic">&</span><br/> {wedding.groom_name}</h1>
         <p className="text-sm opacity-80 mb-12 font-light max-w-md mx-auto leading-relaxed px-4">Evliliğe atacağımız ilk adımda mutluluğumuzu sizinle paylaşmaktan onur duyarız.</p>

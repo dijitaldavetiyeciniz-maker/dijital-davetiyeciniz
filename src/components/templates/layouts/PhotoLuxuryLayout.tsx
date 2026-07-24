@@ -77,7 +77,7 @@ export default function PhotoLuxuryLayout({ wedding,
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in text-slate-800"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
-      <div data-testid="invitation-card-surface" className="relative rounded-[2.5rem] overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] bg-slate-950 border border-white/5" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="relative rounded-[2.5rem] overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] bg-slate-950 border border-white/5" style={cardSurfaceStyle}>
         
         {/* EN-BOY ORANI KORUNMUŞ FOTOĞRAF ALANI */}
         <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden z-0 bg-slate-950">

@@ -69,7 +69,7 @@ export default function PolaroidStoryLayout({ wedding,
       data-testid="layout-polaroid-story"
     >
       {/* Container - Stacked on mobile, huge canvas on desktop */}
-      <div data-testid="invitation-card-surface" className="max-w-[1400px] mx-auto w-full min-h-screen relative p-4 sm:p-8 md:min-h-[1100px] lg:min-h-[900px] flex flex-col md:block items-center overflow-hidden" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="max-w-[1400px] mx-auto w-full min-h-screen relative p-4 sm:p-8 md:min-h-[1100px] lg:min-h-[900px] flex flex-col md:block items-center overflow-hidden" style={cardSurfaceStyle}>
 
         {/* MOBILE VIEW: Vertical Flow, DESKTOP VIEW: Absolute Scattered Flow */}
 

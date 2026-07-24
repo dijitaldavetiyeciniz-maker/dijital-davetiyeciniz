@@ -5,7 +5,7 @@ import CountdownTimer from '../../CountdownTimer';
 export default function FashionEditorialLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full min-h-screen text-slate-900 p-8 sm:p-12 flex flex-col items-center" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
-      <div data-testid="invitation-card-surface" className="w-full max-w-3xl bg-white shadow-2xl overflow-hidden flex flex-col md:flex-row" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="w-full max-w-3xl bg-white shadow-2xl overflow-hidden flex flex-col md:flex-row" style={cardSurfaceStyle}>
         <div className="w-full md:w-1/2 bg-[#FF69B4] p-12 text-white flex flex-col justify-center relative">
           <h4 className="text-xs font-bold uppercase tracking-[0.3em] mb-4 opacity-80">Vol. 1</h4>
           <h1 className="text-6xl md:text-8xl font-black uppercase leading-[0.8]" style={{ fontFamily: `"${headingFont}", sans-serif` }}>{wedding.bride_name}</h1>

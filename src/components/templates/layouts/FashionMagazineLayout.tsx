@@ -68,7 +68,7 @@ export default function FashionMagazineLayout({ wedding,
       data-testid="layout-fashion-magazine"
     >
       {/* FULL BLEED BACKGROUND IMAGE */}
-      <div data-testid="invitation-card-surface" className="fixed inset-0 w-full h-full z-0 pointer-events-none" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="fixed inset-0 w-full h-full z-0 pointer-events-none" style={cardSurfaceStyle}>
         {couplePhoto ? (
           <SafeImage 
             src={couplePhoto} 

@@ -86,7 +86,7 @@ export default function SplitScreenLayout({ wedding,
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* Split Kart Container */}
-      <div data-testid="invitation-card-surface" className="relative rounded-[2.2rem] overflow-hidden shadow-2xl bg-white border border-black/5 min-h-[600px]" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="relative rounded-[2.2rem] overflow-hidden shadow-2xl bg-white border border-black/5 min-h-[600px]" style={cardSurfaceStyle}>
         
         {/* CSS GRID Yapısı (Masaüstünde Split, Mobilde Tek Sütun ve Seçilebilir Sürükleme Sırası) */}
         <div className="grid grid-cols-1 md:grid-cols-12 w-full min-h-[600px]">

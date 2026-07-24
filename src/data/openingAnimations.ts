@@ -111,7 +111,7 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     icon: "seal",
   },
   {
-    id: "cloudBaloon",
+    id: "cloudBalloon",
     name: "☁️ Bulut ve Balon Açılışı",
     description: "Bulutlar, uçan balonlar ve tatlı yıldızlarla sevimli çocuk açılışı.",
     icon: "cloud",

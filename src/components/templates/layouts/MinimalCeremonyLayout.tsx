@@ -11,7 +11,7 @@ export default function MinimalCeremonyLayout({ wedding, primaryColor, textColor
         <span className="block">{wedding.groom_name}</span>
       </h1>
       <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4 opacity-50">Nişan Töreni</p>
-      <div data-testid="invitation-card-surface" className="w-8 h-px bg-black/20 mx-auto mb-8" style={cardSurfaceStyle}></div>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="w-8 h-px bg-black/20 mx-auto mb-8" style={cardSurfaceStyle}></div>
       
       <p className="font-medium text-lg mb-2">{dateStr}</p>
       <p className="text-xs opacity-70 mb-12">{wedding.venue_name}</p>

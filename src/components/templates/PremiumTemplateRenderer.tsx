@@ -186,15 +186,21 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   const primaryColor = overrides.primary_color || wedding.primary_color || (effectivePalette as any).primary || '#111111';
   
   const customDesignOverrides = wedding.custom_overrides?.design || {};
-  const sceneBackgroundColor = customDesignOverrides.sceneBackgroundColor || effectivePalette.background || '#f8fafc';
-  const overridesCardBg = customDesignOverrides.cardBgColor;
+  const cardSurfaceObj = customDesignOverrides.cardSurface || {};
+
+  const sceneBackgroundColor = customDesignOverrides.sceneBackgroundColor ?? wedding.scene_background_color ?? (isDarkModeActive ? '#0f172a' : (effectivePalette.background || '#f8fafc'));
+
+  const overridesCardBg = cardSurfaceObj.color || customDesignOverrides.cardBgColor;
   const cardBgColorFallback = overridesCardBg || (isDarkModeActive ? '#12131a' : (effectivePalette.surface || (effectivePalette as any).card || '#ffffff'));
   const cardBgColorRaw = overridesCardBg || cardBgColorFallback || '#ffffff';
-  const cardOpacity = customDesignOverrides.cardOpacity !== undefined ? (customDesignOverrides.cardOpacity / 100) : 0.94;
-  const cardBlur = customDesignOverrides.cardBlur ?? 0;
-  
+
+  const rawOpacityNum = cardSurfaceObj.opacity !== undefined ? cardSurfaceObj.opacity : (customDesignOverrides.cardOpacity !== undefined ? customDesignOverrides.cardOpacity : 90);
+  const cardOpacity = rawOpacityNum / 100;
+
+  const cardBlur = cardSurfaceObj.blur !== undefined ? cardSurfaceObj.blur : (customDesignOverrides.cardBlur ?? 0);
+
   let rawTextColor = isDarkModeActive ? '#f8fafc' : (overrides.text_color || wedding.text_color || effectivePalette.primaryText || '#333333');
-  let effectiveTextBg = cardOpacity > 0.4 ? cardBgColorRaw : (effectiveBackground === 'none' ? '#ffffff' : (effectivePalette.background || '#ffffff'));
+  let effectiveTextBg = cardOpacity > 0.4 ? cardBgColorRaw : sceneBackgroundColor;
   const contrastRatio = getContrastRatio(rawTextColor, effectiveTextBg);
   if (contrastRatio < 3.0) {
     rawTextColor = getReadableTextColor(effectiveTextBg, '#ffffff', '#1e293b');

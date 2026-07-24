@@ -80,7 +80,7 @@ export default function ConstellationNightLayout({
         backgroundImage: 'radial-gradient(circle at 50% 0%, #0f1b3d 0%, #030712 80%)',
         color: textColor || '#f0f9ff'
       }}
-      data-testid="invitation-card-surface"
+      data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface"
     >
       {/* Background Star Map */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none opacity-60">

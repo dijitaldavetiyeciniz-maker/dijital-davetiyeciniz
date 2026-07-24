@@ -85,7 +85,7 @@ export default function MinimalPaperLayout({ wedding,
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* İnce Kırık Beyaz / Pamuklu Kağıt Kart Zemin */}
-      <div data-testid="invitation-card-surface" 
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" 
         className="relative rounded-[2rem] overflow-hidden p-8 sm:p-14 text-center border flex flex-col items-center justify-between min-h-[600px]"
         style={{ ...cardSurfaceStyle,  ...backgroundStyle, borderColor: borderLineStyle }}
       >

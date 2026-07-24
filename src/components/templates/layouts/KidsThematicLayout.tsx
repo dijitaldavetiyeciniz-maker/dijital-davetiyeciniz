@@ -161,7 +161,7 @@ export default function KidsThematicLayout({ wedding,
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}
     >
-      <div data-testid="invitation-card-surface" 
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" 
         className={cardStyle}
         style={{ ...cardSurfaceStyle,  backgroundColor: cardBgColor, borderColor: `${themeColor}25`, color: textColor || (variant === 'little-racer' ? '#ffffff' : '#334155') }}
       >

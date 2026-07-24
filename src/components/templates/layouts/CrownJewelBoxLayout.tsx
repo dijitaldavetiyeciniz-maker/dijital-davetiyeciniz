@@ -5,7 +5,7 @@ import CountdownTimer from '../../CountdownTimer';
 export default function CrownJewelBoxLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-sm mx-auto shadow-[0_20px_50px_rgba(236,72,153,0.2)] p-1 border-[16px] border-[#FCE7F3]" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
-      <div data-testid="invitation-card-surface" className="border border-pink-200 p-8 text-center bg-pink-50/50" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="border border-pink-200 p-8 text-center bg-pink-50/50" style={cardSurfaceStyle}>
         <h1 className="text-3xl font-bold text-pink-600 mb-2" style={{ fontFamily: `"${headingFont}", sans-serif` }}>{wedding.bride_name}</h1>
         <p className="text-xs uppercase font-bold tracking-widest text-slate-400 mb-8">Doğum Günü Partisi</p>
         

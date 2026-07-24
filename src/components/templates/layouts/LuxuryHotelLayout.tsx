@@ -66,7 +66,7 @@ export default function LuxuryHotelLayout({ wedding,
       data-testid="layout-luxury-hotel"
     >
       {/* LEFT: GRAND PHOTO (Split Screen) */}
-      <div data-testid="invitation-card-surface" className="w-full h-[50vh] md:h-screen md:w-[45%] lg:w-[50%] relative shrink-0" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="w-full h-[50vh] md:h-screen md:w-[45%] lg:w-[50%] relative shrink-0" style={cardSurfaceStyle}>
         <div className="absolute inset-0 z-10 bg-gradient-to-t md:bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent pointer-events-none" />
         
         {couplePhoto ? (

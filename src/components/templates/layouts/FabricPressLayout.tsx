@@ -6,7 +6,7 @@ export default function FabricPressLayout({ wedding, primaryColor, textColor, he
   return (
     <div className="w-full max-w-lg mx-auto p-12 shadow-md relative overflow-hidden" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
       {/* Fabric Texture Overlay */}
-      <div data-testid="invitation-card-surface" className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ ...cardSurfaceStyle,  backgroundImage: 'url("https://www.transparenttextures.com/patterns/linen.png")' }}></div>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ ...cardSurfaceStyle,  backgroundImage: 'url("https://www.transparenttextures.com/patterns/linen.png")' }}></div>
       <div className="absolute top-0 left-0 w-full h-8 bg-black/5 blur-md"></div>
       
       <div className="relative z-10 text-center border p-8 bg-[#F4F1EB] shadow-sm" style={{ borderColor: primaryColor }}>

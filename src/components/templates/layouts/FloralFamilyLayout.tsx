@@ -5,7 +5,7 @@ import CountdownTimer from '../../CountdownTimer';
 export default function FloralFamilyLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-lg mx-auto p-8 text-center rounded-[4rem] shadow-xl relative overflow-hidden" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
-      <div data-testid="invitation-card-surface" className="absolute top-0 left-0 w-full h-32 bg-green-50 rounded-t-[4rem] pointer-events-none" style={cardSurfaceStyle}></div>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute top-0 left-0 w-full h-32 bg-green-50 rounded-t-[4rem] pointer-events-none" style={cardSurfaceStyle}></div>
       <div className="relative z-10 pt-10">
         <h3 className="text-xs uppercase tracking-widest font-bold mb-6 text-green-700">Aile Arası Nişan</h3>
         <h1 className="text-4xl mb-6 font-bold" style={{ fontFamily: `"${headingFont}", serif` }}>{wedding.bride_name} & {wedding.groom_name}</h1>

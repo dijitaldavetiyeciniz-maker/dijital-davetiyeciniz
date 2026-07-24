@@ -67,7 +67,7 @@ export default function BotanicalCeramicLayout({ wedding,
       data-testid="layout-botanical-ceramic"
     >
       {/* Left Column: Botanical & Image */}
-      <div data-testid="invitation-card-surface" className="w-full lg:w-1/2 relative min-h-[50vh] lg:min-h-screen flex items-center justify-center p-6 lg:p-12 overflow-hidden bg-[#f4f1eb]" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="w-full lg:w-1/2 relative min-h-[50vh] lg:min-h-screen flex items-center justify-center p-6 lg:p-12 overflow-hidden bg-[#f4f1eb]" style={cardSurfaceStyle}>
         {/* Ceramic/Tile subtle background pattern overlay */}
         <div 
           className="absolute inset-0 opacity-[0.03] pointer-events-none"

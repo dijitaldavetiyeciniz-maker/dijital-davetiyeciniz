@@ -8,7 +8,7 @@ export default function LavenderGardenLayout({ wedding, primaryColor, textColor,
       <h3 className="text-[10px] uppercase font-bold tracking-[0.4em] text-[#6B21A8] mb-6">Kır Nişanı</h3>
       <h1 className="text-5xl font-light mb-10 text-slate-800" style={{ fontFamily: `"${headingFont}", cursive` }}>{wedding.bride_name} <br/><span className="text-2xl text-[#6B21A8]">&</span><br/> {wedding.groom_name}</h1>
       
-      <div data-testid="invitation-card-surface" className="w-16 h-px bg-[#6B21A8]/30 mx-auto mb-8" style={cardSurfaceStyle}></div>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="w-16 h-px bg-[#6B21A8]/30 mx-auto mb-8" style={cardSurfaceStyle}></div>
       
       <p className="font-bold text-lg mb-2 text-[#6B21A8]">{dateStr}</p>
       <p className="text-sm text-slate-600 mb-10">{wedding.venue_name}</p>

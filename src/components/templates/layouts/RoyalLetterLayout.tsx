@@ -68,7 +68,7 @@ export default function RoyalLetterLayout({ wedding,
       data-testid="layout-royal-letter"
     >
       {/* Background Ambience */}
-      <div data-testid="invitation-card-surface" className="fixed inset-0 z-0 pointer-events-none" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="fixed inset-0 z-0 pointer-events-none" style={cardSurfaceStyle}>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(60,45,20,0.6)_0%,#0a0806_100%)] opacity-80" />
         {/* Subtle floating sparkles pattern */}
         <div 

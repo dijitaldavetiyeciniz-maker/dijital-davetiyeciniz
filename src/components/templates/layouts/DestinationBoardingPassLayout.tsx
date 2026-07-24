@@ -67,7 +67,7 @@ export default function DestinationBoardingPassLayout({ wedding,
       data-testid="layout-destination-boarding-pass"
     >
       {/* Background Map Pattern */}
-      <div data-testid="invitation-card-surface" className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ ...cardSurfaceStyle, 
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ ...cardSurfaceStyle, 
         backgroundImage: `radial-gradient(${brandColor} 2px, transparent 2px)`,
         backgroundSize: '30px 30px'
       }} />

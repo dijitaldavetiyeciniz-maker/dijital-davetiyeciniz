@@ -103,7 +103,7 @@ export default function StoryTimelineLayout({ wedding,
         className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
         style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
       >
-        <div data-testid="invitation-card-surface" 
+        <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" 
           className="relative rounded-[2.5rem] overflow-hidden p-6 sm:p-10 border flex flex-col items-center justify-between min-h-[400px] shadow-2xl bg-[#faf9f6]"
           style={{ ...cardSurfaceStyle,  borderColor: 'rgba(0,0,0,0.05)', color: textColor }}
         >

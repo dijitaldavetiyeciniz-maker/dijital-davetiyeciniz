@@ -60,7 +60,7 @@ export default function MinimalTypographicLayout({ wedding,
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), backgroundColor: mainBg, color: textColor || '#111', fontFamily: `"${bodyFont}", sans-serif` }}
     >
       {/* Structural Grid lines for Swiss aesthetic */}
-      <div data-testid="invitation-card-surface" className="absolute inset-0 pointer-events-none grid grid-cols-4 lg:grid-cols-12 gap-4 px-6 lg:px-12 opacity-[0.04]" style={cardSurfaceStyle}>
+      <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute inset-0 pointer-events-none grid grid-cols-4 lg:grid-cols-12 gap-4 px-6 lg:px-12 opacity-[0.04]" style={cardSurfaceStyle}>
         {Array.from({ length: 12 }).map((_, i) => (
           <div key={i} className="h-full border-l border-current hidden lg:block" />
         ))}
