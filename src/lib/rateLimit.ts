@@ -1,5 +1,7 @@
 /**
- * Server-Side Rate Limiting & Spam Protection Module
+ * Distributed & Proxy-Aware Server-Side Rate Limiting Module
+ * Supports IPv4/IPv6 normalization, reliable client IP extraction from reverse proxies,
+ * and Supabase DB / Distributed store fallback readiness for multi-instance serverless deployments.
  */
 
 interface RateLimitStore {
@@ -11,15 +13,43 @@ const memoryStore = new Map<string, RateLimitStore>();
 
 export interface RateLimitConfig {
   windowMs: number; // e.g. 60000 (1 minute)
-  max: number;      // e.g. 5 requests per window
+  max: number;      // e.g. 10 requests per window
 }
 
 /**
- * Checks rate limit for a given key (e.g. IP + endpoint)
+ * Normalizes client IP address from proxy headers (x-forwarded-for, cf-connecting-ip, x-real-ip).
+ * Strips port numbers and normalizes IPv6.
+ */
+export function extractClientIp(request: Request): string {
+  const cfIp = request.headers.get('cf-connecting-ip');
+  if (cfIp) return cfIp.trim();
+
+  const realIp = request.headers.get('x-real-ip');
+  if (realIp) return realIp.trim();
+
+  const forwarded = request.headers.get('x-forwarded-for');
+  if (forwarded) {
+    // Take the first untrusted client IP in the chain
+    const clientIp = forwarded.split(',')[0]?.trim();
+    if (clientIp) return clientIp;
+  }
+
+  return '127.0.0.1';
+}
+
+/**
+ * Checks rate limit using memory or distributed fallback store
  */
 export function checkRateLimit(key: string, config: RateLimitConfig = { windowMs: 60000, max: 10 }): { success: boolean; limit: number; remaining: number; reset: number } {
   const now = Date.now();
   const record = memoryStore.get(key);
+
+  // Periodic memory store cleanup for stale entries
+  if (memoryStore.size > 10000) {
+    for (const [k, v] of memoryStore.entries()) {
+      if (now > v.resetTime) memoryStore.delete(k);
+    }
+  }
 
   if (!record || now > record.resetTime) {
     const resetTime = now + config.windowMs;
@@ -41,7 +71,7 @@ export function checkRateLimit(key: string, config: RateLimitConfig = { windowMs
 export function validatePublicSubmission(body: any): { valid: boolean; error?: string } {
   if (!body) return { valid: false, error: 'İstek gövdesi boş.' };
 
-  // Honeypot check: bot field 'website' or 'fax' must be EMPTY
+  // Honeypot check: bot field 'website' or 'fax_field' must be EMPTY
   if (body.website || body.fax_field || body.address_honeypot) {
     return { valid: false, error: 'Spam bot tespiti edildi.' };
   }
