@@ -3,6 +3,7 @@ import { useState, useEffect, use, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getSmartAutoMatch } from '@/lib/autoMatch';
 import { mapEnumToDbEventType } from '@/lib/themes';
+import { getEventTypeConfig } from '@/data/eventTypeConfig';
 import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
 import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
 import { Heart, Upload, Link as LinkIcon, Download, Smartphone, Share2, Sparkles, MapPin, Search, Grid, Eye, CheckCircle2, Navigation, Wand2, Calendar, Clock, Lock, ShieldAlert, Monitor, Type, Palette, ArrowRight, Save, Shield, Settings, Info, Music, StopCircle, RefreshCw, X, Users, MessageSquare, Paintbrush, CreditCard, Copy, ExternalLink, Tablet, Trash2, Check, Volume2, VolumeX } from 'lucide-react';
@@ -1489,48 +1490,62 @@ export default function CoupleAdminPage({
                   </select>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      {['Baby Shower'].includes(eventType) ? 'Anne Adı' :
-                       ['Doğum Günü', 'Sünnet'].includes(eventType) ? 'Etkinlik Sahibi' :
-                       ['Özel Davet', 'Bekarlığa Veda'].includes(eventType) ? 'Davet Sahibi (1)' : 
-                       'Gelin / Gelin Adayı'}
-                    </label>
-                    <input id="field-brideName" value={brideName} onChange={e=>{ setBrideName(e.target.value); if (fieldErrors.brideName) setFieldErrors(prev => ({...prev, brideName: ''})); }} type="text" className={`w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white ${fieldErrors.brideName ? 'border-rose-500 ring-2 ring-rose-200' : ''}`} />
-                    {fieldErrors.brideName && <p className="text-xs text-rose-500 font-semibold mt-1">⚠️ {fieldErrors.brideName}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      {['Baby Shower'].includes(eventType) ? 'Baba Adı (İsteğe Bağlı)' :
-                       ['Doğum Günü', 'Sünnet'].includes(eventType) ? 'İkinci Kişi (İsteğe Bağlı)' :
-                       ['Özel Davet', 'Bekarlığa Veda'].includes(eventType) ? 'Davet Sahibi (2) (Opsiyonel)' : 
-                       'Damat / Damat Adayı'}
-                    </label>
-                    <input id="field-groomName" value={groomName} onChange={e=>setGroomName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
-                  </div>
-                </div>
+                {(() => {
+                  const eventConfig = getEventTypeConfig(eventType);
+                  return (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-1">
+                            {eventConfig.primarySubjectLabel}
+                          </label>
+                          <input 
+                            id="field-brideName" 
+                            value={brideName} 
+                            onChange={e => { setBrideName(e.target.value); if (fieldErrors.brideName) setFieldErrors(prev => ({...prev, brideName: ''})); }} 
+                            placeholder={eventConfig.primarySubjectPlaceholder}
+                            type="text" 
+                            className={`w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white ${fieldErrors.brideName ? 'border-rose-500 ring-2 ring-rose-200' : ''}`} 
+                          />
+                          {fieldErrors.brideName && <p className="text-xs text-rose-500 font-semibold mt-1">⚠️ {fieldErrors.brideName}</p>}
+                        </div>
+                        
+                        {eventConfig.secondarySubjectLabel && (
+                          <div>
+                            <label className="block text-sm font-medium mb-1">
+                              {eventConfig.secondarySubjectLabel}
+                            </label>
+                            <input 
+                              id="field-groomName" 
+                              value={groomName} 
+                              onChange={e => setGroomName(e.target.value)} 
+                              placeholder={eventConfig.secondarySubjectPlaceholder || ''}
+                              type="text" 
+                              className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" 
+                            />
+                          </div>
+                        )}
+                      </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      {['Baby Shower'].includes(eventType) ? 'Anneanne & Dede (Opsiyonel)' :
-                       ['Doğum Günü', 'Sünnet'].includes(eventType) ? 'Anne & Baba Adı' :
-                       ['Özel Davet', 'Bekarlığa Veda'].includes(eventType) ? 'Ev Sahibi Detay 1' : 
-                       'Gelin Anne & Baba'}
-                    </label>
-                    <input value={brideParents} onChange={e=>setBrideParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      {['Baby Shower'].includes(eventType) ? 'Babaanne & Dede (Opsiyonel)' :
-                       ['Doğum Günü', 'Sünnet'].includes(eventType) ? 'Diğer Büyükler (Opsiyonel)' :
-                       ['Özel Davet', 'Bekarlığa Veda'].includes(eventType) ? 'Ev Sahibi Detay 2' : 
-                       'Damat Anne & Baba'}
-                    </label>
-                    <input value={groomParents} onChange={e=>setGroomParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
-                  </div>
-                </div>
+                      {eventConfig.hostLabels && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium mb-1">
+                              {eventConfig.motherLabel || 'Anne / Birinci Taraf'}
+                            </label>
+                            <input value={brideParents} onChange={e=>setBrideParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium mb-1">
+                              {eventConfig.fatherLabel || 'Baba / İkinci Taraf'}
+                            </label>
+                            <input value={groomParents} onChange={e=>setGroomParents(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" autoCapitalize="none" autoCorrect="off" style={{ textTransform: 'none' }} />
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>

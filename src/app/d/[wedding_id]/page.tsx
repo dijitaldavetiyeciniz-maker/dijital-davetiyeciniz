@@ -11,6 +11,7 @@ import SnowEffect from '@/components/effects/SnowEffect';
 
 import BackgroundMusic from '@/components/BackgroundMusic';
 import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
+import { sanitizePublicWedding } from '@/lib/sanitizeWedding';
 
 // Next.js App Router Page
 export default async function WeddingPage({
@@ -80,21 +81,23 @@ export default async function WeddingPage({
     );
   }
 
+  const cleanWedding = sanitizePublicWedding(wedding);
+
   // Veritabanından gelen template_id değerine göre uygun şablonu render et.
   const templateComponent = (
     <PremiumTemplateRenderer 
-      wedding={wedding} 
-      templateId={wedding.template_id || 'template1'} 
+      wedding={cleanWedding} 
+      templateId={cleanWedding.template_id || 'template1'} 
     />
   );
 
   // Zarf kullanımı kontrolü (use_envelope sütunu true ise veya null/undefined ise varsayılan true)
-  const useEnvelope = wedding.use_envelope !== false;
+  const useEnvelope = cleanWedding.use_envelope !== false;
   
   let effectComponent = null;
-  const customBgId = wedding?.custom_overrides?.design?.backgroundDesign;
-  let bgAnim = wedding.background_animation || '';
-  let effType = wedding.effect_type || '';
+  const customBgId = cleanWedding?.custom_overrides?.design?.backgroundDesign;
+  let bgAnim = cleanWedding.background_animation || '';
+  let effType = cleanWedding.effect_type || '';
   
   if (customBgId) {
      const themes = require('@/lib/themes').predefinedThemes;
@@ -109,10 +112,9 @@ export default async function WeddingPage({
         effType = '';
      }
   }
-  
 
   if (bgAnim === 'rosePetals' || effType === 'hearts') {
-    effectComponent = <HeartsEffect color={wedding.primary_color} />;
+    effectComponent = <HeartsEffect color={cleanWedding.primary_color} />;
   } else if (bgAnim === 'goldParticles' || bgAnim === 'stars' || bgAnim === 'leafFall' || effType === 'sparkles') {
     effectComponent = <SparklesEffect />;
   } else if (bgAnim === 'pearlLight' || effType === 'bubbles') {
@@ -126,16 +128,16 @@ export default async function WeddingPage({
       {effectComponent}
       {templateComponent}
       <BackgroundMusic 
-        url={wedding.music_url} 
+        url={cleanWedding.music_url} 
         isEnvelopeOpened={true} 
-        autoplay={wedding.music_autoplay !== false}
-        primaryColor={wedding.primary_color}
+        autoplay={cleanWedding.music_autoplay !== false}
+        primaryColor={cleanWedding.primary_color}
       />
     </>
   );
 
   return (
-    <WeddingClientWrapper wedding={wedding}>
+    <WeddingClientWrapper wedding={cleanWedding}>
       {contentWithMusic}
     </WeddingClientWrapper>
   );

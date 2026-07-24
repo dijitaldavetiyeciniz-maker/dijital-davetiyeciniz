@@ -3,6 +3,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { getSmartAutoMatch } from '@/lib/autoMatch';
+import { getEventTypeConfig } from '@/data/eventTypeConfig';
 import Link from 'next/link';
 import { Sparkles, Link as LinkIcon, KeyRound, Eye, EyeOff, Check, AlertCircle } from 'lucide-react';
 
@@ -120,14 +121,18 @@ function CreateForm() {
       return;
     }
 
+    const eventConfig = getEventTypeConfig(eventType);
     const match = getSmartAutoMatch(eventType);
 
     const { error } = await supabase.from('weddings').insert([
       {
         user_id: user?.id,
         user_email: user?.email,
-        bride_name: eventType === 'Kına' ? 'Gelin' : eventType === 'Sünnet' ? 'Sevgili Oğlumuz' : 'Gelin',
-        groom_name: eventType === 'Kına' ? '' : eventType === 'Sünnet' ? '' : 'Damat',
+        bride_name: eventConfig.previewPlaceholders.primaryName,
+        groom_name: eventConfig.previewPlaceholders.secondaryName || '',
+        primary_subject_name: eventConfig.previewPlaceholders.primaryName,
+        secondary_subject_name: eventConfig.previewPlaceholders.secondaryName || '',
+        event_title: eventConfig.defaultTitle,
         bride_parents: '',
         groom_parents: '',
         slug: cleanSlug,
@@ -149,7 +154,7 @@ function CreateForm() {
         google_maps_url: '',
         custom_message: '',
         is_paid: false,
-        entrance_animation: 'royal-seal-premium',
+        entrance_animation: eventConfig.recommendedAnimations?.[0] || 'envelope',
         envelope_style: 'classic',
         show_program: false
       }

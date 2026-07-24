@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import EntranceAnimation from './EntranceAnimation';
 import { getInitials } from '@/utils/getInitials';
+import { getPrimarySubjectName, getSecondarySubjectName } from '@/data/eventTypeConfig';
 import BackgroundMusic from '@/components/BackgroundMusic';
 
 type WeddingClientWrapperProps = {
@@ -32,9 +33,9 @@ export default function WeddingClientWrapper({ wedding, children, mode = 'public
           eventType={wedding.event_type}
           backgroundAnimation={wedding.background_animation || "golden"}
           backgroundDesign={wedding.background_design || wedding.envelope_bg_color || "rose-gold-silk"}
-          initials={getInitials(wedding.bride_name, wedding.groom_name)}
-          brideName={wedding.bride_name}
-          groomName={wedding.groom_name}
+          initials={getInitials(getPrimarySubjectName(wedding), getSecondarySubjectName(wedding))}
+          brideName={getPrimarySubjectName(wedding)}
+          groomName={getSecondarySubjectName(wedding)}
           eventDate={(() => {
             if (!wedding.wedding_date) return undefined;
             const d = new Date(wedding.wedding_date);
