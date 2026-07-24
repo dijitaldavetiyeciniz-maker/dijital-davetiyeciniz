@@ -1227,40 +1227,32 @@ case 'asymmetric':
       
       case 'parisian-apartment': return <ParisianApartmentLayout {...commonProps} />;
       case 'swiss-grid': return <SwissGridCeremonyLayout {...commonProps} />;
-      case 'cocktail-menu': return <CocktailMenuLayout {...commonProps} />;
-      case 'fabric-press': return <FabricPressLayout {...commonProps} />;
-      case 'marble-column': return <MarbleColumnLayout {...commonProps} dateObj={dateObj} />;
-      case 'gala-night': return <GalaNightLayout {...commonProps} />;
-      case 'velvet-curtain': return <VelvetCurtainLayout {...commonProps} />;
-      case 'henna-tray': return <HennaTrayLayout {...commonProps} />;
-      case 'candle-corridor': return <CandleCorridorLayout {...commonProps} />;
-      case 'oriental-lace': return <OrientalLaceLayout {...commonProps} />;
-      case 'prince-throne-room': return <PrinceThroneRoomLayout {...commonProps} />;
-      case 'nazar-dome': return <NazarDomeLayout {...commonProps} />;
-      case 'velvet-theater': return <VelvetTheaterLayout {...commonProps} />;
-      case 'ottoman-garden': return <OttomanGardenLayout {...commonProps} />;
-      case 'crown-crest': return <CrownCrestLayout {...commonProps} />;
-      case 'modern-geometric-monogram': return <ModernGeometricMonogramLayout {...commonProps} />;
-      case 'fashion-editorial': return <FashionEditorialLayout {...commonProps} />;
-      case 'fairy-tale-palace': return <FairyTalePalaceLayout {...commonProps} />;
-      case 'crown-jewel-box': return <CrownJewelBoxLayout {...commonProps} />;
-      case 'storybook': return <StorybookLayout {...commonProps} />;
-      case 'hot-air-balloon': return <HotAirBalloonLayout {...commonProps} />;
-      case 'engagement-table': return <EngagementTableLayout {...commonProps} />;
-      case 'minimal-ceremony': return <MinimalCeremonyLayout {...commonProps} />;
-      case 'gold-frame-gallery': return <GoldFrameGalleryLayout {...commonProps} />;
-      case 'floral-family': return <FloralFamilyLayout {...commonProps} />;
-      case 'lavender-garden': return <LavenderGardenLayout {...commonProps} />;
-      case 'emerald-elegance': return <EmeraldEleganceLayout {...commonProps} />;
+      case 'parisian-black-tie':
+      case 'french-haute-couture': return <ParisianApartmentLayout {...commonProps} />;
+      case 'grand-opera-ballroom': return <ArtDecoTheaterLayout {...commonProps} />;
+      case 'moonlit-secret-garden': return <ConstellationNightLayout {...commonProps} />;
+      case 'vogue-wedding-editorial': return <FashionMagazineLayout {...commonProps} />;
+      case 'mediterranean-ceramic-garden':
+      case 'mediterranean-ceramic': return <BotanicalCeramicLayout {...commonProps} />;
+      case 'ottoman-illumination': return <OrientalLaceLayout {...commonProps} />;
+      case 'coastal-sunset': return <FullBleedPhotoLayout {...commonProps} />;
+      case 'aurora-glass': return <ModernArchitectureLayout {...commonProps} />;
+      case 'fine-art-botanical-watercolor': return <BotanicalFrameLayout {...commonProps} />;
+      case 'film-premiere-night': return <CinematicPosterLayout {...commonProps} />;
+      case 'minimal-swiss-gallery': return <SwissGridCeremonyLayout {...commonProps} dateObj={dateObj} />;
+      case 'royal-palace-invitation': return <RoyalLetterLayout {...commonProps} />;
+      case 'henna-palace-night': return <HennaVelvetLayout {...commonProps} />;
+      case 'prince-ceremony': return <RoyalCircumcisionLayout {...commonProps} />;
+      case 'storybook-babyshower':
+      case 'storybook-birthday': return <KidsThematicLayout {...commonProps} />;
+      case 'future-summit': return <ModernEventLayout {...commonProps} />;
+      case 'template1': return <SplitScreenLayout {...commonProps} />;
+      case 'template2': return <ConstellationNightLayout {...commonProps} />;
+      case 'template3': return <BotanicalFrameLayout {...commonProps} />;
+      case 'template4': return <RoyalLetterLayout {...commonProps} />;
+      case 'template5': return <MinimalPaperLayout {...commonProps} />;
       default:
-        if (process.env.NODE_ENV === 'development') {
-          throw new Error(`Missing premium layout mapping for preset: ${templateId}`);
-        }
-        return (
-          <div className="p-8 text-center bg-red-50 text-red-500 rounded-2xl border border-red-200 m-8">
-            Uyumsuz şablon eşleştirmesi: {templateId}
-          </div>
-        );
+        return <SplitScreenLayout {...commonProps} />;
     }
   };
 

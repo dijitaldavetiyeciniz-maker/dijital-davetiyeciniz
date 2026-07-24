@@ -193,6 +193,17 @@ export const FLAGSHIP_TEMPLATES: CatalogTemplate[] = [
     thumbnailBadge: 'Baby Shower Flagship',
   },
   {
+    id: 'storybook-birthday',
+    name: 'Storybook Doğum Günü',
+    category: 'Çocuk',
+    eventType: 'birthday',
+    description: 'Doğum gününe özel eğlenceli masal kapağı. Doğum günü sahibinin adı ve yaş rozeti öncelikli, sıfır Baby Shower dili.',
+    colors: ['bg-amber-100', 'bg-purple-100', 'bg-rose-200'],
+    gradient: 'from-amber-50 via-purple-50 to-rose-50',
+    isFlagship: true,
+    thumbnailBadge: 'Doğum Günü Flagship',
+  },
+  {
     id: 'future-summit',
     name: 'Future Summit Corporate',
     category: 'Kurumsal',
