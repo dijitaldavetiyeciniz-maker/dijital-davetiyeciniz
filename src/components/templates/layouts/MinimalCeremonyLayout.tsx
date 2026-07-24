@@ -2,7 +2,7 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function MinimalCeremonyLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
+export default function MinimalCeremonyLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-md mx-auto min-h-[80vh] flex flex-col items-center justify-center p-12 text-center" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
       <h1 className="text-3xl font-light mb-12 tracking-widest uppercase" style={{ fontFamily: `"${headingFont}", sans-serif` }}>
@@ -11,7 +11,7 @@ export default function MinimalCeremonyLayout({ wedding, primaryColor, textColor
         <span className="block">{wedding.groom_name}</span>
       </h1>
       <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4 opacity-50">Nişan Töreni</p>
-      <div className="w-8 h-px bg-black/20 mx-auto mb-8"></div>
+      <div data-testid="invitation-card-surface" className="w-8 h-px bg-black/20 mx-auto mb-8" style={cardSurfaceStyle}></div>
       
       <p className="font-medium text-lg mb-2">{dateStr}</p>
       <p className="text-xs opacity-70 mb-12">{wedding.venue_name}</p>

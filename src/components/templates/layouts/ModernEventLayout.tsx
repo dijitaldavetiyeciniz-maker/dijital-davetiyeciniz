@@ -15,6 +15,7 @@ interface Sponsor {
 }
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -35,8 +36,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function ModernEventLayout({
-  wedding,
+export default function ModernEventLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -53,7 +53,7 @@ export default function ModernEventLayout({
   handleMapClick,
   cardBgColor = '#090d16',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   
   // 1. ETKİNLİK VARYANT TESPİTİ
   const presetId = wedding.template_id || '';
@@ -96,7 +96,7 @@ export default function ModernEventLayout({
     decorativeOverlay = (
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-25">
         {/* Floating mortarboard caps and diploma scrolls */}
-        <div className="absolute top-12 left-10 text-3xl animate-bounce duration-[4000ms]">🎓</div>
+        <div data-testid="invitation-card-surface" className="absolute top-12 left-10 text-3xl animate-bounce duration-[4000ms]" style={cardSurfaceStyle}>🎓</div>
         <div className="absolute top-24 right-10 text-4xl animate-pulse">📜</div>
         <div className="absolute bottom-40 left-8 text-2xl animate-bounce">📜</div>
         <div className="absolute bottom-20 right-12 text-3xl animate-pulse duration-[5000ms]">🎓</div>

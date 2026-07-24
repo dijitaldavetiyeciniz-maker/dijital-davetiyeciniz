@@ -5,6 +5,7 @@ import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/l
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -25,8 +26,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function BotanicalCeramicLayout({
-  wedding,
+export default function BotanicalCeramicLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -43,7 +43,7 @@ export default function BotanicalCeramicLayout({
   handleMapClick,
   cardBgColor = '#fdfbf7',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const overrides = wedding.custom_overrides || {};
   const focalX = overrides.photoFocalPoint?.x ?? wedding.photo_focal_point?.x ?? 50;
   const focalY = overrides.photoFocalPoint?.y ?? wedding.photo_focal_point?.y ?? 50;
@@ -67,7 +67,7 @@ export default function BotanicalCeramicLayout({
       data-testid="layout-botanical-ceramic"
     >
       {/* Left Column: Botanical & Image */}
-      <div className="w-full lg:w-1/2 relative min-h-[50vh] lg:min-h-screen flex items-center justify-center p-6 lg:p-12 overflow-hidden bg-[#f4f1eb]">
+      <div data-testid="invitation-card-surface" className="w-full lg:w-1/2 relative min-h-[50vh] lg:min-h-screen flex items-center justify-center p-6 lg:p-12 overflow-hidden bg-[#f4f1eb]" style={cardSurfaceStyle}>
         {/* Ceramic/Tile subtle background pattern overlay */}
         <div 
           className="absolute inset-0 opacity-[0.03] pointer-events-none"

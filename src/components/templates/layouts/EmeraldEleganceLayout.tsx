@@ -2,10 +2,10 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function EmeraldEleganceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
+export default function EmeraldEleganceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-lg mx-auto text-white p-12 text-center shadow-2xl relative" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
-      <div className="border border-white/20 p-8 relative">
+      <div data-testid="invitation-card-surface" className="border border-white/20 p-8 relative" style={cardSurfaceStyle}>
         <h3 className="text-xs uppercase font-bold tracking-widest text-[#A7F3D0] mb-8">Söz Daveti</h3>
         <h1 className="text-4xl mb-4 font-serif">{wedding.bride_name}</h1>
         <h1 className="text-4xl mb-10 font-serif">{wedding.groom_name}</h1>

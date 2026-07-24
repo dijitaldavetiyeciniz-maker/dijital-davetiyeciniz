@@ -5,6 +5,7 @@ import { getReadableTextColor } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -25,8 +26,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function ModernArchitectureLayout({
-  wedding,
+export default function ModernArchitectureLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -43,7 +43,7 @@ export default function ModernArchitectureLayout({
   handleMapClick,
   cardBgColor = '#F4F4F0',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const couplePhoto = wedding.bride_photo_url || wedding.groom_photo_url || wedding.background_image_url || '';
   
   const overrides = wedding.custom_overrides || {};
@@ -65,9 +65,9 @@ export default function ModernArchitectureLayout({
       data-testid="layout-modern-architecture"
     >
       {/* BAUHAUS GEOMETRIC DECORATIONS */}
-      <div 
+      <div data-testid="invitation-card-surface" 
         className="hidden md:block absolute top-[10%] left-[45%] w-32 h-32 rounded-full mix-blend-multiply opacity-80 z-0 pointer-events-none transition-transform duration-1000 hover:scale-110"
-        style={{ backgroundColor: accent }}
+        style={{ ...cardSurfaceStyle,  backgroundColor: accent }}
       />
       <div 
         className="hidden md:block absolute bottom-[5%] right-[35%] w-48 h-48 mix-blend-multiply opacity-20 z-0 pointer-events-none"

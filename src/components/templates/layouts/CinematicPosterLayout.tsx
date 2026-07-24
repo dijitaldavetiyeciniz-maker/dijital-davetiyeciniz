@@ -5,6 +5,7 @@ import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/l
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -25,8 +26,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function CinematicPosterLayout({
-  wedding,
+export default function CinematicPosterLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -43,7 +43,7 @@ export default function CinematicPosterLayout({
   handleMapClick,
   cardBgColor = '#05070a',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
@@ -66,7 +66,7 @@ export default function CinematicPosterLayout({
       data-testid="layout-cinematic-poster"
     >
       {/* SİNEMATİK ÜST BAR */}
-      <div className="absolute top-0 inset-x-0 w-full bg-gradient-to-r from-red-950/80 via-black to-red-950/80 py-2 px-6 flex items-center justify-between border-b border-red-500/20 text-[9px] sm:text-xs font-mono tracking-[0.3em] text-red-400 select-none z-50">
+      <div data-testid="invitation-card-surface" className="absolute top-0 inset-x-0 w-full bg-gradient-to-r from-red-950/80 via-black to-red-950/80 py-2 px-6 flex items-center justify-between border-b border-red-500/20 text-[9px] sm:text-xs font-mono tracking-[0.3em] text-red-400 select-none z-50" style={cardSurfaceStyle}>
         <div className="flex items-center gap-2 font-bold">
           <Film className="w-4 h-4 animate-pulse" />
           <span>DIRECTOR'S CUT PREMIERE</span>

@@ -4,6 +4,7 @@ import { Calendar, MapPin, Navigation, Info } from 'lucide-react';
 import { backgroundDesignRegistry } from '@/lib/registries';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -24,8 +25,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function BotanicalFrameLayout({
-  wedding,
+export default function BotanicalFrameLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -42,7 +42,7 @@ export default function BotanicalFrameLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
@@ -93,9 +93,9 @@ export default function BotanicalFrameLayout({
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* İnce Okaliptüs Yapraklı Oval Çerçeveli Kart */}
-      <div 
+      <div data-testid="invitation-card-surface" 
         className="relative rounded-[3.5rem] overflow-hidden shadow-[0_20px_50px_rgba(21,128,61,0.15)] p-6 sm:p-10 text-center border flex flex-col items-center justify-between min-h-[640px]"
-        style={{ borderColor: `${primaryColor}25`, backgroundColor: bgRegistry.fallbackColor || cardBgColor, color: textColor }}
+        style={{ ...cardSurfaceStyle,  borderColor: `${primaryColor}25`, backgroundColor: bgRegistry.fallbackColor || cardBgColor, color: textColor }}
       >
         {/* İnce Keten/Kağıt Noise Doku */}
         <div className="absolute inset-0 bg-[radial-gradient(rgba(22,101,52,0.015)_1px,transparent_1px)] bg-[size:14px_14px] pointer-events-none z-0 opacity-60" />

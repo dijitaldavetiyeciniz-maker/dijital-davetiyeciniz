@@ -5,6 +5,7 @@ import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/l
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -25,8 +26,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function FullBleedPhotoLayout({
-  wedding,
+export default function FullBleedPhotoLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -43,7 +43,7 @@ export default function FullBleedPhotoLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
@@ -75,7 +75,7 @@ export default function FullBleedPhotoLayout({
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* FULL-BLEED KART (Ekranı kaplayan dikey fotoğraf veya şık fallback) */}
-      <div className="relative rounded-[2.5rem] overflow-hidden min-h-[660px] sm:min-h-[720px] flex flex-col justify-end bg-slate-950 border border-white/5 shadow-2xl">
+      <div data-testid="invitation-card-surface" className="relative rounded-[2.5rem] overflow-hidden min-h-[660px] sm:min-h-[720px] flex flex-col justify-end bg-slate-950 border border-white/5 shadow-2xl" style={cardSurfaceStyle}>
         
         {/* Full-bleed Görsel Katmanı */}
         {couplePhoto ? (

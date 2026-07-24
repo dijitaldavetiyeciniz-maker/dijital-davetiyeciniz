@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Navigation, Gift, Sparkles } from 'lucide-react';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -23,8 +24,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function KidsThematicLayout({
-  wedding,
+export default function KidsThematicLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -41,7 +41,7 @@ export default function KidsThematicLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   // 1. VARYANT BELİRLEME
   const presetId = wedding.template_id || '';
   let variant: 'clouds-above' | 'little-racer' | 'blue-bear' | 'pink-princess' | 'neutral' = 'neutral';
@@ -161,9 +161,9 @@ export default function KidsThematicLayout({
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}
     >
-      <div 
+      <div data-testid="invitation-card-surface" 
         className={cardStyle}
-        style={{ backgroundColor: cardBgColor, borderColor: `${themeColor}25`, color: textColor || (variant === 'little-racer' ? '#ffffff' : '#334155') }}
+        style={{ ...cardSurfaceStyle,  backgroundColor: cardBgColor, borderColor: `${themeColor}25`, color: textColor || (variant === 'little-racer' ? '#ffffff' : '#334155') }}
       >
         {backgroundDecoration}
 

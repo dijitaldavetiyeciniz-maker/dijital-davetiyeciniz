@@ -5,6 +5,7 @@ import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/l
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -25,8 +26,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function SplitScreenLayout({
-  wedding,
+export default function SplitScreenLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -43,7 +43,7 @@ export default function SplitScreenLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
@@ -86,7 +86,7 @@ export default function SplitScreenLayout({
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* Split Kart Container */}
-      <div className="relative rounded-[2.2rem] overflow-hidden shadow-2xl bg-white border border-black/5 min-h-[600px]">
+      <div data-testid="invitation-card-surface" className="relative rounded-[2.2rem] overflow-hidden shadow-2xl bg-white border border-black/5 min-h-[600px]" style={cardSurfaceStyle}>
         
         {/* CSS GRID Yapısı (Masaüstünde Split, Mobilde Tek Sütun ve Seçilebilir Sürükleme Sırası) */}
         <div className="grid grid-cols-1 md:grid-cols-12 w-full min-h-[600px]">

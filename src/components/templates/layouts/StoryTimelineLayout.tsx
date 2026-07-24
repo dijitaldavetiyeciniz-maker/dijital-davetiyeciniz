@@ -14,6 +14,7 @@ interface TimelineItem {
 }
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -34,8 +35,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function StoryTimelineLayout({
-  wedding,
+export default function StoryTimelineLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -52,7 +52,7 @@ export default function StoryTimelineLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 
@@ -103,9 +103,9 @@ export default function StoryTimelineLayout({
         className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
         style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
       >
-        <div 
+        <div data-testid="invitation-card-surface" 
           className="relative rounded-[2.5rem] overflow-hidden p-6 sm:p-10 border flex flex-col items-center justify-between min-h-[400px] shadow-2xl bg-[#faf9f6]"
-          style={{ borderColor: 'rgba(0,0,0,0.05)', color: textColor }}
+          style={{ ...cardSurfaceStyle,  borderColor: 'rgba(0,0,0,0.05)', color: textColor }}
         >
           <div className="text-center w-full mb-8">
             <span className="text-[10px] font-sans font-bold tracking-[0.3em] uppercase opacity-60" style={{ color: primaryColor }}>

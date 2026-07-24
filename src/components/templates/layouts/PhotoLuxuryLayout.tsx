@@ -5,6 +5,7 @@ import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/l
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -25,8 +26,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function PhotoLuxuryLayout({
-  wedding,
+export default function PhotoLuxuryLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -43,7 +43,7 @@ export default function PhotoLuxuryLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
@@ -77,7 +77,7 @@ export default function PhotoLuxuryLayout({
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in text-slate-800"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
-      <div className="relative rounded-[2.5rem] overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] bg-slate-950 border border-white/5">
+      <div data-testid="invitation-card-surface" className="relative rounded-[2.5rem] overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] bg-slate-950 border border-white/5" style={cardSurfaceStyle}>
         
         {/* EN-BOY ORANI KORUNMUŞ FOTOĞRAF ALANI */}
         <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden z-0 bg-slate-950">

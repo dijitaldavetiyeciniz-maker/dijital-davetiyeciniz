@@ -349,9 +349,18 @@ function EntranceAnimation({
 
   return (
     <div 
+      role="button"
+      tabIndex={0}
       className={`opening-stage-container overflow-hidden w-full h-full relative bg-design-${backgroundDesign || "rose-gold-silk"} absolute inset-0 z-50 cursor-pointer`}
       style={{ backgroundColor: styleConfig.palette.background }}
       onClick={handleRevealInvitation}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleRevealInvitation();
+        }
+      }}
+      aria-label="Davetiyeyi açmak için dokununuz"
     >
       {/* Render Particles */}
       <BackgroundAnimation type={backgroundAnimation || ""} />

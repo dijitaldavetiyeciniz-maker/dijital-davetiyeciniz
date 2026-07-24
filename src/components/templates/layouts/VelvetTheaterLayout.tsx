@@ -2,10 +2,10 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function VelvetTheaterLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
+export default function VelvetTheaterLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-md mx-auto text-white p-4 shadow-2xl overflow-hidden rounded-[3rem] border border-blue-900/50 relative" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
-      <div className="absolute top-0 left-0 w-full h-32 bg-blue-900/30 blur-2xl"></div>
+      <div data-testid="invitation-card-surface" className="absolute top-0 left-0 w-full h-32 bg-blue-900/30 blur-2xl" style={cardSurfaceStyle}></div>
       <div className="relative z-10 text-center py-12 px-6">
         <h3 className="text-[10px] tracking-widest uppercase text-blue-300 font-bold mb-4">Sünnet Töreni</h3>
         <h1 className="text-4xl text-blue-50 font-bold mb-10" style={{ fontFamily: `"${headingFont}", serif` }}>{wedding.bride_name}</h1>

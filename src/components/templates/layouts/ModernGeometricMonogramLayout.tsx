@@ -2,10 +2,10 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function ModernGeometricMonogramLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
+export default function ModernGeometricMonogramLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-lg mx-auto shadow-lg flex flex-col overflow-hidden" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
-      <div className="w-full aspect-square bg-[#1E3A8A] flex items-center justify-center relative overflow-hidden">
+      <div data-testid="invitation-card-surface" className="w-full aspect-square bg-[#1E3A8A] flex items-center justify-center relative overflow-hidden" style={cardSurfaceStyle}>
         <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.05)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.05)_50%,rgba(255,255,255,0.05)_75%,transparent_75%,transparent)] bg-[length:20px_20px]"></div>
         <div className="w-48 h-48 border-[8px] border-white flex items-center justify-center rotate-45 shadow-2xl relative z-10 bg-[#1E3A8A]/50 backdrop-blur-sm">
           <span className="text-6xl text-white font-black -rotate-45" style={{ fontFamily: `"${headingFont}", sans-serif` }}>{wedding.bride_name[0]}</span>

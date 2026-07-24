@@ -4,6 +4,7 @@ import { Calendar, MapPin, Navigation } from 'lucide-react';
 import { backgroundDesignRegistry } from '@/lib/registries';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -24,8 +25,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function MinimalPaperLayout({
-  wedding,
+export default function MinimalPaperLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -42,7 +42,7 @@ export default function MinimalPaperLayout({
   handleMapClick,
   cardBgColor = '#fcfbf7', // Krem rengi kağıt fallback
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
@@ -85,9 +85,9 @@ export default function MinimalPaperLayout({
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* İnce Kırık Beyaz / Pamuklu Kağıt Kart Zemin */}
-      <div 
+      <div data-testid="invitation-card-surface" 
         className="relative rounded-[2rem] overflow-hidden p-8 sm:p-14 text-center border flex flex-col items-center justify-between min-h-[600px]"
-        style={{ ...backgroundStyle, borderColor: borderLineStyle }}
+        style={{ ...cardSurfaceStyle,  ...backgroundStyle, borderColor: borderLineStyle }}
       >
         
         {/* Güvenli İçerik Katmanı */}

@@ -5,6 +5,7 @@ import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/l
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -25,8 +26,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function RoyalLetterLayout({
-  wedding,
+export default function RoyalLetterLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -43,7 +43,7 @@ export default function RoyalLetterLayout({
   handleMapClick,
   cardBgColor = '#fdfbf7',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const [isUnrolled, setIsUnrolled] = useState(false);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function RoyalLetterLayout({
       data-testid="layout-royal-letter"
     >
       {/* Background Ambience */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      <div data-testid="invitation-card-surface" className="fixed inset-0 z-0 pointer-events-none" style={cardSurfaceStyle}>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(60,45,20,0.6)_0%,#0a0806_100%)] opacity-80" />
         {/* Subtle floating sparkles pattern */}
         <div 

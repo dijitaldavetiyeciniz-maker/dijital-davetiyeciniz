@@ -5,6 +5,7 @@ import SafeImage from '@/components/ui/SafeImage';
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -25,8 +26,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function LuxuryHotelLayout({
-  wedding,
+export default function LuxuryHotelLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -43,7 +43,7 @@ export default function LuxuryHotelLayout({
   handleMapClick,
   cardBgColor = '#0a0a0a',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const overrides = wedding.custom_overrides || {};
   const focalX = overrides.photoFocalPoint?.x ?? wedding.photo_focal_point?.x ?? 50;
   const focalY = overrides.photoFocalPoint?.y ?? wedding.photo_focal_point?.y ?? 50;
@@ -66,7 +66,7 @@ export default function LuxuryHotelLayout({
       data-testid="layout-luxury-hotel"
     >
       {/* LEFT: GRAND PHOTO (Split Screen) */}
-      <div className="w-full h-[50vh] md:h-screen md:w-[45%] lg:w-[50%] relative shrink-0">
+      <div data-testid="invitation-card-surface" className="w-full h-[50vh] md:h-screen md:w-[45%] lg:w-[50%] relative shrink-0" style={cardSurfaceStyle}>
         <div className="absolute inset-0 z-10 bg-gradient-to-t md:bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent pointer-events-none" />
         
         {couplePhoto ? (

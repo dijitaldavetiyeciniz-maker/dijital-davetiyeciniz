@@ -5,6 +5,7 @@ import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/l
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -25,8 +26,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function FashionMagazineLayout({
-  wedding,
+export default function FashionMagazineLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -43,7 +43,7 @@ export default function FashionMagazineLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const overrides = wedding.custom_overrides || {};
   const focalX = overrides.photoFocalPoint?.x ?? wedding.photo_focal_point?.x ?? 50;
   const focalY = overrides.photoFocalPoint?.y ?? wedding.photo_focal_point?.y ?? 50;
@@ -68,7 +68,7 @@ export default function FashionMagazineLayout({
       data-testid="layout-fashion-magazine"
     >
       {/* FULL BLEED BACKGROUND IMAGE */}
-      <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
+      <div data-testid="invitation-card-surface" className="fixed inset-0 w-full h-full z-0 pointer-events-none" style={cardSurfaceStyle}>
         {couplePhoto ? (
           <SafeImage 
             src={couplePhoto} 

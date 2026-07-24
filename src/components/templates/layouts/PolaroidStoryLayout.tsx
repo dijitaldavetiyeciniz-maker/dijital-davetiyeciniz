@@ -5,6 +5,7 @@ import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/l
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -25,8 +26,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function PolaroidStoryLayout({
-  wedding,
+export default function PolaroidStoryLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -43,7 +43,7 @@ export default function PolaroidStoryLayout({
   handleMapClick,
   cardBgColor = '#eae7e0',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const themeRose = primaryColor || '#e11d48';
   const mainBg = cardBgColor || '#eae7e0';
 
@@ -69,7 +69,7 @@ export default function PolaroidStoryLayout({
       data-testid="layout-polaroid-story"
     >
       {/* Container - Stacked on mobile, huge canvas on desktop */}
-      <div className="max-w-[1400px] mx-auto w-full min-h-screen relative p-4 sm:p-8 md:min-h-[1100px] lg:min-h-[900px] flex flex-col md:block items-center overflow-hidden">
+      <div data-testid="invitation-card-surface" className="max-w-[1400px] mx-auto w-full min-h-screen relative p-4 sm:p-8 md:min-h-[1100px] lg:min-h-[900px] flex flex-col md:block items-center overflow-hidden" style={cardSurfaceStyle}>
 
         {/* MOBILE VIEW: Vertical Flow, DESKTOP VIEW: Absolute Scattered Flow */}
 

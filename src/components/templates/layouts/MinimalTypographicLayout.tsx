@@ -4,6 +4,7 @@ import { Calendar, MapPin, Navigation, ArrowRight } from 'lucide-react';
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -24,8 +25,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function MinimalTypographicLayout({
-  wedding,
+export default function MinimalTypographicLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -42,7 +42,7 @@ export default function MinimalTypographicLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const couplePhoto = wedding.bride_photo_url || wedding.groom_photo_url || wedding.background_image_url || '';
   const mainBg = cardBgColor || '#ffffff';
   
@@ -60,7 +60,7 @@ export default function MinimalTypographicLayout({
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), backgroundColor: mainBg, color: textColor || '#111', fontFamily: `"${bodyFont}", sans-serif` }}
     >
       {/* Structural Grid lines for Swiss aesthetic */}
-      <div className="absolute inset-0 pointer-events-none grid grid-cols-4 lg:grid-cols-12 gap-4 px-6 lg:px-12 opacity-[0.04]">
+      <div data-testid="invitation-card-surface" className="absolute inset-0 pointer-events-none grid grid-cols-4 lg:grid-cols-12 gap-4 px-6 lg:px-12 opacity-[0.04]" style={cardSurfaceStyle}>
         {Array.from({ length: 12 }).map((_, i) => (
           <div key={i} className="h-full border-l border-current hidden lg:block" />
         ))}

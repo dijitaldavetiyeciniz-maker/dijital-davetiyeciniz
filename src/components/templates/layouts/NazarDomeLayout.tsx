@@ -2,10 +2,10 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function NazarDomeLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
+export default function NazarDomeLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-lg mx-auto rounded-full p-8 shadow-xl border-4 border-blue-600 text-center relative flex flex-col items-center justify-center min-h-[600px] overflow-hidden" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
-      <div className="absolute inset-0 bg-blue-50 border-[16px] border-white rounded-full"></div>
+      <div data-testid="invitation-card-surface" className="absolute inset-0 bg-blue-50 border-[16px] border-white rounded-full" style={cardSurfaceStyle}></div>
       <div className="absolute inset-4 bg-white rounded-full shadow-inner border border-blue-100"></div>
       <div className="relative z-10 p-8 w-full">
         <div className="w-16 h-16 mx-auto bg-blue-600 rounded-full border-4 border-white shadow-md flex items-center justify-center mb-6">

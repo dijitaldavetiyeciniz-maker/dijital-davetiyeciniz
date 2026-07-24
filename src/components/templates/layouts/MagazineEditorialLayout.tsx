@@ -4,6 +4,7 @@ import { Calendar, MapPin, Navigation } from 'lucide-react';
 import SafeImage from '@/components/ui/SafeImage';
 
 interface LayoutProps {
+  cardSurfaceStyle?: React.CSSProperties;
   selectedBackground?: any;
   wedding: any;
   primaryColor: string;
@@ -24,8 +25,7 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function MagazineEditorialLayout({
-  wedding,
+export default function MagazineEditorialLayout({ wedding,
   primaryColor,
   textColor,
   headingFont,
@@ -42,7 +42,7 @@ export default function MagazineEditorialLayout({
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground}: LayoutProps) {
+, selectedBackground, cardSurfaceStyle }: LayoutProps) {
   const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
   const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
 
@@ -86,9 +86,9 @@ export default function MagazineEditorialLayout({
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
       {/* Dergi Kapağı Kartı (Asimetrik CSS Grid Yapısı) */}
-      <div 
+      <div data-testid="invitation-card-surface" 
         className={`relative rounded-[2rem] overflow-hidden p-6 sm:p-10 border flex flex-col justify-between min-h-[640px] shadow-2xl transition-colors duration-500 ${containerBg}`}
-        style={{ borderColor: variant === 'luxury' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', color: textColor }}
+        style={{ ...cardSurfaceStyle,  borderColor: variant === 'luxury' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', color: textColor }}
       >
         
         {/* MASTHEAD (Dergi Başlığı Edisyonu - En Üst Alan) */}

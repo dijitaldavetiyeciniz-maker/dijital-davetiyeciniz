@@ -2,10 +2,10 @@
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function StorybookLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground }: any) {
+export default function StorybookLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-2xl mx-auto shadow-2xl flex flex-col md:flex-row text-slate-800 rounded-xl overflow-hidden border border-slate-200" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
-      <div className="w-full md:w-1/2 p-10 bg-white border-r border-slate-200 flex flex-col justify-center items-center text-center">
+      <div data-testid="invitation-card-surface" className="w-full md:w-1/2 p-10 bg-white border-r border-slate-200 flex flex-col justify-center items-center text-center" style={cardSurfaceStyle}>
         <h1 className="text-5xl font-black mb-4 text-[#7C3AED]" style={{ fontFamily: `"${headingFont}", cursive` }}>{wedding.bride_name}</h1>
         <h3 className="text-sm uppercase tracking-widest font-bold opacity-60">Birinci Bölüm</h3>
       </div>

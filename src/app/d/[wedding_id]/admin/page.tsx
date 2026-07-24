@@ -248,6 +248,7 @@ export default function CoupleAdminPage({
   const [cardOpacity, setCardOpacity] = useState(90); // Kart Opaklığı (0-100)
   const [cardBlur, setCardBlur] = useState(0); // Kart Bulanıklığı (px)
   const [sceneBackgroundColor, setSceneBackgroundColor] = useState('#f8f7f4'); // Dış Sahne Rengi
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({}); // Validasyon hataları
   const [envelopeColor, setEnvelopeColor] = useState('#e6d5c3');
   const [envelopeBgColor, setEnvelopeBgColor] = useState('slate');
   const [envelopeFlapType, setEnvelopeFlapType] = useState('triangle');
@@ -541,16 +542,46 @@ export default function CoupleAdminPage({
   }
 
   async function handleSaveDesign() {
-    // Zorunlu alan validasyonu
-    const validationErrors: string[] = [];
-    if (!brideName?.trim() && !groomName?.trim()) validationErrors.push('Gelin/Damat isim(ler)i');
-    if (!weddingDate) validationErrors.push('Etkinlik tarihi');
-    if (!venueName?.trim()) validationErrors.push('Mekan adı');
-    if (!templateId) validationErrors.push('Şablon seçimi');
-    if (!eventType) validationErrors.push('Etkinlik türü');
+    // Zorunlu alan validasyonu (Etkinlik türüne duyarlı)
+    const errors: Record<string, string> = {};
+    const isCorporate = eventType === 'corporate' || eventType === 'Kurumsal' || eventType === 'Özel Davet';
     
-    if (validationErrors.length > 0) {
-      alert('⚠️ Lütfen aşağıdaki zorunlu alanları tamamlayın:\n\n• ' + validationErrors.join('\n• '));
+    if (!isCorporate && !brideName?.trim() && !groomName?.trim()) {
+      errors.brideName = 'İsim / Kişi adı girilmesi zorunludur.';
+    }
+    if (!weddingDate) {
+      errors.weddingDate = 'Etkinlik tarihi ve saati zorunludur.';
+    }
+    if (!venueName?.trim()) {
+      errors.venueName = 'Mekan adı zorunludur.';
+    }
+    if (!templateId) {
+      errors.templateId = 'Şablon seçimi zorunludur.';
+    }
+    if (!eventType) {
+      errors.eventType = 'Etkinlik türü seçimi zorunludur.';
+    }
+
+    setFieldErrors(errors);
+
+    const errorKeys = Object.keys(errors);
+    if (errorKeys.length > 0) {
+      if (errors.brideName || errors.weddingDate || errors.venueName || errors.eventType) {
+        setActiveMainTab('genel');
+      } else if (errors.templateId) {
+        setActiveMainTab('tema');
+      }
+
+      setTimeout(() => {
+        const firstKey = errorKeys[0];
+        const el = document.getElementById(`field-${firstKey}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.focus();
+        }
+      }, 150);
+
+      alert('⚠️ Lütfen aşağıdaki eksik alanları tamamlayın:\n\n• ' + Object.values(errors).join('\n• '));
       return;
     }
 
@@ -1459,7 +1490,8 @@ export default function CoupleAdminPage({
                        ['Özel Davet', 'Bekarlığa Veda'].includes(eventType) ? 'Davet Sahibi (1)' : 
                        'Gelin / Gelin Adayı'}
                     </label>
-                    <input value={brideName} onChange={e=>setBrideName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
+                    <input id="field-brideName" value={brideName} onChange={e=>{ setBrideName(e.target.value); if (fieldErrors.brideName) setFieldErrors(prev => ({...prev, brideName: ''})); }} type="text" className={`w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white ${fieldErrors.brideName ? 'border-rose-500 ring-2 ring-rose-200' : ''}`} />
+                    {fieldErrors.brideName && <p className="text-xs text-rose-500 font-semibold mt-1">⚠️ {fieldErrors.brideName}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">
@@ -1468,7 +1500,7 @@ export default function CoupleAdminPage({
                        ['Özel Davet', 'Bekarlığa Veda'].includes(eventType) ? 'Davet Sahibi (2) (Opsiyonel)' : 
                        'Damat / Damat Adayı'}
                     </label>
-                    <input value={groomName} onChange={e=>setGroomName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
+                    <input id="field-groomName" value={groomName} onChange={e=>setGroomName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
                   </div>
                 </div>
 
@@ -1496,11 +1528,13 @@ export default function CoupleAdminPage({
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">Tarih ve Saat</label>
-                    <input type="datetime-local" value={weddingDate} onChange={e=>setWeddingDate(e.target.value)} className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
+                    <input id="field-weddingDate" type="datetime-local" value={weddingDate} onChange={e=>{ setWeddingDate(e.target.value); if (fieldErrors.weddingDate) setFieldErrors(prev => ({...prev, weddingDate: ''})); }} className={`w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white ${fieldErrors.weddingDate ? 'border-rose-500 ring-2 ring-rose-200' : ''}`} />
+                    {fieldErrors.weddingDate && <p className="text-xs text-rose-500 font-semibold mt-1">⚠️ {fieldErrors.weddingDate}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-1">Mekan Adı</label>
-                    <input value={venueName} onChange={e=>setVenueName(e.target.value)} type="text" className="w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white" />
+                    <input id="field-venueName" value={venueName} onChange={e=>{ setVenueName(e.target.value); if (fieldErrors.venueName) setFieldErrors(prev => ({...prev, venueName: ''})); }} type="text" className={`w-full border p-2 rounded-lg bg-white/50 backdrop-blur-sm shadow-inner focus:bg-white ${fieldErrors.venueName ? 'border-rose-500 ring-2 ring-rose-200' : ''}`} />
+                    {fieldErrors.venueName && <p className="text-xs text-rose-500 font-semibold mt-1">⚠️ {fieldErrors.venueName}</p>}
                   </div>
                 </div>
 
