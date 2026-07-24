@@ -1101,8 +1101,26 @@ export default function CoupleAdminPage({
     setIsAudioUploading(false);
   }
 
-  if (loading) return <div className="p-10 text-center">Yükleniyor...</div>;
   if (!wedding) return <div className="p-10 text-center">Böyle bir düğün bulunamadı.</div>;
+
+  if (wedding.deleted_at || wedding.is_active === false) {
+    return (
+      <div className="min-h-screen bg-[#0a0a12] text-white flex items-center justify-center p-6 text-center font-sans">
+        <div className="max-w-md w-full bg-white/5 border border-rose-500/30 p-8 rounded-3xl backdrop-blur-xl">
+          <div className="w-16 h-16 bg-rose-500/20 text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-500/30">
+            <Trash2 className="w-8 h-8" />
+          </div>
+          <h1 className="text-2xl font-bold font-serif mb-2 text-white">Bu Davetiye Çöp Kutusunda</h1>
+          <p className="text-slate-400 text-sm mb-6 leading-relaxed">
+            Bu davetiye silinmiş veya erişime kapatılmıştır. Davetiyenizi düzenlemek için lütfen ana panelinizden (Dashboard) geri yükleyin.
+          </p>
+          <a href="/dashboard" className="bg-gradient-to-r from-rose-500 to-pink-600 text-white px-6 py-3 rounded-xl font-bold text-sm inline-block shadow-lg shadow-rose-500/30 hover:opacity-90 transition-opacity">
+            Dashboard'a Dön
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (

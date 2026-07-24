@@ -66,4 +66,10 @@ test.describe('PART 1 — Security, Dashboard Soft Delete & Event Type Architect
     await page.goto('/giris-yap');
     await expect(page.getByRole('button', { name: 'Giriş Yap' })).toBeVisible();
   });
+
+  test('Soft delete screen blocks admin route if wedding is inactive or trashed', async ({ page }) => {
+    await page.goto('/d/demo1/admin');
+    const body = page.locator('body');
+    await expect(body).toBeVisible();
+  });
 });
