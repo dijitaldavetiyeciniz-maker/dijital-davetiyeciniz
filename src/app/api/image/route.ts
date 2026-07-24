@@ -1,7 +1,15 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { isSafeUrl } from '@/lib/ssrfProtection';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 export async function GET(request: Request) {
+  const ip = request.headers.get('x-forwarded-for') || 'anon';
+  const rate = checkRateLimit(`image_api_${ip}`, { windowMs: 60000, max: 60 });
+  if (!rate.success) {
+    return new NextResponse('Çok fazla istek gönderildi. Lütfen bekleyin.', { status: 429 });
+  }
+
   const { searchParams } = new URL(request.url);
   const file_id = searchParams.get('file_id');
   const wedding_id = searchParams.get('wedding_id');
@@ -31,6 +39,13 @@ export async function GET(request: Request) {
 
     // 2. Telegram'dan file_path bilgisini al
     const getFileUrl = `https://api.telegram.org/bot${token}/getFile?file_id=${file_id}`;
+    
+    // SSRF Check
+    const ssrfCheck = isSafeUrl(getFileUrl);
+    if (!ssrfCheck.safe) {
+      return new NextResponse('Güvensiz URL tespiti: ' + ssrfCheck.reason, { status: 400 });
+    }
+
     const fileRes = await fetch(getFileUrl);
     const fileData = await fileRes.json();
 
