@@ -3,6 +3,7 @@ import React from 'react';
 import { Calendar, MapPin, Navigation, MoveRight } from 'lucide-react';
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
+import InvitationContentSurface from '../InvitationContentSurface';
 
 interface LayoutProps {
   cardSurfaceStyle?: React.CSSProperties;
@@ -126,62 +127,68 @@ export default function SplitScreenLayout({ wedding,
 
           {/* DAVET İÇERİK BÖLÜMÜ */}
           <div 
-            className={`relative p-8 sm:p-10 flex flex-col justify-between items-center text-center z-10 ${contentColSpan} ${
+            className={`relative p-4 sm:p-8 flex flex-col justify-between items-center text-center z-10 space-y-4 ${contentColSpan} ${
               mobileOrder === 'content-first' ? 'order-1 md:order-none' : 'order-2 md:order-none'
             }`}
-            style={{ backgroundColor: cardBgColor, color: textColor }}
+            style={{ color: textColor }}
           >
-            {/* Güvenli İçerik Katmanı */}
-            <div className="w-full flex flex-col items-center">
-              {/* Monogram / Logo Süsü */}
-              <div className="flex flex-col items-center mb-6 select-none opacity-80">
-                <div className="text-xl sm:text-2xl font-serif font-light tracking-[0.2em] uppercase leading-none" style={{ color: primaryColor }}>
-                  {groomInitial ? `${brideInitial}•${groomInitial}` : brideInitial}
+            {/* HERO TEXT SURFACE */}
+            <InvitationContentSurface testId="hero-text-surface" surfaceStyle={cardSurfaceStyle} className="w-full p-6 rounded-3xl">
+              <div className="w-full flex flex-col items-center">
+                {/* Monogram / Logo Süsü */}
+                <div className="flex flex-col items-center mb-4 select-none opacity-80">
+                  <div className="text-xl sm:text-2xl font-serif font-light tracking-[0.2em] uppercase leading-none" style={{ color: primaryColor }}>
+                    {groomInitial ? `${brideInitial}•${groomInitial}` : brideInitial}
+                  </div>
+                  <div className="w-6 h-[0.5px] mt-1.5 opacity-55" style={{ backgroundColor: primaryColor }} />
                 </div>
-                <div className="w-6 h-[0.5px] mt-1.5 opacity-55" style={{ backgroundColor: primaryColor }} />
-              </div>
 
-              {/* Etkinlik Türü */}
-              <h3 className="font-semibold tracking-[0.25em] uppercase text-[9px] mb-4 opacity-75" style={{ color: primaryColor }}>
-                {eventTitle}
-              </h3>
+                {/* Etkinlik Türü */}
+                <h3 className="font-semibold tracking-[0.25em] uppercase text-[9px] mb-3 opacity-75" style={{ color: primaryColor }}>
+                  {eventTitle}
+                </h3>
 
-              {/* İsimler */}
-              <div className="w-full mb-6">
-                {wedding.bride_parents && (
-                  <p className="text-[9px] tracking-[0.2em] font-light mb-3 opacity-60 uppercase font-sans">
-                    {wedding.bride_parents}
-                  </p>
-                )}
-                <h1 className="text-2xl sm:text-3xl font-light leading-snug tracking-wide" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
-                  {wedding.bride_name}
-                </h1>
-                <div className="my-1.5 text-xs italic opacity-50" style={{ fontFamily: `"${accentFont}", cursive` }}>
-                  and
+                {/* İsimler */}
+                <div className="w-full mb-4">
+                  {wedding.bride_parents && (
+                    <p className="text-[9px] tracking-[0.2em] font-light mb-2 opacity-60 uppercase font-sans">
+                      {wedding.bride_parents}
+                    </p>
+                  )}
+                  <h1 className="text-2xl sm:text-3xl font-light leading-snug tracking-wide" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
+                    {wedding.bride_name}
+                  </h1>
+                  <div className="my-1 text-xs italic opacity-50" style={{ fontFamily: `"${accentFont}", cursive` }}>
+                    and
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl font-light leading-snug tracking-wide" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
+                    {wedding.groom_name}
+                  </h1>
+                  {wedding.groom_parents && (
+                    <p className="text-[9px] tracking-[0.2em] font-light mt-2 opacity-60 uppercase font-sans">
+                      {wedding.groom_parents}
+                    </p>
+                  )}
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-light leading-snug tracking-wide" style={{ color: primaryColor, fontFamily: `"${headingFont}", serif` }}>
-                  {wedding.groom_name}
-                </h1>
-                {wedding.groom_parents && (
-                  <p className="text-[9px] tracking-[0.2em] font-light mt-3 opacity-60 uppercase font-sans">
-                    {wedding.groom_parents}
-                  </p>
-                )}
-              </div>
 
-              {/* Davet Mesajı */}
-              <div className="my-2 leading-relaxed text-xs opacity-90 max-w-sm italic">
-                {renderQuote()}
+                {/* Davet Mesajı */}
+                <div className="my-2 leading-relaxed text-xs opacity-90 max-w-sm italic">
+                  {renderQuote()}
+                </div>
               </div>
+            </InvitationContentSurface>
 
-              {/* Geri Sayım */}
-              <div className="w-full my-4">
+            {/* COUNTDOWN SURFACE */}
+            <InvitationContentSurface testId="countdown-surface" surfaceStyle={cardSurfaceStyle} className="w-full p-4 rounded-2xl">
+              <div className="w-full">
                 {renderTimer()}
               </div>
+            </InvitationContentSurface>
 
-              {/* Tarih ve Mekan Detayları */}
-              <div className="w-full max-w-xs text-xs font-semibold my-6 space-y-2.5">
-                <div className="flex items-center gap-3 py-2.5 px-4 rounded-xl border bg-black/5" style={{ borderColor: `${primaryColor}15` }}>
+            {/* VENUE & DATE SURFACE */}
+            <InvitationContentSurface testId="venue-surface" surfaceStyle={cardSurfaceStyle} className="w-full p-4 rounded-2xl">
+              <div className="w-full text-xs font-semibold space-y-2.5">
+                <div data-testid="date-surface" className="flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl border bg-black/5" style={{ borderColor: `${primaryColor}15` }}>
                   <Calendar className="w-4 h-4 shrink-0" style={{ color: primaryColor }} />
                   <span>{dateStr} <span className="mx-1 opacity-45">|</span> {timeStr}</span>
                 </div>
@@ -196,31 +203,32 @@ export default function SplitScreenLayout({ wedding,
                   )}
                 </div>
               </div>
-            </div>
+            </InvitationContentSurface>
 
-            {/* BUTON GRUBU (MIN 48PX, ÇENTİK KORUMALI) */}
-            <div className="w-full max-w-xs flex flex-col gap-3 mt-4 safe-bottom">
-              
-              {/* Buton 1: KONUMA GİT */}
-              {hasMaps && (
-                <button 
-                  type="button"
-                  onClick={handleMapClick}
-                  className="w-full h-12 rounded-full border flex items-center justify-between px-5 font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer focus-visible:ring-2 focus-visible:outline-none"
-                  style={{ 
-                    borderColor: `${primaryColor}30`, 
-                    color: primaryColor,
-                    backgroundColor: 'rgba(255, 255, 255, 0.4)'
-                  }}
-                >
-                  <span>KONUMA GİT</span>
-                  <span>&rarr;</span>
-                </button>
-              )}
+            {/* ACTION SURFACE */}
+            <InvitationContentSurface testId="action-surface" surfaceStyle={cardSurfaceStyle} className="w-full p-4 rounded-2xl">
+              <div className="w-full flex flex-col gap-3 safe-bottom">
+                {/* Buton 1: KONUMA GİT */}
+                {hasMaps && (
+                  <button 
+                    type="button"
+                    onClick={handleMapClick}
+                    className="w-full h-12 rounded-full border flex items-center justify-between px-5 font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer focus-visible:ring-2 focus-visible:outline-none"
+                    style={{ 
+                      borderColor: `${primaryColor}30`, 
+                      color: primaryColor,
+                      backgroundColor: 'rgba(255, 255, 255, 0.4)'
+                    }}
+                  >
+                    <span>KONUMA GİT</span>
+                    <span>&rarr;</span>
+                  </button>
+                )}
 
-              {/* Buton 2: KATILIM ANKETİ / LCV BİLDİRİMİ */}
-              {showRsvp && renderRsvpButton()}
-            </div>
+                {/* Buton 2: KATILIM ANKETİ / LCV BİLDİRİMİ */}
+                {showRsvp && renderRsvpButton()}
+              </div>
+            </InvitationContentSurface>
 
             {/* Anı Defteri */}
             {renderGuestBook()}
