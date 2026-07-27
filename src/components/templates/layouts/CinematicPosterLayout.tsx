@@ -65,6 +65,18 @@ export default function CinematicPosterLayout({ wedding,
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`, backgroundColor: mainBg }}
       data-testid="layout-cinematic-poster"
     >
+      {wedding?.template_id === 'film-premiere-night' && (
+        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="film-premiere-night" aria-hidden="true">
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
+          </div>
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
+          </div>
+        </div>
+      )}
       {/* SİNEMATİK ÜST BAR */}
       <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute top-0 inset-x-0 w-full bg-gradient-to-r from-red-950/80 via-black to-red-950/80 py-2 px-6 flex items-center justify-between border-b border-red-500/20 text-[9px] sm:text-xs font-mono tracking-[0.3em] text-red-400 select-none z-50" style={cardSurfaceStyle}>
         <div className="flex items-center gap-2 font-bold">

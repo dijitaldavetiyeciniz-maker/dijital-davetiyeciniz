@@ -66,6 +66,18 @@ export default function BotanicalCeramicLayout({ wedding,
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`, backgroundColor: mainBg, color: computedTextColor }}
       data-testid="layout-botanical-ceramic"
     >
+      {wedding?.template_id === 'mediterranean-ceramic-garden' && (
+        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="mediterranean-ceramic-garden" aria-hidden="true">
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
+          </div>
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
+          </div>
+        </div>
+      )}
       {/* Left Column: Botanical & Image */}
       <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="w-full lg:w-1/2 relative min-h-[50vh] lg:min-h-screen flex items-center justify-center p-6 lg:p-12 overflow-hidden bg-[#f4f1eb]" style={cardSurfaceStyle}>
         {/* Ceramic/Tile subtle background pattern overlay */}

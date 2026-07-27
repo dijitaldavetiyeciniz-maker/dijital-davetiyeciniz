@@ -5,6 +5,18 @@ import CountdownTimer from '../../CountdownTimer';
 export default function OrientalLaceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-lg mx-auto p-6 sm:p-12 relative shadow-lg" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
+      {wedding?.template_id === 'ottoman-illumination' && (
+        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="ottoman-illumination" aria-hidden="true">
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
+          </div>
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
+          </div>
+        </div>
+      )}
       <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute inset-4 border-2 border-dotted pointer-events-none rounded-xl opacity-30" style={{ ...cardSurfaceStyle,  borderColor: primaryColor }}></div>
       <div className="absolute inset-6 border border-solid pointer-events-none rounded-lg opacity-20" style={{ borderColor: primaryColor }}></div>
       <div className="text-center relative z-10 py-12">

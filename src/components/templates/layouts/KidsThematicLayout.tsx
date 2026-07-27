@@ -44,7 +44,7 @@ export default function KidsThematicLayout({ wedding,
 , selectedBackground, cardSurfaceStyle }: LayoutProps) {
   // 1. VARYANT BELİRLEME
   const presetId = wedding.template_id || '';
-  let variant: 'clouds-above' | 'little-racer' | 'blue-bear' | 'pink-princess' | 'neutral' = 'neutral';
+  let variant: 'clouds-above' | 'little-racer' | 'blue-bear' | 'pink-princess' | 'storybook-birthday' | 'neutral' = 'neutral';
   
   if (presetId === 'clouds-above') {
     variant = 'clouds-above';
@@ -54,6 +54,10 @@ export default function KidsThematicLayout({ wedding,
     variant = 'blue-bear';
   } else if (presetId === 'pink-princess') {
     variant = 'pink-princess';
+  } else if (presetId === 'storybook-birthday') {
+    variant = 'storybook-birthday';
+  } else if (presetId === 'storybook-babyshower') {
+    variant = 'blue-bear'; // Default for baby shower if no gender
   } else {
     // Fallback parsing
     const overrides = wedding.custom_overrides || {};
@@ -149,6 +153,17 @@ export default function KidsThematicLayout({ wedding,
         <div className="absolute top-20 right-8 text-3xl animate-pulse">👑</div>
         <div className="absolute bottom-24 left-8 text-3xl">🦋</div>
         <div className="absolute bottom-16 right-10 text-4xl animate-bounce duration-[5000ms]">🌸</div>
+      </div>
+    );
+  } else if (variant === 'storybook-birthday') {
+    themeColor = primaryColor || '#f59e0b'; // Doğum Günü Sarısı
+    cardStyle += ' border-amber-200 shadow-amber-200/40';
+    backgroundDecoration = (
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.3]">
+        <div className="absolute top-10 left-8 text-5xl animate-bounce duration-[3000ms]">🎉</div>
+        <div className="absolute top-12 right-12 text-4xl animate-pulse">🎈</div>
+        <div className="absolute bottom-20 left-10 text-4xl animate-bounce duration-[4500ms]">🎁</div>
+        <div className="absolute bottom-16 right-8 text-3xl">🎊</div>
       </div>
     );
   }

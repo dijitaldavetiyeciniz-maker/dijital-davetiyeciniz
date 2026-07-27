@@ -137,6 +137,18 @@ export default function ModernEventLayout({ wedding,
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}
     >
+      {wedding?.template_id === 'future-summit' && (
+        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="future-summit" aria-hidden="true">
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
+          </div>
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
+          </div>
+        </div>
+      )}
       <div 
         className={`relative rounded-[2.5rem] overflow-hidden p-6 sm:p-10 border flex flex-col justify-between min-h-[640px] shadow-2xl transition-all duration-500 ${containerBg}`}
         style={{ borderColor: 'rgba(255,255,255,0.06)' }}

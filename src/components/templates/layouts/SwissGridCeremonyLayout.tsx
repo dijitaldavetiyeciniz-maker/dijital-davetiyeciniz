@@ -5,6 +5,18 @@ import CountdownTimer from '../../CountdownTimer';
 export default function SwissGridCeremonyLayout({ wedding, primaryColor, textColor, dateStr, timeStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-5xl mx-auto p-8 sm:p-12 font-sans" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
+      {wedding?.template_id === 'minimal-swiss-gallery' && (
+        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="minimal-swiss-gallery" aria-hidden="true">
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
+          </div>
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
+          </div>
+        </div>
+      )}
       <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="grid grid-cols-1 md:grid-cols-12 gap-8 border-t-4 pt-4" style={{ ...cardSurfaceStyle,  borderColor: primaryColor }}>
         <div className="md:col-span-3 text-xs uppercase tracking-widest font-bold">
           <p className="mb-2">01 — Gelin & Damat</p>

@@ -6,6 +6,18 @@ import CountdownTimer from '../../CountdownTimer';
 export default function ParisianApartmentLayout({ wedding, primaryColor, textColor, headingFont, bodyFont, dateStr, timeStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   return (
     <div className="w-full max-w-2xl mx-auto min-h-screen p-4 sm:p-8 flex flex-col items-center" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
+      {wedding?.template_id === 'parisian-black-tie' && (
+        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="parisian-black-tie" aria-hidden="true">
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
+          </div>
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
+          </div>
+        </div>
+      )}
       <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="w-full h-full border-x-4 border-t-8 border-b-4 rounded-t-[5rem] p-8 flex flex-col items-center relative overflow-hidden" style={{ ...cardSurfaceStyle,  borderColor: primaryColor }}>
         {/* Balcony Grill SVG */}
         <div className="absolute bottom-0 w-full h-32 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #000 2px, transparent 2px)', backgroundSize: '10px 10px' }}></div>

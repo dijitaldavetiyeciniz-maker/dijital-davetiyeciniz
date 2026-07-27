@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, use, useMemo } from 'react';
+import { useState, useEffect, use, useMemo, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { getSmartAutoMatch } from '@/lib/autoMatch';
 import { mapEnumToDbEventType } from '@/lib/themes';
@@ -243,6 +243,7 @@ export default function CoupleAdminPage({
   
   // Tasarım Stüdyosu State
   const [templateId, setTemplateId] = useState('template1');
+  const latestTemplateIdRef = useRef<string | null>(null);
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
   const [textColor, setTextColor] = useState('#1e293b'); // Yeni eklenen metin rengi
   const [cardBgColor, setCardBgColor] = useState('#ffffff'); // Kart Zemin Rengi
@@ -532,10 +533,24 @@ export default function CoupleAdminPage({
     }
   }
 
+  useEffect(() => {
+    if (wedding && typeof window !== 'undefined') {
+      const authKey = `wedding_auth_${wedding.id}`;
+      const savedAuth = sessionStorage.getItem(authKey);
+      if (savedAuth === wedding.admin_password) {
+        setIsAuthenticated(true);
+        fetchRsvps(wedding.id);
+      }
+    }
+  }, [wedding]);
+
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     if (wedding && passwordInput === wedding.admin_password) {
       setIsAuthenticated(true);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(`wedding_auth_${wedding.id}`, passwordInput);
+      }
       fetchRsvps(wedding.id);
     } else {
       setErrorMsg('Şifre hatalı. Lütfen tekrar deneyin.');
@@ -587,7 +602,7 @@ export default function CoupleAdminPage({
     }
 
     const payload: any = {
-      template_id: templateId,
+      template_id: latestTemplateIdRef.current || templateId,
       primary_color: primaryColor,
       text_color: textColor,
       envelope_color: envelopeColor,
@@ -764,7 +779,9 @@ export default function CoupleAdminPage({
   };
 
   function applyPreset(theme: any, selectedVariant?: any) {
-    setTemplateId(theme.template_id || theme.id);
+    const newTemplateId = theme.template_id || theme.id;
+    latestTemplateIdRef.current = newTemplateId;
+    setTemplateId(newTemplateId);
     
     // Choose active color palette (Selected variant or theme default colorPalette)
     const palette = selectedVariant?.colorPalette || theme.colorPalette;
@@ -1808,6 +1825,7 @@ export default function CoupleAdminPage({
                               <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
                                 <button
                                   type="button"
+                                  data-testid={`template-${theme.id}`}
                                   onClick={() => applyPreset(theme)}
                                   className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs ${
                                     isActive

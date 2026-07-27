@@ -82,6 +82,18 @@ export default function ConstellationNightLayout({
       }}
       data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface"
     >
+      {wedding?.template_id === 'moonlit-secret-garden' && (
+        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="moonlit-secret-garden" aria-hidden="true">
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
+          </div>
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
+          </div>
+        </div>
+      )}
       {/* Background Star Map */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none opacity-60">
         <svg className="absolute inset-0 w-full h-full stroke-sky-300/20 fill-none" preserveAspectRatio="xMidYMid slice">

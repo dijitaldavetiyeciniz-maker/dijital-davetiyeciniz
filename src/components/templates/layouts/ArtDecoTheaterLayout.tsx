@@ -63,6 +63,18 @@ export default function ArtDecoTheaterLayout({ wedding,
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}
       data-testid="layout-art-deco-theater"
     >
+      {wedding?.template_id === 'grand-opera-ballroom' && (
+        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="grand-opera-ballroom" aria-hidden="true">
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
+          </div>
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
+          </div>
+        </div>
+      )}
       {/* Background Decorative Pattern */}
       <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute inset-0 pointer-events-none opacity-10 z-0" style={{ ...cardSurfaceStyle, 
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
@@ -136,9 +148,9 @@ export default function ArtDecoTheaterLayout({ wedding,
         
         {/* Quote / Subtitle */}
         <div className="text-center w-full mb-16 mt-8 lg:mt-0">
-          <p className="text-[#F3E5AB] text-xl md:text-2xl font-light italic opacity-90 mx-auto max-w-2xl leading-relaxed" style={{ fontFamily: `"${accentFont}", cursive` }}>
+          <div className="text-[#F3E5AB] text-xl md:text-2xl font-light italic opacity-90 mx-auto max-w-2xl leading-relaxed" style={{ fontFamily: `"${accentFont}", cursive` }}>
             {renderQuote()}
-          </p>
+          </div>
           <div className="flex justify-center items-center mt-8 gap-3">
             <div className="h-[1px] w-24 bg-[#D4AF37]/50" />
             <div className="w-3 h-3 rotate-45 border border-[#D4AF37] bg-[#D4AF37]/20" />

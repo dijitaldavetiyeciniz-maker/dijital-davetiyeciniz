@@ -64,6 +64,18 @@ export default function ModernArchitectureLayout({ wedding,
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), backgroundColor: mainBg, color: contrastText, fontFamily: `"${bodyFont}", sans-serif` }}
       data-testid="layout-modern-architecture"
     >
+      {wedding?.template_id === 'aurora-glass' && (
+        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="aurora-glass" aria-hidden="true">
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
+          </div>
+          <div className="w-full flex justify-between">
+             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
+             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
+          </div>
+        </div>
+      )}
       {/* BAUHAUS GEOMETRIC DECORATIONS */}
       <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" 
         className="hidden md:block absolute top-[10%] left-[45%] w-32 h-32 rounded-full mix-blend-multiply opacity-80 z-0 pointer-events-none transition-transform duration-1000 hover:scale-110"
