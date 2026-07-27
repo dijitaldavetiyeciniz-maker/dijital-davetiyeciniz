@@ -420,11 +420,29 @@ export default function CoupleAdminPage({
       // 2. Mevcut kullanıcının (Auth) oturumunu kontrol et
       const { data: { session } } = await supabase.auth.getSession();
       
-      // Eğer giren kişi bu davetiyenin sahibiyse, şifre sormadan içeri al!
+      let isAuth = false;
       if (session?.user?.id && session.user.id === weddingData.user_id) {
         setIsOwner(true);
+        isAuth = true;
+      } else {
+        try {
+          const res = await fetch('/api/admin/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ wedding_id: weddingData.id })
+          });
+          const data = await res.json();
+          isAuth = data.authenticated;
+        } catch(e) {
+          console.error(e);
+        }
+      }
+
+      if (isAuth) {
         setIsAuthenticated(true);
         fetchRsvps(weddingData.id);
+      } else {
+        setIsAuthenticated(false);
       }
       
       if (weddingData.template_id) setTemplateId(weddingData.template_id);
@@ -533,27 +551,26 @@ export default function CoupleAdminPage({
     }
   }
 
-  useEffect(() => {
-    if (wedding && typeof window !== 'undefined') {
-      const authKey = `wedding_auth_${wedding.id}`;
-      const savedAuth = sessionStorage.getItem(authKey);
-      if (savedAuth === wedding.admin_password) {
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    if (!wedding) return;
+
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wedding_id: wedding.id, password: passwordInput })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
         setIsAuthenticated(true);
         fetchRsvps(wedding.id);
+      } else {
+        setErrorMsg('Şifre hatalı. Lütfen tekrar deneyin.');
       }
-    }
-  }, [wedding]);
-
-  function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-    if (wedding && passwordInput === wedding.admin_password) {
-      setIsAuthenticated(true);
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem(`wedding_auth_${wedding.id}`, passwordInput);
-      }
-      fetchRsvps(wedding.id);
-    } else {
-      setErrorMsg('Şifre hatalı. Lütfen tekrar deneyin.');
+    } catch (e) {
+      setErrorMsg('Giriş yapılırken bir hata oluştu.');
     }
   }
 
@@ -1209,7 +1226,16 @@ export default function CoupleAdminPage({
               </h1>
               <p className="text-slate-500 text-xs mt-1">Davetiye Yönetim ve Tasarım Paneli</p>
             </div>
-            <button onClick={() => setIsAuthenticated(false)} className="text-xs font-semibold px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all">
+            <button onClick={async () => {
+              setIsAuthenticated(false);
+              try {
+                await fetch('/api/admin/logout', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ wedding_id: wedding.id })
+                });
+              } catch(e) {}
+            }} className="text-xs font-semibold px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all">
               Çıkış Yap
             </button>
           </header>
