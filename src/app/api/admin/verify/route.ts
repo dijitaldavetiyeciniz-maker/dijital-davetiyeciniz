@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
+import { verifyAdminCookie } from '@/lib/auth-cookie';
 
 export async function POST(req: Request) {
   try {
@@ -10,23 +11,13 @@ export async function POST(req: Request) {
     }
 
     const cookieStore = await cookies();
-    const storedPassword = cookieStore.get(`admin_auth_${wedding_id}`)?.value;
+    const storedCookie = cookieStore.get(`admin_auth_${wedding_id}`)?.value;
 
-    if (!storedPassword) {
+    if (!storedCookie) {
       return NextResponse.json({ authenticated: false });
     }
 
-    const { data, error } = await supabase
-      .from('weddings')
-      .select('admin_password')
-      .eq('id', wedding_id)
-      .single();
-
-    if (error || !data) {
-      return NextResponse.json({ authenticated: false });
-    }
-
-    if (data.admin_password === storedPassword) {
+    if (verifyAdminCookie(wedding_id, storedCookie)) {
       return NextResponse.json({ authenticated: true });
     }
 

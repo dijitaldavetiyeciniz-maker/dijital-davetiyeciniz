@@ -13,10 +13,13 @@ import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
 
 export default async function DemoWeddingPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ wedding_id: string }>;
+  searchParams: Promise<{ templateId?: string }>;
 }) {
   const { wedding_id } = await params;
+  const sp = await searchParams;
 
   // Supabase'den veriyi çekiyoruz
   const { data: wedding, error } = await supabase
@@ -32,12 +35,13 @@ export default async function DemoWeddingPage({
 
   // Demo modunda ödeme duvarını tamamen baypas etmek için is_paid'i true yapıyoruz
   wedding.is_paid = true;
+  const effectiveTemplateId = sp.templateId || wedding.template_id || 'parisian-black-tie';
 
-  // Veritabanından gelen template_id değerine göre uygun şablonu render et.
+  // Veritabanından veya URL parametresinden gelen templateId değerine göre şablonu render et.
   const templateComponent = (
     <PremiumTemplateRenderer 
       wedding={wedding} 
-      templateId={wedding.template_id || 'template1'} 
+      templateId={effectiveTemplateId} 
     />
   );
 

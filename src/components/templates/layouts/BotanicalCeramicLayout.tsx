@@ -3,6 +3,7 @@ import React from 'react';
 import { Calendar, MapPin, Navigation, Leaf, Flower2, Sparkles } from 'lucide-react';
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
+import CountdownTimer from '../../CountdownTimer';
 
 interface LayoutProps {
   cardSurfaceStyle?: React.CSSProperties;
@@ -60,24 +61,91 @@ export default function BotanicalCeramicLayout({ wedding,
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 
+  if (wedding?.template_id === 'mediterranean-ceramic-garden') {
+    return (
+      <div className="w-full min-h-screen flex flex-col md:flex-row relative bg-[#f8f9fa] font-sans" style={{ color: computedTextColor, ...(selectedBackground?.background ? { background: selectedBackground.background } : {}) }}>
+        
+        {/* Kolon 1: İsim ve Karşılama */}
+        <div className="w-full md:w-1/4 p-8 flex flex-col justify-center items-center text-center border-b md:border-b-0 md:border-r border-[#004b87]/20 relative">
+          <div className="absolute top-0 w-full h-4 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PHBhdGggZD0iTTAgMGgyMHYyMEgwem0xMCAxMGE1IDUgMCAxIDAgMC0xMCA1 5IDAgMCAwIDAgMTB6IiBmaWxsPSIjMDA0Yjg3IiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] opacity-50" />
+          <h1 className="text-4xl md:text-5xl font-light text-[#004b87] leading-tight mb-4" style={{ fontFamily: `"${headingFont}", serif` }}>
+            {wedding.bride_name}
+          </h1>
+          <span className="text-3xl font-serif italic text-[#004b87]/40 my-2">&</span>
+          <h1 className="text-4xl md:text-5xl font-light text-[#004b87] leading-tight mt-4" style={{ fontFamily: `"${headingFont}", serif` }}>
+            {wedding.groom_name}
+          </h1>
+          <div className="w-full h-px bg-[#004b87]/20 my-8" />
+          <p className="text-[9px] uppercase tracking-[0.3em] text-[#004b87]/70 font-bold">
+            {eventTitle}
+          </p>
+        </div>
+
+        {/* Kolon 2: Kemerli Ana Fotoğraf (Merkez) */}
+        <div className="w-full md:w-2/4 p-6 md:p-12 flex flex-col items-center justify-center bg-white relative shadow-[0_0_40px_rgba(0,75,135,0.05)] z-10">
+          <div className="relative w-full max-w-sm aspect-[2/3] mx-auto rounded-t-full rounded-b-xl overflow-hidden border-8 border-[#004b87]/10 p-2">
+            <div className="w-full h-full rounded-t-full rounded-b-lg overflow-hidden relative">
+              {couplePhoto ? (
+                <SafeImage 
+                  src={couplePhoto} 
+                  alt="Couple"
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition }}
+                  isHero={true}
+                />
+              ) : (
+                <div className="w-full h-full bg-[#f0f4f8] flex items-center justify-center">
+                  <Flower2 className="w-16 h-16 text-[#004b87]/20" />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="mt-8 text-center italic text-sm text-[#004b87]/80 max-w-sm px-4">
+            {renderQuote()}
+          </div>
+          
+          <div className="w-full max-w-sm mt-8">
+            <CountdownTimer targetDate={wedding.wedding_date} primaryColor="#004b87" styleType="minimal" />
+          </div>
+        </div>
+
+        {/* Kolon 3: Tarih, Mekan ve Aksiyonlar */}
+        <div className="w-full md:w-1/4 p-8 flex flex-col justify-center items-center text-center border-t md:border-t-0 md:border-l border-[#004b87]/20 relative bg-[#f8f9fa]">
+          <div className="absolute bottom-0 w-full h-4 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PHBhdGggZD0iTTAgMGgyMHYyMEgwem0xMCAxMGE1IDUgMCAxIDAgMC0xMCA1 5IDAgMCAwIDAgMTB6IiBmaWxsPSIjMDA0Yjg3IiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] opacity-50" />
+          
+          <div className="mb-10 w-full">
+            <Calendar className="w-6 h-6 mx-auto text-[#004b87] mb-3" />
+            <div className="font-bold text-lg text-[#004b87] tracking-wider mb-1">{dateStr}</div>
+            <div className="text-xs text-[#004b87]/60">{timeStr}</div>
+          </div>
+
+          <div className="mb-10 w-full">
+            <MapPin className="w-6 h-6 mx-auto text-[#004b87] mb-3" />
+            <div className="font-bold text-sm text-[#004b87] mb-2">{wedding.venue_name}</div>
+            {wedding.venue_address && <div className="text-[10px] text-[#004b87]/60 leading-relaxed">{wedding.venue_address}</div>}
+          </div>
+
+          <div className="w-full flex flex-col gap-4 mt-4">
+             {hasMaps && (
+                <button onClick={handleMapClick} className="w-full h-12 border border-[#004b87] text-[#004b87] hover:bg-[#004b87] hover:text-white rounded-none font-bold text-xs tracking-widest uppercase transition-colors">
+                  Harita
+                </button>
+             )}
+             <div className="w-full">{showRsvp && renderRsvpButton()}</div>
+             <div className="w-full">{renderGuestBook()}</div>
+          </div>
+        </div>
+
+      </div>
+    );
+  }
+
   return (
     <div 
       className="min-h-screen w-full flex flex-col lg:flex-row relative z-10 animate-fade-in"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`, backgroundColor: mainBg, color: computedTextColor }}
       data-testid="layout-botanical-ceramic"
     >
-      {wedding?.template_id === 'mediterranean-ceramic-garden' && (
-        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="mediterranean-ceramic-garden" aria-hidden="true">
-          <div className="w-full flex justify-between">
-             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
-             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
-          </div>
-          <div className="w-full flex justify-between">
-             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
-             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
-          </div>
-        </div>
-      )}
       {/* Left Column: Botanical & Image */}
       <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="w-full lg:w-1/2 relative min-h-[50vh] lg:min-h-screen flex items-center justify-center p-6 lg:p-12 overflow-hidden bg-[#f4f1eb]" style={cardSurfaceStyle}>
         {/* Ceramic/Tile subtle background pattern overlay */}

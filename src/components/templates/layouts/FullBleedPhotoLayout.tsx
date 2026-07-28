@@ -69,23 +69,109 @@ export default function FullBleedPhotoLayout({ wedding,
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 
+  if (wedding?.template_id === 'coastal-sunset') {
+    return (
+      <div className="w-full h-full min-h-screen bg-slate-950 font-sans flex flex-col md:flex-row relative z-10 animate-fade-in">
+        {/* Fotoğraf Bölümü - Mobilde üstte, Masaüstünde solda (veya sağda) yarım ekran */}
+        <div className="w-full h-[50vh] md:h-screen md:w-1/2 relative">
+          {couplePhoto ? (
+            <SafeImage 
+              src={couplePhoto} 
+              alt="Coastal Sunset Couple"
+              className="w-full h-full object-cover transition-transform duration-[12000ms] ease-out motion-safe:scale-105 motion-safe:hover:scale-100"
+              style={{ objectPosition }}
+              isHero={true}
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-950" />
+          )}
+          {/* Gradient Geçiş - Masaüstü için sağa doğru, Mobil için aşağı doğru */}
+          <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-transparent to-slate-950/90 pointer-events-none" />
+        </div>
+
+        {/* İçerik Bölümü - Mobilde altta, Masaüstünde sağda */}
+        <div className="w-full md:w-1/2 flex flex-col justify-center p-8 sm:p-16 lg:p-24 z-10 md:-ml-8 bg-slate-950 md:bg-transparent">
+          <div className="max-w-md w-full mx-auto text-left">
+            
+            <div className="flex items-center gap-4 mb-8 text-amber-500/70 border-b border-amber-500/20 pb-4">
+              <span className="font-bold tracking-[0.3em] uppercase text-xs">
+                {eventTitle}
+              </span>
+              <div className="flex-1 h-px bg-amber-500/20" />
+            </div>
+
+            <h1 className="text-4xl sm:text-6xl font-light text-slate-100 mb-2 leading-tight" style={{ fontFamily: `"${headingFont}", serif` }}>
+              {wedding.bride_name}
+            </h1>
+            <div className="text-amber-500 font-serif italic text-2xl my-1 ml-4">&</div>
+            <h1 className="text-4xl sm:text-6xl font-light text-slate-100 mb-10 leading-tight" style={{ fontFamily: `"${headingFont}", serif` }}>
+              {wedding.groom_name}
+            </h1>
+
+            <div className="my-8 text-sm text-slate-300 italic leading-relaxed pl-4 border-l-2 border-amber-500/30">
+              {renderQuote()}
+            </div>
+
+            <div className="flex flex-col gap-6 text-slate-200 mt-12">
+              <div className="flex items-start gap-4">
+                <Calendar className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-bold tracking-wider mb-1">{dateStr}</div>
+                  <div className="text-xs text-slate-400">{timeStr}</div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <MapPin className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-bold tracking-wider mb-1">{wedding.venue_name || 'Mekan Belirtilmedi'}</div>
+                  {wedding.venue_address && <div className="text-xs text-slate-400 leading-relaxed">{wedding.venue_address}</div>}
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full my-10 bg-slate-900/50 p-6 rounded-2xl border border-slate-800">
+              <span className="text-[10px] font-bold tracking-[0.2em] text-amber-500/60 block mb-3 uppercase">Geri Sayım</span>
+              {renderTimer()}
+            </div>
+
+            <div className="w-full flex flex-col gap-4 mt-8">
+              {hasMaps && (
+                <button 
+                  type="button"
+                  onClick={handleMapClick}
+                  className="w-full h-14 rounded-none border border-slate-700 flex items-center justify-between px-6 font-bold text-xs tracking-[0.2em] uppercase transition-all duration-300 hover:bg-white hover:text-black cursor-pointer text-slate-300"
+                >
+                  <span>KONUMA GİT</span>
+                  <MoveRight className="w-4 h-4" />
+                </button>
+              )}
+
+              {wedding.bank_iban && (
+                <div className="w-full p-6 border border-slate-800 text-left text-xs leading-relaxed text-slate-400 bg-slate-900/30 mt-4">
+                  <div className="flex items-center gap-2 font-bold mb-3 text-amber-500/80">
+                    <Ticket className="w-4 h-4" />
+                    <span className="tracking-widest uppercase text-[10px]">Hediye & IBAN</span>
+                  </div>
+                  <p className="font-mono">{wedding.bank_iban}</p>
+                </div>
+              )}
+
+              <div className="mt-4">{showRsvp && renderRsvpButton()}</div>
+              <div className="mt-4">{renderGuestBook()}</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
-      {wedding?.template_id === 'coastal-sunset' && (
-        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="coastal-sunset" aria-hidden="true">
-          <div className="w-full flex justify-between">
-             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
-             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
-          </div>
-          <div className="w-full flex justify-between">
-             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
-             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
-          </div>
-        </div>
-      )}
       {/* FULL-BLEED KART (Ekranı kaplayan dikey fotoğraf veya şık fallback) */}
       <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="relative rounded-[2.5rem] overflow-hidden min-h-[660px] sm:min-h-[720px] flex flex-col justify-end bg-slate-950 border border-white/5 shadow-2xl" style={cardSurfaceStyle}>
         

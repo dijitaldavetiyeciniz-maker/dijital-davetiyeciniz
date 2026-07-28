@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Navigation, Info } from 'lucide-react';
 import { backgroundDesignRegistry } from '@/lib/registries';
+import CountdownTimer from '../../CountdownTimer';
 
 interface LayoutProps {
   cardSurfaceStyle?: React.CSSProperties;
@@ -84,6 +85,87 @@ export default function BotanicalFrameLayout({ wedding,
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 
+  if (wedding?.template_id === 'fine-art-botanical-watercolor') {
+    return (
+      <div className="w-full min-h-screen bg-[#fcfbfa] flex flex-col items-center py-16 px-6 font-serif relative overflow-hidden" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
+        
+        {/* Kağıt Dokusu Katmanı */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03] mix-blend-multiply" 
+             style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
+
+        {/* Ana Katmanlı Yüzey */}
+        <div className="w-full max-w-4xl relative z-10">
+          
+          {/* Arkadaki Suluboya / Botanik Süs Katmanı (Simüle Edilmiş) */}
+          <div className="absolute -top-12 -left-12 w-64 h-64 bg-emerald-100/40 rounded-full blur-3xl mix-blend-multiply" />
+          <div className="absolute -bottom-24 -right-12 w-80 h-80 bg-rose-100/40 rounded-full blur-3xl mix-blend-multiply" />
+
+          {/* İsim / Tarih Yüzeyi (Bağımsız Sanat Yüzeyi) */}
+          <div className="w-full bg-white/60 backdrop-blur-md border border-emerald-900/10 p-12 md:p-24 shadow-[0_20px_50px_rgba(0,0,0,0.03)] relative mb-12">
+            <div className="absolute top-8 left-8 w-12 h-12 border-t border-l border-emerald-800/30" />
+            <div className="absolute bottom-8 right-8 w-12 h-12 border-b border-r border-emerald-800/30" />
+
+            <div className="text-center">
+              <span className="text-[10px] tracking-[0.3em] uppercase text-emerald-800/60 mb-6 block font-sans">
+                {eventTitle}
+              </span>
+              
+              <h1 className="text-5xl md:text-7xl font-light text-emerald-950 mb-4" style={{ fontFamily: `"${headingFont}", serif` }}>
+                {wedding.bride_name}
+              </h1>
+              <div className="text-3xl font-light text-emerald-800/40 italic my-2">ve</div>
+              <h1 className="text-5xl md:text-7xl font-light text-emerald-950 mb-12" style={{ fontFamily: `"${headingFont}", serif` }}>
+                {wedding.groom_name}
+              </h1>
+
+              <div className="inline-block border-b border-emerald-900/20 pb-4 mb-4">
+                <p className="text-xl md:text-2xl text-emerald-900 tracking-wide">{dateStr}</p>
+                <p className="text-sm text-emerald-800/60 mt-2 font-sans">{timeStr}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* İçerik ve Detay Yüzeyi */}
+          <div className="w-full bg-white/40 border border-emerald-900/5 p-8 md:p-16 relative">
+            <div className="max-w-xl mx-auto text-center flex flex-col items-center">
+              
+              <Info className="w-6 h-6 text-emerald-800/40 mb-6" />
+              
+              <div className="text-sm md:text-base leading-loose italic text-emerald-900/80 mb-12">
+                {renderQuote()}
+              </div>
+
+              <div className="mb-12">
+                <p className="text-[10px] tracking-[0.3em] uppercase text-emerald-800/60 mb-3 font-sans">Mekan</p>
+                <p className="text-lg md:text-xl text-emerald-950">{wedding.venue_name}</p>
+                {wedding.venue_address && <p className="text-xs text-emerald-800/60 mt-2 font-sans">{wedding.venue_address}</p>}
+              </div>
+
+              <div className="w-full mb-12">
+                <CountdownTimer targetDate={wedding.wedding_date} primaryColor="#064e3b" styleType="minimal" />
+              </div>
+
+              <div className="w-full flex flex-col md:flex-row gap-4 justify-center items-center font-sans">
+                {hasMaps && (
+                  <button onClick={handleMapClick} className="px-8 py-4 bg-emerald-900/5 hover:bg-emerald-900/10 text-emerald-950 text-xs tracking-[0.2em] uppercase transition-colors">
+                    Haritaya Git
+                  </button>
+                )}
+                <div className="w-full md:w-auto min-w-[200px]">
+                  {renderRsvpButton()}
+                </div>
+                <div className="w-full md:w-auto min-w-[200px]">
+                  {renderGuestBook()}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
   // 1. DOĞAL KAĞIT / BOTANİK DOKU VE ZEMİN
   const bgRegistry = backgroundDesignRegistry[wedding.background_design || 'fine-paper-texture'] || { fallbackColor: '#fcfdfa' };
 
@@ -92,19 +174,6 @@ export default function BotanicalFrameLayout({ wedding,
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in text-emerald-950"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", serif` }}
     >
-      {wedding?.template_id === 'fine-art-botanical-watercolor' && (
-        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="fine-art-botanical-watercolor" aria-hidden="true">
-          <div className="w-full flex justify-between">
-             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
-             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
-          </div>
-          <div className="w-full flex justify-between">
-             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
-             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
-          </div>
-        </div>
-      )}
-      {/* İnce Okaliptüs Yapraklı Oval Çerçeveli Kart */}
       <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" 
         className="relative rounded-[3.5rem] overflow-hidden shadow-[0_20px_50px_rgba(21,128,61,0.15)] p-6 sm:p-10 text-center border flex flex-col items-center justify-between min-h-[640px]"
         style={{ ...cardSurfaceStyle,  borderColor: `${primaryColor}25`, backgroundColor: bgRegistry.fallbackColor || cardBgColor, color: textColor }}

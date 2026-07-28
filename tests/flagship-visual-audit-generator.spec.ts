@@ -105,8 +105,9 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       if (await pwdInput.isVisible()) {
         await pwdInput.fill('demo');
         await page.click('button:has-text("Giriş Yap")');
-        await studioBtn.waitFor({ state: 'visible', timeout: 15000 });
       }
+      
+      await studioBtn.waitFor({ state: 'visible', timeout: 15000 });
 
       // Step 3: Şablonu gerçek portal kataloğundan seç
       await studioBtn.click();
@@ -218,24 +219,23 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     }
   });
 
-  test('Şablon kaydetme race condition (Hızlı seçim ve kaydetme)', async ({ page, browser }) => {
+  test('Şablon kaydetme race condition (Hızlı Seçim C)', async ({ page, browser }) => {
     test.setTimeout(60000);
-    
-    // Dialog handler
     page.on('dialog', async dialog => {
       const msg = dialog.message();
-      if (msg.includes('Bu şablonu uygulamak') || msg.includes('başarıyla kaydedildi')) {
+      if (msg.includes('Bu şablonu uygulamak istediğinize emin misiniz')) {
+        await dialog.accept();
+      } else if (msg.includes('başarıyla kaydedildi')) {
         await dialog.accept();
       } else {
-        await dialog.dismiss();
+        console.error('Unexpected dialog in Hızlı Seçim C:', msg);
+        try { await dialog.dismiss(); } catch (e) {}
+        throw new Error('Unexpected dialog: ' + msg);
       }
     });
-
-    // 1. Admin rotasını aç
     await page.goto(`/d/${TEST_SLUG}/admin`);
     await page.waitForLoadState('networkidle');
 
-    // Login if necessary
     const pwdInput = page.locator('input[type="password"]');
     const studioBtn = page.locator('button:has-text("Tasarım Stüdyosu")').first();
     
@@ -249,57 +249,135 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       await page.click('button:has-text("Giriş Yap")');
     }
 
-    // 2. Tasarım Stüdyosu'na geç ve şablon sekmesini aç
     await studioBtn.waitFor({ state: 'visible', timeout: 15000 });
     await studioBtn.click();
     await page.click('button:has-text("Şablon & Tema")');
     
-    // A şablonu (template1) ve B şablonu (template2)
     const templateA = 'parisian-black-tie';
     const templateB = 'grand-opera-ballroom';
+    const templateC = 'moonlit-secret-garden';
     
     await page.waitForSelector(`[data-testid="template-${templateA}"]`, { state: 'visible' });
     
-    // 3. A şablonunu seç
+    // A seç
     await page.click(`[data-testid="template-${templateA}"]`);
-    
-    // 4. Hemen B şablonunu seç
+    await page.waitForTimeout(100);
+    // B seç
     await page.click(`[data-testid="template-${templateB}"]`);
+    await page.waitForTimeout(100);
+    // C seç
+    await page.click(`[data-testid="template-${templateC}"]`);
     
-    // 5. Beklemeden kaydet
+    // Beklemeden kaydet
     await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
-    // 6. Veritabanında B şablonunun kayıtlı olduğunu doğrula
     const { data: weddingDb } = await supabase.from('weddings').select('template_id').eq('slug', TEST_SLUG).single();
-    expect(weddingDb?.template_id, 'Race condition: Eski template kaydedildi!').toBe(templateB);
+    expect(weddingDb?.template_id, 'Race condition: Eski template kaydedildi (C bekleniyordu)!').toBe(templateC);
     
-    // 7. Sayfayı yenile
     await page.reload();
     await page.waitForLoadState('networkidle');
-    
-    // 8. B şablonunun seçili olduğunu doğrula
     await studioBtn.click();
     await page.click('button:has-text("Şablon & Tema")');
-    const selectedTemplate = page.locator(`[data-testid="template-${templateB}"]:has-text("Uygulandı")`);
+    const selectedTemplate = page.locator(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`);
     await expect(selectedTemplate).toBeVisible();
 
-    // 9. Public rotada B şablonunun render edildiğini doğrula
     const publicContext = await browser.newContext();
     const publicPage = await publicContext.newPage();
     await publicPage.goto(`/d/${TEST_SLUG}`);
     await publicPage.waitForLoadState('networkidle');
-    
-    // Dismiss envelope if it exists
     await publicPage.waitForTimeout(500);
     await publicPage.click('body').catch(() => {});
     await publicPage.waitForTimeout(1500);
-    
     const root = publicPage.locator('[data-template-id]').first();
     await root.waitFor({ state: 'attached', timeout: 5000 });
-    expect(await root.getAttribute('data-template-id')).toBe(templateB);
+    expect(await root.getAttribute('data-template-id')).toBe(templateC);
+    await publicContext.close();
+  });
+
+  test('Şablon kaydetme race condition (İptal Senaryosu)', async ({ page, browser }) => {
+    test.setTimeout(60000);
+    let isRejecting = false;
     
+    page.on('dialog', async dialog => {
+      const msg = dialog.message();
+      if (msg.includes('Bu şablonu uygulamak istediğinize emin misiniz')) {
+        if (isRejecting) {
+          await dialog.dismiss();
+        } else {
+          await dialog.accept();
+        }
+      } else if (msg.includes('başarıyla kaydedildi')) {
+        await dialog.accept();
+      } else {
+        console.error('Unexpected dialog in İptal Senaryosu:', msg);
+        try { await dialog.dismiss(); } catch (e) {}
+        throw new Error('Unexpected dialog: ' + msg);
+      }
+    });
+    await page.goto(`/d/${TEST_SLUG}/admin`);
+    await page.waitForLoadState('networkidle');
+
+    const pwdInput = page.locator('input[type="password"]');
+    const studioBtn = page.locator('button:has-text("Tasarım Stüdyosu")').first();
+    
+    await Promise.any([
+      pwdInput.waitFor({ state: 'visible', timeout: 15000 }),
+      studioBtn.waitFor({ state: 'visible', timeout: 15000 })
+    ]).catch(() => {});
+
+    if (await pwdInput.isVisible()) {
+      await pwdInput.fill('demo');
+      await page.click('button:has-text("Giriş Yap")');
+    }
+
+    await studioBtn.waitFor({ state: 'visible', timeout: 15000 });
+    await studioBtn.click();
+    await page.click('button:has-text("Şablon & Tema")');
+    
+    const templateA = 'moonlit-secret-garden'; // It should currently be C from previous test
+    const templateB = 'parisian-black-tie';
+    
+    // Select A, accept
+    await page.click(`[data-testid="template-${templateA}"]`);
+    await page.waitForTimeout(500);
+    
+    // Enable rejection for the next click
+    isRejecting = true;
+    
+    // Select B, which will be dismissed
+    await page.click(`[data-testid="template-${templateB}"]`);
+    await page.waitForTimeout(500);
+    
+    // Set to accept for the save success dialog
+    isRejecting = false;
+
+    // Kaydet
+    await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(2000);
+
+    const { data: weddingDb } = await supabase.from('weddings').select('template_id').eq('slug', TEST_SLUG).single();
+    expect(weddingDb?.template_id, 'Race condition Cancel: Yanlış template kaydedildi!').toBe(templateA);
+    
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+    await studioBtn.click();
+    await page.click('button:has-text("Şablon & Tema")');
+    const selectedTemplate = page.locator(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`);
+    await expect(selectedTemplate).toBeVisible();
+
+    const publicContext = await browser.newContext();
+    const publicPage = await publicContext.newPage();
+    await publicPage.goto(`/d/${TEST_SLUG}`);
+    await publicPage.waitForLoadState('networkidle');
+    await publicPage.waitForTimeout(500);
+    await publicPage.click('body').catch(() => {});
+    await publicPage.waitForTimeout(1500);
+    const root = publicPage.locator('[data-template-id]').first();
+    await root.waitFor({ state: 'attached', timeout: 5000 });
+    expect(await root.getAttribute('data-template-id')).toBe(templateA);
     await publicContext.close();
   });
 });

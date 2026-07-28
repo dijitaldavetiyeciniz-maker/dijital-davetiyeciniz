@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
+import { signAdminCookie } from '@/lib/auth-cookie';
 
 export async function POST(req: Request) {
   try {
@@ -21,10 +22,12 @@ export async function POST(req: Request) {
 
     if (data.admin_password === password) {
       const cookieStore = await cookies();
-      cookieStore.set(`admin_auth_${wedding_id}`, password, { 
+      const signedValue = signAdminCookie(wedding_id);
+      cookieStore.set(`admin_auth_${wedding_id}`, signedValue, { 
         httpOnly: true, 
         secure: process.env.NODE_ENV === 'production', 
         path: '/',
+        sameSite: 'lax',
         maxAge: 60 * 60 * 24 * 7
       });
       return NextResponse.json({ success: true });

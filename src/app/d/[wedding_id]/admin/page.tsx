@@ -796,6 +796,8 @@ export default function CoupleAdminPage({
   };
 
   function applyPreset(theme: any, selectedVariant?: any) {
+    if (!window.confirm('Bu şablonu uygulamak istediğinize emin misiniz?')) return;
+    
     const newTemplateId = theme.template_id || theme.id;
     latestTemplateIdRef.current = newTemplateId;
     setTemplateId(newTemplateId);

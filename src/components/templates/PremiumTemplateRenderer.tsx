@@ -677,7 +677,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   
   
   const renderLayout = () => {
-    const layoutStyle = wedding.custom_overrides?.layoutStyle || themeConfig.layoutStyle || 'monogram';
+    const layoutStyle = wedding.custom_overrides?.layoutStyle || themeConfig?.layoutStyle || templateId || 'monogram';
     const commonProps = {
     selectedBackground, wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick, cardBgColor, cardBlur, cardSurfaceStyle };
     switch (layoutStyle) {
@@ -1344,7 +1344,12 @@ case 'asymmetric':
       )}
 
       {/* Main Premium Invitation Card Box */}
-      <div data-testid="invitation-layout-root" className="relative z-[20]">
+      <div 
+        data-testid="invitation-layout-root" 
+        data-template-id={templateId}
+        data-layout-id={themeConfig?.layoutStyle || 'split-screen'}
+        className="relative z-[20]"
+      >
         {renderLayout()}
       </div>
 

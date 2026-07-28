@@ -171,6 +171,143 @@ export default function KidsThematicLayout({ wedding,
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 
+  if (presetId === 'storybook-birthday') {
+    return (
+      <div className="max-w-5xl mx-auto w-full my-8 relative z-10 animate-fade-in font-sans" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}>
+        <div data-testid="invitation-card-surface" className="rounded-3xl p-6 sm:p-12 shadow-2xl bg-white border border-rose-100 flex flex-col md:flex-row gap-8">
+          
+          <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-rose-50 rounded-2xl relative overflow-hidden">
+            <div className="absolute top-4 left-4 text-4xl animate-bounce">🎊</div>
+            <div className="absolute bottom-4 right-4 text-4xl animate-pulse">🎉</div>
+            <div className="py-2 px-6 rounded-full bg-rose-200 text-rose-700 font-black tracking-widest uppercase mb-6 shadow-sm border border-rose-300 transform -rotate-2">
+              <Sparkles className="w-4 h-4 inline-block mr-2" />
+              {badgeText}
+            </div>
+            <h1 className="text-5xl sm:text-7xl font-black text-rose-600 mb-6 drop-shadow-md" style={{ fontFamily: `"${headingFont}", cursive` }}>
+              {wedding.bride_name}
+            </h1>
+            <h3 className="font-bold tracking-widest uppercase text-xs text-rose-800 bg-white px-4 py-2 rounded-lg shadow-sm">
+              {eventTitle}
+            </h3>
+          </div>
+
+          <div className="flex-1 flex flex-col justify-center space-y-6">
+            <div className="text-center italic text-slate-600 px-4">
+              {renderQuote()}
+            </div>
+            
+            <div className="w-full bg-slate-900 text-white p-6 rounded-2xl shadow-inner">
+              <span className="text-[10px] font-bold tracking-widest text-slate-400 block mb-3 uppercase text-center">Geri Sayım</span>
+              {renderTimer()}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="bg-rose-50 p-4 rounded-xl border border-rose-100 flex flex-col items-center text-center">
+                <Calendar className="w-6 h-6 text-rose-500 mb-2" />
+                <span className="font-black text-rose-900">{dateStr}</span>
+                <span className="text-xs text-rose-600">{timeStr}</span>
+              </div>
+              <div className="bg-rose-50 p-4 rounded-xl border border-rose-100 flex flex-col items-center text-center">
+                <MapPin className="w-6 h-6 text-rose-500 mb-2" />
+                <span className="font-black text-rose-900">{wedding.venue_name}</span>
+                {wedding.venue_address && <span className="text-[10px] text-rose-600 mt-1">{wedding.venue_address}</span>}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3 pt-4 border-t border-slate-100">
+              {hasMaps && (
+                <button onClick={handleMapClick} className="w-full h-12 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all">
+                  <Navigation className="w-4 h-4" /> HARİTADA GÖSTER
+                </button>
+              )}
+              {wedding.bank_iban && (
+                <div className="w-full p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-600 text-center">
+                  <Gift className="w-4 h-4 mx-auto mb-2 text-slate-400" />
+                  <strong>HEDİYE & IBAN:</strong> <br/> {wedding.bank_iban}
+                </div>
+              )}
+              {showRsvp && renderRsvpButton()}
+              {renderGuestBook()}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
+  if (presetId === 'storybook-babyshower') {
+    return (
+      <div className="max-w-[480px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}>
+        <div data-testid="invitation-card-surface" className="rounded-[40px] p-8 sm:p-10 shadow-xl bg-sky-50 border-4 border-white flex flex-col relative overflow-hidden">
+          
+          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-sky-100 to-transparent pointer-events-none" />
+          
+          <div className="relative z-10 w-full flex flex-col items-center text-center">
+            <svg className="w-16 h-16 text-sky-400 mb-4 opacity-80 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+               <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
+            </svg>
+            
+            <h3 className="font-medium tracking-[0.3em] uppercase text-xs mb-2 text-sky-600">
+              {eventTitle}
+            </h3>
+            
+            <h1 className="text-4xl sm:text-5xl font-light text-sky-900 mb-2 w-full" style={{ fontFamily: `"${headingFont}", serif` }}>
+              {wedding.bride_name}
+            </h1>
+            
+            {(wedding.bride_parents || wedding.groom_parents) && (
+              <p className="text-[10px] tracking-widest text-sky-600/70 uppercase mb-6">
+                {wedding.bride_parents ? `ANNE: ${wedding.bride_parents}` : ''}
+              </p>
+            )}
+
+            <div className="w-full h-px bg-sky-200 my-4" />
+
+            <div className="my-4 text-sm text-sky-800 leading-relaxed max-w-sm">
+              {renderQuote()}
+            </div>
+
+            <div className="w-full flex flex-col space-y-3 mt-4 mb-8">
+              <div className="flex items-center justify-between py-3 px-5 bg-white rounded-full border border-sky-100 shadow-sm text-sky-900 text-sm">
+                <span className="font-bold">{dateStr}</span>
+                <Calendar className="w-4 h-4 text-sky-400" />
+                <span className="font-bold">{timeStr}</span>
+              </div>
+              <div className="flex flex-col items-center p-4 bg-white rounded-2xl border border-sky-100 shadow-sm text-sky-900">
+                <MapPin className="w-5 h-5 text-sky-400 mb-2" />
+                <span className="font-bold text-sm">{wedding.venue_name}</span>
+                {wedding.venue_address && <span className="text-[10px] mt-1 opacity-70">{wedding.venue_address}</span>}
+              </div>
+            </div>
+
+            <div className="w-full bg-white/50 p-5 rounded-3xl border border-sky-100 mb-6">
+              <span className="text-[9px] font-bold tracking-widest text-sky-500 block mb-2 uppercase">Heyecanla Bekliyoruz</span>
+              {renderTimer()}
+            </div>
+
+            <div className="w-full flex flex-col gap-3">
+              {hasMaps && (
+                <button onClick={handleMapClick} className="w-full h-12 bg-sky-100 hover:bg-sky-200 text-sky-700 rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                  <Navigation className="w-4 h-4" /> YOL TARİFİ AL
+                </button>
+              )}
+              {wedding.bank_iban && (
+                <div className="w-full p-4 bg-sky-50/50 rounded-2xl text-xs text-sky-800 text-center border border-sky-100">
+                  <Gift className="w-4 h-4 mx-auto mb-1 text-sky-400" />
+                  <strong>İHTİYAÇ LİSTESİ:</strong> <br/> {wedding.bank_iban}
+                </div>
+              )}
+              <div className="mt-2 w-full">{showRsvp && renderRsvpButton()}</div>
+              <div className="w-full">{renderGuestBook()}</div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
       className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
