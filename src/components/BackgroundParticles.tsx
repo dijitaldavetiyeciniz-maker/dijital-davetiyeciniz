@@ -7,6 +7,7 @@ interface BackgroundParticlesProps {
 }
 
 export default function BackgroundParticles({ animationType, primaryColor = '#d4af37' }: BackgroundParticlesProps) {
+  const rand = (seed, offset) => { const x = Math.sin(seed * 12.9898 + offset * 78.233) * 43758.5453; return x - Math.floor(x); };
   if (['goldenDust', 'rosePetals', 'sakura', 'bokehLights', 'heartsRain', 'starShower', 'pearlSparkle', 'mistCloud', 'confettiBurst', 'autumnLeaves', 'waveReflection', 'silkWave', 'candleFlicker', 'neonGradient', 'marbleLight'].includes(animationType)) {
     const config: Record<string, { cls: string; count: number; content?: string[]; noPos?: boolean }> = {
       goldenDust: { cls: 'golden-dust-particles', count: 30 },
@@ -35,9 +36,9 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
             const seedY = i * 29 + 1.61;
             const randomX = (Math.sin(seedX) * 10000) % 1;
             const randomY = (Math.sin(seedY) * 10000) % 1;
-            style.left = `${Math.abs(randomX) * 100}%`;
+            style.left = `${(Math.abs(randomX) * 100).toFixed(4)}%`;
             if (['bokehLights', 'pearlSparkle', 'mistCloud', 'candleFlicker', 'neonGradient'].includes(animationType)) {
-              style.top = `${Math.abs(randomY) * 100}%`;
+              style.top = `${(Math.abs(randomY) * 100).toFixed(4)}%`;
             }
           }
           return (
@@ -354,11 +355,11 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       case 'gold-dust': {
         const count = 18;
         return Array.from({ length: count }, (_, i) => {
-          const size = 3 + Math.random() * 5;
-          const left = (i / count) * 100 + (Math.random() * 6 - 3);
-          const dur = 4 + Math.random() * 5;
-          const delay = Math.random() * 6;
-          const drift = (Math.random() * 80 - 40) + 'px';
+          const size = 3 + rand(i, 1) * 5;
+          const left = (i / count) * 100 + (rand(i, 2) * 6 - 3);
+          const dur = 4 + rand(i, 3) * 5;
+          const delay = rand(i, 4) * 6;
+          const drift = (rand(i, 5) * 80 - 40) + 'px';
           return (
             <div key={i} className="particle-gold" style={{
               width: size, height: size,
@@ -372,10 +373,10 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       case 'sakura': {
         const cls = animationType === 'sakura' ? 'particle-sakura' : 'particle-petal';
         return Array.from({ length: 14 }, (_, i) => {
-          const left = Math.random() * 100;
-          const dur = 5 + Math.random() * 6;
-          const delay = Math.random() * 8;
-          const drift = (Math.random() * 100 - 50) + 'px';
+          const left = rand(i, 6) * 100;
+          const dur = 5 + rand(i, 7) * 6;
+          const delay = rand(i, 8) * 8;
+          const drift = (rand(i, 9) * 100 - 50) + 'px';
           return (
             <div key={i} className={cls} style={{
               left: `${left}%`,
@@ -387,9 +388,9 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       case 'hearts': {
         const emojis = ['❤️', '🩷', '💕', '💗'];
         return Array.from({ length: 12 }, (_, i) => {
-          const left = Math.random() * 95;
-          const dur = 5 + Math.random() * 5;
-          const delay = Math.random() * 7;
+          const left = rand(i, 10) * 95;
+          const dur = 5 + rand(i, 11) * 5;
+          const delay = rand(i, 12) * 7;
           return (
             <div key={i} className="particle-heart" style={{
               left: `${left}%`,
@@ -402,10 +403,10 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       }
       case 'light-orbs': {
         return Array.from({ length: 10 }, (_, i) => {
-          const size = 30 + Math.random() * 60;
-          const left = Math.random() * 100;
-          const dur = 6 + Math.random() * 7;
-          const delay = Math.random() * 8;
+          const size = 30 + rand(i, 13) * 60;
+          const left = rand(i, 14) * 100;
+          const dur = 6 + rand(i, 15) * 7;
+          const delay = rand(i, 16) * 8;
           return (
             <div key={i} className="particle-orb" style={{
               width: size, height: size, left: `${left}%`,
@@ -416,12 +417,12 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       }
       case 'bokeh': {
         return Array.from({ length: 12 }, (_, i) => {
-          const size = 40 + Math.random() * 80;
-          const left = Math.random() * 100;
-          const top = Math.random() * 100;
-          const dur = 5 + Math.random() * 8;
-          const delay = Math.random() * 7;
-          const drift = (Math.random() * 40 - 20) + 'px';
+          const size = 40 + rand(i, 17) * 80;
+          const left = rand(i, 18) * 100;
+          const top = rand(i, 19) * 100;
+          const dur = 5 + rand(i, 20) * 8;
+          const delay = rand(i, 21) * 7;
+          const drift = (rand(i, 22) * 40 - 20) + 'px';
           return (
             <div key={i} className="particle-bokeh" style={{
               width: size, height: size, left: `${left}%`, top: `${top}%`,
@@ -432,11 +433,11 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       }
       case 'starry-night': {
         return Array.from({ length: 25 }, (_, i) => {
-          const size = 1.5 + Math.random() * 3;
-          const left = Math.random() * 100;
-          const top = Math.random() * 100;
-          const dur = 2 + Math.random() * 4;
-          const delay = Math.random() * 5;
+          const size = 1.5 + rand(i, 23) * 3;
+          const left = rand(i, 24) * 100;
+          const top = rand(i, 25) * 100;
+          const dur = 2 + rand(i, 26) * 4;
+          const delay = rand(i, 27) * 5;
           return (
             <div key={i} className="particle-star" style={{
               width: size, height: size, left: `${left}%`, top: `${top}%`,
@@ -447,11 +448,11 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       }
       case 'soft-mist': {
         return Array.from({ length: 5 }, (_, i) => {
-          const size = 200 + Math.random() * 300;
-          const left = Math.random() * 100;
-          const top = Math.random() * 100;
-          const dur = 10 + Math.random() * 10;
-          const delay = Math.random() * 8;
+          const size = 200 + rand(i, 28) * 300;
+          const left = rand(i, 29) * 100;
+          const top = rand(i, 30) * 100;
+          const dur = 10 + rand(i, 31) * 10;
+          const delay = rand(i, 32) * 8;
           return (
             <div key={i} className="particle-mist" style={{
               width: size, height: size, left: `${left}%`, top: `${top}%`,
@@ -462,12 +463,12 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       }
       case 'pearl-shimmer': {
         return Array.from({ length: 15 }, (_, i) => {
-          const size = 4 + Math.random() * 8;
-          const left = Math.random() * 100;
-          const top = 40 + Math.random() * 60;
-          const dur = 3 + Math.random() * 4;
-          const delay = Math.random() * 6;
-          const drift = (Math.random() * 60 - 30) + 'px';
+          const size = 4 + rand(i, 33) * 8;
+          const left = rand(i, 34) * 100;
+          const top = 40 + rand(i, 35) * 60;
+          const dur = 3 + rand(i, 36) * 4;
+          const delay = rand(i, 37) * 6;
+          const drift = (rand(i, 38) * 60 - 30) + 'px';
           return (
             <div key={i} className="particle-pearl" style={{
               width: size, height: size, left: `${left}%`, top: `${top}%`,
@@ -479,18 +480,18 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       case 'confetti': {
         const colors = ['#f43f5e', '#facc15', '#34d399', '#60a5fa', '#c084fc', '#fb923c'];
         return Array.from({ length: 18 }, (_, i) => {
-          const left = Math.random() * 100;
-          const dur = 4 + Math.random() * 4;
-          const delay = Math.random() * 7;
-          const drift = (Math.random() * 120 - 60) + 'px';
+          const left = rand(i, 39) * 100;
+          const dur = 4 + rand(i, 40) * 4;
+          const delay = rand(i, 41) * 7;
+          const drift = (rand(i, 42) * 120 - 60) + 'px';
           const color = colors[i % colors.length];
           return (
             <div key={i} className="particle-confetti" style={{
               left: `${left}%`,
               backgroundColor: color,
               '--dur': `${dur}s`, '--delay': `${delay}s`, '--drift': drift,
-              borderRadius: Math.random() > 0.5 ? '50%' : '2px',
-              transform: `rotate(${Math.random() * 360}deg)`,
+              borderRadius: rand(i, 43) > 0.5 ? '50%' : '2px',
+              transform: `rotate(${rand(i, 44) * 360}deg)`,
             } as React.CSSProperties} />
           );
         });
@@ -498,9 +499,9 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       case 'snowflakes': {
         const snowEmojis = ['❄', '❅', '❆', '✦'];
         return Array.from({ length: 14 }, (_, i) => {
-          const left = Math.random() * 100;
-          const dur = 5 + Math.random() * 7;
-          const delay = Math.random() * 8;
+          const left = rand(i, 45) * 100;
+          const dur = 5 + rand(i, 46) * 7;
+          const delay = rand(i, 47) * 8;
           return (
             <div key={i} className="particle-snow" style={{
               left: `${left}%`,
@@ -514,10 +515,10 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       case 'leaf-fall': {
         const leafEmojis = ['🍁', '🍂', '🍃', '🌿'];
         return Array.from({ length: 12 }, (_, i) => {
-          const left = Math.random() * 100;
-          const dur = 5 + Math.random() * 6;
-          const delay = Math.random() * 8;
-          const drift = (Math.random() * 100 - 50) + 'px';
+          const left = rand(i, 48) * 100;
+          const dur = 5 + rand(i, 49) * 6;
+          const delay = rand(i, 50) * 8;
+          const drift = (rand(i, 51) * 100 - 50) + 'px';
           return (
             <div key={i} className="particle-leaf" style={{
               left: `${left}%`,
@@ -530,11 +531,11 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       }
       case 'candlelight': {
         return Array.from({ length: 6 }, (_, i) => {
-          const size = 40 + Math.random() * 60;
+          const size = 40 + rand(i, 52) * 60;
           const left = 10 + (i / 6) * 80;
-          const top = 30 + Math.random() * 40;
-          const dur = 1.5 + Math.random() * 2;
-          const delay = Math.random() * 2;
+          const top = 30 + rand(i, 53) * 40;
+          const dur = 1.5 + rand(i, 54) * 2;
+          const delay = rand(i, 55) * 2;
           return (
             <div key={i} className="particle-candle" style={{
               width: size, height: size * 1.4,
@@ -547,7 +548,7 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
       case 'neon-gradient': {
         const neonColors = ['#f43f5e', '#8b5cf6', '#06b6d4', '#10b981'];
         return Array.from({ length: 4 }, (_, i) => {
-          const size = 150 + Math.random() * 200;
+          const size = 150 + rand(i, 56) * 200;
           const positions = [
             { left: '10%', top: '10%' },
             { left: '70%', top: '5%' },

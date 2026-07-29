@@ -12,6 +12,7 @@ import SnowEffect from '@/components/effects/SnowEffect';
 import BackgroundMusic from '@/components/BackgroundMusic';
 import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
 import { sanitizePublicWedding } from '@/lib/sanitizeWedding';
+import { predefinedThemes } from '@/lib/themes';
 
 // Next.js App Router Page
 export default async function WeddingPage({
@@ -100,8 +101,7 @@ export default async function WeddingPage({
   let effType = cleanWedding.effect_type || '';
   
   if (customBgId) {
-     const themes = require('@/lib/themes').predefinedThemes;
-     const allBgs = themes.flatMap((t: any) => t.backgroundOptions || []);
+     const allBgs = predefinedThemes.flatMap((t: any) => t.backgroundOptions || []);
      const bg = allBgs.find((b: any) => b.id === customBgId);
      
      if (bg?.ornamentSet) {

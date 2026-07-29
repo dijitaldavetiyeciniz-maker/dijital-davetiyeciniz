@@ -140,7 +140,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   const overrides = wedding.custom_overrides || {};
   
   // -- BACKGROUND SELECTION LOGIC --
-  let requestedBg = overrides.design?.backgroundDesign || overrides.background_design || wedding.background_design;
+  const requestedBg = overrides.design?.backgroundDesign || overrides.background_design || wedding.background_design;
   let selectedVariant = null;
   let effectiveBackground = themeConfig?.defaultBackground || 'minimal-white';
   
@@ -200,7 +200,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   const cardBlur = cardSurfaceObj.blur !== undefined ? cardSurfaceObj.blur : (customDesignOverrides.cardBlur ?? 0);
 
   let rawTextColor = isDarkModeActive ? '#f8fafc' : (overrides.text_color || wedding.text_color || effectivePalette.primaryText || '#333333');
-  let effectiveTextBg = cardOpacity > 0.4 ? cardBgColorRaw : sceneBackgroundColor;
+  const effectiveTextBg = cardOpacity > 0.4 ? cardBgColorRaw : sceneBackgroundColor;
   const contrastRatio = getContrastRatio(rawTextColor, effectiveTextBg);
   if (contrastRatio < 3.0) {
     rawTextColor = getReadableTextColor(effectiveTextBg, '#ffffff', '#1e293b');
@@ -1225,32 +1225,31 @@ case 'asymmetric':
           />
         );
       
-      case 'parisian-apartment': return <ParisianApartmentLayout {...commonProps} />;
-      case 'swiss-grid': return <SwissGridCeremonyLayout {...commonProps} />;
+      case 'parisian-apartment': 
       case 'parisian-black-tie':
       case 'french-haute-couture': return <ParisianApartmentLayout {...commonProps} />;
+      case 'swiss-grid':
+      case 'minimal-swiss-gallery': return <SwissGridCeremonyLayout {...commonProps} dateObj={dateObj} />;
       case 'grand-opera-ballroom': return <ArtDecoTheaterLayout {...commonProps} />;
       case 'moonlit-secret-garden': return <ConstellationNightLayout {...commonProps} />;
       case 'vogue-wedding-editorial': return <FashionMagazineLayout {...commonProps} />;
       case 'mediterranean-ceramic-garden':
       case 'mediterranean-ceramic': return <BotanicalCeramicLayout {...commonProps} />;
-      case 'ottoman-illumination': return <OrientalLaceLayout {...commonProps} />;
-      case 'coastal-sunset': return <FullBleedPhotoLayout {...commonProps} />;
+      case 'ottoman-illumination': 
+      case 'oriental-lace': return <OrientalLaceLayout {...commonProps} />;
+      case 'coastal-sunset': 
+      case 'full-bleed-photo': return <FullBleedPhotoLayout {...commonProps} />;
       case 'aurora-glass': return <ModernArchitectureLayout {...commonProps} />;
       case 'fine-art-botanical-watercolor': return <BotanicalFrameLayout {...commonProps} />;
       case 'film-premiere-night': return <CinematicPosterLayout {...commonProps} />;
-      case 'minimal-swiss-gallery': return <SwissGridCeremonyLayout {...commonProps} dateObj={dateObj} />;
       case 'royal-palace-invitation': return <RoyalLetterLayout {...commonProps} />;
       case 'henna-palace-night': return <HennaVelvetLayout {...commonProps} />;
       case 'prince-ceremony': return <RoyalCircumcisionLayout {...commonProps} />;
       case 'storybook-babyshower':
-      case 'storybook-birthday': return <KidsThematicLayout {...commonProps} />;
-      case 'future-summit': return <ModernEventLayout {...commonProps} />;
-      case 'template1': return <SplitScreenLayout {...commonProps} />;
-      case 'template2': return <ConstellationNightLayout {...commonProps} />;
-      case 'template3': return <BotanicalFrameLayout {...commonProps} />;
-      case 'template4': return <RoyalLetterLayout {...commonProps} />;
-      case 'template5': return <MinimalPaperLayout {...commonProps} />;
+      case 'storybook-birthday': 
+      case 'storybook-kids': return <KidsThematicLayout {...commonProps} />;
+      case 'future-summit':
+      case 'modern-event': return <ModernEventLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }

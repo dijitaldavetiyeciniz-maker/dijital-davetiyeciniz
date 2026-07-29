@@ -384,6 +384,8 @@ function EntranceAnimation({
 
   return (
     <div 
+      data-testid="opening-overlay"
+      data-opening-state={opened ? (doorOpened || !isCurtainType ? 'opened' : 'completed-awaiting-interaction') : 'playing'}
       role="button"
       tabIndex={0}
       className={`opening-stage-container overflow-hidden w-full h-full relative bg-design-${backgroundDesign || "rose-gold-silk"} absolute inset-0 z-50 cursor-pointer`}

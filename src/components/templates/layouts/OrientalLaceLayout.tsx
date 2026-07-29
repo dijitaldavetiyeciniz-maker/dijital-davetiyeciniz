@@ -5,10 +5,10 @@ import CountdownTimer from '../../CountdownTimer';
 export default function OrientalLaceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
   if (wedding?.template_id === 'ottoman-illumination') {
     return (
-      <div className="w-full min-h-[800px] max-w-4xl mx-auto flex flex-col md:flex-row relative shadow-2xl overflow-hidden bg-slate-900 border-8 border-double border-amber-900/50" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), color: textColor }}>
+      <div className="w-full min-h-[800px] max-w-4xl mx-auto flex flex-col md:flex-row relative shadow-2xl overflow-hidden bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-950 via-slate-950 to-black border-8 border-double border-amber-900/50" style={{ color: textColor }}>
         
         {/* Sol/Üst Süsleme ve İsim */}
-        <div className="w-full md:w-1/3 p-8 flex flex-col items-center justify-center bg-black/40 border-b md:border-b-0 md:border-r border-amber-500/30 relative">
+        <div className="w-full md:w-1/3 p-12 flex flex-col items-center justify-center bg-black/40 border-b-8 md:border-b-0 md:border-r-8 border-amber-600 relative">
           <div className="absolute top-4 left-4 w-16 h-16 border-t-2 border-l-2 border-amber-500 opacity-60" />
           <div className="absolute bottom-4 right-4 w-16 h-16 border-b-2 border-r-2 border-amber-500 opacity-60" />
           

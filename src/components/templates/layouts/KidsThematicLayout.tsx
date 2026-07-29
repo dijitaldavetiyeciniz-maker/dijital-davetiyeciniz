@@ -171,20 +171,42 @@ export default function KidsThematicLayout({ wedding,
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 
+  const contentOpts = overrides.content || {};
+  
+  // Semantic resolution
+  let resolvedHeroName = wedding.bride_name || '';
+  let resolvedMother = wedding.bride_parents || '';
+  let resolvedFather = wedding.groom_parents || '';
+  let displayBadge = badgeText;
+
+  if (presetId === 'storybook-babyshower' || eventTypeRaw.includes('shower')) {
+    const babyName = contentOpts.babyName || wedding.bride_name || '';
+    const babyDisplayName = contentOpts.babyDisplayName || babyName;
+    resolvedHeroName = babyDisplayName || 'Bebeğimiz';
+    resolvedMother = contentOpts.motherName || wedding.bride_parents || '';
+    resolvedFather = contentOpts.fatherName || wedding.groom_parents || '';
+  } else if (presetId === 'storybook-birthday' || eventTypeRaw.includes('birthday') || eventTypeRaw.includes('dogum')) {
+    resolvedHeroName = contentOpts.primarySubjectName || wedding.bride_name || 'Doğum Günü Çocuğu';
+    const age = contentOpts.age || overrides.kids_age || '';
+    if (age) {
+      displayBadge = `${age} Yaşında!`;
+    }
+  }
+
   if (presetId === 'storybook-birthday') {
     return (
-      <div className="max-w-5xl mx-auto w-full my-8 relative z-10 animate-fade-in font-sans" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}>
-        <div data-testid="invitation-card-surface" className="rounded-3xl p-6 sm:p-12 shadow-2xl bg-white border border-rose-100 flex flex-col md:flex-row gap-8">
+      <div className="w-full min-h-screen bg-orange-300 p-8 flex items-center justify-center relative z-10 animate-fade-in font-sans" style={{ fontFamily: `"${bodyFont}", sans-serif` }}>
+        <div data-testid="invitation-card-surface" className="w-full max-w-5xl rounded-[60px] p-8 sm:p-16 shadow-[0px_20px_50px_rgba(234,88,12,0.6)] bg-white border-8 border-orange-200 flex flex-col md:flex-row gap-12">
           
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-rose-50 rounded-2xl relative overflow-hidden">
             <div className="absolute top-4 left-4 text-4xl animate-bounce">🎊</div>
             <div className="absolute bottom-4 right-4 text-4xl animate-pulse">🎉</div>
             <div className="py-2 px-6 rounded-full bg-rose-200 text-rose-700 font-black tracking-widest uppercase mb-6 shadow-sm border border-rose-300 transform -rotate-2">
               <Sparkles className="w-4 h-4 inline-block mr-2" />
-              {badgeText}
+              {displayBadge}
             </div>
             <h1 className="text-5xl sm:text-7xl font-black text-rose-600 mb-6 drop-shadow-md" style={{ fontFamily: `"${headingFont}", cursive` }}>
-              {wedding.bride_name}
+              {resolvedHeroName}
             </h1>
             <h3 className="font-bold tracking-widest uppercase text-xs text-rose-800 bg-white px-4 py-2 rounded-lg shadow-sm">
               {eventTitle}
@@ -238,8 +260,8 @@ export default function KidsThematicLayout({ wedding,
 
   if (presetId === 'storybook-babyshower') {
     return (
-      <div className="max-w-[480px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans" style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}>
-        <div data-testid="invitation-card-surface" className="rounded-[40px] p-8 sm:p-10 shadow-xl bg-sky-50 border-4 border-white flex flex-col relative overflow-hidden">
+      <div className="w-full min-h-screen bg-sky-200 py-12 relative z-10 animate-fade-in font-sans" style={{ fontFamily: `"${bodyFont}", sans-serif` }}>
+        <div data-testid="invitation-card-surface" className="max-w-[480px] mx-auto rounded-none p-12 shadow-[10px_10px_0px_0px_rgba(2,132,199,0.5)] bg-sky-50 border-[12px] border-sky-400 flex flex-col relative overflow-hidden">
           
           <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-sky-100 to-transparent pointer-events-none" />
           
@@ -253,12 +275,13 @@ export default function KidsThematicLayout({ wedding,
             </h3>
             
             <h1 className="text-4xl sm:text-5xl font-light text-sky-900 mb-2 w-full" style={{ fontFamily: `"${headingFont}", serif` }}>
-              {wedding.bride_name}
+              {resolvedHeroName}
             </h1>
             
-            {(wedding.bride_parents || wedding.groom_parents) && (
-              <p className="text-[10px] tracking-widest text-sky-600/70 uppercase mb-6">
-                {wedding.bride_parents ? `ANNE: ${wedding.bride_parents}` : ''}
+            {(resolvedMother || resolvedFather) && (
+              <p className="text-[10px] tracking-widest text-sky-600/70 uppercase mb-6 flex flex-col gap-1">
+                {resolvedMother && <span>ANNE: {resolvedMother}</span>}
+                {resolvedFather && <span>BABA: {resolvedFather}</span>}
               </p>
             )}
 

@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Calendar, MapPin, Navigation, Compass, Moon, Star, Sparkles } from 'lucide-react';
 import { getReadableTextColor, WCAG_MIN_RATIO, checkTemplateContrast } from '@/lib/colorUtils';
 import SafeImage from '@/components/ui/SafeImage';
@@ -26,6 +26,21 @@ interface LayoutProps {
   cardSurfaceStyle?: React.CSSProperties;
   mode?: 'preview' | 'public';
 }
+
+// Deterministic star data (outside component to avoid render-phase side effects)
+const STAR_DATA: {top: string, left: string, size: string, opacity: number, animDelay: string, animDur: string}[] = 
+  [...Array(50)].map((_, i) => {
+    const seed = (i * 137.508 + 42) % 100;
+    const seed2 = (i * 97.3 + 17) % 100;
+    return {
+      top: `${seed}%`,
+      left: `${seed2}%`,
+      size: `${(i % 3) + 1}px`,
+      opacity: 0.2 + (i % 8) * 0.1,
+      animDelay: `${i % 5}s`,
+      animDur: `${2 + (i % 3)}s`
+    };
+  });
 
 export default function ConstellationNightLayout({
   wedding,
@@ -57,20 +72,7 @@ export default function ConstellationNightLayout({
   const hasMaps = !!wedding.google_maps_url;
   const showRsvp = wedding.show_rsvp !== false;
 
-  const [stars, setStars] = useState<{top: string, left: string, size: string, opacity: number, animDelay: string, animDur: string}[]>([]);
-
-  useEffect(() => {
-    // Generate stars on client to avoid hydration mismatch
-    const generatedStars = [...Array(50)].map(() => ({
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      size: `${Math.random() * 3 + 1}px`,
-      opacity: Math.random() * 0.8 + 0.2,
-      animDelay: `${Math.random() * 5}s`,
-      animDur: `${Math.random() * 3 + 2}s`
-    }));
-    setStars(generatedStars);
-  }, []);
+  const stars = STAR_DATA;
 
   return (
     <div 

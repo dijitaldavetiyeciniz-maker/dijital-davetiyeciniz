@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { predefinedThemes } from '../src/lib/themes';
 
 const AUDIT_DIR = path.join(process.cwd(), 'test-results/flagship-visual-audit');
 
@@ -134,14 +135,15 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       
       // Step 6: Save isteğini gerçekleştir
       await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
-      await page.waitForLoadState('networkidle');
       
-      // Wait a moment for iframe to reload in real portal
-      await page.waitForTimeout(2000);
+      // Wait for networkidle
+      await page.waitForLoadState('networkidle');
 
-      // Verify persistence in DB
-      const { data: weddingDb } = await supabase.from('weddings').select('template_id, custom_overrides').eq('slug', TEST_SLUG).single();
-      expect(weddingDb?.template_id).toBe(tplId);
+      // Verify persistence in DB (Poll to avoid arbitrary timeouts)
+      await expect(async () => {
+        const { data } = await supabase.from('weddings').select('template_id').eq('slug', TEST_SLUG).single();
+        expect(data?.template_id).toBe(tplId);
+      }).toPass({ timeout: 15000 });
 
       // Step 11: Admin dashboard'ın kendisinin de seçilen template ile senkron kalıp kalmadığına bak (Reload ile)
       await page.reload();
@@ -167,13 +169,35 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       // Step 13: /d/[slug] public rotasını aç
       await publicPage.goto(`/d/${TEST_SLUG}`);
       await publicPage.waitForLoadState('networkidle');
-      await publicPage.waitForTimeout(1500); // Allow fonts and images
+      
+      // Hydration check
+      const errors: string[] = [];
+      publicPage.on('console', msg => {
+        if (msg.type() === 'error' && (msg.text().includes('Hydration') || msg.text().includes('Minified React error'))) {
+          errors.push(msg.text());
+        }
+      });
 
-      // Dismiss envelope if it exists
-      await publicPage.click('body').catch(() => {});
-      await publicPage.waitForTimeout(1500);
+      // Opening overlay test without bypass
+      const overlay = publicPage.locator('[data-testid="opening-overlay"]');
+      await overlay.waitFor({ state: 'attached', timeout: 15000 });
+      
+      // Trigger user click on the body (avoid clicking any specific button to test generic interaction)
+      await overlay.click({ force: true, position: { x: 10, y: 10 } });
+      
+      // Wait for opened state
+      await expect(overlay).toHaveAttribute('data-opening-state', 'opened', { timeout: 10000 }).catch(() => {});
+      
+      // Wait for overlay to completely unmount
+      await overlay.waitFor({ state: 'detached', timeout: 30000 });
+      
+      expect(errors.length, `Hydration errors detected: ${errors.join(', ')}`).toBe(0);
 
       // Step 15: Public renderer'ın beklenen layout componentini kullandığını doğrula
+      const expectedTheme = predefinedThemes.find(t => t.id === tplId);
+      expect(expectedTheme).toBeTruthy();
+      const expectedLayoutStyle = expectedTheme!.layoutStyle;
+
       const root = publicPage.locator('[data-template-id]').first();
       await root.waitFor({ state: 'attached', timeout: 5000 });
       
@@ -182,7 +206,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       
       expect(actualTplId, `Template ID mismatch on Public route! Expected: ${tplId}, got: ${actualTplId}`).toBe(tplId);
       expect(actualLayoutId, `Layout ID is missing or invalid on Public route!`).toBeTruthy();
-      expect(actualLayoutId).not.toBe('default-fallback'); // Default fallback not allowed!
+      expect(actualLayoutId, `Template fell back to default-fallback instead of ${expectedLayoutStyle}`).not.toBe('default-fallback');
+      expect(actualLayoutId, `Mapping error! Expected layoutStyle ${expectedLayoutStyle} but got ${actualLayoutId}`).toBe(expectedLayoutStyle);
 
       // Step 20: Bundan sonra screenshot al (Mobil)
       await publicPage.setViewportSize({ width: 390, height: 844 });
@@ -261,20 +286,22 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     // A seç
     await page.click(`[data-testid="template-${templateA}"]`);
-    await page.waitForTimeout(100);
+    await page.waitForSelector(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
     // B seç
     await page.click(`[data-testid="template-${templateB}"]`);
-    await page.waitForTimeout(100);
+    await page.waitForSelector(`[data-testid="template-${templateB}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
     // C seç
     await page.click(`[data-testid="template-${templateC}"]`);
+    await page.waitForSelector(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
     
     // Beklemeden kaydet
     await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
 
-    const { data: weddingDb } = await supabase.from('weddings').select('template_id').eq('slug', TEST_SLUG).single();
-    expect(weddingDb?.template_id, 'Race condition: Eski template kaydedildi (C bekleniyordu)!').toBe(templateC);
+    await expect(async () => {
+      const { data } = await supabase.from('weddings').select('template_id').eq('slug', TEST_SLUG).single();
+      expect(data?.template_id).toBe(templateC);
+    }).toPass({ timeout: 15000 });
     
     await page.reload();
     await page.waitForLoadState('networkidle');
@@ -287,9 +314,12 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const publicPage = await publicContext.newPage();
     await publicPage.goto(`/d/${TEST_SLUG}`);
     await publicPage.waitForLoadState('networkidle');
-    await publicPage.waitForTimeout(500);
-    await publicPage.click('body').catch(() => {});
-    await publicPage.waitForTimeout(1500);
+    
+    const overlay = publicPage.locator('[data-testid="opening-overlay"]');
+    await overlay.waitFor({ state: 'attached', timeout: 15000 });
+    await overlay.click({ force: true, position: { x: 10, y: 10 } });
+    await overlay.waitFor({ state: 'detached', timeout: 30000 });
+
     const root = publicPage.locator('[data-template-id]').first();
     await root.waitFor({ state: 'attached', timeout: 5000 });
     expect(await root.getAttribute('data-template-id')).toBe(templateC);
@@ -341,14 +371,19 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     // Select A, accept
     await page.click(`[data-testid="template-${templateA}"]`);
-    await page.waitForTimeout(500);
+    await page.waitForSelector(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
     
     // Enable rejection for the next click
     isRejecting = true;
     
     // Select B, which will be dismissed
     await page.click(`[data-testid="template-${templateB}"]`);
+    
+    // Wait a brief moment to ensure dialog fired
     await page.waitForTimeout(500);
+    
+    // B should NOT be selected
+    await expect(page.locator(`[data-testid="template-${templateB}"]`)).not.toContainText('Uygulandı');
     
     // Set to accept for the save success dialog
     isRejecting = false;
@@ -356,10 +391,11 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     // Kaydet
     await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(2000);
 
-    const { data: weddingDb } = await supabase.from('weddings').select('template_id').eq('slug', TEST_SLUG).single();
-    expect(weddingDb?.template_id, 'Race condition Cancel: Yanlış template kaydedildi!').toBe(templateA);
+    await expect(async () => {
+      const { data } = await supabase.from('weddings').select('template_id').eq('slug', TEST_SLUG).single();
+      expect(data?.template_id).toBe(templateA);
+    }).toPass({ timeout: 15000 });
     
     await page.reload();
     await page.waitForLoadState('networkidle');
@@ -372,12 +408,107 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const publicPage = await publicContext.newPage();
     await publicPage.goto(`/d/${TEST_SLUG}`);
     await publicPage.waitForLoadState('networkidle');
-    await publicPage.waitForTimeout(500);
-    await publicPage.click('body').catch(() => {});
-    await publicPage.waitForTimeout(1500);
+    
+    const overlay = publicPage.locator('[data-testid="opening-overlay"]');
+    await overlay.waitFor({ state: 'attached', timeout: 15000 });
+    await overlay.click({ force: true, position: { x: 10, y: 10 } });
+    await overlay.waitFor({ state: 'detached', timeout: 30000 });
+
     const root = publicPage.locator('[data-template-id]').first();
     await root.waitFor({ state: 'attached', timeout: 5000 });
     expect(await root.getAttribute('data-template-id')).toBe(templateA);
     await publicContext.close();
+  });
+  test('Baby Shower Semantic Test', async ({ page, browser }) => {
+    test.setTimeout(60000);
+    const BABY_SLUG = 'baby-shower-semantic-test';
+    
+    // 1. Setup Data
+    await supabase.from('weddings').delete().eq('slug', BABY_SLUG);
+    await supabase.from('weddings').insert([{
+      slug: BABY_SLUG,
+      bride_name: 'Yanlış İsim', // Should be overridden
+      groom_name: 'Yanlış İsim 2',
+      event_type: 'baby_shower',
+      template_id: 'storybook-babyshower',
+      is_paid: true,
+      custom_overrides: {
+        content: {
+          babyName: 'Defne',
+          motherName: 'Ayşe',
+          fatherName: 'Mehmet'
+        }
+      }
+    }]);
+
+    // 2. Open Public Page
+    const publicContext = await browser.newContext();
+    const publicPage = await publicContext.newPage();
+    await publicPage.goto(`/d/${BABY_SLUG}`);
+    await publicPage.waitForLoadState('networkidle');
+
+    // 3. Clear Overlay
+    const overlay = publicPage.locator('[data-testid="opening-overlay"]');
+    await overlay.waitFor({ state: 'attached', timeout: 15000 });
+    await overlay.click({ force: true, position: { x: 10, y: 10 } });
+    await overlay.waitFor({ state: 'detached', timeout: 30000 });
+
+    // 4. Assertions
+    const contentText = await publicPage.locator('body').innerText();
+    expect(contentText).toContain('Defne');
+    expect(contentText).toContain('Ayşe');
+    expect(contentText).toContain('Mehmet');
+    expect(contentText).not.toContain('Düğün Töreni');
+    expect(contentText).not.toContain('Gelin');
+    expect(contentText).not.toContain('Damat');
+    expect(contentText).not.toContain('Doğum Günü Partisi');
+    expect(contentText).not.toContain('Yaşında!');
+
+    await publicContext.close();
+    await supabase.from('weddings').delete().eq('slug', BABY_SLUG);
+  });
+
+  test('Birthday Semantic Test', async ({ page, browser }) => {
+    test.setTimeout(60000);
+    const BDAY_SLUG = 'birthday-semantic-test';
+    
+    // 1. Setup Data
+    await supabase.from('weddings').delete().eq('slug', BDAY_SLUG);
+    await supabase.from('weddings').insert([{
+      slug: BDAY_SLUG,
+      event_type: 'birthday',
+      template_id: 'storybook-birthday',
+      is_paid: true,
+      custom_overrides: {
+        content: {
+          primarySubjectName: 'Eylül',
+          age: '6',
+          eventTitle: "Eylül'ün Doğum Günü"
+        }
+      }
+    }]);
+
+    // 2. Open Public Page
+    const publicContext = await browser.newContext();
+    const publicPage = await publicContext.newPage();
+    await publicPage.goto(`/d/${BDAY_SLUG}`);
+    await publicPage.waitForLoadState('networkidle');
+
+    // 3. Clear Overlay
+    const overlay = publicPage.locator('[data-testid="opening-overlay"]');
+    await overlay.waitFor({ state: 'attached', timeout: 15000 });
+    await overlay.click({ force: true, position: { x: 10, y: 10 } });
+    await overlay.waitFor({ state: 'detached', timeout: 30000 });
+
+    // 4. Assertions
+    const contentText = await publicPage.locator('body').innerText();
+    expect(contentText).toContain('Eylül');
+    expect(contentText).toContain('6 Yaşında!');
+    expect(contentText).toContain("Eylül'ün Doğum Günü");
+    expect(contentText).not.toContain('Baby Shower');
+    expect(contentText).not.toContain('Bebeğimiz');
+
+    await publicContext.close();
+    await supabase.from('weddings').delete().eq('slug', BDAY_SLUG);
   });
 });
