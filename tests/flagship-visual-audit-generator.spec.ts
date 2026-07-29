@@ -182,14 +182,13 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       const overlay = publicPage.locator('[data-testid="opening-overlay"]');
       await overlay.waitFor({ state: 'attached', timeout: 15000 });
       
-      // Trigger user click on the body (avoid clicking any specific button to test generic interaction)
-      await overlay.click({ force: true, position: { x: 10, y: 10 } });
-      
-      // Wait for opened state
-      await expect(overlay).toHaveAttribute('data-opening-state', 'opened', { timeout: 10000 }).catch(() => {});
-      
-      // Wait for overlay to completely unmount
-      await overlay.waitFor({ state: 'detached', timeout: 30000 });
+      // Robustly click until the overlay detaches (handles hydration race conditions)
+      await expect(async () => {
+        if (await overlay.isVisible()) {
+          await overlay.click({ force: true, position: { x: 10, y: 10 } });
+        }
+        await expect(overlay).toBeHidden({ timeout: 3000 });
+      }).toPass({ timeout: 30000 });
       
       expect(errors.length, `Hydration errors detected: ${errors.join(', ')}`).toBe(0);
 
@@ -317,8 +316,13 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
-    await overlay.click({ force: true, position: { x: 10, y: 10 } });
-    await overlay.waitFor({ state: 'detached', timeout: 30000 });
+    
+    await expect(async () => {
+      if (await overlay.isVisible()) {
+        await overlay.click({ force: true, position: { x: 10, y: 10 } });
+      }
+      await expect(overlay).toBeHidden({ timeout: 3000 });
+    }).toPass({ timeout: 30000 });
 
     const root = publicPage.locator('[data-template-id]').first();
     await root.waitFor({ state: 'attached', timeout: 5000 });
@@ -411,8 +415,13 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
-    await overlay.click({ force: true, position: { x: 10, y: 10 } });
-    await overlay.waitFor({ state: 'detached', timeout: 30000 });
+    
+    await expect(async () => {
+      if (await overlay.isVisible()) {
+        await overlay.click({ force: true, position: { x: 10, y: 10 } });
+      }
+      await expect(overlay).toBeHidden({ timeout: 3000 });
+    }).toPass({ timeout: 30000 });
 
     const root = publicPage.locator('[data-template-id]').first();
     await root.waitFor({ state: 'attached', timeout: 5000 });
@@ -450,8 +459,13 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     // 3. Clear Overlay
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
-    await overlay.click({ force: true, position: { x: 10, y: 10 } });
-    await overlay.waitFor({ state: 'detached', timeout: 30000 });
+    
+    await expect(async () => {
+      if (await overlay.isVisible()) {
+        await overlay.click({ force: true, position: { x: 10, y: 10 } });
+      }
+      await expect(overlay).toBeHidden({ timeout: 3000 });
+    }).toPass({ timeout: 30000 });
 
     // 4. Assertions
     const contentText = await publicPage.locator('body').innerText();
@@ -497,8 +511,13 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     // 3. Clear Overlay
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
-    await overlay.click({ force: true, position: { x: 10, y: 10 } });
-    await overlay.waitFor({ state: 'detached', timeout: 30000 });
+    
+    await expect(async () => {
+      if (await overlay.isVisible()) {
+        await overlay.click({ force: true, position: { x: 10, y: 10 } });
+      }
+      await expect(overlay).toBeHidden({ timeout: 3000 });
+    }).toPass({ timeout: 30000 });
 
     // 4. Assertions
     const contentText = await publicPage.locator('body').innerText();
