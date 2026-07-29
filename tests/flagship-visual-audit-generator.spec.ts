@@ -185,7 +185,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       // Robustly click until the overlay detaches (handles hydration race conditions)
       await expect(async () => {
         if (await overlay.isVisible()) {
-          await overlay.click({ force: true, position: { x: 10, y: 10 } });
+          await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
         }
         await expect(overlay).toBeHidden({ timeout: 3000 });
       }).toPass({ timeout: 30000 });
@@ -319,7 +319,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await expect(async () => {
       if (await overlay.isVisible()) {
-        await overlay.click({ force: true, position: { x: 10, y: 10 } });
+        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
       }
       await expect(overlay).toBeHidden({ timeout: 3000 });
     }).toPass({ timeout: 30000 });
@@ -418,7 +418,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await expect(async () => {
       if (await overlay.isVisible()) {
-        await overlay.click({ force: true, position: { x: 10, y: 10 } });
+        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
       }
       await expect(overlay).toBeHidden({ timeout: 3000 });
     }).toPass({ timeout: 30000 });
@@ -462,7 +462,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await expect(async () => {
       if (await overlay.isVisible()) {
-        await overlay.click({ force: true, position: { x: 10, y: 10 } });
+        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
       }
       await expect(overlay).toBeHidden({ timeout: 3000 });
     }).toPass({ timeout: 30000 });
@@ -514,7 +514,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await expect(async () => {
       if (await overlay.isVisible()) {
-        await overlay.click({ force: true, position: { x: 10, y: 10 } });
+        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
       }
       await expect(overlay).toBeHidden({ timeout: 3000 });
     }).toPass({ timeout: 30000 });
