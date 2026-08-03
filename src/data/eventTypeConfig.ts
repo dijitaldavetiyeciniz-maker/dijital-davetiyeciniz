@@ -409,3 +409,45 @@ export function resolveEventTitle(wedding: any): string {
   return config.defaultTitle || "";
 }
 
+export type OpeningSemanticContent = {
+  primaryName?: string;
+  secondaryName?: string;
+  eventTitle: string;
+  eventDate?: string;
+  monogram?: string;
+  age?: number;
+  motherName?: string;
+  partnerName?: string;
+  companyName?: string;
+  logoUrl?: string;
+  schoolName?: string;
+  departmentName?: string;
+};
+
+export function getOpeningSemanticData(wedding: any): OpeningSemanticContent {
+  const primaryName = getPrimarySubjectName(wedding);
+  const secondaryName = getSecondarySubjectName(wedding);
+  const eventTitle = resolveEventTitle(wedding);
+  
+  // Create a monogram from initials (first letters of primary and secondary names)
+  let monogram = "";
+  if (primaryName) monogram += primaryName.charAt(0).toUpperCase();
+  if (secondaryName) monogram += secondaryName.charAt(0).toUpperCase();
+  if (!monogram && eventTitle) monogram = eventTitle.charAt(0).toUpperCase();
+
+  return {
+    primaryName,
+    secondaryName,
+    eventTitle,
+    eventDate: wedding?.wedding_date,
+    monogram,
+    age: wedding?.custom_overrides?.content?.age || undefined,
+    motherName: getMotherName(wedding),
+    partnerName: getFatherName(wedding), // For simplicity mapping it here
+    companyName: wedding?.company_name || secondaryName, // Fallback for corporate
+    logoUrl: wedding?.custom_overrides?.content?.logoUrl || undefined,
+    schoolName: wedding?.custom_overrides?.content?.schoolName || undefined,
+    departmentName: wedding?.custom_overrides?.content?.departmentName || undefined,
+  };
+}
+

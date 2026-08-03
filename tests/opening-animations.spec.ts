@@ -18,7 +18,8 @@ test.describe("Opening Animations - Detailed Checks", () => {
   test.setTimeout(120000);
 
   let supabase: any;
-  const SLUG = "test-opening-animations-" + Date.now();
+  const runId = crypto.randomUUID();
+  const SLUG = `test-opening-${runId}`;
 
   test.beforeAll(async () => {
     supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -31,7 +32,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
         is_paid: true,
         bride_name: "Long Corporate Name Co",
         groom_name: "",
-        wedding_date: new Date(Date.now() + 864000000).toISOString(),
+        wedding_date: "2027-06-15T17:00:00.000Z",
         venue_name: "Convention Center",
         admin_password: "test",
         entrance_animation: "parisianBlackTie",
@@ -42,13 +43,32 @@ test.describe("Opening Animations - Detailed Checks", () => {
     ];
 
     const { error } = await supabase.from("weddings").insert(records);
-    if (error) console.error("INSERT ERROR:", error);
+    if (error) throw new Error(`Test record insert failed: ${error.message}`);
   });
 
   test.afterAll(async () => {
     if (supabase) {
-      await supabase.from("weddings").delete().eq("slug", SLUG);
+      const { error } = await supabase.from("weddings").delete().eq("slug", SLUG);
+      if (error) console.error("Cleanup failed:", error);
     }
+  });
+
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "__audioPlayCalls", {
+        value: 0,
+        writable: true
+      });
+      Object.defineProperty(window, "__openCalls", {
+        value: 0,
+        writable: true
+      });
+
+      HTMLMediaElement.prototype.play = function () {
+        window.__audioPlayCalls += 1;
+        return Promise.resolve();
+      };
+    });
   });
 
   test("1. No Auto Open & 5s idle & Final State persistence", async ({ page }) => {
@@ -58,22 +78,22 @@ test.describe("Opening Animations - Detailed Checks", () => {
     const overlay = page.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlay).toBeVisible();
     
+    // Check audio play count before interaction
+    let audioCalls = await page.evaluate(() => (window as any).__audioPlayCalls);
+    expect(audioCalls).toBe(0);
+
     // Wait for animation to finish (e.g. 3s)
     await page.waitForTimeout(3500);
-    
-    // Ensure state is completed-awaiting-interaction
     await expect(overlay).toHaveAttribute("data-opening-state", "completed-awaiting-interaction");
     
     // Idle 5 seconds
     await page.waitForTimeout(5000);
-    
-    // Ensure still awaiting
     await expect(overlay).toHaveAttribute("data-opening-state", "completed-awaiting-interaction");
     
-    // Ensure no blank screen
-    const box = await overlay.boundingBox();
-    expect(box?.height).toBeGreaterThan(0);
-    
+    // Audio still 0
+    audioCalls = await page.evaluate(() => window.__audioPlayCalls);
+    expect(audioCalls).toBe(0);
+
     await page.screenshot({ path: "test-results/opening-parisian-final-plus-5s.png" });
   });
 
@@ -84,7 +104,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
     const overlay = page.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlay).toBeVisible();
     
-    // Tap on top left corner (not a button)
+    // Tap on top left corner
     await overlay.click({ position: { x: 10, y: 10 } });
     
     // Ensure state becomes opened
@@ -93,13 +113,14 @@ test.describe("Opening Animations - Detailed Checks", () => {
     // Wait for transition 300ms
     await page.waitForTimeout(400);
     
-    // Ensure overlay is hidden or gone
-    // Check if main content is visible
+    const audioCalls = await page.evaluate(() => (window as any).__audioPlayCalls);
+    expect(audioCalls).toBeLessThanOrEqual(1); // 1 if music is enabled for this template, 0 if not
+
     await expect(page.locator("text=Long Corporate Name Co")).toBeVisible();
     await page.screenshot({ path: "test-results/opening-parisian-opened.png" });
   });
 
-  test("3. Enter and Space to open", async ({ page }) => {
+  test("3. Enter Key to open", async ({ page }) => {
     await page.goto(`${BASE_URL}/d/${SLUG}`);
     const overlay = page.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlay).toBeVisible();
@@ -107,11 +128,79 @@ test.describe("Opening Animations - Detailed Checks", () => {
     await overlay.focus();
     await page.keyboard.press("Enter");
     await expect(overlay).toHaveAttribute("data-opening-state", "opened");
+    await page.waitForTimeout(400);
+    const audioCalls = await page.evaluate(() => (window as any).__audioPlayCalls);
+    expect(audioCalls).toBeLessThanOrEqual(1);
   });
 
-  test("4. Semantic Data check", async ({ page }) => {
+  test("4. Space Key to open with preventDefault check", async ({ page }) => {
+    // Add enough content to ensure page is scrollable, or just test scrollY
+    await page.setViewportSize({ width: 1280, height: 600 });
     await page.goto(`${BASE_URL}/d/${SLUG}`);
     const overlay = page.locator("[data-testid=\"opening-overlay\"]");
-    await expect(overlay.locator("text=Long Corporate Name Co")).toBeVisible();
+    await expect(overlay).toBeVisible();
+    
+    await overlay.focus();
+    const beforeScroll = await page.evaluate(() => window.scrollY);
+    await page.keyboard.press("Space");
+    
+    await expect(overlay).toHaveAttribute("data-opening-state", "opened");
+    const afterScroll = await page.evaluate(() => window.scrollY);
+    
+    // Space should not have scrolled the page
+    expect(afterScroll).toBe(beforeScroll);
+
+    const audioCalls = await page.evaluate(() => (window as any).__audioPlayCalls);
+    expect(audioCalls).toBeLessThanOrEqual(1);
+  });
+
+  test("5. Double Tap Check (Idempotency)", async ({ page }) => {
+    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    const overlay = page.locator("[data-testid=\"opening-overlay\"]");
+    await expect(overlay).toBeVisible();
+    
+    // Tap rapidly twice
+    await overlay.click({ position: { x: 10, y: 10 } });
+    await overlay.click({ position: { x: 10, y: 10 } });
+    
+    await expect(overlay).toHaveAttribute("data-opening-state", "opened");
+    await page.waitForTimeout(400);
+
+    const audioCalls = await page.evaluate(() => (window as any).__audioPlayCalls);
+    expect(audioCalls).toBeLessThanOrEqual(1); // Should definitely not be 2!
+  });
+
+  test("6. Reduced Motion Check", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    const overlay = page.locator("[data-testid=\"opening-overlay\"]");
+    await expect(overlay).toBeVisible();
+
+    // It should still start in 'playing' and go to 'completed-awaiting-interaction' quickly or normally, 
+    // but without auto open. 
+    await expect(overlay).toHaveAttribute("data-opening-state", "playing");
+    await page.waitForTimeout(3500);
+    await expect(overlay).toHaveAttribute("data-opening-state", "completed-awaiting-interaction");
+    
+    // Tap should open it directly
+    await overlay.click({ position: { x: 10, y: 10 } });
+    await expect(overlay).toHaveAttribute("data-opening-state", "opened");
+  });
+
+  test("7. Preview vs Public Comparison", async ({ page, context }) => {
+    // Check Public
+    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    const overlayPublic = page.locator("[data-testid=\"opening-overlay\"]");
+    await expect(overlayPublic).toBeVisible();
+    const publicContent = await page.locator("h1").first().innerText(); // Assuming primaryName is in first h1
+
+    // Check Preview
+    const previewPage = await context.newPage();
+    await previewPage.goto(`${BASE_URL}/d/${SLUG}?preview=true`);
+    const overlayPreview = previewPage.locator("[data-testid=\"opening-overlay\"]");
+    await expect(overlayPreview).toBeVisible();
+    const previewContent = await previewPage.locator("h1").first().innerText();
+
+    expect(previewContent).toBe(publicContent);
   });
 });

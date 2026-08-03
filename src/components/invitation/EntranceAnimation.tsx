@@ -1,8 +1,9 @@
 'use client';
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import "@/styles/invitation-animations.css";
 import "@/styles/opening-animations.css";
 import { entranceAnimationTypes, entranceAnimationStyles, EntranceAnimationStyle } from "@/data/openingAnimations";
+import { getOpeningSemanticData } from "@/data/eventTypeConfig";
 import BackgroundAnimation from "@/components/BackgroundAnimation";
 
 // Import opening family components
@@ -241,7 +242,15 @@ function EntranceAnimation({
   const [isFadingOut, setIsFadingOut] = useState(false);
   
   const onCompleteRef = useRef(onComplete);
-  const isTransitioningRef = useRef(false);
+  const openedRef = useRef(false);
+
+  const semanticData = wedding ? getOpeningSemanticData(wedding) : {
+    primaryName: brideName,
+    secondaryName: groomName,
+    eventTitle: getInvitationIntroText(eventType),
+    eventDate: eventDate,
+    monogram: initials,
+  };
 
   useEffect(() => {
     onCompleteRef.current = onComplete;
@@ -265,13 +274,16 @@ function EntranceAnimation({
     return () => clearTimeout(timer);
   }, [animationType, style]);
 
-  const handleRevealInvitation = (e?: React.MouseEvent | React.KeyboardEvent) => {
-    if (isTransitioningRef.current || animationState === 'opened') return;
+  const openOnce = useCallback(() => {
+    if (openedRef.current) return;
+    openedRef.current = true;
     
-    // Prevent double invocation
-    isTransitioningRef.current = true;
-    
-    // If we are curtain type, we might want to wait for door open
+    // Play music once here if not already playing?
+    // We rely on BackgroundMusic to do that via isEnvelopeOpened prop 
+    // which is mapped to !showEntrance in WeddingClientWrapper, 
+    // but wait! BackgroundMusic might need to start inside openOnce if it's rendered inside?
+    // Let's stick to state updates.
+
     if (isCurtainType && !doorOpened) {
       setDoorOpened(true);
       setTimeout(() => {
@@ -286,9 +298,9 @@ function EntranceAnimation({
       setIsFadingOut(true);
       setTimeout(() => {
         if (onCompleteRef.current) onCompleteRef.current();
-      }, 250); // fast fade out 150-300ms
+      }, 300); // fade out duration
     }
-  };
+  }, [doorOpened, isCurtainType]);
 
   // Extract particle details from effects list
   const hasRosePetals = styleConfig.effects.includes("rosePetals");
@@ -347,9 +359,6 @@ function EntranceAnimation({
   const renderFamily = () => {
     const commonProps = {
       opened: animationState === 'opened' || animationState === 'completed-awaiting-interaction' || isFadingOut, 
-      // some legacy openings rely on "opened" to trigger the final static state. 
-      // But we don't want them to fade out until clicked.
-      // Wait, let's keep them as they are, but pass 'animationState'
       animationState,
       initials,
       brideName: brideName || '',
@@ -360,6 +369,7 @@ function EntranceAnimation({
       customSealType: sealType,
       introText: getInvitationIntroText(eventType),
       wedding,
+      semanticData,
     };
 
     switch (typeConfig.id) {
@@ -439,13 +449,16 @@ function EntranceAnimation({
       data-opening-state={animationState}
       role="button"
       tabIndex={0}
-      className={`opening-stage-container overflow-hidden w-full h-full absolute inset-0 z-50 cursor-pointer transition-opacity duration-300 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}
+      className={`opening-stage-container overflow-hidden fixed inset-0 z-[9999] cursor-pointer transition-opacity duration-300 ${isFadingOut || animationState === 'opened' ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}
       style={{ backgroundColor: styleConfig.palette.background }}
-      onClick={handleRevealInvitation}
+      onClick={(e) => {
+        if (animationState === 'opened') return;
+        openOnce();
+      }}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          handleRevealInvitation(e);
+          openOnce();
         }
       }}
       aria-label="Davetiyeyi açmak için dokununuz"

@@ -25,7 +25,13 @@ export default function WeddingClientWrapper({ wedding, children, mode = 'public
 
   return (
     <>
-      {children}
+      <div 
+        className={`w-full transition-opacity duration-1000 ${
+          showEntrance ? 'opacity-0 pointer-events-none fixed inset-0 overflow-hidden' : 'opacity-100 relative'
+        }`}
+      >
+        {children}
+      </div>
       
       {showEntrance && (
         <EntranceAnimation

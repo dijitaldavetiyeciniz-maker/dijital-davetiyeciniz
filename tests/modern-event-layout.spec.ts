@@ -18,11 +18,12 @@ test.describe('ModernEventLayout Variant Tests', () => {
   test.setTimeout(120000); // Allow 2 minutes per test for Next.js compilation delays
 
   let supabase: any;
+  const runId = crypto.randomUUID();
   const SLUGS = {
-    tech: 'test-tech-launch-' + Date.now(),
-    gala: 'test-gala-night-' + Date.now(),
-    graduation: 'test-graduation-' + Date.now(),
-    neon: 'test-neon-party-' + Date.now()
+    tech: 'test-tech-launch-' + runId,
+    gala: 'test-gala-night-' + runId,
+    graduation: 'test-graduation-' + runId,
+    neon: 'test-neon-party-' + runId
   };
 
   test.beforeAll(async () => {
@@ -37,7 +38,7 @@ test.describe('ModernEventLayout Variant Tests', () => {
         is_paid: true,
         bride_name: 'Tech Launch Name',
         groom_name: '',
-        wedding_date: new Date(Date.now() + 864000000).toISOString(),
+        wedding_date: "2027-06-15T17:00:00.000Z",
         venue_name: 'Convention Center',
         admin_password: 'test',
         custom_overrides: {
@@ -56,7 +57,7 @@ test.describe('ModernEventLayout Variant Tests', () => {
         is_paid: true,
         bride_name: 'Awards Gala Name',
         groom_name: '',
-        wedding_date: new Date(Date.now() + 864000000).toISOString(),
+        wedding_date: "2027-06-15T17:00:00.000Z",
         venue_name: 'The Ritz',
         admin_password: 'test',
         custom_overrides: {
@@ -71,7 +72,7 @@ test.describe('ModernEventLayout Variant Tests', () => {
         is_paid: true,
         bride_name: 'Alice Graduation',
         groom_name: '',
-        wedding_date: new Date(Date.now() + 864000000).toISOString(),
+        wedding_date: "2027-06-15T17:00:00.000Z",
         venue_name: 'University Hall',
         admin_password: 'test',
         custom_overrides: {
@@ -86,7 +87,7 @@ test.describe('ModernEventLayout Variant Tests', () => {
         is_paid: true,
         bride_name: 'Neon Party Name',
         groom_name: '',
-        wedding_date: new Date(Date.now() + 864000000).toISOString(),
+        wedding_date: "2027-06-15T17:00:00.000Z",
         venue_name: 'Club Neon',
         admin_password: 'test',
         custom_overrides: {

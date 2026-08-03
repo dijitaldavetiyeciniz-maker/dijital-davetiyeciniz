@@ -433,7 +433,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
   });
   test('Baby Shower Semantic Test', async ({ page, browser }) => {
     test.setTimeout(60000);
-    const BABY_SLUG = 'baby-shower-semantic-test-' + Date.now();
+    const BABY_SLUG = 'baby-shower-semantic-test-' + crypto.randomUUID();
     
     // 1. Setup Data
     await supabase.from('weddings').delete().eq('slug', BABY_SLUG);
@@ -492,7 +492,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
   test('Birthday Semantic Test', async ({ page, browser }) => {
     test.setTimeout(60000);
-    const BDAY_SLUG = 'birthday-semantic-test-' + Date.now();
+    const BDAY_SLUG = 'birthday-semantic-test-' + crypto.randomUUID();
     
     // 1. Setup Data
     await supabase.from('weddings').delete().eq('slug', BDAY_SLUG);
