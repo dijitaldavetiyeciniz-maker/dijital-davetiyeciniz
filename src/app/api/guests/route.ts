@@ -1,66 +1,137 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
-import { cookies } from 'next/headers';
-import { verifyAdminCookie } from '@/lib/auth-cookie';
-import { generateGuestToken } from '@/lib/guestTokens';
+import { z } from 'zod';
+import { createAdminClient } from '@/server/supabaseClient';
+import { generateGuestToken } from '@/server/guestTokens';
+import { checkRateLimit } from '@/lib/rateLimit';
+
+// Zod schemas
+const GuestSchema = z.object({
+  first_name: z.string().min(1).max(50),
+  last_name: z.string().min(1).max(50),
+  phone: z.string().max(20).optional().nullable(),
+  email: z.string().email().optional().nullable(),
+  meal_preference: z.string().max(100).optional().nullable(),
+  allergy_notes: z.string().max(500).optional().nullable(),
+  special_needs: z.string().max(500).optional().nullable(),
+  plus_ones_allowed: z.number().int().min(0).max(10).default(0),
+  children_count: z.number().int().min(0).max(10).default(0),
+  notes: z.string().max(1000).optional().nullable(),
+  group_id: z.string().uuid().optional().nullable(),
+});
+
+const PostGuestsSchema = z.object({
+  wedding_id: z.string().uuid(),
+  guests: z.array(GuestSchema).min(1).max(500),
+});
 
 export async function GET(request: NextRequest) {
+  // Rate limiting
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anon';
+  const rate = checkRateLimit(`guests_get_${ip}`, { windowMs: 60000, max: 60 });
+  if (!rate.success) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const weddingId = searchParams.get('wedding_id');
 
-    if (!weddingId) {
-      return NextResponse.json({ error: 'wedding_id is required' }, { status: 400 });
+    if (!weddingId || !z.string().uuid().safeParse(weddingId).success) {
+      return NextResponse.json({ error: 'Valid wedding_id is required' }, { status: 400 });
     }
 
-    const cookieStore = await cookies();
-    const storedCookie = cookieStore.get(`admin_auth_${weddingId}`)?.value;
+    const supabase = await createAdminClient();
+    const { data: { session } } = await supabase.auth.getSession();
 
-    if (!storedCookie || !verifyAdminCookie(weddingId, storedCookie)) {
+    if (!session?.user) {
+      console.warn(JSON.stringify({ event: 'audit', action: 'guests_get_unauthorized', ip, weddingId }));
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Fetch guests
+    // Verify ownership of the wedding
+    const { data: wedding, error: weddingError } = await supabase
+      .from('weddings')
+      .select('id, user_id')
+      .eq('id', weddingId)
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (weddingError || !wedding) {
+      console.warn(JSON.stringify({ event: 'audit', action: 'guests_get_forbidden', user: session.user.id, weddingId }));
+      return NextResponse.json({ error: 'Wedding not found or access denied' }, { status: 403 });
+    }
+
+    // Fetch guests (RLS applies here, but we also enforced ownership above)
     const { data: guests, error: guestsError } = await supabase
       .from('guests')
-      .select('*')
+      .select('id, public_id, token_version, token_revoked_at, first_name, last_name, phone, email, meal_preference, allergy_notes, special_needs, plus_ones_allowed, children_count, rsvp_status, created_at')
       .eq('wedding_id', weddingId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (guestsError) {
-      return NextResponse.json({ error: guestsError.message }, { status: 500 });
+      throw new Error(guestsError.message);
     }
 
     // Decorate guests with generated token link for the frontend
-    const decoratedGuests = guests.map(guest => ({
+    const decoratedGuests = guests.map((guest: any) => ({
       ...guest,
-      // generate token on the fly so admin can copy it
-      tokenUrl: !guest.is_revoked ? generateGuestToken(guest.id, guest.token_version) : null
+      tokenUrl: !guest.token_revoked_at ? generateGuestToken(guest.public_id, guest.token_version) : null
     }));
 
-    return NextResponse.json({ guests: decoratedGuests });
+    console.info(JSON.stringify({ event: 'audit', action: 'guests_get_success', user: session.user.id, weddingId, count: guests.length }));
+
+    return NextResponse.json({ guests: decoratedGuests }, {
+      headers: {
+        'Cache-Control': 'private, no-store',
+      }
+    });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Guests GET error:', error.message);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
+  // Rate limiting
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anon';
+  const rate = checkRateLimit(`guests_post_${ip}`, { windowMs: 60000, max: 20 });
+  if (!rate.success) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   try {
-    const body = await request.json();
-    const { wedding_id, guests } = body;
+    const supabase = await createAdminClient();
+    const { data: { session } } = await supabase.auth.getSession();
 
-    if (!wedding_id || !guests || !Array.isArray(guests)) {
-      return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
-    }
-
-    const cookieStore = await cookies();
-    const storedCookie = cookieStore.get(`admin_auth_${wedding_id}`)?.value;
-
-    if (!storedCookie || !verifyAdminCookie(wedding_id, storedCookie)) {
+    if (!session?.user) {
+      console.warn(JSON.stringify({ event: 'audit', action: 'guests_post_unauthorized', ip }));
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const insertPayload = guests.map((g: any) => ({
+    const body = await request.json();
+    const parseResult = PostGuestsSchema.safeParse(body);
+
+    if (!parseResult.success) {
+      return NextResponse.json({ error: 'Invalid payload', details: parseResult.error.issues }, { status: 400 });
+    }
+
+    const { wedding_id, guests } = parseResult.data;
+
+    // Verify ownership
+    const { data: wedding, error: weddingError } = await supabase
+      .from('weddings')
+      .select('id, user_id')
+      .eq('id', wedding_id)
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (weddingError || !wedding) {
+      console.warn(JSON.stringify({ event: 'audit', action: 'guests_post_forbidden', user: session.user.id, weddingId: wedding_id }));
+      return NextResponse.json({ error: 'Wedding not found or access denied' }, { status: 403 });
+    }
+
+    const insertPayload = guests.map(g => ({
       wedding_id,
       first_name: g.first_name,
       last_name: g.last_name,
@@ -69,28 +140,36 @@ export async function POST(request: NextRequest) {
       meal_preference: g.meal_preference || null,
       allergy_notes: g.allergy_notes || null,
       special_needs: g.special_needs || null,
-      plus_ones_allowed: g.plus_ones_allowed || 0,
-      children_count: g.children_count || 0,
+      plus_ones_allowed: g.plus_ones_allowed,
+      children_count: g.children_count,
       notes: g.notes || null,
+      group_id: g.group_id || null,
     }));
 
     const { data, error } = await supabase
       .from('guests')
       .insert(insertPayload)
-      .select();
+      .select('id, public_id, token_version, token_revoked_at, first_name, last_name, phone, email, meal_preference, allergy_notes, special_needs, plus_ones_allowed, children_count, rsvp_status, created_at');
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      throw new Error(error.message);
     }
 
     // Return decorated guests
-    const decoratedGuests = data.map(guest => ({
+    const decoratedGuests = data.map((guest: any) => ({
       ...guest,
-      tokenUrl: !guest.is_revoked ? generateGuestToken(guest.id, guest.token_version) : null
+      tokenUrl: generateGuestToken(guest.public_id, guest.token_version)
     }));
 
-    return NextResponse.json({ guests: decoratedGuests });
+    console.info(JSON.stringify({ event: 'audit', action: 'guests_post_success', user: session.user.id, weddingId: wedding_id, count: guests.length }));
+
+    return NextResponse.json({ guests: decoratedGuests }, {
+      headers: {
+        'Cache-Control': 'private, no-store',
+      }
+    });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Guests POST error:', error.message);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

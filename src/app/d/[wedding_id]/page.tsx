@@ -13,6 +13,7 @@ import BackgroundMusic from '@/components/BackgroundMusic';
 import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
 import { sanitizePublicWedding } from '@/lib/sanitizeWedding';
 import { predefinedThemes } from '@/lib/themes';
+import { resolveGuestToken } from '@/server/guestTokens';
 
 // Next.js App Router Page
 export default async function WeddingPage({
@@ -36,6 +37,16 @@ export default async function WeddingPage({
   // Eğer url yanlışsa veya böyle bir düğün yoksa 404 sayfası göster
   if (error || !wedding) {
     notFound();
+  }
+
+  // Misafir Token Çözümleme
+  let guestContext = null;
+  let guestErrorMsg = null;
+  if (sParams.guest) {
+    guestContext = await resolveGuestToken(sParams.guest, wedding.id);
+    if (!guestContext) {
+      guestErrorMsg = "Kişisel davet bağlantısı doğrulanamadı. Genel davetiyeyi görüntülüyorsunuz.";
+    }
   }
 
   // Değişiklikleri kaydetmeden canlı önizleme yapabilmek için URL query parametrelerini ez
@@ -136,8 +147,20 @@ export default async function WeddingPage({
     </>
   );
 
+  const greeting = guestContext ? `Sayın ${guestContext.displayName}, davetimize hoş geldiniz.` : null;
+
   return (
     <WeddingClientWrapper wedding={cleanWedding}>
+      {guestErrorMsg && (
+        <div className="fixed top-0 left-0 w-full bg-red-500 text-white text-center py-2 z-[9999] text-sm">
+          {guestErrorMsg}
+        </div>
+      )}
+      {greeting && (
+        <div className="fixed top-0 left-0 w-full bg-slate-900/80 backdrop-blur text-white text-center py-2 z-[9999] text-sm">
+          {greeting}
+        </div>
+      )}
       {contentWithMusic}
     </WeddingClientWrapper>
   );
