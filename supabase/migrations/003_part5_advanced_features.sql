@@ -135,7 +135,8 @@ CREATE TABLE IF NOT EXISTS public.guests (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     wedding_id UUID NOT NULL REFERENCES public.weddings(id) ON DELETE CASCADE,
     group_id UUID REFERENCES public.guest_groups(id) ON DELETE SET NULL,
-    secure_token TEXT UNIQUE NOT NULL DEFAULT encode(gen_random_bytes(16), 'hex'),
+    token_version INT DEFAULT 1,
+    is_revoked BOOLEAN DEFAULT false,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     phone TEXT,
@@ -195,7 +196,7 @@ CREATE TABLE IF NOT EXISTS public.analytics_events (
 -- Index creation
 CREATE INDEX IF NOT EXISTS idx_events_wedding_id ON public.events(wedding_id);
 CREATE INDEX IF NOT EXISTS idx_guests_wedding_id ON public.guests(wedding_id);
-CREATE INDEX IF NOT EXISTS idx_guests_secure_token ON public.guests(secure_token);
+-- Removed idx_guests_secure_token as it is no longer needed
 CREATE INDEX IF NOT EXISTS idx_check_ins_wedding_id ON public.check_ins(wedding_id);
 CREATE INDEX IF NOT EXISTS idx_analytics_wedding_id ON public.analytics_events(wedding_id);
 CREATE INDEX IF NOT EXISTS idx_tables_wedding_id ON public.tables(wedding_id);
@@ -220,5 +221,5 @@ CREATE POLICY "Analytics Owner Select" ON public.analytics_events FOR SELECT TO 
 
 -- Policies for Public/Guest access
 CREATE POLICY "Events Public Select" ON public.events FOR SELECT TO anon, authenticated USING (wedding_id IN (SELECT id FROM public.weddings WHERE is_paid = true AND deleted_at IS NULL AND is_active = true));
-CREATE POLICY "Guests Public Select by Token" ON public.guests FOR SELECT TO anon, authenticated USING (secure_token IS NOT NULL);
+-- Removed insecure Guests Public Select by Token policy
 CREATE POLICY "Analytics Public Insert" ON public.analytics_events FOR INSERT TO anon, authenticated WITH CHECK (wedding_id IN (SELECT id FROM public.weddings WHERE deleted_at IS NULL));

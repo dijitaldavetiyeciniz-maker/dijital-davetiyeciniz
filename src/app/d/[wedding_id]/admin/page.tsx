@@ -13,7 +13,7 @@ import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingA
 import { envelopeStyles } from '@/data/envelopeStyles';
 import { sealStyles } from '@/data/sealStyles';
 import { getInitials } from '@/utils/getInitials';
-
+import GuestManagementTab from '@/components/admin/tabs/GuestManagementTab';
 
 function getTemplatePreset(id: string) {
   const num = parseInt(id.replace('template', '')) || 1;
@@ -236,7 +236,7 @@ export default function CoupleAdminPage({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
-  const [activeTab, setActiveTab] = useState<'rsvps' | 'design' | 'content' | 'payment'>('rsvps');
+  const [activeTab, setActiveTab] = useState<'rsvps' | 'guests' | 'design' | 'content' | 'payment'>('rsvps');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'attending' | 'not-attending'>('all');
   const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
@@ -1250,6 +1250,12 @@ export default function CoupleAdminPage({
           >
             <Users className="w-4 h-4" /> Gelen Yanıtlar (LCV)
           </button>
+          <button
+            onClick={() => setActiveTab('guests')}
+            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'guests' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          >
+            <Users className="w-4 h-4" /> Misafir Yönetimi
+          </button>
           <button 
             onClick={() => setActiveTab('design')} 
             className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'design' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
@@ -1466,6 +1472,12 @@ export default function CoupleAdminPage({
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'guests' && (
+          <div className="bg-white rounded-xl p-8 border shadow-sm">
+            <GuestManagementTab weddingId={wedding.id} />
           </div>
         )}
 
