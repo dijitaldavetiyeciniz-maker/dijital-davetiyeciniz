@@ -64,8 +64,8 @@ test.describe("Opening Animations - Detailed Checks", () => {
         writable: true
       });
 
-      HTMLMediaElement.prototype.play = function () {
-        window.__audioPlayCalls += 1;
+      (HTMLMediaElement.prototype as any).play = function () {
+        (window as any).__audioPlayCalls += 1;
         return Promise.resolve();
       };
     });
@@ -91,7 +91,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
     await expect(overlay).toHaveAttribute("data-opening-state", "completed-awaiting-interaction");
     
     // Audio still 0
-    audioCalls = await page.evaluate(() => window.__audioPlayCalls);
+    audioCalls = await page.evaluate(() => (window as any).__audioPlayCalls);
     expect(audioCalls).toBe(0);
 
     await page.screenshot({ path: "test-results/opening-parisian-final-plus-5s.png" });
