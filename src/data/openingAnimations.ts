@@ -152,6 +152,103 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     description: "Maşallah rozeti, nazar boncuğu ve şehzade kubbe açılışı.",
     icon: "nazar",
   },
+  // FLAGSHIP SPECIFIC ANIMATIONS
+  {
+    id: "parisianBlackTie",
+    name: "Karanlık Spot Işığı",
+    description: "Kontrollü spot ışığı, ince altın çizgi reveal, monogram.",
+    icon: "spotlight",
+  },
+  {
+    id: "grandOpera",
+    name: "Tiyatro Sahnesi",
+    description: "Kadife perde, sahne ışığı, tiyatro derinliği.",
+    icon: "curtain",
+  },
+  {
+    id: "moonlitGarden",
+    name: "Gece Bahçesi",
+    description: "Ay ışığı, çiçek açılımı, katmanlı gece bahçesi.",
+    icon: "garden",
+  },
+  {
+    id: "vogueEditorial",
+    name: "Dergi Kapağı",
+    description: "Tipografik blokların kademeli yerleşimi, masthead.",
+    icon: "book",
+  },
+  {
+    id: "mediterraneanCeramic",
+    name: "Seramik Desen",
+    description: "Akdeniz kemeri, kobalt vurgular, katmanlı tamamlanma.",
+    icon: "door",
+  },
+  {
+    id: "ottomanIllumination",
+    name: "Tezhip ve Mühür",
+    description: "Altın motifler, mühür, hat sanatı açılışı.",
+    icon: "seal",
+  },
+  {
+    id: "coastalSunset",
+    name: "Ufuk Çizgisi",
+    description: "Sahil kompozisyonu, ufukta güneş geçişi, kontrollü dalgalar.",
+    icon: "glass",
+  },
+  {
+    id: "auroraGlass",
+    name: "Buzlu Cam Aurora",
+    description: "Buzlu cam yüzeyi, yüksek kontrast aurora ışık hareketi.",
+    icon: "glass",
+  },
+  {
+    id: "botanicalWatercolor",
+    name: "Suluboya Çiçek",
+    description: "Pigment yayılımı, organik çerçeve oluşumu.",
+    icon: "flower",
+  },
+  {
+    id: "filmPremiere",
+    name: "Film Şeridi",
+    description: "Projektör ışığı, sinematik başlık, gala kartı.",
+    icon: "cinema",
+  },
+  {
+    id: "swissGallery",
+    name: "Grid Çizgileri",
+    description: "Tipografik hizalama, geometrik açılış, minimal hareket.",
+    icon: "minimal",
+  },
+  {
+    id: "royalPalace",
+    name: "Saray Kapısı",
+    description: "Arma, altın detay, saray kapısının açılması.",
+    icon: "door",
+  },
+  {
+    id: "hennaPalace",
+    name: "Fener ve Kına",
+    description: "Fenerler, kadife perde, kına tepsisi, altın bordo detaylar.",
+    icon: "henna",
+  },
+  {
+    id: "princeCeremony",
+    name: "Kraliyet Kubbesi",
+    description: "Kubbe, nazar detayı, çocuk isim arması.",
+    icon: "nazar",
+  },
+  {
+    id: "storybook",
+    name: "Masal Kitabı",
+    description: "Açılan kitap, özgün karakterler, etkinlik türüne göre semantik içerik.",
+    icon: "book",
+  },
+  {
+    id: "futureSummit",
+    name: "Dijital Sahne",
+    description: "Grid, logo reveal, program başlığı.",
+    icon: "zoom",
+  }
 ];
 
 export const entranceAnimationStyles: EntranceAnimationStyle[] = [

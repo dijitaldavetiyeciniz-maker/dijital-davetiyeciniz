@@ -29,6 +29,24 @@ import { BotanicalBlossomOpening } from "./openings/BotanicalBlossomOpening";
 import { HennaVelvetGateOpening } from "./openings/HennaVelvetGateOpening";
 import { NazarDomeOpening } from "./openings/NazarDomeOpening";
 
+// New Flagship Openings
+import { ParisianBlackTieOpening } from "./openings/ParisianBlackTieOpening";
+import { GrandOperaOpening } from "./openings/GrandOperaOpening";
+import { MoonlitGardenOpening } from "./openings/MoonlitGardenOpening";
+import { VogueEditorialOpening } from "./openings/VogueEditorialOpening";
+import { MediterraneanCeramicOpening } from "./openings/MediterraneanCeramicOpening";
+import { OttomanIlluminationOpening } from "./openings/OttomanIlluminationOpening";
+import { CoastalSunsetOpening } from "./openings/CoastalSunsetOpening";
+import { AuroraGlassOpening } from "./openings/AuroraGlassOpening";
+import { BotanicalWatercolorOpening } from "./openings/BotanicalWatercolorOpening";
+import { FilmPremiereOpening } from "./openings/FilmPremiereOpening";
+import { SwissGalleryOpening } from "./openings/SwissGalleryOpening";
+import { RoyalPalaceOpening } from "./openings/RoyalPalaceOpening";
+import { HennaPalaceOpening } from "./openings/HennaPalaceOpening";
+import { PrinceCeremonyOpening } from "./openings/PrinceCeremonyOpening";
+import { StorybookOpening } from "./openings/StorybookOpening";
+import { FutureSummitOpening } from "./openings/FutureSummitOpening";
+
 type EntranceAnimationProps = {
   animationType: string; // matches id in entranceAnimationTypes
   initials: string;
@@ -44,6 +62,7 @@ type EntranceAnimationProps = {
   sealType?: string;
   backgroundAnimation?: string;
   backgroundDesign?: string;
+  wedding?: any;
 };
 
 // Reusable Particle components
@@ -120,7 +139,17 @@ function parseLegacyAnimation(animationVal: string, styleVal: string) {
 
   const val = (animationVal || "").toLowerCase();
   
-  const validTypes = ["envelope", "curtain", "door", "gardenGate", "book", "luxuryBox", "treasureChest", "glass", "mirror", "cinematicZoom", "spotlight", "starryNight", "minimalFade", "royalHall", "elevator", "cinematicText", "photoCover", "sealOnly"];
+  const validTypes = [
+    "envelope", "curtain", "door", "gardenGate", "book", "luxuryBox", 
+    "treasureChest", "glass", "mirror", "cinematicZoom", "spotlight", 
+    "starryNight", "minimalFade", "royalHall", "elevator", "cinematicText", 
+    "photoCover", "sealOnly", "cloudBaloon", "teddyBear", "cinematicFilm", 
+    "royalParchment", "botanicalBlossom", "hennaVelvetGate", "nazarDome",
+    "parisianBlackTie", "grandOpera", "moonlitGarden", "vogueEditorial", 
+    "mediterraneanCeramic", "ottomanIllumination", "coastalSunset", 
+    "auroraGlass", "botanicalWatercolor", "filmPremiere", "swissGallery", 
+    "royalPalace", "hennaPalace", "princeCeremony", "storybook", "futureSummit"
+  ];
   if (validTypes.includes(animationVal)) {
     return { type: animationVal, style };
   }
@@ -205,11 +234,15 @@ function EntranceAnimation({
   sealType,
   backgroundAnimation,
   backgroundDesign,
+  wedding,
 }: EntranceAnimationProps) {
-  const [opened, setOpened] = useState(false);
+  const [animationState, setAnimationState] = useState<'playing' | 'completed-awaiting-interaction' | 'opened'>('playing');
   const [doorOpened, setDoorOpened] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
   
   const onCompleteRef = useRef(onComplete);
+  const isTransitioningRef = useRef(false);
+
   useEffect(() => {
     onCompleteRef.current = onComplete;
   }, [onComplete]);
@@ -225,38 +258,35 @@ function EntranceAnimation({
   const isCurtainType = typeConfig.id === 'curtain';
 
   useEffect(() => {
-    // Auto-open curtain after 1.5 seconds
-    const autoOpenTimer = setTimeout(() => {
-      setOpened(true);
-    }, 1500);
+    const timer = setTimeout(() => {
+      setAnimationState(prev => prev === 'opened' ? 'opened' : 'completed-awaiting-interaction');
+    }, 2800); // Wait 2.8s for main animation
 
-    return () => {
-      clearTimeout(autoOpenTimer);
-    };
+    return () => clearTimeout(timer);
   }, [animationType, style]);
 
-  const handleManualOpen = () => {
-    if (opened) return;
-    setOpened(true);
-  };
-
-  // Handle the main CTA button click:
-  // - Curtain type: first open the door, then reveal invitation after animation
-  // - All other types: directly reveal invitation
-  const handleRevealInvitation = () => {
-    if (isCurtainType && opened && !doorOpened) {
-      // Phase 2: open the door
+  const handleRevealInvitation = (e?: React.MouseEvent | React.KeyboardEvent) => {
+    if (isTransitioningRef.current || animationState === 'opened') return;
+    
+    // Prevent double invocation
+    isTransitioningRef.current = true;
+    
+    // If we are curtain type, we might want to wait for door open
+    if (isCurtainType && !doorOpened) {
       setDoorOpened(true);
-      // Wait for door animation to complete (~1.4s), then show invitation
+      setTimeout(() => {
+        setAnimationState('opened');
+        setIsFadingOut(true);
+        setTimeout(() => {
+          if (onCompleteRef.current) onCompleteRef.current();
+        }, 300); // wait for fade out
+      }, 1200);
+    } else {
+      setAnimationState('opened');
+      setIsFadingOut(true);
       setTimeout(() => {
         if (onCompleteRef.current) onCompleteRef.current();
-      }, 1400);
-    } else if (!isCurtainType) {
-      // For other types, open if not opened yet
-      if (!opened) setOpened(true);
-      setTimeout(() => {
-        if (onCompleteRef.current) onCompleteRef.current();
-      }, 600);
+      }, 250); // fast fade out 150-300ms
     }
   };
 
@@ -316,7 +346,11 @@ function EntranceAnimation({
 
   const renderFamily = () => {
     const commonProps = {
-      opened,
+      opened: animationState === 'opened' || animationState === 'completed-awaiting-interaction' || isFadingOut, 
+      // some legacy openings rely on "opened" to trigger the final static state. 
+      // But we don't want them to fade out until clicked.
+      // Wait, let's keep them as they are, but pass 'animationState'
+      animationState,
       initials,
       brideName: brideName || '',
       groomName: groomName || '',
@@ -325,6 +359,7 @@ function EntranceAnimation({
       customSealStyle: sealStyle,
       customSealType: sealType,
       introText: getInvitationIntroText(eventType),
+      wedding,
     };
 
     switch (typeConfig.id) {
@@ -376,6 +411,22 @@ function EntranceAnimation({
         return <HennaVelvetGateOpening {...commonProps} />;
       case "nazarDome":
         return <NazarDomeOpening {...commonProps} />;
+      case "parisianBlackTie": return <ParisianBlackTieOpening {...commonProps} />;
+      case "grandOpera": return <GrandOperaOpening {...commonProps} />;
+      case "moonlitGarden": return <MoonlitGardenOpening {...commonProps} />;
+      case "vogueEditorial": return <VogueEditorialOpening {...commonProps} />;
+      case "mediterraneanCeramic": return <MediterraneanCeramicOpening {...commonProps} />;
+      case "ottomanIllumination": return <OttomanIlluminationOpening {...commonProps} />;
+      case "coastalSunset": return <CoastalSunsetOpening {...commonProps} />;
+      case "auroraGlass": return <AuroraGlassOpening {...commonProps} />;
+      case "botanicalWatercolor": return <BotanicalWatercolorOpening {...commonProps} />;
+      case "filmPremiere": return <FilmPremiereOpening {...commonProps} />;
+      case "swissGallery": return <SwissGalleryOpening {...commonProps} />;
+      case "royalPalace": return <RoyalPalaceOpening {...commonProps} />;
+      case "hennaPalace": return <HennaPalaceOpening {...commonProps} />;
+      case "princeCeremony": return <PrinceCeremonyOpening {...commonProps} />;
+      case "storybook": return <StorybookOpening {...commonProps} />;
+      case "futureSummit": return <FutureSummitOpening {...commonProps} />;
       case "minimalFade":
       default:
         return <MinimalFadeOpening {...commonProps} />;
@@ -385,33 +436,33 @@ function EntranceAnimation({
   return (
     <div 
       data-testid="opening-overlay"
-      data-opening-state={opened ? (doorOpened || !isCurtainType ? 'opened' : 'completed-awaiting-interaction') : 'playing'}
+      data-opening-state={animationState}
       role="button"
       tabIndex={0}
-      className={`opening-stage-container overflow-hidden w-full h-full relative bg-design-${backgroundDesign || "rose-gold-silk"} absolute inset-0 z-50 cursor-pointer`}
+      className={`opening-stage-container overflow-hidden w-full h-full absolute inset-0 z-50 cursor-pointer transition-opacity duration-300 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}
       style={{ backgroundColor: styleConfig.palette.background }}
       onClick={handleRevealInvitation}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          handleRevealInvitation();
+          handleRevealInvitation(e);
         }
       }}
       aria-label="Davetiyeyi açmak için dokununuz"
     >
-      {/* Render Particles */}
-      <BackgroundAnimation type={backgroundAnimation || ""} />
-
       {/* Render selected family layout */}
       {renderFamily()}
 
+      {/* Render Particles */}
+      <BackgroundAnimation type={backgroundAnimation || ""} />
+
       {/* "Davetiyeyi Aç" Text Overlay */}
       <div 
-        className="absolute bottom-8 left-0 right-0 z-[60] flex flex-col items-center px-6 pointer-events-none"
-        style={{ bottom: 'max(2rem, env(safe-area-inset-bottom))' } as React.CSSProperties}
+        className={`absolute bottom-8 left-0 right-0 z-[60] flex flex-col items-center px-6 pointer-events-none transition-opacity duration-1000 ${animationState === 'completed-awaiting-interaction' ? 'opacity-100' : 'opacity-0'}`}
+        style={{ bottom: 'max(2rem, env(safe-area-inset-bottom))' }}
       >
         <p className="text-white/70 text-sm tracking-widest uppercase animate-pulse text-center drop-shadow-md">
-          {isCurtainType && !opened ? 'Perde Açılıyor...' : 'Davetiyeyi Açmak İçin Ekrana Dokunun'}
+          {getPromptText()}
         </p>
       </div>
     </div>

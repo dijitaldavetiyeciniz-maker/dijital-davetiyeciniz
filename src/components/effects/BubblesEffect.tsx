@@ -6,12 +6,16 @@ export default function BubblesEffect() {
 
   useEffect(() => {
     const createBubbles = () => {
-      const newBubbles = Array.from({ length: 15 }).map((_, i) => ({
+      const rand = (seed: number, offset: number) => { 
+        const x = Math.sin(seed * 12.9898 + offset * 78.233) * 43758.5453; 
+        return x - Math.floor(x); 
+      };
+      const newBubbles = Array.from({ length: 20 }).map((_, i) => ({
         id: i,
-        left: Math.random() * 100 + '%',
-        size: Math.random() * 40 + 10 + 'px',
-        animationDuration: Math.random() * 10 + 5 + 's',
-        animationDelay: Math.random() * 5 + 's',
+        left: rand(i, 1) * 100 + '%',
+        size: rand(i, 2) * 40 + 10 + 'px',
+        animationDuration: rand(i, 3) * 10 + 5 + 's',
+        animationDelay: rand(i, 4) * 5 + 's',
       }));
       setBubbles(newBubbles);
     };

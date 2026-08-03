@@ -387,7 +387,7 @@ export default function CoupleAdminPage({
     };
   }, [
     wedding, templateId, primaryColor, textColor, envelopeColor,
-    envelopeBgColor, envelopeFlapType, sealType, sealColor,
+    envelopeFlapType, sealType, sealColor,
     entranceType, effectType, fontFamily, namesFontFamily, useEnvelope,
     showPhotos, showRsvp, showComments, showCountdown, backgroundAnimation,
     entranceAnimation, envelopeStyle, sealStyle, countdownStyle, isDarkMode, eventType,
@@ -3677,6 +3677,25 @@ export default function CoupleAdminPage({
 
                 return (
                   <>
+                    {recItem && entranceAnimation !== recItem.id && (
+                      <div className="mb-4 bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-between">
+                        <div>
+                          <h4 className="text-sm font-bold text-amber-900">Şablonun Önerilen Animasyonu</h4>
+                          <p className="text-[10px] text-amber-700 mt-1">Bu şablon için en iyi görsel uyumu sağlar.</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEntranceAnimation(recItem.id);
+                            setUserChangedOpeningType(true); // Optional: if you want to consider this a user override. Or keep it as tracking template match.
+                          }}
+                          className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-md transition-all active:scale-95 whitespace-nowrap"
+                        >
+                          Önerilene Dön
+                        </button>
+                      </div>
+                    )}
+                  
                     {recItem && (
                       <div>
                         <h4 className="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1">

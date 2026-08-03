@@ -295,6 +295,9 @@ export function getPrimarySubjectName(wedding: any): string {
   if (!wedding) return "";
   const config = getEventTypeConfig(wedding.event_type);
 
+  const contentOpts = wedding.custom_overrides?.content || {};
+  if (contentOpts.primarySubjectName) return contentOpts.primarySubjectName;
+
   if (wedding.primary_subject_name) return wedding.primary_subject_name;
 
   if (config.id === "babyshower") {
@@ -324,6 +327,11 @@ export function getSecondarySubjectName(wedding: any): string {
   if (!wedding) return "";
   const config = getEventTypeConfig(wedding.event_type);
 
+  const contentOpts = wedding.custom_overrides?.content || {};
+  // For birthday, age acts as the secondary subject
+  if (config.id === "birthday" && contentOpts.age) return `${contentOpts.age} Yaşında!`;
+  if (contentOpts.secondarySubjectName) return contentOpts.secondarySubjectName;
+
   if (wedding.secondary_subject_name) return wedding.secondary_subject_name;
 
   if (config.id === "babyshower" || config.id === "circumcision") {
@@ -338,3 +346,66 @@ export function getSecondarySubjectName(wedding: any): string {
 
   return wedding.groom_name || "";
 }
+
+export function getMotherName(wedding: any): string {
+  if (!wedding) return "";
+  if (wedding.mother_name) return wedding.mother_name;
+  
+  const contentOpts = wedding.custom_overrides?.content || {};
+  if (contentOpts.motherName) return contentOpts.motherName;
+
+  const config = getEventTypeConfig(wedding.event_type);
+  if (config.id === "babyshower" || config.id === "circumcision") {
+    return wedding.bride_parents || "";
+  }
+  return wedding.bride_parents || "";
+}
+
+export function getFatherName(wedding: any): string {
+  if (!wedding) return "";
+  if (wedding.father_or_partner_name) return wedding.father_or_partner_name;
+  
+  const contentOpts = wedding.custom_overrides?.content || {};
+  if (contentOpts.fatherName) return contentOpts.fatherName;
+
+  const config = getEventTypeConfig(wedding.event_type);
+  if (config.id === "babyshower" || config.id === "circumcision") {
+    return wedding.groom_parents || "";
+  }
+  return wedding.groom_parents || "";
+}
+
+export function getBabyDisplayName(wedding: any): string {
+  if (!wedding) return "";
+  if (wedding.baby_name) return wedding.baby_name;
+  if (wedding.baby_display_name) return wedding.baby_display_name;
+  
+  const contentOpts = wedding.custom_overrides?.content || {};
+  if (contentOpts.babyName) return contentOpts.babyName;
+  if (contentOpts.babyDisplayName) return contentOpts.babyDisplayName;
+  
+  // Legacy migration fallback
+  if (wedding.bride_name && wedding.bride_name.toLowerCase() !== "bebeğimiz") return wedding.bride_name;
+  
+  return "Bebeğimiz";
+}
+
+export function getHostNames(wedding: any): string {
+  if (!wedding) return "";
+  if (wedding.host_names) return wedding.host_names;
+  return wedding.bride_parents && wedding.groom_parents 
+    ? `${wedding.bride_parents} & ${wedding.groom_parents}` 
+    : (wedding.bride_parents || wedding.groom_parents || "");
+}
+
+export function resolveEventTitle(wedding: any): string {
+  if (!wedding) return "";
+  
+  const contentOpts = wedding.custom_overrides?.content || {};
+  if (contentOpts.eventTitle) return contentOpts.eventTitle;
+  
+  if (wedding.event_title) return wedding.event_title;
+  const config = getEventTypeConfig(wedding.event_type);
+  return config.defaultTitle || "";
+}
+

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Calendar, MapPin, Navigation } from 'lucide-react';
 import SafeImage from '@/components/ui/SafeImage';
+import { getEventTypeConfig, getPrimarySubjectName, getSecondarySubjectName, getMotherName, getFatherName, getBabyDisplayName, resolveEventTitle } from '@/data/eventTypeConfig';
 
 interface LayoutProps {
   cardSurfaceStyle?: React.CSSProperties;
@@ -43,23 +44,29 @@ export default function MagazineEditorialLayout({ wedding,
   cardBgColor = '#ffffff',
   mode = 'public'
 , selectedBackground, cardSurfaceStyle }: LayoutProps) {
-  const brideInitial = wedding.bride_name ? wedding.bride_name.trim().charAt(0) : 'E';
-  const groomInitial = wedding.groom_name ? wedding.groom_name.trim().charAt(0) : '';
-
-  const hasMaps = !!wedding.google_maps_url;
-  const showRsvp = wedding.show_rsvp !== false;
-
-  // 1. VARYANT TESPİTİ
-  // custom_overrides.editorial_variant: 'fashion' | 'newspaper' | 'luxury'
-  const variant = wedding.custom_overrides?.editorial_variant || 'fashion';
-
-  // Masthead Metni (Örn: "THE WEDDING EDITION", "SPECIAL DAY")
-  const mastheadText = wedding.custom_overrides?.masthead_text || 'THE WEDDING EDITION';
-
-  // Focal Point
   const focalX = wedding.photo_focal_point?.x ?? 50;
   const focalY = wedding.photo_focal_point?.y ?? 50;
   const objectPosition = `${focalX}% ${focalY}%`;
+
+  // Semantic Resolution
+  const eventConfig = getEventTypeConfig(wedding.event_type);
+  const isBabyShower = eventConfig.id === 'babyshower';
+  const isBirthday = eventConfig.id === 'birthday';
+  const isCircumcision = eventConfig.id === 'circumcision';
+  const isKidsOrBaby = isBabyShower || isBirthday || isCircumcision;
+
+  let primaryName = getPrimarySubjectName(wedding);
+  if (isBabyShower) primaryName = getBabyDisplayName(wedding);
+  const secondaryName = isBabyShower || isCircumcision ? '' : getSecondarySubjectName(wedding);
+  
+  const resolvedMasthead = wedding.custom_overrides?.masthead_text || (isBabyShower ? 'THE BABY EDITION' : (isBirthday ? 'THE BIRTHDAY ISSUE' : (isCircumcision ? 'THE SPECIAL ISSUE' : 'THE WEDDING EDITION')));
+  const issueText = isBabyShower ? 'Baby Shower Issue' : (isBirthday ? 'Birthday Issue' : 'Special Day Issue');
+
+  const primaryInitial = primaryName ? primaryName.trim().charAt(0) : 'E';
+  const secondaryInitial = secondaryName ? secondaryName.trim().charAt(0) : '';
+  const monogram = secondaryInitial ? `${primaryInitial}${secondaryInitial}` : primaryInitial;
+
+  const finalEventTitle = resolveEventTitle(wedding) || eventTitle;
 
   // Fotoğraf varlığı
   const couplePhoto = wedding.bride_photo_url || wedding.groom_photo_url || wedding.background_image_url || '';
@@ -69,6 +76,15 @@ export default function MagazineEditorialLayout({ wedding,
   let titleColor = primaryColor || '#0f172a';
   let borderLine = 'border-slate-200';
   const fontSelection = `font-serif`;
+
+  const presetId = wedding.template_id || '';
+  let variant: 'newspaper' | 'luxury' | 'editorial' = 'editorial';
+  if (wedding.custom_overrides?.variant) {
+    variant = wedding.custom_overrides.variant;
+  }
+
+  const hasMaps = !!wedding.google_maps_url;
+  const showRsvp = wedding.show_rsvp !== false;
 
   if (variant === 'newspaper') {
     containerBg = 'bg-[#f8f6f0]'; // Gazete saman kağıdı rengi
@@ -97,7 +113,7 @@ export default function MagazineEditorialLayout({ wedding,
             className="text-[10px] font-sans font-bold tracking-[0.35em] uppercase select-none opacity-60"
             style={{ color: titleColor }}
           >
-            {mastheadText}
+            {resolvedMasthead}
           </span>
           <span className="text-[9px] font-mono opacity-50 uppercase tracking-widest">
             {dateObj.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
@@ -127,14 +143,14 @@ export default function MagazineEditorialLayout({ wedding,
                 }}
               >
                 <span className="text-6xl font-serif font-light mb-2 opacity-30 select-none" aria-hidden="true">
-                  {groomInitial ? `${brideInitial}${groomInitial}` : brideInitial}
+                  {monogram}
                 </span>
-                <span className="text-[8px] uppercase tracking-[0.3em] opacity-40 font-sans">Special Day Issue</span>
+                <span className="text-[8px] uppercase tracking-[0.3em] opacity-40 font-sans">{issueText}</span>
               </div>
             )}
             {/* Fotoğraf üstü dergi kapağı metin yerleşimi */}
             <div className="absolute bottom-4 left-4 bg-black/40 backdrop-blur-xs text-white py-1 px-3 rounded-md text-[9px] font-bold tracking-widest uppercase">
-              COUPLE OF THE YEAR
+              {isBabyShower ? 'BABY OF THE YEAR' : (isBirthday ? 'STAR OF THE DAY' : (isKidsOrBaby ? 'SPECIAL OF THE DAY' : 'COUPLE OF THE YEAR'))}
             </div>
           </div>
 
@@ -157,24 +173,35 @@ export default function MagazineEditorialLayout({ wedding,
                 className="text-2xl sm:text-3xl font-normal leading-tight tracking-tight uppercase"
                 style={{ color: titleColor, fontFamily: `"${headingFont}", serif` }}
               >
-                {wedding.bride_name}
+                {primaryName}
               </h1>
-              <div className="h-[1px] w-8 my-2" style={{ backgroundColor: titleColor }} />
-              <h1 
-                className="text-2xl sm:text-3xl font-normal leading-tight tracking-tight uppercase"
-                style={{ color: titleColor, fontFamily: `"${headingFont}", serif` }}
-              >
-                {wedding.groom_name}
-              </h1>
+              {secondaryName && (
+                <>
+                  <div className="h-[1px] w-8 my-2" style={{ backgroundColor: titleColor }} />
+                  <h1 
+                    className="text-2xl sm:text-3xl font-normal leading-tight tracking-tight uppercase"
+                    style={{ color: titleColor, fontFamily: `"${headingFont}", serif` }}
+                  >
+                    {secondaryName}
+                  </h1>
+                </>
+              )}
             </div>
 
             {/* Aile İsimleri */}
-            {(wedding.bride_parents || wedding.groom_parents) && (
-              <div className="mt-3 font-sans text-[9px] tracking-widest uppercase opacity-60 leading-relaxed">
-                {wedding.bride_parents && <p>{wedding.bride_parents}</p>}
-                {wedding.groom_parents && <p>{wedding.groom_parents}</p>}
-              </div>
-            )}
+            <div className="mt-3 font-sans text-[9px] tracking-widest uppercase opacity-60 leading-relaxed">
+              {isKidsOrBaby ? (
+                <>
+                  {getMotherName(wedding) && <p>ANNE: {getMotherName(wedding)}</p>}
+                  {getFatherName(wedding) && <p>BABA: {getFatherName(wedding)}</p>}
+                </>
+              ) : (
+                <>
+                  {wedding.bride_parents && <p>{wedding.bride_parents}</p>}
+                  {wedding.groom_parents && <p>{wedding.groom_parents}</p>}
+                </>
+              )}
+            </div>
           </div>
         </div>
 

@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { eventTypeConfigs } from '@/data/eventTypeConfig';
 
+const generateRandomSuffix = () => Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
@@ -135,7 +137,7 @@ export default function DashboardPage() {
   // 4. Duplicate (Kopyala)
   const handleDuplicate = async (wedding: any) => {
     if (!user) return;
-    const newSlug = `${wedding.slug}-kopya-${Date.now().toString().slice(-4)}`;
+    const newSlug = `${wedding.slug}-kopya-${generateRandomSuffix()}`;
     const { id, created_at, updated_at, deleted_at, deleted_by, ...copyData } = wedding;
 
     const newRecord = {

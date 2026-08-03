@@ -28,7 +28,10 @@ export default function CountdownTimer({
     return isNaN(distance) || distance < 0;
   });
 
+  const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
+    setIsClient(true);
     if (!targetDate) return;
 
     const timer = setInterval(() => {
@@ -59,6 +62,10 @@ export default function CountdownTimer({
 
     return () => clearInterval(timer);
   }, [targetDate]);
+
+  if (!isClient) {
+    return <div className="h-[60px] sm:h-[80px]" />; // Placeholder to prevent layout shift
+  }
 
   if (isPast) {
     return (

@@ -12,16 +12,20 @@ interface SnowProps {
 }
 
 export default function SnowEffect() {
-  const [snowflakes] = useState<SnowProps[]>(() =>
-    Array.from({ length: 30 }).map((_, i) => ({
+  const [snowflakes] = useState<SnowProps[]>(() => {
+    const rand = (seed: number, offset: number) => { 
+      const x = Math.sin(seed * 12.9898 + offset * 78.233) * 43758.5453; 
+      return x - Math.floor(x); 
+    };
+    return Array.from({ length: 30 }).map((_, i) => ({
       id: i,
-      size: Math.random() * 10 + 5, // 5px - 15px
-      left: Math.random() * 100, // %0 - %100
-      animationDuration: Math.random() * 8 + 7, // 7s - 15s
-      animationDelay: Math.random() * 10, // 0s - 10s
-      opacity: Math.random() * 0.5 + 0.3, // 0.3 - 0.8
-    }))
-  );
+      size: rand(i, 1) * 10 + 5, // 5px - 15px
+      left: rand(i, 2) * 100, // %0 - %100
+      animationDuration: rand(i, 3) * 8 + 7, // 7s - 15s
+      animationDelay: rand(i, 4) * 10, // 0s - 10s
+      opacity: rand(i, 5) * 0.5 + 0.3, // 0.3 - 0.8
+    }));
+  });
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-[5]">

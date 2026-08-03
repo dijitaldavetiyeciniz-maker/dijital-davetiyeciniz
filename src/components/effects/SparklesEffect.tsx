@@ -6,13 +6,17 @@ export default function SparklesEffect({ color = '#d4af37' }: { color?: string }
 
   useEffect(() => {
     const createSparkles = () => {
+      const rand = (seed: number, offset: number) => { 
+        const x = Math.sin(seed * 12.9898 + offset * 78.233) * 43758.5453; 
+        return x - Math.floor(x); 
+      };
       const newSparkles = Array.from({ length: 30 }).map((_, i) => ({
         id: i,
-        left: Math.random() * 100 + '%',
-        top: Math.random() * 100 + '%',
-        size: Math.random() * 4 + 1 + 'px',
-        animationDuration: Math.random() * 3 + 1 + 's',
-        animationDelay: Math.random() * 5 + 's',
+        left: rand(i, 1) * 100 + '%',
+        top: rand(i, 2) * 100 + '%',
+        size: rand(i, 3) * 4 + 1 + 'px',
+        animationDuration: rand(i, 4) * 3 + 1 + 's',
+        animationDelay: rand(i, 5) * 5 + 's',
       }));
       setSparkles(newSparkles);
     };

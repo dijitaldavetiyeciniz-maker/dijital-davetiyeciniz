@@ -1,17 +1,15 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, Navigation, Award, Disc } from 'lucide-react';
+import { Calendar, MapPin, Navigation, Award, Disc, Mic, Star, Sparkles, Map } from 'lucide-react';
+import { getPrimarySubjectName, getSecondarySubjectName, resolveEventTitle, getEventTypeConfig } from '@/data/eventTypeConfig';
 
 interface Speaker {
   name: string;
   role: string;
   company?: string;
-  avatarUrl?: string;
 }
-
 interface Sponsor {
   name: string;
-  logoUrl?: string;
 }
 
 interface LayoutProps {
@@ -36,289 +34,339 @@ interface LayoutProps {
   mode?: 'preview' | 'public';
 }
 
-export default function ModernEventLayout({ wedding,
-  primaryColor,
-  textColor,
-  headingFont,
-  bodyFont,
-  accentFont,
-  dateObj,
-  dateStr,
-  timeStr,
-  eventTitle,
-  renderTimer,
-  renderRsvpButton,
-  renderGuestBook,
-  renderQuote,
-  handleMapClick,
-  cardBgColor = '#090d16',
-  mode = 'public'
-, selectedBackground, cardSurfaceStyle }: LayoutProps) {
+function TechLaunchView({ props, semanticData }: { props: LayoutProps, semanticData: any }) {
+  const { wedding, primaryColor, textColor, headingFont, bodyFont, dateObj, dateStr, timeStr, renderTimer, renderRsvpButton, handleMapClick, cardSurfaceStyle } = props;
+  const { overrides, primaryName, secondaryName, eventTitle } = semanticData;
+  const speakers: Speaker[] = overrides.speakers || [
+    { name: 'Dr. Sarah Connor', role: 'Chief AI Officer', company: 'Cyberdyne' },
+    { name: 'John Doe', role: 'Lead Engineer', company: 'TechNova' }
+  ];
+
+  return (
+    <div data-testid="modern-event-tech-launch" className="w-full min-h-screen flex flex-col bg-[#050505] text-[#f4f4f5] font-sans selection:bg-cyan-500/30 overflow-x-hidden">
+      {/* Hero */}
+      <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-center text-center p-6 sm:p-12" style={cardSurfaceStyle}>
+        <div className="absolute inset-0 bg-radial-gradient from-cyan-900/20 to-[#050505] pointer-events-none" />
+        <div className="relative z-10 flex flex-col items-center max-w-4xl mx-auto space-y-6">
+          <span className="text-xs sm:text-sm font-mono tracking-[0.4em] uppercase text-cyan-400 border border-cyan-400/30 py-1.5 px-4 rounded-full">
+            {eventTitle || 'TECH LAUNCH'}
+          </span>
+          <h1 className="text-[12vw] sm:text-7xl md:text-8xl font-black leading-none tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-500" style={{ fontFamily: `"${headingFont}", sans-serif` }}>
+            {primaryName || 'INNOVATE'}
+          </h1>
+          {secondaryName && <h2 className="text-xl sm:text-3xl font-medium text-slate-300 tracking-wide">{secondaryName}</h2>}
+          <div className="pt-8">
+            <p className="text-lg sm:text-xl font-mono text-slate-400 tracking-widest">{dateStr} — {timeStr}</p>
+          </div>
+        </div>
+        <div className="absolute bottom-10 left-0 w-full flex justify-center animate-bounce opacity-50">
+          <span className="text-2xl">&darr;</span>
+        </div>
+      </section>
+
+      {/* Timer & Quote */}
+      <section className="w-full py-16 px-6 sm:px-12 bg-black border-y border-white/5 flex flex-col md:flex-row items-center justify-center gap-12">
+        <div className="max-w-xl text-center md:text-left text-sm sm:text-base text-slate-400 leading-relaxed font-light">
+          {props.renderQuote()}
+        </div>
+        <div className="shrink-0 scale-110 sm:scale-125 transform origin-center">
+          {renderTimer()}
+        </div>
+      </section>
+
+      {/* Speakers */}
+      {speakers.length > 0 && (
+        <section className="w-full py-20 px-6 sm:px-12 max-w-6xl mx-auto">
+          <h3 className="text-xs font-mono tracking-[0.3em] uppercase text-slate-500 mb-10 text-center">Featured Speakers</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {speakers.map((sp, idx) => (
+              <div key={idx} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-start gap-4 transition-transform hover:-translate-y-2">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg">
+                  {sp.name.charAt(0)}
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold text-white mb-1">{sp.name}</h4>
+                  <p className="text-sm text-cyan-400 font-medium">{sp.role}</p>
+                  {sp.company && <p className="text-xs text-slate-500 mt-1 uppercase tracking-wider">{sp.company}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Actions */}
+      <section className="w-full py-20 px-6 sm:px-12 bg-gradient-to-t from-cyan-900/20 to-transparent flex flex-col items-center text-center space-y-10">
+        <div className="space-y-4 max-w-lg">
+          <MapPin className="w-8 h-8 mx-auto text-cyan-400" />
+          <h3 className="text-2xl font-bold">{wedding.venue_name || 'Location TBA'}</h3>
+          {wedding.venue_address && <p className="text-sm text-slate-400">{wedding.venue_address}</p>}
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md justify-center">
+          {wedding.google_maps_url && (
+            <button onClick={handleMapClick} className="flex-1 py-4 px-6 rounded-full bg-white/10 text-white font-bold text-sm tracking-widest uppercase hover:bg-white/20 transition-colors flex justify-center items-center gap-2">
+              <Navigation className="w-4 h-4" /> Map
+            </button>
+          )}
+          {wedding.show_rsvp !== false && (
+            <div className="flex-1 w-full [&>button]:w-full [&>button]:py-4 [&>button]:rounded-full [&>button]:text-sm [&>button]:tracking-widest [&>button]:uppercase [&>button]:bg-cyan-500 [&>button]:text-black hover:[&>button]:bg-cyan-400 [&>button]:font-bold transition-colors">
+              {renderRsvpButton()}
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function GraduationView({ props, semanticData }: { props: LayoutProps, semanticData: any }) {
+  const { wedding, primaryColor, textColor, headingFont, bodyFont, dateObj, dateStr, timeStr, renderTimer, renderRsvpButton, handleMapClick, cardSurfaceStyle } = props;
+  const { overrides, primaryName, secondaryName, eventTitle } = semanticData;
+  const graduationYear = overrides.graduation_year || dateObj.getFullYear().toString();
+  const department = overrides.department || secondaryName || 'Computer Science';
+  const faculty = overrides.faculty || 'Engineering Faculty';
+
+  return (
+    <div data-testid="modern-event-graduation" className="w-full min-h-screen flex flex-col bg-[#0f172a] text-[#f8fafc] overflow-x-hidden font-sans">
+      <section className="w-full min-h-[85vh] flex flex-col items-center justify-center p-6 sm:p-12 relative" style={cardSurfaceStyle}>
+        {/* Background elements */}
+        <div className="absolute top-0 w-full h-1/2 bg-gradient-to-b from-amber-500/10 to-transparent pointer-events-none" />
+        
+        <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center">
+          <div className="w-16 h-16 rounded-full bg-amber-500/20 flex items-center justify-center mb-8">
+            <Award className="w-8 h-8 text-amber-400" />
+          </div>
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold uppercase tracking-tight mb-4" style={{ fontFamily: `"${headingFont}", sans-serif` }}>
+            {primaryName}
+          </h1>
+          <div className="h-px w-24 bg-amber-500/50 my-6" />
+          <h2 className="text-xl sm:text-2xl text-amber-200 font-medium tracking-widest uppercase mb-2">
+            Class of {graduationYear}
+          </h2>
+          <p className="text-sm sm:text-base text-slate-400 uppercase tracking-widest mt-4">
+            {faculty} <br className="sm:hidden" /> <span className="hidden sm:inline">•</span> {department}
+          </p>
+        </div>
+      </section>
+
+      <section className="w-full py-16 px-6 bg-slate-900 border-t border-slate-800 flex flex-col items-center justify-center space-y-12">
+        <div className="max-w-2xl text-center text-lg md:text-xl font-light leading-relaxed italic text-slate-300" style={{ fontFamily: `"${props.accentFont}", serif` }}>
+          {props.renderQuote()}
+        </div>
+        <div className="bg-slate-950/50 p-6 rounded-3xl border border-slate-800 shadow-xl">
+          {renderTimer()}
+        </div>
+      </section>
+
+      <section className="w-full py-20 px-6 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="flex flex-col space-y-6 bg-white/5 p-8 rounded-3xl border border-white/10">
+          <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-400 mb-2">
+            <Calendar className="w-6 h-6" />
+          </div>
+          <h3 className="text-2xl font-bold">Commencement</h3>
+          <div className="space-y-1 text-slate-300">
+            <p className="font-medium text-lg">{dateStr}</p>
+            <p className="text-sm opacity-80">{timeStr}</p>
+          </div>
+        </div>
+
+        <div className="flex flex-col space-y-6 bg-white/5 p-8 rounded-3xl border border-white/10">
+          <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 mb-2">
+            <MapPin className="w-6 h-6" />
+          </div>
+          <h3 className="text-2xl font-bold">Location</h3>
+          <div className="space-y-1 text-slate-300">
+            <p className="font-medium">{wedding.venue_name || 'TBA'}</p>
+            {wedding.venue_address && <p className="text-sm opacity-80">{wedding.venue_address}</p>}
+          </div>
+          {wedding.google_maps_url && (
+            <button onClick={handleMapClick} className="text-sm text-amber-400 font-bold uppercase tracking-wider flex items-center gap-2 mt-4 hover:text-amber-300">
+              Get Directions <span aria-hidden="true">&rarr;</span>
+            </button>
+          )}
+        </div>
+      </section>
+
+      {wedding.show_rsvp !== false && (
+        <section className="w-full pb-24 px-6 flex justify-center">
+          <div className="w-full max-w-md [&>button]:w-full [&>button]:py-4 [&>button]:rounded-2xl [&>button]:bg-amber-500 [&>button]:text-slate-900 [&>button]:font-bold [&>button]:uppercase [&>button]:tracking-widest hover:[&>button]:bg-amber-400 transition-colors shadow-xl shadow-amber-500/10">
+            {renderRsvpButton()}
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
+
+function GalaView({ props, semanticData }: { props: LayoutProps, semanticData: any }) {
+  const { wedding, primaryColor, textColor, headingFont, bodyFont, dateObj, dateStr, timeStr, renderTimer, renderRsvpButton, handleMapClick, cardSurfaceStyle } = props;
+  const { primaryName, eventTitle } = semanticData;
+
+  return (
+    <div data-testid="modern-event-gala" className="w-full min-h-screen flex flex-col bg-[#111111] text-[#e5e5e5] font-serif overflow-x-hidden">
+      <section className="w-full min-h-screen flex flex-col justify-between p-6 sm:p-12 relative" style={cardSurfaceStyle}>
+        <div className="absolute inset-4 sm:inset-8 border border-white/20 pointer-events-none" />
+        <div className="absolute inset-5 sm:inset-10 border border-white/10 pointer-events-none" />
+        
+        <header className="w-full text-center pt-8 sm:pt-12 z-10">
+          <span className="text-[10px] sm:text-xs font-sans tracking-[0.4em] uppercase text-yellow-600/80">
+            {eventTitle || 'Annual Gala'}
+          </span>
+        </header>
+
+        <main className="w-full flex-1 flex flex-col items-center justify-center text-center px-4 z-10">
+          <Sparkles className="w-8 h-8 text-yellow-600 mb-8 opacity-70" />
+          <h1 className="text-5xl sm:text-7xl md:text-8xl font-normal leading-tight tracking-tight mb-8 max-w-5xl" style={{ fontFamily: `"${headingFont}", serif` }}>
+            {primaryName || 'A Night of Elegance'}
+          </h1>
+          <div className="w-24 h-[1px] bg-yellow-600/50 mb-8" />
+          <p className="text-lg sm:text-xl text-white/70 italic max-w-2xl" style={{ fontFamily: `"${props.accentFont}", serif` }}>
+            {props.renderQuote()}
+          </p>
+        </main>
+
+        <footer className="w-full text-center pb-8 sm:pb-12 z-10 flex flex-col items-center gap-4">
+          <div className="flex items-center gap-6 text-xs sm:text-sm uppercase tracking-widest font-sans">
+            <span>{dateStr}</span>
+            <span className="w-1.5 h-1.5 bg-yellow-600 rotate-45" />
+            <span>{timeStr}</span>
+          </div>
+          <p className="text-xs uppercase tracking-widest text-white/50 font-sans mt-2">{wedding.venue_name}</p>
+        </footer>
+      </section>
+
+      <section className="w-full bg-[#0a0a0a] py-24 px-6 flex flex-col items-center justify-center space-y-16">
+        <div className="transform scale-90 sm:scale-100">
+          {renderTimer()}
+        </div>
+        
+        <div className="w-full max-w-md space-y-6 font-sans">
+          {wedding.google_maps_url && (
+            <button onClick={handleMapClick} className="w-full py-4 border border-white/20 text-white uppercase tracking-widest text-xs hover:bg-white/5 transition-colors">
+              View Map & Directions
+            </button>
+          )}
+          {wedding.show_rsvp !== false && (
+            <div className="w-full [&>button]:w-full [&>button]:py-4 [&>button]:bg-yellow-700 [&>button]:text-white [&>button]:uppercase [&>button]:tracking-widest [&>button]:text-xs hover:[&>button]:bg-yellow-600 transition-colors">
+              {renderRsvpButton()}
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function NeonPartyView({ props, semanticData }: { props: LayoutProps, semanticData: any }) {
+  const { wedding, primaryColor, textColor, headingFont, bodyFont, dateObj, dateStr, timeStr, renderTimer, renderRsvpButton, handleMapClick, cardSurfaceStyle } = props;
+  const { overrides, primaryName, eventTitle } = semanticData;
+  const djName = overrides.dj_name || 'DJ PULSE';
+  const dressCode = overrides.dress_code || 'Neon Casual';
+
+  return (
+    <div data-testid="modern-event-neon-party" className="w-full min-h-screen flex flex-col bg-[#050014] text-white font-sans overflow-x-hidden">
+      <section className="w-full min-h-[90vh] flex flex-col items-center justify-center relative p-6 sm:p-12 overflow-hidden" style={cardSurfaceStyle}>
+        {/* Neon Glows */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-fuchsia-600/30 blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-cyan-600/30 blur-[100px] pointer-events-none" />
+        
+        <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center space-y-8">
+          <div className="inline-block py-1 px-4 rounded-full border border-fuchsia-500/50 bg-fuchsia-500/10 text-fuchsia-300 text-xs font-bold uppercase tracking-widest">
+            {eventTitle || 'AFTER PARTY'}
+          </div>
+          
+          <h1 className="text-6xl sm:text-8xl md:text-9xl font-black italic tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-500 drop-shadow-[0_0_15px_rgba(217,70,239,0.5)]" style={{ fontFamily: `"${headingFont}", sans-serif` }}>
+            {primaryName || 'NEON NIGHTS'}
+          </h1>
+          
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 text-lg sm:text-2xl font-bold uppercase tracking-widest text-white/90">
+            <span>{dateStr}</span>
+            <span className="hidden sm:block text-fuchsia-500">•</span>
+            <span>{timeStr}</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full py-16 px-6 bg-[#03000a] flex flex-col md:flex-row gap-8 items-center justify-center border-y border-white/5">
+        <div className="flex flex-col items-center justify-center p-6 bg-white/5 rounded-3xl w-full max-w-sm border border-white/5 backdrop-blur-md">
+          <Disc className="w-10 h-10 text-cyan-400 mb-4 animate-[spin_4s_linear_infinite]" />
+          <h3 className="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-1">HEADLINE DJ</h3>
+          <p className="text-xl font-black italic tracking-wider text-cyan-300">{djName}</p>
+        </div>
+        <div className="flex flex-col items-center justify-center p-6 bg-white/5 rounded-3xl w-full max-w-sm border border-white/5 backdrop-blur-md">
+          <Star className="w-10 h-10 text-fuchsia-400 mb-4" />
+          <h3 className="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-1">DRESS CODE</h3>
+          <p className="text-xl font-black italic tracking-wider text-fuchsia-300">{dressCode}</p>
+        </div>
+      </section>
+
+      <section className="w-full py-20 px-6 max-w-2xl mx-auto text-center space-y-12">
+        <div>
+          <h3 className="text-xs uppercase tracking-[0.3em] text-white/50 mb-6">Countdown</h3>
+          <div className="inline-block scale-110">
+            {renderTimer()}
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <p className="font-bold text-xl">{wedding.venue_name}</p>
+          <p className="text-sm text-white/50">{wedding.venue_address}</p>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          {wedding.google_maps_url && (
+            <button onClick={handleMapClick} className="w-full py-4 rounded-xl bg-white/10 text-white font-bold uppercase tracking-widest text-sm hover:bg-white/20 transition-all">
+              Location Map
+            </button>
+          )}
+          {wedding.show_rsvp !== false && (
+            <div className="w-full [&>button]:w-full [&>button]:py-4 [&>button]:rounded-xl [&>button]:bg-gradient-to-r [&>button]:from-fuchsia-600 [&>button]:to-purple-600 [&>button]:text-white [&>button]:font-bold [&>button]:uppercase [&>button]:tracking-widest [&>button]:text-sm hover:[&>button]:opacity-90 transition-opacity shadow-[0_0_20px_rgba(192,38,211,0.4)]">
+              {renderRsvpButton()}
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default function ModernEventLayout(props: LayoutProps) {
+  const { wedding, eventTitle } = props;
   
   // 1. ETKİNLİK VARYANT TESPİTİ
   const presetId = wedding.template_id || '';
-  let variant: 'tech-launch' | 'graduation' | 'gala' | 'neon-party' = 'tech-launch';
-
-  if (presetId === 'graduation-ceremony' || eventTitle.includes('Mezuniyet')) {
-    variant = 'graduation';
-  } else if (presetId === 'modern-tech-event') {
-    variant = 'tech-launch';
-  } else {
-    const overrides = wedding.custom_overrides || {};
-    variant = overrides.event_variant || 'tech-launch';
-  }
-
-  const [isPast, setIsPast] = useState(false);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const eventTime = dateObj.getTime();
-      setIsPast(eventTime - now <= 0);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [dateObj]);
-
-  // 2. RENK VE GRID TASARIM SİSTEMİ
-  let containerBg = 'bg-[#030712] text-white';
-  let accentColor = primaryColor || '#06b6d4'; // Cyan
-  let categoryLabel = 'TECHNOLOGY LAUNCH';
-  let decorativeOverlay: React.ReactNode = null;
-
-  if (variant === 'gala') {
-    containerBg = 'bg-[#0b1329] text-white';
-    accentColor = '#dfb76c'; // Gold
-    categoryLabel = 'AWARDS GALA';
-  } else if (variant === 'graduation') {
-    containerBg = 'bg-[#0b1329] text-white border-yellow-500/20'; // Lacivert & Altın mezuniyet zemin
-    accentColor = '#dfc384'; // Altın
-    categoryLabel = 'GRADUATION CEREMONY';
-    decorativeOverlay = (
-      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-25">
-        {/* Floating mortarboard caps and diploma scrolls */}
-        <div data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface" className="absolute top-12 left-10 text-3xl animate-bounce duration-[4000ms]" style={cardSurfaceStyle}>🎓</div>
-        <div className="absolute top-24 right-10 text-4xl animate-pulse">📜</div>
-        <div className="absolute bottom-40 left-8 text-2xl animate-bounce">📜</div>
-        <div className="absolute bottom-20 right-12 text-3xl animate-pulse duration-[5000ms]">🎓</div>
-      </div>
-    );
-  } else if (variant === 'neon-party') {
-    containerBg = 'bg-[#050508] text-white';
-    accentColor = '#ec4899'; // Pink
-    categoryLabel = 'AFTER PARTY';
-  }
-
-  // 3. VARYANTA ÖZEL VERİ SETLERİ
-  const defaultSpeakers: Speaker[] = [
-    { name: 'Dr. Ahmet Yılmaz', role: 'AI Specialist', company: 'DeepTech' },
-    { name: 'Nesrin Arslan', role: 'UI Engineer', company: 'Platform Inc' }
-  ];
-
-  const defaultSponsors: Sponsor[] = [
-    { name: 'Google Cloud' }, { name: 'Vercel' }
-  ];
-
   const overrides = wedding.custom_overrides || {};
-  const speakers: Speaker[] = overrides.speakers || (variant === 'tech-launch' ? defaultSpeakers : []);
-  const sponsors: Sponsor[] = overrides.sponsors || (variant === 'tech-launch' ? defaultSponsors : []);
+  let variant: 'tech-launch' | 'graduation' | 'gala' | 'neon-party' = overrides.event_variant || 'tech-launch';
 
-  const department = overrides.department || 'Bilgisayar Mühendisliği';
-  const faculty = overrides.faculty || 'Mühendislik Fakültesi';
-  const graduationYear = overrides.graduation_year || '2026';
+  if (!overrides.event_variant) {
+    if (presetId === 'graduation-ceremony' || eventTitle.includes('Mezuniyet')) {
+      variant = 'graduation';
+    } else if (presetId === 'future-summit' || presetId === 'modern-event') {
+      variant = 'tech-launch';
+    } else if (presetId === 'gala-night') {
+      variant = 'gala';
+    } else if (presetId === 'neon-party') {
+      variant = 'neon-party';
+    }
+  }
 
-  const djName = overrides.dj_name || 'DJ Pulse';
-  const dressCode = overrides.dress_code || 'Smart Casual / Neon Gold';
+  const config = getEventTypeConfig(wedding.event_type);
+  const semanticData = {
+    overrides: wedding.custom_overrides || {},
+    primaryName: getPrimarySubjectName(wedding),
+    secondaryName: getSecondarySubjectName(wedding),
+    eventTitle: resolveEventTitle(wedding)
+  };
 
-  const hasMaps = !!wedding.google_maps_url;
-  const showRsvp = wedding.show_rsvp !== false;
-
-  return (
-    <div 
-      className="max-w-[550px] mx-auto w-full my-8 relative z-10 animate-fade-in font-sans"
-      style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif` }}
-    >
-      {wedding?.template_id === 'future-summit' && (
-        <div className="flagship-exclusive-decor absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-4" data-flagship-decor="future-summit" aria-hidden="true">
-          <div className="w-full flex justify-between">
-             <div className="w-12 h-12 border-t-2 border-l-2 border-current opacity-20" />
-             <div className="w-12 h-12 border-t-2 border-r-2 border-current opacity-20" />
-          </div>
-          <div className="w-full flex justify-between">
-             <div className="w-12 h-12 border-b-2 border-l-2 border-current opacity-20" />
-             <div className="w-12 h-12 border-b-2 border-r-2 border-current opacity-20" />
-          </div>
-        </div>
-      )}
-      <div 
-        className={`relative rounded-[2.5rem] overflow-hidden p-6 sm:p-10 border flex flex-col justify-between min-h-[640px] shadow-2xl transition-all duration-500 ${containerBg}`}
-        style={{ borderColor: 'rgba(255,255,255,0.06)' }}
-      >
-        {decorativeOverlay}
-
-        {/* Kurumsal Mesh Degradesi */}
-        {variant !== 'graduation' && (
-          <div className="absolute top-0 right-0 w-64 h-64 bg-radial-gradient from-cyan-500/10 to-transparent blur-3xl pointer-events-none z-0" />
-        )}
-
-        {/* Üst Kategoriler */}
-        <div className="w-full flex justify-between items-center mb-6 z-10">
-          <span 
-            className="text-[9px] font-mono tracking-[0.3em] font-bold py-1 px-3 rounded-full border border-current select-none"
-            style={{ color: accentColor }}
-          >
-            {categoryLabel}
-          </span>
-          <span className="text-[10px] font-semibold opacity-60">
-            {dateObj.toLocaleDateString('tr-TR', { year: 'numeric' })}
-          </span>
-        </div>
-
-        {/* Başlık ve Büyük Tarih */}
-        <div className="text-left w-full mb-6 z-10">
-          <div className="flex justify-between items-start gap-4 mb-2">
-            <h1 
-              className="text-2xl sm:text-3xl font-black leading-tight tracking-tight uppercase"
-              style={{ fontFamily: `"${headingFont}", sans-serif` }}
-            >
-              {wedding.bride_name || 'Lansman Etkinliği'}
-            </h1>
-            
-            <div className="text-right shrink-0 select-none" aria-hidden="true">
-              <span className="text-3xl sm:text-4xl font-black tracking-tighter" style={{ color: accentColor }}>
-                {String(dateObj.getDate()).padStart(2, '0')}
-              </span>
-              <span className="block text-[9px] font-mono tracking-widest uppercase opacity-60">
-                {dateObj.toLocaleDateString('tr-TR', { month: 'short' })}
-              </span>
-            </div>
-          </div>
-
-          <div className="text-xs opacity-75 font-light leading-relaxed max-w-sm mt-3">
-            {renderQuote()}
-          </div>
-        </div>
-
-        {/* DİNAMİK İÇERİK MODÜLLERİ */}
-        
-        {/* A. Teknoloji Lansmanı */}
-        {variant === 'tech-launch' && (
-          <div className="w-full text-left my-6 space-y-5 z-10">
-            {speakers.length > 0 && (
-              <div>
-                <span className="text-[9px] font-mono uppercase tracking-widest opacity-50 block mb-2">KONUŞMACILAR</span>
-                <div className="grid grid-cols-1 gap-2">
-                  {speakers.map((sp, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 rounded-xl border bg-white/5 border-white/5">
-                      <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs uppercase" style={{ color: accentColor }}>
-                        {sp.name.charAt(0)}
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-bold">{sp.name}</h4>
-                        <p className="text-[10px] opacity-60">{sp.role} {sp.company ? `- ${sp.company}` : ''}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {sponsors.length > 0 && (
-              <div>
-                <span className="text-[9px] font-mono uppercase tracking-widest opacity-50 block mb-1.5">SPONSORLAR</span>
-                <div className="flex flex-wrap gap-2 text-[9px] font-semibold opacity-75">
-                  {sponsors.map((sp, idx) => (
-                    <span key={idx} className="py-1 px-2.5 rounded-md bg-white/5 border border-white/5">{sp.name}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* B. Mezuniyet Töreni */}
-        {variant === 'graduation' && (
-          <div className="w-full text-left my-6 space-y-4 z-10">
-            <div className="p-4 rounded-2xl border border-yellow-500/20 bg-slate-900/60 text-white">
-              <span className="text-[8px] font-sans font-bold tracking-widest uppercase opacity-60 block mb-1">FAKÜLTE & BÖLÜM</span>
-              <h4 className="text-sm font-bold text-amber-300">{faculty}</h4>
-              <p className="text-xs font-medium opacity-90 mt-0.5">{department}</p>
-              <div className="w-8 h-[1px] bg-yellow-500/20 my-2.5" />
-              <p className="text-[10px] opacity-75 font-mono uppercase">MEZUNİYET YILI: {graduationYear}</p>
-            </div>
-          </div>
-        )}
-
-        {/* C. Neon Parti */}
-        {variant === 'neon-party' && (
-          <div className="w-full text-left my-6 space-y-4 z-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <div className="p-3 rounded-xl border bg-black/40 border-white/5">
-                <span className="text-[9px] opacity-40 uppercase tracking-widest block mb-0.5">LINE UP</span>
-                <div className="flex items-center gap-1.5 text-xs font-bold">
-                  <Disc className="w-3.5 h-3.5 animate-spin" style={{ color: accentColor }} />
-                  <span>{djName}</span>
-                </div>
-              </div>
-              <div className="p-3 rounded-xl border bg-black/40 border-white/5">
-                <span className="text-[9px] opacity-40 uppercase tracking-widest block mb-0.5">DRESS CODE</span>
-                <span className="text-xs font-bold text-slate-200">{dressCode}</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Sayaç */}
-        <div className="w-full my-4 z-10 text-center">
-          {isPast ? (
-            <div className="py-2 px-4 rounded-xl border text-[10px] font-bold inline-block bg-white/5 border-white/5 uppercase tracking-wider text-slate-400">
-              Etkinlik Tamamlandı / Event Completed
-            </div>
-          ) : (
-            renderTimer()
-          )}
-        </div>
-
-        {/* Tarih & Mekan */}
-        <div className="w-full max-w-sm text-xs font-semibold my-6 space-y-2.5 text-left mx-auto z-10">
-          <div className="flex items-center gap-3 py-2.5 px-4 rounded-xl border bg-black/20 border-white/5">
-            <Calendar className="w-4 h-4 shrink-0" style={{ color: accentColor }} />
-            <span>{dateStr} <span className="mx-1 opacity-45">|</span> {timeStr}</span>
-          </div>
-
-          <div className="flex flex-col items-start gap-1 p-4 rounded-xl border bg-black/20 border-white/5 text-left">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 shrink-0" style={{ color: accentColor }} />
-              <span className="font-bold">{wedding.venue_name || 'Mekan Belirtilmedi'}</span>
-            </div>
-            {wedding.venue_address && (
-              <p className="text-[11px] font-light opacity-80 pl-6 leading-relaxed">{wedding.venue_address}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Aksiyonlar */}
-        <div className="w-full max-w-sm flex flex-col gap-3 mt-4 mx-auto z-10">
-          {hasMaps && (
-            <button 
-              type="button"
-              onClick={handleMapClick}
-              className="w-full h-12 rounded-full border flex items-center justify-between px-6 font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer focus-visible:ring-2 focus-visible:outline-none bg-white/5 border-white/5"
-              style={{ borderColor: `${accentColor}40`, color: '#ffffff' }}
-            >
-              <div className="flex items-center gap-2">
-                <Navigation className="w-4 h-4" style={{ color: accentColor }} />
-                <span>KONUMA GİT</span>
-              </div>
-              <span>&rarr;</span>
-            </button>
-          )}
-
-          {showRsvp && renderRsvpButton()}
-        </div>
-
-        {/* Anı Defteri */}
-        {renderGuestBook()}
-      </div>
-    </div>
-  );
+  switch (variant) {
+    case 'graduation':
+      return <GraduationView props={props} semanticData={semanticData} />;
+    case 'gala':
+      return <GalaView props={props} semanticData={semanticData} />;
+    case 'neon-party':
+      return <NeonPartyView props={props} semanticData={semanticData} />;
+    case 'tech-launch':
+    default:
+      return <TechLaunchView props={props} semanticData={semanticData} />;
+  }
 }

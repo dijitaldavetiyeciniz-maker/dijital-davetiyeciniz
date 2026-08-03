@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Navigation, Gift, Sparkles } from 'lucide-react';
+import { getEventTypeConfig, getPrimarySubjectName, getMotherName, getFatherName, getBabyDisplayName, resolveEventTitle } from '@/data/eventTypeConfig';
 
 interface LayoutProps {
   cardSurfaceStyle?: React.CSSProperties;
@@ -174,24 +175,30 @@ export default function KidsThematicLayout({ wedding,
   const contentOpts = overrides.content || {};
   
   // Semantic resolution
-  let resolvedHeroName = wedding.bride_name || '';
-  let resolvedMother = wedding.bride_parents || '';
-  let resolvedFather = wedding.groom_parents || '';
+  let resolvedHeroName = '';
+  let resolvedMother = '';
+  let resolvedFather = '';
   let displayBadge = badgeText;
+  
+  const eventConfig = getEventTypeConfig(wedding.event_type);
 
-  if (presetId === 'storybook-babyshower' || eventTypeRaw.includes('shower')) {
-    const babyName = contentOpts.babyName || wedding.bride_name || '';
-    const babyDisplayName = contentOpts.babyDisplayName || babyName;
-    resolvedHeroName = babyDisplayName || 'Bebeğimiz';
-    resolvedMother = contentOpts.motherName || wedding.bride_parents || '';
-    resolvedFather = contentOpts.fatherName || wedding.groom_parents || '';
-  } else if (presetId === 'storybook-birthday' || eventTypeRaw.includes('birthday') || eventTypeRaw.includes('dogum')) {
-    resolvedHeroName = contentOpts.primarySubjectName || wedding.bride_name || 'Doğum Günü Çocuğu';
-    const age = contentOpts.age || overrides.kids_age || '';
+  if (presetId === 'storybook-babyshower' || eventConfig.id === 'babyshower') {
+    resolvedHeroName = getBabyDisplayName(wedding);
+    resolvedMother = getMotherName(wedding);
+    resolvedFather = getFatherName(wedding);
+  } else if (presetId === 'storybook-birthday' || eventConfig.id === 'birthday') {
+    resolvedHeroName = getPrimarySubjectName(wedding) || 'Doğum Günü Çocuğu';
+    const age = contentOpts.age || overrides.kids_age || wedding.age || '';
     if (age) {
       displayBadge = `${age} Yaşında!`;
     }
+  } else {
+     resolvedHeroName = getPrimarySubjectName(wedding);
+     resolvedMother = getMotherName(wedding);
+     resolvedFather = getFatherName(wedding);
   }
+  
+  const finalEventTitle = resolveEventTitle(wedding) || eventTitle;
 
   if (presetId === 'storybook-birthday') {
     return (
@@ -209,7 +216,7 @@ export default function KidsThematicLayout({ wedding,
               {resolvedHeroName}
             </h1>
             <h3 className="font-bold tracking-widest uppercase text-xs text-rose-800 bg-white px-4 py-2 rounded-lg shadow-sm">
-              {eventTitle}
+              {finalEventTitle}
             </h3>
           </div>
 
@@ -271,7 +278,7 @@ export default function KidsThematicLayout({ wedding,
             </svg>
             
             <h3 className="font-medium tracking-[0.3em] uppercase text-xs mb-2 text-sky-600">
-              {eventTitle}
+              {finalEventTitle}
             </h3>
             
             <h1 className="text-4xl sm:text-5xl font-light text-sky-900 mb-2 w-full" style={{ fontFamily: `"${headingFont}", serif` }}>
@@ -362,7 +369,7 @@ export default function KidsThematicLayout({ wedding,
 
           {/* Başlık */}
           <h3 className="font-semibold tracking-[0.25em] uppercase text-[10px] mb-4 opacity-75 animate-pulse" style={{ color: themeColor }}>
-            {eventTitle}
+            {finalEventTitle}
           </h3>
 
           {/* Çocuğun İsmi */}
@@ -371,14 +378,14 @@ export default function KidsThematicLayout({ wedding,
               className="text-4xl sm:text-5xl font-normal leading-tight tracking-wide w-full"
               style={{ color: themeColor, fontFamily: `"${headingFont}", cursive` }}
             >
-              {wedding.bride_name || 'Bebeğimiz'}
+              {resolvedHeroName}
             </h1>
             
             {/* Anne Baba Detayı */}
-            {(wedding.bride_parents || wedding.groom_parents) && (
+            {(resolvedMother || resolvedFather) && (
               <p className="text-[9px] tracking-[0.25em] font-light mt-3 opacity-60 uppercase font-sans">
-                {wedding.bride_parents ? `ANNE: ${wedding.bride_parents}` : ''} 
-                {wedding.groom_parents ? ` • BABA: ${wedding.groom_parents}` : ''}
+                {resolvedMother ? `ANNE: ${resolvedMother}` : ''} 
+                {resolvedFather ? ` • BABA: ${resolvedFather}` : ''}
               </p>
             )}
           </div>

@@ -14,11 +14,6 @@ type WeddingClientWrapperProps = {
 export default function WeddingClientWrapper({ wedding, children, mode = 'public' }: WeddingClientWrapperProps) {
   const [showEntrance, setShowEntrance] = useState(true);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.search.includes('screenshot=true')) {
-      setShowEntrance(false);
-    }
-  }, []);
 
   const [isPreview] = useState(() => {
     if (mode === 'preview') return true;
@@ -30,7 +25,9 @@ export default function WeddingClientWrapper({ wedding, children, mode = 'public
 
   return (
     <>
-      {showEntrance ? (
+      {children}
+      
+      {showEntrance && (
         <EntranceAnimation
           animationType={wedding.entrance_animation || "royal-seal-premium"}
           envelopeStyle={wedding.envelope_style || "classic"}
@@ -42,6 +39,7 @@ export default function WeddingClientWrapper({ wedding, children, mode = 'public
           initials={getInitials(getPrimarySubjectName(wedding), getSecondarySubjectName(wedding))}
           brideName={getPrimarySubjectName(wedding)}
           groomName={getSecondarySubjectName(wedding)}
+          wedding={wedding} // Passing the full object to extract semantic data
           eventDate={(() => {
             if (!wedding.wedding_date) return undefined;
             const d = new Date(wedding.wedding_date);
@@ -49,23 +47,19 @@ export default function WeddingClientWrapper({ wedding, children, mode = 'public
           })()}
           onComplete={() => setShowEntrance(false)}
         />
-      ) : (
-        <>
-          {children}
-          
-          {/* Replay Animation Floating Button (Only in Design Studio Emulator) */}
-          {isPreview && (
-            <div className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-3 duration-300">
-              <button
-                type="button"
-                onClick={() => setShowEntrance(true)}
-                className="bg-slate-900/90 text-white font-semibold text-xs tracking-wider uppercase px-4 py-3 rounded-full hover:bg-slate-800 transition-all shadow-2xl backdrop-blur-sm border border-slate-700/50 cursor-pointer active:scale-95"
-              >
-                🔄 Animasyonu Tekrar Oynat
-              </button>
-            </div>
-          )}
-        </>
+      )}
+
+      {/* Replay Animation Floating Button (Only in Design Studio Emulator) */}
+      {isPreview && !showEntrance && (
+        <div className="fixed bottom-6 right-6 z-[100] animate-in fade-in slide-in-from-bottom-3 duration-300">
+          <button
+            type="button"
+            onClick={() => setShowEntrance(true)}
+            className="bg-slate-900/90 text-white font-semibold text-xs tracking-wider uppercase px-4 py-3 rounded-full hover:bg-slate-800 transition-all shadow-2xl backdrop-blur-sm border border-slate-700/50 cursor-pointer active:scale-95"
+          >
+            🔄 Animasyonu Tekrar Oynat
+          </button>
+        </div>
       )}
     </>
   );

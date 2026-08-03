@@ -7,7 +7,7 @@ interface BackgroundParticlesProps {
 }
 
 export default function BackgroundParticles({ animationType, primaryColor = '#d4af37' }: BackgroundParticlesProps) {
-  const rand = (seed, offset) => { const x = Math.sin(seed * 12.9898 + offset * 78.233) * 43758.5453; return x - Math.floor(x); };
+  const rand = (seed: number, offset: number) => { const x = Math.sin(seed * 12.9898 + offset * 78.233) * 43758.5453; return x - Math.floor(x); };
   if (['goldenDust', 'rosePetals', 'sakura', 'bokehLights', 'heartsRain', 'starShower', 'pearlSparkle', 'mistCloud', 'confettiBurst', 'autumnLeaves', 'waveReflection', 'silkWave', 'candleFlicker', 'neonGradient', 'marbleLight'].includes(animationType)) {
     const config: Record<string, { cls: string; count: number; content?: string[]; noPos?: boolean }> = {
       goldenDust: { cls: 'golden-dust-particles', count: 30 },
@@ -32,13 +32,11 @@ export default function BackgroundParticles({ animationType, primaryColor = '#d4
         {Array.from({ length: c.count }).map((_, i) => {
           const style: any = { '--i': i };
           if (!c.noPos) {
-            const seedX = i * 17 + 3.14;
-            const seedY = i * 29 + 1.61;
-            const randomX = (Math.sin(seedX) * 10000) % 1;
-            const randomY = (Math.sin(seedY) * 10000) % 1;
-            style.left = `${(Math.abs(randomX) * 100).toFixed(4)}%`;
+            const randomX = rand(i, 1);
+            const randomY = rand(i, 2);
+            style.left = `${(randomX * 100).toFixed(4)}%`;
             if (['bokehLights', 'pearlSparkle', 'mistCloud', 'candleFlicker', 'neonGradient'].includes(animationType)) {
-              style.top = `${(Math.abs(randomY) * 100).toFixed(4)}%`;
+              style.top = `${(randomY * 100).toFixed(4)}%`;
             }
           }
           return (
