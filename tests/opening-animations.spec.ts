@@ -84,7 +84,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
 
     // Wait for animation to finish (e.g. 3s)
     await page.waitForTimeout(3500);
-    await expect(overlay).toHaveAttribute("data-opening-state", "completed-awaiting-interaction", { timeout: 15000 });
+    await expect(overlay).toHaveAttribute("data-opening-state", "completed-awaiting-interaction", { timeout: 10000 });
     
     // Idle 5 seconds
     await page.waitForTimeout(5000);

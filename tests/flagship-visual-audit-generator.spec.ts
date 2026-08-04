@@ -188,12 +188,12 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       const overlay = publicPage.locator('[data-testid="opening-overlay"]');
       await overlay.waitFor({ state: 'attached', timeout: 15000 });
       
-      // Robustly click until the overlay detaches (handles hydration race conditions)
+      // Robustly click until the overlay detaches
       await expect(async () => {
         if (await overlay.isVisible()) {
-          await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
+          await overlay.click({ force: true });
         }
-        await expect(overlay).toBeHidden({ timeout: 3000 });
+        await expect(overlay).toBeHidden({ timeout: 5000 });
       }).toPass({ timeout: 30000 });
       
       expect(errors.length, `Hydration errors detected: ${errors.join(', ')}`).toBe(0);
@@ -214,9 +214,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       expect(actualLayoutId, `Template fell back to default-fallback instead of ${expectedLayoutStyle}`).not.toBe('default-fallback');
       expect(actualLayoutId, `Mapping error! Expected layoutStyle ${expectedLayoutStyle} but got ${actualLayoutId}`).toBe(expectedLayoutStyle);
 
-      // Wait for any entry animations to settle after the overlay is removed
-      await publicPage.waitForTimeout(1500);
-
+      // Deterministic layout-ready wait (no more waitForTimeout)
+      const wrapper = publicPage.locator('[data-testid="wedding-content-wrapper"]');
+      await expect(wrapper).toHaveAttribute('data-layout-ready', 'true');
+      await expect(wrapper).toHaveCSS('opacity', '1');
       // Step 20: Bundan sonra screenshot al (Mobil)
       await publicPage.setViewportSize({ width: 390, height: 844 });
       await publicPage.screenshot({ path: path.join(AUDIT_DIR, `${tplId}-mobile-390x844.png`), fullPage: false });
@@ -424,7 +425,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await expect(async () => {
       if (await overlay.isVisible()) {
-        await overlay.dispatchEvent('click');
+        await overlay.click({ force: true });
       }
       await expect(overlay).toBeHidden({ timeout: 5000 });
     }).toPass({ timeout: 30000 });
