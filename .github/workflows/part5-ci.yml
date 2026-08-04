@@ -45,10 +45,29 @@ jobs:
         run: supabase status
 
       - name: Export Supabase Secrets
+        shell: bash
         run: |
-          supabase status -o env | grep "SERVICE_ROLE_KEY=" | sed 's/SERVICE_ROLE_KEY=/SUPABASE_SERVICE_ROLE_KEY=/' >> $GITHUB_ENV
-          supabase status -o env | grep "ANON_KEY=" | sed 's/ANON_KEY=/NEXT_PUBLIC_SUPABASE_ANON_KEY=/' >> $GITHUB_ENV
-          echo "NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321" >> $GITHUB_ENV
+          set -euo pipefail
+          set +x
+
+          eval "$(supabase status -o env)"
+
+          test -n "${API_URL:-}"
+          test -n "${ANON_KEY:-}"
+          test -n "${SERVICE_ROLE_KEY:-}"
+
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=${API_URL}"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${ANON_KEY}"
+            echo "SUPABASE_SERVICE_ROLE_KEY=${SERVICE_ROLE_KEY}"
+          } >> "$GITHUB_ENV"
+
+          test "$(awk -F. '{print NF}' <<< "$SERVICE_ROLE_KEY")" -eq 3
+
+          echo "Supabase URL: SET"
+          echo "Anon key: SET"
+          echo "Service role key: SET"
+          echo "Service role JWT parts: 3"
 
       - name: Apply migration
         run: supabase db reset --local
