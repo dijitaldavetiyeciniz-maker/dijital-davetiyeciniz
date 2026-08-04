@@ -31,7 +31,7 @@ test.describe('Server Repository DB Integration', () => {
 
     try {
       const weddingAInsert = await supabase.from('weddings').insert({
-        id: 'a0000000-0000-0000-0000-000000000001',
+        id: '00000000-0000-0000-0000-000000000001',
         slug: 'wedding-a-integration',
         is_active: true,
         bride_name: 'Bride A',
@@ -44,7 +44,7 @@ test.describe('Server Repository DB Integration', () => {
 
       // 2. Wedding B oluştur
       const weddingBInsert = await supabase.from('weddings').insert({
-        id: 'b0000000-0000-0000-0000-000000000002',
+        id: '00000000-0000-0000-0000-000000000002',
         slug: 'wedding-b-integration',
         is_active: true,
         bride_name: 'Bride B',
@@ -57,7 +57,7 @@ test.describe('Server Repository DB Integration', () => {
 
       // 3. Guest A oluştur
       const guestAInsert = await supabase.from('guests').insert({
-        id: 'g0000000-0000-0000-0000-000000000001',
+        id: '11111111-0000-0000-0000-000000000001',
         wedding_id: weddingA.id,
         first_name: 'Guest',
         last_name: 'A',
@@ -72,7 +72,7 @@ test.describe('Server Repository DB Integration', () => {
 
       // 4. Guest B oluştur
       const guestBInsert = await supabase.from('guests').insert({
-        id: 'g0000000-0000-0000-0000-000000000002',
+        id: '11111111-0000-0000-0000-000000000002',
         wedding_id: weddingB.id,
         first_name: 'Guest',
         last_name: 'B',
