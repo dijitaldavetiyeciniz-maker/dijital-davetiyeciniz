@@ -2,9 +2,13 @@ name: Part 5A Final CI / CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+      - ci/part5a-final-fix
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   test:
