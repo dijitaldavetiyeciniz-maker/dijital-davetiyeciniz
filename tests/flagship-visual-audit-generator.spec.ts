@@ -424,9 +424,9 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await expect(async () => {
       if (await overlay.isVisible()) {
-        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
+        await overlay.dispatchEvent('click');
       }
-      await expect(overlay).toBeHidden({ timeout: 3000 });
+      await expect(overlay).toBeHidden({ timeout: 5000 });
     }).toPass({ timeout: 30000 });
 
     const root = publicPage.locator('[data-template-id]').first();
