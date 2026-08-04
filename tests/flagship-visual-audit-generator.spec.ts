@@ -191,7 +191,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       // Robustly click until the overlay detaches
       await expect(async () => {
         if (await overlay.isVisible()) {
-          await overlay.click({ force: true });
+          // Send a real hardware-level coordinate click (bypassing actionability checks on the animating overlay)
+          await publicPage.mouse.click(200, 200);
         }
         await expect(overlay).toBeHidden({ timeout: 5000 });
       }).toPass({ timeout: 30000 });
@@ -425,7 +426,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await expect(async () => {
       if (await overlay.isVisible()) {
-        await overlay.click({ force: true });
+        await publicPage.mouse.click(200, 200);
       }
       await expect(overlay).toBeHidden({ timeout: 5000 });
     }).toPass({ timeout: 30000 });
