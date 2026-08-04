@@ -15,7 +15,16 @@ test.describe('PART 5A - Guest Management E2E', () => {
   test('Guest Management E2E Flow', async ({ page }) => {
     // Admin misafir sekmesi açılır
     await page.goto('/d/test-wedding/admin');
-    await page.click('text="Misafirler"');
+    await expect(page).toHaveURL(/admin/);
+
+    await page.screenshot({
+      path: "test-results/admin-before-tabs.png",
+      fullPage: true
+    });
+
+    console.log(await page.content());
+
+    await page.click('text="Misafir Yönetimi"');
 
     // Misafir eklenir
     await page.click('text="Yeni Misafir Ekle"');
