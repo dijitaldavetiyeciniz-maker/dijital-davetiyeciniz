@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { resolveGuestToken, generateGuestToken, revokeGuestToken, renewGuestToken } from '@/server/guestTokens';
+import { resolveGuestTokenDetailed, generateGuestToken, revokeGuestToken, renewGuestToken, verifyGuestToken } from '@/server/guestTokens';
 
 export async function POST(request: Request) {
   if (process.env.NODE_ENV !== 'test' && process.env.PART5_TEST_MODE !== 'true') {
@@ -16,9 +16,14 @@ export async function POST(request: Request) {
           token: generateGuestToken(payload.publicId, payload.tokenVersion, payload.expiresAt) 
         });
 
+      case 'verify':
+        return NextResponse.json({
+          payload: verifyGuestToken(payload.token)
+        });
+
       case 'resolve':
-        const resolved = await resolveGuestToken(payload.token, payload.weddingSlug);
-        return NextResponse.json({ resolved });
+        const result = await resolveGuestTokenDetailed(payload.token, payload.weddingSlug);
+        return NextResponse.json(result);
 
       case 'revoke':
         await revokeGuestToken(payload.guestId);

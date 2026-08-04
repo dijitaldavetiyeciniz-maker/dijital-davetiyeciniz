@@ -86,8 +86,43 @@ test.describe('Server Repository DB Integration', () => {
       guestB = guestBInsert.data!;
 
       // 5. Guest A token oluştur
-      const genARes = await request.post(apiUrl, { data: { action: 'generate', payload: { publicId: guestA.public_id, tokenVersion: 1 } } });
+      const genARes = await request.post(apiUrl, { data: { action: 'generate', payload: { publicId: guestA.public_id, tokenVersion: guestA.token_version } } });
       const { token: tokenA } = await genARes.json();
+
+      // 5.1 Verify Token Payload
+      const verifyRes = await request.post(apiUrl, { data: { action: 'verify', payload: { token: tokenA } } });
+      const { payload: verifiedPayload } = await verifyRes.json();
+      expect(verifiedPayload.publicId).toBe(guestA.public_id);
+      expect(verifiedPayload.tokenVersion).toBe(guestA.token_version);
+
+      // 5.2 Strict DB Assertions
+      const guestLookup = await supabase
+        .from('guests')
+        .select(`
+          public_id,
+          wedding_id,
+          token_version,
+          token_revoked_at,
+          token_expires_at,
+          deleted_at
+        `)
+        .eq('public_id', guestA.public_id)
+        .single();
+
+      expect(guestLookup.error, JSON.stringify(guestLookup.error)).toBeNull();
+      expect(guestLookup.data?.public_id).toBe(guestA.public_id);
+      expect(guestLookup.data?.token_version).toBe(guestA.token_version);
+      expect(guestLookup.data?.token_revoked_at).toBeNull();
+      expect(guestLookup.data?.deleted_at).toBeNull();
+
+      const weddingLookup = await supabase
+        .from('weddings')
+        .select('id, slug')
+        .eq('id', guestLookup.data!.wedding_id)
+        .single();
+
+      expect(weddingLookup.error, JSON.stringify(weddingLookup.error)).toBeNull();
+      expect(weddingLookup.data?.slug).toBe('wedding-a-integration');
 
       // 6. Guest A doğru slug’da çözülür
       let resolveRes = await request.post(apiUrl, { 
@@ -99,17 +134,14 @@ test.describe('Server Repository DB Integration', () => {
           } 
         } 
       });
-      const resolveBody = await resolveRes.json().catch(async () => ({
-        raw: await resolveRes.text()
-      }));
+      const resolveBody = await resolveRes.json();
 
       expect(
-        resolveRes.ok(),
-        `Resolve failed: status=${resolveRes.status()} body=${JSON.stringify(resolveBody)}`
-      ).toBeTruthy();
+        resolveBody.resolved,
+        `Resolve returned null: ${JSON.stringify(resolveBody.diagnostic)}`
+      ).not.toBeNull();
 
       const resolvedA = resolveBody.resolved;
-      expect(resolvedA).not.toBeNull();
       expect(resolvedA?.displayName).toBe('Guest A');
 
       // 7. Redaction Assertions

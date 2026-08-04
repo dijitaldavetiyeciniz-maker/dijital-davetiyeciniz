@@ -29,9 +29,20 @@ export function verifyGuestToken(token: string): GuestTokenPayload | null {
   return verifyGuestTokenCore(token, getSecretKey());
 }
 
-export async function resolveGuestToken(token: string, weddingSlug: string): Promise<PublicGuestContext | null> {
+export type TokenDiagnostic = 
+  | 'invalid_token'
+  | 'guest_not_found'
+  | 'token_version_mismatch'
+  | 'token_revoked'
+  | 'token_expired'
+  | 'guest_deleted'
+  | 'wedding_not_found'
+  | 'wedding_slug_mismatch'
+  | 'unknown_error';
+
+export async function resolveGuestTokenDetailed(token: string, weddingSlug: string): Promise<{ resolved: PublicGuestContext | null; diagnostic?: { reason: TokenDiagnostic } }> {
   const payload = verifyGuestToken(token);
-  if (!payload) return null;
+  if (!payload) return { resolved: null, diagnostic: { reason: 'invalid_token' } };
 
   try {
     const { data: guest, error } = await supabase
@@ -40,12 +51,12 @@ export async function resolveGuestToken(token: string, weddingSlug: string): Pro
       .eq('public_id', payload.publicId)
       .single();
 
-    if (error || !guest) return null;
+    if (error || !guest) return { resolved: null, diagnostic: { reason: 'guest_not_found' } };
 
-    if (guest.deleted_at) return null;
-    if (guest.token_revoked_at) return null;
-    if (guest.token_expires_at && new Date(guest.token_expires_at).getTime() < Date.now()) return null;
-    if (guest.token_version !== payload.tokenVersion) return null;
+    if (guest.deleted_at) return { resolved: null, diagnostic: { reason: 'guest_deleted' } };
+    if (guest.token_revoked_at) return { resolved: null, diagnostic: { reason: 'token_revoked' } };
+    if (guest.token_expires_at && new Date(guest.token_expires_at).getTime() <= Date.now()) return { resolved: null, diagnostic: { reason: 'token_expired' } };
+    if (guest.token_version !== payload.tokenVersion) return { resolved: null, diagnostic: { reason: 'token_version_mismatch' } };
 
     const { data: wedding, error: weddingError } = await supabase
       .from('weddings')
@@ -53,20 +64,26 @@ export async function resolveGuestToken(token: string, weddingSlug: string): Pro
       .eq('id', guest.wedding_id)
       .single();
       
-    if (weddingError || !wedding) return null;
-    if (wedding.slug !== weddingSlug) return null;
-    if (wedding.deleted_at || !wedding.is_active) return null;
+    if (weddingError || !wedding || wedding.deleted_at || !wedding.is_active) return { resolved: null, diagnostic: { reason: 'wedding_not_found' } };
+    if (wedding.slug !== weddingSlug) return { resolved: null, diagnostic: { reason: 'wedding_slug_mismatch' } };
 
     return {
-      displayName: [guest.first_name, guest.last_name].filter(Boolean).join(' '),
-      allowedPlusOnes: guest.plus_ones_allowed || 0,
-      allowedChildren: guest.children_count || 0,
-      rsvpStatus: guest.rsvp_status as any,
+      resolved: {
+        displayName: [guest.first_name, guest.last_name].filter(Boolean).join(' '),
+        allowedPlusOnes: guest.plus_ones_allowed || 0,
+        allowedChildren: guest.children_count || 0,
+        rsvpStatus: guest.rsvp_status as any,
+      }
     };
   } catch (error) {
     console.error('Error resolving guest token:', error);
-    return null;
+    return { resolved: null, diagnostic: { reason: 'unknown_error' } };
   }
+}
+
+export async function resolveGuestToken(token: string, weddingSlug: string): Promise<PublicGuestContext | null> {
+  const { resolved } = await resolveGuestTokenDetailed(token, weddingSlug);
+  return resolved;
 }
 
 export async function renewGuestToken(guestId: string): Promise<string | null> {
