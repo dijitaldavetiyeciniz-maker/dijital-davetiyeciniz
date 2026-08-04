@@ -50,6 +50,15 @@ jobs:
       - name: Run RLS SQL tests
         run: psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -f supabase/tests/part5a_rls.sql
 
+      - name: Build application for Playwright
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:54321"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key"
+          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-key"
+          GUEST_TOKEN_SECRET_V1: "ci_dummy_secret_key_at_least_32_chars_long"
+          GUEST_TOKEN_ACTIVE_KEY_VERSION: "1"
+
       - name: Run token unit tests
         run: npx playwright test tests/token.spec.ts --workers=1
 
@@ -93,12 +102,6 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-      - name: Run production build
-        run: npm run build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:54321"
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key"
-          GUEST_TOKEN_SECRET_V1: "ci_dummy_secret_key_at_least_32_chars_long"
 
       - name: Run critical regression tests
         run: |
