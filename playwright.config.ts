@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -18,7 +20,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm.cmd run start',
+    command: `${npmCommand} run start`,
     url: 'http://localhost:3000',
     reuseExistingServer: true,
     timeout: 120 * 1000,
