@@ -8,7 +8,10 @@ CREATE TABLE IF NOT EXISTS public.weddings (
     wedding_date TIMESTAMP WITH TIME ZONE,
     template_id TEXT DEFAULT 'template1', -- Tasarım şablonu
     admin_password TEXT NOT NULL, -- Çiftin paneline girmek için şifresi
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    bride_photo_url TEXT,
+    groom_photo_url TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- 2. RSVPs (LCV / Katılım Durumları) Tablosu

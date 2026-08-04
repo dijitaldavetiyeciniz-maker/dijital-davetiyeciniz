@@ -44,7 +44,12 @@ CREATE OR REPLACE VIEW public.public_wedding_view AS
 SELECT 
     w.id,
     w.slug,
-    w.title,
+    CASE 
+        WHEN w.event_type IN ('Düğün', 'Nişan', 'Kına', 'Sünnet') THEN 
+            COALESCE(w.bride_name || ' & ' || w.groom_name, w.bride_name, 'Etkinlik')
+        ELSE 
+            COALESCE(w.bride_name, 'Etkinlik')
+    END AS title,
     w.event_type,
     w.bride_name,
     w.groom_name,
