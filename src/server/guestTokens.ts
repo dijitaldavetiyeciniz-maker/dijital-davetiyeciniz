@@ -1,5 +1,5 @@
 import "server-only";
-import { supabase } from "@/lib/supabase";
+import { createServerServiceRoleClient } from "@/server/supabaseClient";
 import { generateGuestTokenCore, verifyGuestTokenCore, GuestTokenPayload } from "@/lib/security/guestTokenCore";
 
 export type { GuestTokenPayload };
@@ -45,13 +45,15 @@ export async function resolveGuestTokenDetailed(token: string, weddingSlug: stri
   if (!payload) return { resolved: null, diagnostic: { reason: 'invalid_token' } };
 
   try {
+    const supabase = createServerServiceRoleClient();
     const { data: guest, error } = await supabase
       .from('guests')
       .select('id, wedding_id, token_version, token_revoked_at, token_expires_at, deleted_at, first_name, last_name, plus_ones_allowed, children_count, rsvp_status')
-      .eq('public_id', payload.publicId)
-      .single();
+      .eq('public_id', payload.publicId.trim())
+      .maybeSingle();
 
-    if (error || !guest) return { resolved: null, diagnostic: { reason: 'guest_not_found' } };
+    if (error) return { resolved: null, diagnostic: { reason: 'unknown_error' as TokenDiagnostic, queryErrorCode: error.code } };
+    if (!guest) return { resolved: null, diagnostic: { reason: 'guest_not_found', supabaseHost: new URL(process.env.NEXT_PUBLIC_SUPABASE_URL!).host } };
 
     if (guest.deleted_at) return { resolved: null, diagnostic: { reason: 'guest_deleted' } };
     if (guest.token_revoked_at) return { resolved: null, diagnostic: { reason: 'token_revoked' } };
@@ -88,6 +90,7 @@ export async function resolveGuestToken(token: string, weddingSlug: string): Pro
 
 export async function renewGuestToken(guestId: string): Promise<string | null> {
   try {
+    const supabase = createServerServiceRoleClient();
     const { data: guest, error } = await supabase
       .from('guests')
       .select('public_id, token_version')
@@ -118,6 +121,7 @@ export async function renewGuestToken(guestId: string): Promise<string | null> {
 
 export async function revokeGuestToken(guestId: string): Promise<boolean> {
   try {
+    const supabase = createServerServiceRoleClient();
     const { error } = await supabase
       .from('guests')
       .update({

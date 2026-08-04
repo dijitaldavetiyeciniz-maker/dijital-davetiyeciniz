@@ -85,17 +85,31 @@ test.describe('Server Repository DB Integration', () => {
       expect(guestBInsert.data?.public_id).toBeTruthy();
       guestB = guestBInsert.data!;
 
+      // 4.5. Strict DB Assertions BEFORE generation
+      expect(guestA.public_id).toBeTruthy();
+      expect(guestA.token_version).toBe(1);
+
+      const guestBeforeGenerate = await supabase
+        .from('guests')
+        .select('id, public_id, wedding_id, token_version')
+        .eq('public_id', guestA.public_id)
+        .single();
+
+      expect(guestBeforeGenerate.error, JSON.stringify(guestBeforeGenerate.error)).toBeNull();
+      expect(guestBeforeGenerate.data?.public_id).toBe(guestA.public_id);
+
       // 5. Guest A token oluştur
       const genARes = await request.post(apiUrl, { data: { action: 'generate', payload: { publicId: guestA.public_id, tokenVersion: guestA.token_version } } });
       const { token: tokenA } = await genARes.json();
 
       // 5.1 Verify Token Payload
       const verifyRes = await request.post(apiUrl, { data: { action: 'verify', payload: { token: tokenA } } });
-      const { payload: verifiedPayload } = await verifyRes.json();
+      const verifyBody = await verifyRes.json();
+      expect(verifyRes.ok(), `Verify failed: ${JSON.stringify(verifyBody)}`).toBeTruthy();
+      const verifiedPayload = verifyBody.payload;
       expect(verifiedPayload.publicId).toBe(guestA.public_id);
       expect(verifiedPayload.tokenVersion).toBe(guestA.token_version);
 
-      // 5.2 Strict DB Assertions
       const guestLookup = await supabase
         .from('guests')
         .select(`
