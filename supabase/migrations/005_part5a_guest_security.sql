@@ -1,12 +1,27 @@
 -- 004_part5a_guest_security.sql
 -- Implements secure public_id, token tracking, and soft deletes for guests
 
--- Add new secure columns to guests table
 ALTER TABLE public.guests
-ADD COLUMN IF NOT EXISTS public_id UUID NOT NULL DEFAULT gen_random_uuid() UNIQUE,
-ADD COLUMN IF NOT EXISTS token_revoked_at TIMESTAMPTZ NULL,
-ADD COLUMN IF NOT EXISTS token_expires_at TIMESTAMPTZ NULL,
-ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ NULL;
+  ADD COLUMN IF NOT EXISTS public_id UUID,
+  ADD COLUMN IF NOT EXISTS token_revoked_at TIMESTAMPTZ NULL,
+  ADD COLUMN IF NOT EXISTS token_expires_at TIMESTAMPTZ NULL,
+  ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ NULL;
+
+UPDATE public.guests
+SET public_id = gen_random_uuid()
+WHERE public_id IS NULL;
+
+ALTER TABLE public.guests
+  ALTER COLUMN public_id SET DEFAULT gen_random_uuid();
+
+ALTER TABLE public.guests
+  ALTER COLUMN public_id SET NOT NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS guests_public_id_unique
+  ON public.guests(public_id);
+
+ALTER TABLE public.guests
+  ADD COLUMN IF NOT EXISTS token_version INTEGER NOT NULL DEFAULT 1;
 
 -- Ensure token_version is strictly positive
 DO $$

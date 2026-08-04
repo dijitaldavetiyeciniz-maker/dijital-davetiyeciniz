@@ -94,6 +94,14 @@ jobs:
       - name: Run token unit tests
         run: npx playwright test tests/token.spec.ts --workers=1
 
+      - name: Assert guests table schema
+        run: |
+          psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -c "
+            SELECT column_name, is_nullable, column_default
+            FROM information_schema.columns
+            WHERE table_schema='public' AND table_name='guests' AND column_name IN ('public_id','token_version');
+          "
+
       - name: Run server repository integration tests
         run: npx playwright test tests/server-integration.spec.ts --workers=1
         env:

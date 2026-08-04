@@ -24,50 +24,67 @@ test.describe('Server Repository DB Integration', () => {
     const apiUrl = '/api/test/guest-tokens';
     
     // 1. Wedding A oluştur
-    const { data: weddingA, error: errA } = await supabase.from('weddings').insert({
-      id: 'a0000000-0000-0000-0000-000000000001',
-      slug: 'wedding-a-integration',
-      is_active: true,
-      bride_name: 'Bride A',
-      groom_name: 'Groom A',
-      admin_password: 'test'
-    }).select().single();
-    if (errA) throw errA;
-
-    // 2. Wedding B oluştur
-    const { data: weddingB, error: errB } = await supabase.from('weddings').insert({
-      id: 'b0000000-0000-0000-0000-000000000002',
-      slug: 'wedding-b-integration',
-      is_active: true,
-      bride_name: 'Bride B',
-      groom_name: 'Groom B',
-      admin_password: 'test'
-    }).select().single();
-    if (errB) throw errB;
-
-    // 3. Guest A oluştur
-    const { data: guestA } = await supabase.from('guests').insert({
-      id: 'g0000000-0000-0000-0000-000000000001',
-      wedding_id: weddingA.id,
-      first_name: 'Guest',
-      last_name: 'A',
-      email: 'a@example.com',
-      token_version: 1,
-      allergy_notes: 'Peanut'
-    }).select().single();
-
-    // 4. Guest B oluştur
-    const { data: guestB } = await supabase.from('guests').insert({
-      id: 'g0000000-0000-0000-0000-000000000002',
-      wedding_id: weddingB.id,
-      first_name: 'Guest',
-      last_name: 'B',
-      email: 'b@example.com',
-      token_version: 1,
-      allergy_notes: 'Gluten'
-    }).select().single();
+    let weddingA: any = null;
+    let weddingB: any = null;
+    let guestA: any = null;
+    let guestB: any = null;
 
     try {
+      const weddingAInsert = await supabase.from('weddings').insert({
+        id: 'a0000000-0000-0000-0000-000000000001',
+        slug: 'wedding-a-integration',
+        is_active: true,
+        bride_name: 'Bride A',
+        groom_name: 'Groom A',
+        admin_password: 'test'
+      }).select('id, slug').single();
+      expect(weddingAInsert.error, JSON.stringify(weddingAInsert.error)).toBeNull();
+      expect(weddingAInsert.data).not.toBeNull();
+      weddingA = weddingAInsert.data!;
+
+      // 2. Wedding B oluştur
+      const weddingBInsert = await supabase.from('weddings').insert({
+        id: 'b0000000-0000-0000-0000-000000000002',
+        slug: 'wedding-b-integration',
+        is_active: true,
+        bride_name: 'Bride B',
+        groom_name: 'Groom B',
+        admin_password: 'test'
+      }).select('id, slug').single();
+      expect(weddingBInsert.error, JSON.stringify(weddingBInsert.error)).toBeNull();
+      expect(weddingBInsert.data).not.toBeNull();
+      weddingB = weddingBInsert.data!;
+
+      // 3. Guest A oluştur
+      const guestAInsert = await supabase.from('guests').insert({
+        id: 'g0000000-0000-0000-0000-000000000001',
+        wedding_id: weddingA.id,
+        first_name: 'Guest',
+        last_name: 'A',
+        email: 'a@example.com',
+        token_version: 1,
+        allergy_notes: 'Peanut'
+      }).select('id, public_id, token_version').single();
+      expect(guestAInsert.error, JSON.stringify(guestAInsert.error)).toBeNull();
+      expect(guestAInsert.data).not.toBeNull();
+      expect(guestAInsert.data?.public_id).toBeTruthy();
+      guestA = guestAInsert.data!;
+
+      // 4. Guest B oluştur
+      const guestBInsert = await supabase.from('guests').insert({
+        id: 'g0000000-0000-0000-0000-000000000002',
+        wedding_id: weddingB.id,
+        first_name: 'Guest',
+        last_name: 'B',
+        email: 'b@example.com',
+        token_version: 1,
+        allergy_notes: 'Gluten'
+      }).select('id, public_id, token_version').single();
+      expect(guestBInsert.error, JSON.stringify(guestBInsert.error)).toBeNull();
+      expect(guestBInsert.data).not.toBeNull();
+      expect(guestBInsert.data?.public_id).toBeTruthy();
+      guestB = guestBInsert.data!;
+
       // 5. Guest A token oluştur
       const genARes = await request.post(apiUrl, { data: { action: 'generate', payload: { publicId: guestA.public_id, tokenVersion: 1 } } });
       const { token: tokenA } = await genARes.json();
@@ -159,10 +176,10 @@ test.describe('Server Repository DB Integration', () => {
       
     } finally {
       // 18. Cleanup
-      await supabase.from('guests').delete().eq('wedding_id', weddingA.id);
-      await supabase.from('guests').delete().eq('wedding_id', weddingB.id);
-      await supabase.from('weddings').delete().eq('id', weddingA.id);
-      await supabase.from('weddings').delete().eq('id', weddingB.id);
+      if (weddingA?.id) await supabase.from('guests').delete().eq('wedding_id', weddingA.id);
+      if (weddingB?.id) await supabase.from('guests').delete().eq('wedding_id', weddingB.id);
+      if (weddingA?.id) await supabase.from('weddings').delete().eq('id', weddingA.id);
+      if (weddingB?.id) await supabase.from('weddings').delete().eq('id', weddingB.id);
     }
   });
 });
