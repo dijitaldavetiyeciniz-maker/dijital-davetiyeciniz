@@ -157,6 +157,18 @@ test.describe('Server Repository DB Integration', () => {
 
       const resolvedA = resolveBody.resolved;
       expect(resolvedA?.displayName).toBe('Guest A');
+      expect(Object.keys(resolvedA!).sort()).toEqual([
+        "allowedChildren",
+        "allowedPlusOnes",
+        "displayName",
+        "groupDisplayName",
+        "rsvpStatus",
+        "tableLabel"
+      ].sort());
+
+      expect(resolvedA?.groupDisplayName).toBeNull();
+      expect(resolvedA?.tableLabel).toBeNull();
+      expect(resolvedA?.rsvpStatus).toBeNull();
 
       // 7. Redaction Assertions
       expect(resolvedA).not.toHaveProperty('email');

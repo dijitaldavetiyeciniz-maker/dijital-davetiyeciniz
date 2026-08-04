@@ -14,11 +14,11 @@ const KEY_VERSION = parseInt(process.env.GUEST_TOKEN_ACTIVE_KEY_VERSION || '1', 
 
 export type PublicGuestContext = {
   displayName: string;
-  groupDisplayName?: string;
-  allowedPlusOnes?: number;
-  allowedChildren?: number;
-  rsvpStatus?: "attending" | "not_attending" | "undecided";
-  tableLabel?: string;
+  groupDisplayName: string | null;
+  allowedPlusOnes: number;
+  allowedChildren: number;
+  rsvpStatus: "attending" | "not_attending" | "undecided" | null;
+  tableLabel: string | null;
 };
 
 export function generateGuestToken(publicId: string, tokenVersion: number, expiresAt?: number): string {
@@ -46,9 +46,23 @@ export async function resolveGuestTokenDetailed(token: string, weddingSlug: stri
 
   try {
     const supabase = createServerServiceRoleClient();
+    
     const { data: guest, error } = await supabase
       .from('guests')
-      .select('id, wedding_id, token_version, token_revoked_at, token_expires_at, deleted_at, first_name, last_name, plus_ones_allowed, children_count, rsvp_status')
+      .select(`
+        id, 
+        wedding_id, 
+        token_version, 
+        token_revoked_at, 
+        token_expires_at, 
+        deleted_at, 
+        first_name, 
+        last_name, 
+        plus_ones_allowed, 
+        children_count, 
+        rsvp_status,
+        guest_groups(name)
+      `)
       .eq('public_id', payload.publicId.trim())
       .maybeSingle();
 
@@ -69,12 +83,20 @@ export async function resolveGuestTokenDetailed(token: string, weddingSlug: stri
     if (weddingError || !wedding || wedding.deleted_at || !wedding.is_active) return { resolved: null, diagnostic: { reason: 'wedding_not_found' } };
     if (wedding.slug !== weddingSlug) return { resolved: null, diagnostic: { reason: 'wedding_slug_mismatch' } };
 
+    const { data: seatData } = await supabase
+      .from('seats')
+      .select('tables(name)')
+      .eq('guest_id', guest.id)
+      .maybeSingle();
+
     return {
       resolved: {
         displayName: [guest.first_name, guest.last_name].filter(Boolean).join(' '),
+        groupDisplayName: (guest.guest_groups as any)?.name ?? null,
         allowedPlusOnes: guest.plus_ones_allowed || 0,
         allowedChildren: guest.children_count || 0,
-        rsvpStatus: guest.rsvp_status as any,
+        rsvpStatus: (guest.rsvp_status as any) ?? null,
+        tableLabel: (seatData?.tables as any)?.name ?? null,
       }
     };
   } catch (error) {
