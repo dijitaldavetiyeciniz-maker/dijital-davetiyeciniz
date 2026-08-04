@@ -29,7 +29,7 @@ export function verifyGuestToken(token: string): GuestTokenPayload | null {
   return verifyGuestTokenCore(token, getSecretKey());
 }
 
-export async function resolveGuestToken(token: string, weddingId: string): Promise<PublicGuestContext | null> {
+export async function resolveGuestToken(token: string, weddingSlug: string): Promise<PublicGuestContext | null> {
   const payload = verifyGuestToken(token);
   if (!payload) return null;
 
@@ -42,7 +42,6 @@ export async function resolveGuestToken(token: string, weddingId: string): Promi
 
     if (error || !guest) return null;
 
-    if (guest.wedding_id !== weddingId) return null;
     if (guest.deleted_at) return null;
     if (guest.token_revoked_at) return null;
     if (guest.token_expires_at && new Date(guest.token_expires_at).getTime() < Date.now()) return null;
@@ -50,15 +49,16 @@ export async function resolveGuestToken(token: string, weddingId: string): Promi
 
     const { data: wedding, error: weddingError } = await supabase
       .from('weddings')
-      .select('is_active, deleted_at')
-      .eq('id', weddingId)
+      .select('slug, is_active, deleted_at')
+      .eq('id', guest.wedding_id)
       .single();
       
     if (weddingError || !wedding) return null;
+    if (wedding.slug !== weddingSlug) return null;
     if (wedding.deleted_at || !wedding.is_active) return null;
 
     return {
-      displayName: `${guest.first_name} ${guest.last_name}`,
+      displayName: [guest.first_name, guest.last_name].filter(Boolean).join(' '),
       allowedPlusOnes: guest.plus_ones_allowed || 0,
       allowedChildren: guest.children_count || 0,
       rsvpStatus: guest.rsvp_status as any,

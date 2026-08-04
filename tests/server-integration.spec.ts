@@ -91,30 +91,40 @@ test.describe('Server Repository DB Integration', () => {
 
       // 6. Guest A doğru slug’da çözülür
       let resolveRes = await request.post(apiUrl, { data: { action: 'resolve', payload: { token: tokenA, weddingId: 'wedding-a-integration' } } });
+      expect(resolveRes.ok()).toBeTruthy();
       const { resolved: resolvedA } = await resolveRes.json();
       expect(resolvedA).not.toBeNull();
       expect(resolvedA?.displayName).toBe('Guest A');
 
-      // 7. Yanlış slug’da çözülmez
+      // 7. Redaction Assertions
+      expect(resolvedA).not.toHaveProperty('email');
+      expect(resolvedA).not.toHaveProperty('phone');
+      expect(resolvedA).not.toHaveProperty('allergy_notes');
+      expect(resolvedA).not.toHaveProperty('token_version');
+      expect(resolvedA).not.toHaveProperty('public_id');
+      expect(resolvedA).not.toHaveProperty('id');
+
+      // 8. Yanlış slug’da çözülmez
       resolveRes = await request.post(apiUrl, { data: { action: 'resolve', payload: { token: tokenA, weddingId: 'wedding-b-integration' } } });
       const { resolved: resolvedWrongSlug } = await resolveRes.json();
       expect(resolvedWrongSlug).toBeNull();
 
-      // 8. Guest B verisi dönmez
+      // 9. Guest B verisi dönmez
       expect(JSON.stringify(resolvedA)).not.toContain('Guest B');
 
-      // 9. token_version artırılır
+      // 10. token_version artırılır
       await supabase.from('guests').update({ token_version: 2 }).eq('id', guestA.id);
 
-      // 10. Eski token çözülmez
+      // 11. Eski token çözülmez
       resolveRes = await request.post(apiUrl, { data: { action: 'resolve', payload: { token: tokenA, weddingId: 'wedding-a-integration' } } });
       const { resolved: resolvedA_old } = await resolveRes.json();
       expect(resolvedA_old).toBeNull();
 
-      // 11. Yeni token çözülür
+      // 12. Yeni token çözülür
       const genANewRes = await request.post(apiUrl, { data: { action: 'generate', payload: { publicId: guestA.public_id, tokenVersion: 2 } } });
       const { token: tokenA_new } = await genANewRes.json();
       resolveRes = await request.post(apiUrl, { data: { action: 'resolve', payload: { token: tokenA_new, weddingId: 'wedding-a-integration' } } });
+      expect(resolveRes.ok()).toBeTruthy();
       const { resolved: resolvedA_new } = await resolveRes.json();
       expect(resolvedA_new).not.toBeNull();
 
