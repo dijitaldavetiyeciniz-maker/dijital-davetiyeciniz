@@ -259,3 +259,29 @@ WHERE photo_focal_point IS NULL;
 ALTER TABLE public.weddings
 ADD COLUMN IF NOT EXISTS background_animation TEXT DEFAULT 'none';
 
+-- ============================================================
+-- 10. İZİNLER VE GRANTS (BÜTÜNSEL GÜVENLİK MODELİ)
+-- ============================================================
+
+-- A. service_role için tam yetki (Migration ve Backend API'nin hatasız çalışması için)
+GRANT USAGE ON SCHEMA public TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO service_role;
+GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO service_role;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO service_role;
+
+-- Gelecekte oluşturulacak nesneler için service_role yetkilerini varsayılan yap
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO service_role;
+
+-- B. anon (Public) ve authenticated (Login olanlar) rolleri için yalnızca gerekli yetkiler
+-- (Not: Bu yetkiler RLS politikalarıyla sınırlandırılmaktadır)
+GRANT USAGE ON SCHEMA public TO anon, authenticated;
+
+-- Public tablolarına sadece SELECT ve INSERT (RLS destekli) yetkisi:
+GRANT SELECT, INSERT, UPDATE ON public.weddings TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.rsvps TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.guestbook_entries TO anon, authenticated;
+
+-- Eğer id'ler sequence kullanıyorsa (UUID yerine):
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO anon, authenticated;
