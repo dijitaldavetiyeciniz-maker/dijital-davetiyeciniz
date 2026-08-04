@@ -42,10 +42,12 @@ SELECT
     w.id,
     w.slug,
     CASE 
-        WHEN w.event_type IN ('Düğün', 'Nişan', 'Kına', 'Sünnet') THEN 
-            COALESCE(w.bride_name || ' & ' || w.groom_name, w.bride_name, 'Etkinlik')
+        WHEN w.event_type IN ('wedding', 'engagement', 'henna') THEN 
+            concat_ws(' & ', nullif(w.bride_name, ''), nullif(w.groom_name, ''))
+        WHEN w.event_type = 'circumcision' THEN 
+            COALESCE(NULLIF(w.bride_name, ''), 'Sünnet Daveti')
         ELSE 
-            COALESCE(w.bride_name, 'Etkinlik')
+            COALESCE(NULLIF(w.bride_name, ''), 'Etkinlik')
     END AS title,
     w.event_type,
     w.bride_name,
@@ -81,6 +83,8 @@ SELECT
     w.is_active,
     w.custom_overrides,
     w.photo_focal_point,
+    w.created_at,
+    w.updated_at,
     w.language,
     w.published_at,
     w.publish_start,
@@ -88,9 +92,7 @@ SELECT
     w.rsvp_deadline,
     w.gallery_open_time,
     w.guestbook_close_time,
-    w.custom_domain,
-    w.created_at,
-    w.updated_at
+    w.custom_domain
 FROM public.weddings w
 WHERE w.deleted_at IS NULL AND w.is_active = true 
   AND (w.publish_start IS NULL OR w.publish_start <= now())

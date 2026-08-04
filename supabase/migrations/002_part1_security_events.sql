@@ -45,10 +45,12 @@ SELECT
     w.id,
     w.slug,
     CASE 
-        WHEN w.event_type IN ('Düğün', 'Nişan', 'Kına', 'Sünnet') THEN 
-            COALESCE(w.bride_name || ' & ' || w.groom_name, w.bride_name, 'Etkinlik')
+        WHEN w.event_type IN ('wedding', 'engagement', 'henna') THEN 
+            concat_ws(' & ', nullif(w.bride_name, ''), nullif(w.groom_name, ''))
+        WHEN w.event_type = 'circumcision' THEN 
+            COALESCE(NULLIF(w.bride_name, ''), 'Sünnet Daveti')
         ELSE 
-            COALESCE(w.bride_name, 'Etkinlik')
+            COALESCE(NULLIF(w.bride_name, ''), 'Etkinlik')
     END AS title,
     w.event_type,
     w.bride_name,
