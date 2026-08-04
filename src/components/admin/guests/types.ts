@@ -13,7 +13,7 @@ export type Guest = {
   plus_ones_allowed: number;
   children_count: number;
   notes?: string | null;
-  rsvp_status?: 'attending' | 'not_attending' | 'undecided' | null;
+  rsvp_status?: 'pending' | 'attending' | 'not_attending' | 'undecided' | null;
   created_at: string;
   tokenUrl?: string | null;
 };
