@@ -214,6 +214,9 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       expect(actualLayoutId, `Template fell back to default-fallback instead of ${expectedLayoutStyle}`).not.toBe('default-fallback');
       expect(actualLayoutId, `Mapping error! Expected layoutStyle ${expectedLayoutStyle} but got ${actualLayoutId}`).toBe(expectedLayoutStyle);
 
+      // Wait for any entry animations to settle after the overlay is removed
+      await publicPage.waitForTimeout(1500);
+
       // Step 20: Bundan sonra screenshot al (Mobil)
       await publicPage.setViewportSize({ width: 390, height: 844 });
       await publicPage.screenshot({ path: path.join(AUDIT_DIR, `${tplId}-mobile-390x844.png`), fullPage: false });

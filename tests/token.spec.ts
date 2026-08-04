@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { generateGuestTokenCore, verifyGuestTokenCore } from '../src/lib/security/guestTokenCore';
-import { randomUUID } from 'crypto';
+import { randomUUID, createHmac } from 'crypto';
 
 test.describe('Guest Token Unit Tests', () => {
   const TEST_SECRET = 'test-secret-key-that-is-at-least-32-chars-long';
@@ -123,9 +123,7 @@ test.describe('Guest Token Unit Tests', () => {
     const base64Payload = Buffer.from(payloadStr).toString('base64url');
     
     // We need the crypto module to sign it
-    const crypto = require('crypto');
-    const signature = crypto
-      .createHmac('sha256', TEST_SECRET)
+    const signature = createHmac('sha256', TEST_SECRET)
       .update(payloadStr)
       .digest('base64url');
       
