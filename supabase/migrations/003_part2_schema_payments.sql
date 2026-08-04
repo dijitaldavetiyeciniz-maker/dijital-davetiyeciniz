@@ -43,3 +43,6 @@ CREATE POLICY "Payments Owner Select" ON public.payments
 CREATE POLICY "Payments Owner Insert" ON public.payments
     FOR INSERT TO authenticated
     WITH CHECK (auth.uid() = user_id);
+
+-- Grants
+GRANT SELECT, INSERT, UPDATE ON public.payments TO authenticated;

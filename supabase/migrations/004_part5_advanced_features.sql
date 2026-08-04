@@ -230,3 +230,13 @@ CREATE POLICY "Analytics Owner Select" ON public.analytics_events FOR SELECT TO 
 CREATE POLICY "Events Public Select" ON public.events FOR SELECT TO anon, authenticated USING (wedding_id IN (SELECT id FROM public.weddings WHERE is_paid = true AND deleted_at IS NULL AND is_active = true));
 -- Removed insecure Guests Public Select by Token policy
 CREATE POLICY "Analytics Public Insert" ON public.analytics_events FOR INSERT TO anon, authenticated WITH CHECK (wedding_id IN (SELECT id FROM public.weddings WHERE deleted_at IS NULL));
+
+-- Grants
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.events TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.guest_groups TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.guests TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.tables TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.seats TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.check_ins TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.analytics_events TO anon, authenticated;
+GRANT SELECT ON public.public_wedding_view TO anon, authenticated;

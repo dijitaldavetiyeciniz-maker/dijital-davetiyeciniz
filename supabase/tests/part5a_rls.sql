@@ -1,8 +1,8 @@
 BEGIN;
 
 -- Setup Weddings and Guests directly as superuser before setting roles
-INSERT INTO weddings (id, user_id, slug, is_active) VALUES ('a0000000-0000-0000-0000-000000000001', 'org_a', 'wedding-a-rls', true);
-INSERT INTO weddings (id, user_id, slug, is_active) VALUES ('b0000000-0000-0000-0000-000000000002', 'org_b', 'wedding-b-rls', true);
+INSERT INTO weddings (id, user_id, slug, is_active, bride_name, groom_name, admin_password) VALUES ('a0000000-0000-0000-0000-000000000001', 'org_a', 'wedding-a-rls', true, 'A', 'A', 'pw');
+INSERT INTO weddings (id, user_id, slug, is_active, bride_name, groom_name, admin_password) VALUES ('b0000000-0000-0000-0000-000000000002', 'org_b', 'wedding-b-rls', true, 'B', 'B', 'pw');
 
 INSERT INTO guests (id, wedding_id, first_name, last_name, token_version) VALUES ('g0000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'Guest', 'A', 1);
 INSERT INTO guests (id, wedding_id, first_name, last_name, token_version) VALUES ('g0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000002', 'Guest', 'B', 1);
@@ -11,7 +11,15 @@ INSERT INTO guests (id, wedding_id, first_name, last_name, token_version) VALUES
 DO $$
 DECLARE
   guest_count int;
+  wedding_count int;
 BEGIN
+  -- 0. Service Role can CRUD weddings and guests
+  SET ROLE service_role;
+  INSERT INTO weddings (id, user_id, slug, is_active, bride_name, groom_name, admin_password) VALUES ('c0000000-0000-0000-0000-000000000003', 'org_c', 'wedding-c-rls', true, 'Bride C', 'Groom C', 'pwd');
+  SELECT count(*) INTO wedding_count FROM weddings WHERE id = 'c0000000-0000-0000-0000-000000000003';
+  IF wedding_count != 1 THEN RAISE EXCEPTION 'Service role insert failed'; END IF;
+  UPDATE weddings SET bride_name = 'Bride C Updated' WHERE id = 'c0000000-0000-0000-0000-000000000003';
+  DELETE FROM weddings WHERE id = 'c0000000-0000-0000-0000-000000000003';
   -- 1. Anonymous direct SELECT sees 0 rows (because of RLS)
   SET ROLE anon;
   SELECT count(*) INTO guest_count FROM guests;

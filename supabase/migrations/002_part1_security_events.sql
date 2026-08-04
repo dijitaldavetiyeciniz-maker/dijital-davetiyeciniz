@@ -149,3 +149,6 @@ CREATE POLICY "Guestbook Public Insert" ON public.guestbook_entries
 CREATE POLICY "Guestbook Owner All" ON public.guestbook_entries
     FOR ALL TO authenticated
     USING (wedding_id IN (SELECT id FROM public.weddings WHERE user_id = auth.uid()));
+
+-- Grants
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.wedding_integrations TO authenticated;
