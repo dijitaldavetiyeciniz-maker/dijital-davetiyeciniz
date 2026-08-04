@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import Papa from 'papaparse';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 import { Guest } from './types';
 
-const sanitizeCell = (value: any) => {
+export const sanitizeCell = (value: any) => {
   if (typeof value === 'string' && /^[=+\-@]/.test(value)) {
     return `'${value}`;
   }
@@ -54,10 +54,22 @@ export default function GuestExportDialog({
       link.click();
       document.body.removeChild(link);
     } else {
-      const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Misafirler");
-      XLSX.writeFile(workbook, `misafir_listesi_${new Date().getTime()}.xlsx`);
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Misafirler');
+      
+      const columns = Object.keys(dataToExport[0]).map(key => ({ header: key, key }));
+      worksheet.columns = columns;
+      worksheet.addRows(dataToExport);
+
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `misafir_listesi_${new Date().getTime()}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     onClose();

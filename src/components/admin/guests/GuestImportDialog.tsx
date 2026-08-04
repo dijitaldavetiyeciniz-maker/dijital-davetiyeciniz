@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Papa from 'papaparse';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 
 export default function GuestImportDialog({ 
   weddingId, 
@@ -38,19 +38,43 @@ export default function GuestImportDialog({
       });
     } else if (ext === 'xlsx' || ext === 'xls') {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const data = e.target?.result;
-        const workbook = XLSX.read(data, { type: 'binary' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        handleData(jsonData);
+      reader.onload = async (e) => {
+        try {
+          const buffer = e.target?.result as ArrayBuffer;
+          const workbook = new ExcelJS.Workbook();
+          await workbook.xlsx.load(buffer);
+          const worksheet = workbook.worksheets[0];
+          
+          if (!worksheet) throw new Error('Çalışma sayfası bulunamadı.');
+
+          const jsonData: any[] = [];
+          const headers: string[] = [];
+
+          worksheet.eachRow((row, rowNumber) => {
+            if (rowNumber === 1) {
+              row.eachCell((cell, colNumber) => {
+                headers[colNumber] = cell.text;
+              });
+            } else {
+              const rowData: any = {};
+              row.eachCell((cell, colNumber) => {
+                rowData[headers[colNumber]] = cell.text;
+              });
+              jsonData.push(rowData);
+            }
+          });
+          
+          handleData(jsonData);
+        } catch (err) {
+          setError('Dosya okunamadı veya geçersiz format.');
+          setLoading(false);
+        }
       };
       reader.onerror = () => {
-        setError('Dosya okunamadı.');
+        setError('Dosya okuma hatası.');
         setLoading(false);
       };
-      reader.readAsBinaryString(file);
+      reader.readAsArrayBuffer(file);
     } else {
       setError('Sadece CSV ve XLSX dosyaları desteklenir.');
       setLoading(false);
