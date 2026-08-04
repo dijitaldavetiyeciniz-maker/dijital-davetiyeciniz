@@ -44,6 +44,12 @@ jobs:
       - name: Verify Supabase health
         run: supabase status
 
+      - name: Export Supabase Secrets
+        run: |
+          supabase status -o env | grep "SERVICE_ROLE_KEY=" | sed 's/SERVICE_ROLE_KEY=/SUPABASE_SERVICE_ROLE_KEY=/' >> $GITHUB_ENV
+          supabase status -o env | grep "ANON_KEY=" | sed 's/ANON_KEY=/NEXT_PUBLIC_SUPABASE_ANON_KEY=/' >> $GITHUB_ENV
+          supabase status -o env | grep "API_URL=" | sed 's/API_URL=/NEXT_PUBLIC_SUPABASE_URL=/' >> $GITHUB_ENV
+
       - name: Apply migration
         run: supabase db reset --local
 
@@ -58,9 +64,6 @@ jobs:
       - name: Build application for Playwright
         run: npm run build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:54321"
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key"
-          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-key"
           GUEST_TOKEN_SECRET_V1: "ci_dummy_secret_key_at_least_32_chars_long"
           GUEST_TOKEN_ACTIVE_KEY_VERSION: "1"
 
@@ -71,9 +74,6 @@ jobs:
         run: npx playwright test tests/server-integration.spec.ts --workers=1
         env:
           PART5_TEST_DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
-          NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:54321"
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-key"
-          SUPABASE_SERVICE_ROLE_KEY: "dummy-service-key"
           GUEST_TOKEN_SECRET_V1: "ci_dummy_secret_key_at_least_32_chars_long"
 
       - name: Run Guest Management Playwright

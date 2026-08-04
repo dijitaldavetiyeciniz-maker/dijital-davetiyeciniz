@@ -14,10 +14,13 @@ test.describe('Server Repository DB Integration', () => {
   });
 
   test('Guest Token Resolution and DB Boundary Checks', async ({ request }) => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321',
-      process.env.SUPABASE_SERVICE_ROLE_KEY || 'dummy-service-key'
-    );
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    expect(url).toBeTruthy();
+    expect(key).toBeTruthy();
+
+    const supabase = createClient(url!, key!);
     const apiUrl = '/api/test/guest-tokens';
     
     // 1. Wedding A oluştur
