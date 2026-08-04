@@ -17,7 +17,7 @@ export async function POST(request: Request) {
         });
 
       case 'resolve':
-        const resolved = await resolveGuestToken(payload.token, payload.weddingId);
+        const resolved = await resolveGuestToken(payload.token, payload.weddingSlug);
         return NextResponse.json({ resolved });
 
       case 'revoke':
@@ -32,6 +32,9 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'guest_resolve_failed',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }
