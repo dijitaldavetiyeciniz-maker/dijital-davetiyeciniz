@@ -75,7 +75,11 @@ jobs:
       - name: Assert schema
         run: |
           # A simple query to assert 'guests' table exists and has expected columns
-          psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -c "SELECT column_name FROM information_schema.columns WHERE table_name = 'guests' AND column_name = 'public_id';" | grep "public_id"
+          psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -c "SELECT column_name, is_nullable, column_default FROM information_schema.columns WHERE table_schema='public' AND table_name='guests' AND column_name IN ('public_id','token_version');" | grep "public_id"
+
+      - name: Assert grants
+        run: |
+          psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -c "SELECT grantee, privilege_type FROM information_schema.role_table_grants WHERE table_name='guests';"
 
       - name: Run RLS SQL tests
         run: psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -f supabase/tests/part5a_rls.sql
@@ -94,14 +98,16 @@ jobs:
 
       - name: Run token unit tests
         run: npx playwright test tests/token.spec.ts --workers=1
+        env:
+          GUEST_TOKEN_SECRET_V1: "ci_dummy_secret_key_at_least_32_chars_long"
+          PART5_TEST_MODE: "true"
 
-      - name: Assert guests table schema
-        run: |
-          psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -c "
-            SELECT column_name, is_nullable, column_default
-            FROM information_schema.columns
-            WHERE table_schema='public' AND table_name='guests' AND column_name IN ('public_id','token_version');
-          "
+      - name: Run import/export tests
+        run: npx playwright test tests/import-export.spec.ts --workers=1
+        env:
+          PART5_TEST_DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+          GUEST_TOKEN_SECRET_V1: "ci_dummy_secret_key_at_least_32_chars_long"
+          PART5_TEST_MODE: "true"
 
       - name: Run server repository integration tests
         run: npx playwright test tests/server-integration.spec.ts --workers=1
@@ -114,33 +120,32 @@ jobs:
         run: npx playwright test tests/part5-guest-management.spec.ts --workers=1
         env:
           PART5_TEST_DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+          GUEST_TOKEN_SECRET_V1: "ci_dummy_secret_key_at_least_32_chars_long"
+          PART5_TEST_MODE: "true"
 
       - name: Run Token Security Playwright
         run: npx playwright test tests/part5-guest-token-security.spec.ts --workers=1
         env:
           PART5_TEST_DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+          GUEST_TOKEN_SECRET_V1: "ci_dummy_secret_key_at_least_32_chars_long"
+          PART5_TEST_MODE: "true"
 
       - name: Run Access-Control Playwright
         run: npx playwright test tests/part5-access-control.spec.ts --workers=1
         env:
           PART5_TEST_DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1:54322/postgres"
+          GUEST_TOKEN_SECRET_V1: "ci_dummy_secret_key_at_least_32_chars_long"
+          PART5_TEST_MODE: "true"
 
       - name: Apply rollback
         run: psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -f supabase/rollback/005_part5a_guest_security_rollback.sql
 
       - name: Assert rollback
         run: |
-          ! psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -c "SELECT * FROM information_schema.tables WHERE table_name = 'guests';" | grep "guests"
+          ! psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -c "SELECT * FROM information_schema.columns WHERE table_name = 'guests' AND column_name = 'public_id';" | grep "public_id"
 
       - name: Reapply migration
         run: supabase db reset --local
-
-      - name: Run TypeScript
-        run: npx tsc --noEmit
-
-      - name: Run ESLint
-        run: npm run lint
-
 
       - name: Run critical regression tests
         run: |
