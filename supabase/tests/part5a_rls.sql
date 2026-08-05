@@ -1,8 +1,11 @@
 BEGIN;
 
 -- Setup Weddings and Guests directly as superuser before setting roles
-INSERT INTO weddings (id, user_id, slug, is_active, bride_name, groom_name, admin_password) VALUES ('00000000-0000-0000-0000-000000000001', 'org_a', 'wedding-a-rls', true, 'A', 'A', 'pw');
-INSERT INTO weddings (id, user_id, slug, is_active, bride_name, groom_name, admin_password) VALUES ('00000000-0000-0000-0000-000000000002', 'org_b', 'wedding-b-rls', true, 'B', 'B', 'pw');
+-- NOTE: user_id is UUID (FK to auth.users), so organizer identifiers must be
+-- real UUIDs, not plain strings like 'org_a'. These are reused below as the
+-- simulated JWT "sub" claim so RLS policies (auth.uid() = user_id) line up.
+INSERT INTO weddings (id, user_id, slug, is_active, bride_name, groom_name, admin_password) VALUES ('00000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-00000000000a', 'wedding-a-rls', true, 'A', 'A', 'pw');
+INSERT INTO weddings (id, user_id, slug, is_active, bride_name, groom_name, admin_password) VALUES ('00000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-00000000000b', 'wedding-b-rls', true, 'B', 'B', 'pw');
 
 INSERT INTO guests (id, wedding_id, first_name, last_name, token_version) VALUES ('11111111-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001', 'Guest', 'A', 1);
 INSERT INTO guests (id, wedding_id, first_name, last_name, token_version) VALUES ('11111111-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000002', 'Guest', 'B', 1);
@@ -15,7 +18,7 @@ DECLARE
 BEGIN
   -- 0. Service Role can CRUD weddings and guests
   SET ROLE service_role;
-  INSERT INTO weddings (id, user_id, slug, is_active, bride_name, groom_name, admin_password) VALUES ('00000000-0000-0000-0000-000000000003', 'org_c', 'wedding-c-rls', true, 'Bride C', 'Groom C', 'pwd');
+  INSERT INTO weddings (id, user_id, slug, is_active, bride_name, groom_name, admin_password) VALUES ('00000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-00000000000c', 'wedding-c-rls', true, 'Bride C', 'Groom C', 'pwd');
   SELECT count(*) INTO wedding_count FROM weddings WHERE id = '00000000-0000-0000-0000-000000000003';
   IF wedding_count != 1 THEN RAISE EXCEPTION 'Service role insert failed'; END IF;
   UPDATE weddings SET bride_name = 'Bride C Updated' WHERE id = '00000000-0000-0000-0000-000000000003';
@@ -36,7 +39,7 @@ BEGIN
   RESET ROLE;
   -- 3. Organizer A can read their own guests
   SET ROLE authenticated;
-  PERFORM set_config('request.jwt.claim.sub', 'org_a', true);
+  PERFORM set_config('request.jwt.claim.sub', '10000000-0000-0000-0000-00000000000a', true);
   
   SELECT count(*) INTO guest_count FROM guests WHERE wedding_id = '00000000-0000-0000-0000-000000000001';
   IF guest_count != 1 THEN RAISE EXCEPTION 'Organizer A should see 1 guest, saw %', guest_count; END IF;
@@ -44,7 +47,7 @@ BEGIN
   -- 4. Organizer B cannot read Organizer A's guest
   RESET ROLE;
   SET ROLE authenticated;
-  PERFORM set_config('request.jwt.claim.sub', 'org_b', true);
+  PERFORM set_config('request.jwt.claim.sub', '10000000-0000-0000-0000-00000000000b', true);
   
   SELECT count(*) INTO guest_count FROM guests WHERE id = '11111111-0000-0000-0000-000000000001';
   IF guest_count != 0 THEN RAISE EXCEPTION 'Organizer B should see 0 rows for Organizer A guest, saw %', guest_count; END IF;
@@ -70,7 +73,7 @@ BEGIN
   RESET ROLE;
   -- 8. public_id is unique
   SET ROLE authenticated;
-  PERFORM set_config('request.jwt.claim.sub', 'org_a', true);
+  PERFORM set_config('request.jwt.claim.sub', '10000000-0000-0000-0000-00000000000a', true);
   BEGIN
     INSERT INTO guests (id, wedding_id, first_name, public_id) VALUES ('11111111-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000001', 'Guest', 'shared-public-id');
     INSERT INTO guests (id, wedding_id, first_name, public_id) VALUES ('11111111-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000001', 'Guest2', 'shared-public-id');

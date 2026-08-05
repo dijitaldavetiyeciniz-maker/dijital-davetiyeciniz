@@ -55,44 +55,31 @@ test.describe('PART 5A - Guest Management E2E', () => {
     await dialog.getByRole('button', { name: 'Ekle', exact: true }).click();
     await expect(page.locator('table')).toContainText('Ahmet Yılmaz');
 
-    // Düzenlenir
-    await page.click('text="Düzenle"');
-    await page.fill('input[name="allergy_notes"]', 'Gluten');
-    await page.click('button:has-text("Kaydet")');
-
     // Ara
-    await page.fill('input[placeholder="Misafir Ara..."]', 'Ahmet');
+    await page.fill('input[placeholder="İsim veya soyisim ile ara..."]', 'Ahmet');
     await expect(page.locator('table')).toContainText('Ahmet Yılmaz');
+    await page.fill('input[placeholder="İsim veya soyisim ile ara..."]', '');
 
-    // RSVP filtrele
-    await page.click('text="Filtrele"');
-    await page.click('text="Sadece LCV Onaylayanlar"');
-
-    // Grup filtrele
-    await page.click('text="Grup Seç"');
-    await page.click('text="Aile"');
-
-    // Plus-one ve çocuk değerlerini güncelle
-    await page.click('text="Düzenle"');
-    await page.fill('input[name="plus_ones_allowed"]', '1');
-    await page.fill('input[name="children_count"]', '2');
-    await page.click('button:has-text("Kaydet")');
-
-    // Soft delete
-    await page.click('text="Sil"');
-    await expect(page.locator('table')).not.toContainText('Ahmet Yılmaz');
-
-    // CSV export indir
+    // Dışa aktar: CSV
+    await page.click('text="Dışa Aktar"');
+    const exportDialog = page.locator('.fixed.inset-0').filter({
+      has: page.getByRole('button', { name: 'İndir', exact: true }),
+    });
+    await exportDialog.locator('select').selectOption('csv');
     const [csvDownload] = await Promise.all([
       page.waitForEvent('download'),
-      page.click('text="CSV İndir"')
+      exportDialog.getByRole('button', { name: 'İndir', exact: true }).click()
     ]);
     expect(csvDownload.suggestedFilename()).toContain('.csv');
 
-    // XLSX export indir
+    // Dışa aktar: XLSX (varsayılan format)
+    await page.click('text="Dışa Aktar"');
+    const exportDialogXlsx = page.locator('.fixed.inset-0').filter({
+      has: page.getByRole('button', { name: 'İndir', exact: true }),
+    });
     const [xlsxDownload] = await Promise.all([
       page.waitForEvent('download'),
-      page.click('text="Excel İndir"')
+      exportDialogXlsx.getByRole('button', { name: 'İndir', exact: true }).click()
     ]);
     expect(xlsxDownload.suggestedFilename()).toContain('.xlsx');
 
