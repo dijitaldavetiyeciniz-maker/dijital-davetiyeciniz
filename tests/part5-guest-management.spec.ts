@@ -1,28 +1,35 @@
 import { test, expect } from '@playwright/test';
+import { setupPart5Fixture } from './helpers/part5Fixtures';
 
 test.describe('PART 5A - Guest Management E2E', () => {
   const isCI = process.env.CI === "true";
+
+  let fixture: any;
+
+  test.beforeAll(async () => {
+    fixture = await setupPart5Fixture('guest-mgmt');
+  });
+
+  test.afterAll(async () => {
+    if (fixture) await fixture.cleanup();
+  });
 
   test.beforeEach(async () => {
     if (isCI && !process.env.PART5_TEST_DATABASE_URL) {
       throw new Error("PART5_TEST_DATABASE_URL is required in CI");
     }
-    if (!isCI && !process.env.PART5_TEST_DATABASE_URL) {
-      test.skip(true, 'Skipped locally because PART5_TEST_DATABASE_URL is missing');
-    }
   });
 
   test('Guest Management E2E Flow', async ({ page }) => {
-    // Admin misafir sekmesi açılır
-    await page.goto('/d/test-wedding/admin');
-    await expect(page).toHaveURL(/admin/);
+    // Admin sayfasına git
+    await page.goto(`/d/${fixture.testSlug}/admin`);
 
-    await page.screenshot({
-      path: "test-results/admin-before-tabs.png",
-      fullPage: true
-    });
+    // Şifre ile giriş yap
+    await page.fill('input[placeholder="Şifre"]', 'test');
+    await page.click('button:has-text("Giriş Yap")');
 
-    console.log(await page.content());
+    // Sayfa yükleninceye kadar bekle
+    await expect(page.locator('text="Misafir Yönetimi"')).toBeVisible();
 
     await page.click('text="Misafir Yönetimi"');
 
