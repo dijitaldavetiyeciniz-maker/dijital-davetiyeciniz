@@ -187,7 +187,14 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       // Opening overlay test without bypass
       const overlay = publicPage.locator('[data-testid="opening-overlay"]');
       await overlay.waitFor({ state: 'attached', timeout: 15000 });
-      
+
+      // networkidle sadece ağ isteklerinin bittiğini garanti eder, React'in
+      // hydration'ı tamamladığını (onClick handler'ların gerçekten bağlandığını)
+      // değil. Aşağıdaki tıklama actionability kontrollerini bilerek atlıyor
+      // (mouse.click ile ham koordinat), bu yüzden hydration'a küçük bir
+      // güven payı veriyoruz - yoksa ilk tıklama boşa gidebilir.
+      await publicPage.waitForTimeout(800);
+
       // Robustly click until the overlay detaches
       await expect(async () => {
         if (await overlay.isVisible()) {
