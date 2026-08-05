@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createAdminClient } from '@/server/supabaseClient';
+import { createAdminClient, createServerServiceRoleClient } from '@/server/supabaseClient';
 import { generateGuestToken } from '@/server/guestTokens';
 import { checkRateLimit } from '@/lib/rateLimit';
 
@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
 
     let isAuthorized = false;
     let authUserId = 'anonymous';
+    let authMethod = 'session';
 
     if (session?.user) {
       // Verify ownership of the wedding
@@ -70,9 +71,11 @@ export async function GET(request: NextRequest) {
       if (storedCookie && verifyAdminCookie(weddingId, storedCookie)) {
         isAuthorized = true;
         authUserId = 'cookie_admin';
+        authMethod = 'cookie';
       } else if (process.env.PART5_TEST_MODE === 'true') {
         isAuthorized = true;
         authUserId = 'test_mode';
+        authMethod = 'test';
       }
     }
 
@@ -81,8 +84,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const dbClient = authMethod === 'session' ? supabase : createServerServiceRoleClient();
+
     // Fetch guests (RLS applies here, but we also enforced ownership above)
-    const { data: guests, error: guestsError } = await supabase
+    const { data: guests, error: guestsError } = await dbClient
       .from('guests')
       .select('id, public_id, token_version, token_revoked_at, first_name, last_name, phone, email, meal_preference, allergy_notes, special_needs, plus_ones_allowed, children_count, rsvp_status, created_at')
       .eq('wedding_id', weddingId)
@@ -135,6 +140,7 @@ export async function POST(request: NextRequest) {
 
     let isAuthorized = false;
     let authUserId = 'anonymous';
+    let authMethod = 'session';
 
     if (session?.user) {
       // Verify ownership
@@ -160,9 +166,11 @@ export async function POST(request: NextRequest) {
       if (storedCookie && verifyAdminCookie(wedding_id, storedCookie)) {
         isAuthorized = true;
         authUserId = 'cookie_admin';
+        authMethod = 'cookie';
       } else if (process.env.PART5_TEST_MODE === 'true') {
         isAuthorized = true;
         authUserId = 'test_mode';
+        authMethod = 'test';
       }
     }
 
@@ -186,7 +194,9 @@ export async function POST(request: NextRequest) {
       group_id: g.group_id || null,
     }));
 
-    const { data, error } = await supabase
+    const dbClient = authMethod === 'session' ? supabase : createServerServiceRoleClient();
+
+    const { data, error } = await dbClient
       .from('guests')
       .insert(insertPayload)
       .select('id, public_id, token_version, token_revoked_at, first_name, last_name, phone, email, meal_preference, allergy_notes, special_needs, plus_ones_allowed, children_count, rsvp_status, created_at');

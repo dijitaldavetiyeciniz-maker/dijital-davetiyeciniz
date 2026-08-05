@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createAdminClient } from '@/server/supabaseClient';
+import { createAdminClient, createServerServiceRoleClient } from '@/server/supabaseClient';
 import { renewGuestToken } from '@/server/guestTokens';
 import { checkRateLimit } from '@/lib/rateLimit';
 
@@ -70,6 +70,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Currently renewGuestToken uses a service role client internally!
     const tokenUrl = await renewGuestToken(guestId);
     if (!tokenUrl) {
       throw new Error('Failed to renew token');
