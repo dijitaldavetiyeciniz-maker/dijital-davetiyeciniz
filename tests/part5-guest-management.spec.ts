@@ -46,9 +46,12 @@ test.describe('PART 5A - Guest Management E2E', () => {
       console.log(html);
       throw error;
     }
-    const dialog = page.locator('.fixed.inset-0');
-    await dialog.locator('label:has-text("Ad *") + input').fill('Ahmet');
-    await dialog.locator('label:has-text("Soyad *") + input').fill('Yılmaz');
+    const dialog = page.locator('.fixed.inset-0').filter({
+      has: page.getByRole('button', { name: 'Ekle', exact: true }),
+    });
+
+    await dialog.locator('input').nth(0).fill('Ahmet');
+    await dialog.locator('input').nth(1).fill('Yılmaz');
     await dialog.getByRole('button', { name: 'Ekle', exact: true }).click();
     await expect(page.locator('table')).toContainText('Ahmet Yılmaz');
 
