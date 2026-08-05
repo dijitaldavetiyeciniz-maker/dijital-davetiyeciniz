@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createAdminClient } from '@/server/supabaseClient';
+import { createAdminClient, createServerServiceRoleClient } from '@/server/supabaseClient';
 import { revokeGuestToken } from '@/server/guestTokens';
 import { checkRateLimit } from '@/lib/rateLimit';
 
@@ -25,8 +25,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     let authUserId = 'anonymous';
     let weddingId = null;
 
-    // We need to fetch the guest first to get the wedding_id
-    const { data: guest, error: guestError } = await supabase
+    // We need to fetch the guest first to get the wedding_id.
+    // Service-role client on purpose: this lookup happens before we know
+    // whether the requester is authorized, and RLS (correctly) hides guests
+    // from anonymous/unrelated sessions — using the RLS-bound client here
+    // made every unauthorized request look like "guest not found" (404)
+    // instead of the correct "unauthorized" (401).
+    const serviceClient = createServerServiceRoleClient();
+    const { data: guest, error: guestError } = await serviceClient
       .from('guests')
       .select('id, wedding_id, public_id')
       .eq('id', guestId)
