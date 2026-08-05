@@ -26,7 +26,8 @@ export async function setupPart5Fixture(testSlugPrefix: string = 'part5-fixture'
       groom_name: "Test Groom",
       admin_password: "test",
       event_type: "wedding",
-      is_active: true
+      is_active: true,
+      is_paid: true
     })
     .select("id, slug")
     .single();
