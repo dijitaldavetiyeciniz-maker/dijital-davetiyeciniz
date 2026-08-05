@@ -34,7 +34,18 @@ test.describe('PART 5A - Guest Management E2E', () => {
     await page.click('text="Misafir Yönetimi"');
 
     // Misafir eklenir
-    await page.click('text="Yeni Misafir Ekle"');
+    await page.screenshot({
+      path: "test-results/guest-management-before-add-button.png",
+      fullPage: true
+    });
+
+    try {
+      await page.getByRole('button', { name: '+ Yeni Misafir' }).click({ timeout: 5000 });
+    } catch (error) {
+      const html = await page.locator("body").evaluate(el => el.innerHTML);
+      console.log(html);
+      throw error;
+    }
     await page.fill('input[name="first_name"]', 'Ahmet');
     await page.fill('input[name="last_name"]', 'Yılmaz');
     await page.click('button[type="submit"]');
