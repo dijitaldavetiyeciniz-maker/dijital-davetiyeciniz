@@ -43,7 +43,7 @@ export default async function WeddingPage({
   let guestContext = null;
   let guestErrorMsg = null;
   if (sParams.guest) {
-    guestContext = await resolveGuestToken(sParams.guest, wedding.id);
+    guestContext = await resolveGuestToken(sParams.guest, wedding.slug);
     if (!guestContext) {
       guestErrorMsg = "Kişisel davet bağlantısı doğrulanamadı. Genel davetiyeyi görüntülüyorsunuz.";
     }
