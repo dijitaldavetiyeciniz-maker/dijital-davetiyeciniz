@@ -42,7 +42,13 @@ export type TokenDiagnostic =
   | 'wedding_slug_mismatch'
   | 'unknown_error';
 
-export async function resolveGuestTokenDetailed(token: string, weddingSlug: string): Promise<{ resolved: PublicGuestContext | null; diagnostic?: { reason: TokenDiagnostic } }> {
+export type TokenDiagnosticDetail = {
+  reason: TokenDiagnostic;
+  queryErrorCode?: string;
+  supabaseHost?: string;
+};
+
+export async function resolveGuestTokenDetailed(token: string, weddingSlug: string): Promise<{ resolved: PublicGuestContext | null; diagnostic?: TokenDiagnosticDetail }> {
   const payload = verifyGuestToken(token);
   if (!payload) return { resolved: null, diagnostic: { reason: 'invalid_token' } };
 
