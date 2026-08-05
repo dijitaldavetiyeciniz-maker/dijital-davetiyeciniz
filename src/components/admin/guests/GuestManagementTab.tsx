@@ -68,9 +68,9 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h2 className="text-xl font-semibold">Misafir Yönetimi</h2>
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2">
           <button onClick={() => setIsImportOpen(true)} className="px-4 py-2 border rounded-md text-sm">İçe Aktar (CSV/XLSX)</button>
           <button onClick={() => setIsExportOpen(true)} className="px-4 py-2 border rounded-md text-sm">Dışa Aktar</button>
           <button onClick={() => setIsFormOpen(true)} className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm">+ Yeni Misafir</button>

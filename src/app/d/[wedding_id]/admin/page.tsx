@@ -3500,8 +3500,8 @@ export default function CoupleAdminPage({
 
       {/* SAĞ KOLON: Canlı Önizleme (Sürekli Görünür ve Aktif) */}
       <div className="lg:col-span-5 xl:col-span-4 relative">
-        <div className="relative h-[850px] lg:sticky lg:top-8 flex flex-col gap-3">
-          <div className="flex justify-between items-center bg-slate-800 text-white px-4 py-2.5 rounded-2xl shadow-md border border-slate-700">
+        <div className="relative lg:h-[850px] lg:sticky lg:top-8 flex flex-col gap-3">
+          <div className="hidden lg:flex justify-between items-center bg-slate-800 text-white px-4 py-2.5 rounded-2xl shadow-md border border-slate-700">
             <span className="text-[11px] font-bold tracking-wider text-slate-300 flex items-center gap-1 shrink-0">
               📱 Canlı Önizleme
             </span>
@@ -3535,7 +3535,7 @@ export default function CoupleAdminPage({
             </div>
           </div>
 
-          <div className="w-full flex justify-center">
+          <div className="hidden lg:flex w-full justify-center">
             <div 
               className={`relative h-[800px] w-full bg-slate-800 rounded-[3rem] p-4 shadow-2xl border-4 border-slate-700 transition-all duration-350 ${
                 previewDevice === 'iphone' ? 'max-w-[375px]' : previewDevice === 'android' ? 'max-w-[412px]' : 'max-w-[700px]'
