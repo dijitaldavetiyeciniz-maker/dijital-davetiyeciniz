@@ -154,6 +154,19 @@ jobs:
       - name: Reapply migration
         run: supabase db reset --local
 
+      - name: Wait for Supabase REST API after reapply
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf "$NEXT_PUBLIC_SUPABASE_URL/rest/v1/" -H "apikey: $NEXT_PUBLIC_SUPABASE_ANON_KEY" > /dev/null; then
+              echo "Supabase REST API is ready."
+              exit 0
+            fi
+            echo "Waiting for Supabase REST API to come back up after container restart... ($i/30)"
+            sleep 2
+          done
+          echo "Supabase REST API did not become ready in time."
+          exit 1
+
       - name: Run critical regression tests
         run: |
           npx playwright test tests/opening-animations.spec.ts tests/modern-event-layout.spec.ts tests/flagship-visual-audit-generator.spec.ts tests/visual-regression.spec.ts --workers=1
