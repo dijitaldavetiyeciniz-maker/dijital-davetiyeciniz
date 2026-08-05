@@ -46,9 +46,9 @@ test.describe('PART 5A - Guest Management E2E', () => {
       console.log(html);
       throw error;
     }
-    await page.fill('input[name="first_name"]', 'Ahmet');
-    await page.fill('input[name="last_name"]', 'Yılmaz');
-    await page.click('button[type="submit"]');
+    await page.locator('label:has-text("Ad *") + input').fill('Ahmet');
+    await page.locator('label:has-text("Soyad *") + input').fill('Yılmaz');
+    await page.getByRole('button', { name: 'Ekle', exact: true }).click();
     await expect(page.locator('table')).toContainText('Ahmet Yılmaz');
 
     // Düzenlenir
