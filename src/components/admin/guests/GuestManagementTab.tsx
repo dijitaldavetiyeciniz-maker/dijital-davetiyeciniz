@@ -15,6 +15,7 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
   const [search, setSearch] = useState('');
   
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingGuest, setEditingGuest] = useState<Guest | undefined>(undefined);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
 
@@ -62,6 +63,25 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
     }
   };
 
+  const handleEdit = (guest: Guest) => {
+    setEditingGuest(guest);
+    setIsFormOpen(true);
+  };
+
+  const handleDelete = async (guestId: string) => {
+    try {
+      const res = await fetch(`/api/guests/${guestId}`, { method: 'DELETE' });
+      if (res.ok) {
+        fetchGuests();
+      } else {
+        alert('Misafir silinirken bir hata oluştu.');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Misafir silinirken bir hata oluştu.');
+    }
+  };
+
   const filteredGuests = guests.filter(g => 
     `${g.first_name} ${g.last_name}`.toLowerCase().includes(search.toLowerCase())
   );
@@ -73,7 +93,10 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
         <div className="flex flex-wrap gap-2">
           <button onClick={() => setIsImportOpen(true)} className="px-4 py-2 border rounded-md text-sm">İçe Aktar (CSV/XLSX)</button>
           <button onClick={() => setIsExportOpen(true)} className="px-4 py-2 border rounded-md text-sm">Dışa Aktar</button>
-          <button onClick={() => setIsFormOpen(true)} className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm">+ Yeni Misafir</button>
+          <button onClick={() => {
+            setEditingGuest(undefined);
+            setIsFormOpen(true);
+          }} className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm">+ Yeni Misafir</button>
         </div>
       </div>
       
@@ -88,14 +111,24 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
           guests={filteredGuests} 
           onRenew={handleRenew} 
           onRevoke={handleRevoke} 
+          onEdit={handleEdit}
+          onDelete={handleDelete}
         />
       )}
 
       {isFormOpen && (
         <GuestFormDialog 
           weddingId={weddingId} 
-          onClose={() => setIsFormOpen(false)} 
-          onSuccess={() => { setIsFormOpen(false); fetchGuests(); }} 
+          initialData={editingGuest}
+          onClose={() => {
+            setIsFormOpen(false);
+            setEditingGuest(undefined);
+          }} 
+          onSuccess={() => { 
+            setIsFormOpen(false); 
+            setEditingGuest(undefined);
+            fetchGuests(); 
+          }} 
         />
       )}
 
