@@ -1190,7 +1190,7 @@ export default function CoupleAdminPage({
   const totalGuests = rsvps.filter(r => r.is_attending).reduce((sum, curr) => sum + curr.guest_count, 0);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-50 via-rose-50/20 to-slate-100 p-4 md:p-8 text-slate-800 selection:bg-rose-200">
+    <div className="min-w-0 min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-50 via-rose-50/20 to-slate-100 p-4 md:p-8 text-slate-800 selection:bg-rose-200">
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] p-4 z-40 lg:hidden flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -1220,7 +1220,7 @@ export default function CoupleAdminPage({
       <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8">
         
         {/* SOL KOLON: İçerik, Sekmeler ve Ayarlar */}
-        <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6">
+        <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6 min-w-0">
           <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
             <div>
               <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
