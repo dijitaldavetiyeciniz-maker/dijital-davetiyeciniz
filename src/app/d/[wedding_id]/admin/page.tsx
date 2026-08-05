@@ -677,16 +677,42 @@ export default function CoupleAdminPage({
       photo_focal_point: photoFocalPoint
     };
 
-    const { error } = await supabase
-      .from('weddings')
-      .update(payload)
-      .eq('id', wedding.id);
-      
-    if (!error) {
-      alert('✅ Tüm ayarlar başarıyla kaydedildi!');
-      setPreviewKey(Date.now()); // Iframe'i yenile
-    } else {
-      alert('Hata oluştu: ' + error.message);
+    const attemptSave = async () => {
+      return supabase.from('weddings').update(payload).eq('id', wedding.id);
+    };
+
+    try {
+      let { error } = await attemptSave();
+
+      // "Failed to fetch" gibi ağ seviyesi hatalar genelde anlıktır (Wi-Fi
+      // kesintisi, sunucunun o an meşgul olması vb.) - kullanıcının işini
+      // kaybetmemesi için bir kez daha deniyoruz, sonra pes ediyoruz.
+      if (error && /fetch/i.test(error.message || '')) {
+        await new Promise((r) => setTimeout(r, 1500));
+        ({ error } = await attemptSave());
+      }
+
+      if (!error) {
+        alert('✅ Tüm ayarlar başarıyla kaydedildi!');
+        setPreviewKey(Date.now()); // Iframe'i yenile
+      } else {
+        alert(
+          'Hata oluştu: ' + error.message +
+          ' | code=' + (error as any).code +
+          ' | details=' + (error as any).details +
+          ' | hint=' + (error as any).hint +
+          ' | payloadBytes=' + JSON.stringify(payload).length
+        );
+      }
+    } catch (err: any) {
+      // supabase-js bazı ağ hatalarını fırlatabilir (return etmek yerine) -
+      // bunu da yakalayıp aynı diyalogda gösteriyoruz ki CI logunda kaybolmasın.
+      alert(
+        'Hata oluştu (catch): ' + (err?.message || String(err)) +
+        ' | name=' + err?.name +
+        ' | cause=' + JSON.stringify(err?.cause) +
+        ' | payloadBytes=' + JSON.stringify(payload).length
+      );
     }
   }
 
