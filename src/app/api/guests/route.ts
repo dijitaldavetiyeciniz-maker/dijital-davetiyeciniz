@@ -72,10 +72,6 @@ export async function GET(request: NextRequest) {
         isAuthorized = true;
         authUserId = 'cookie_admin';
         authMethod = 'cookie';
-      } else if (process.env.PART5_TEST_MODE === 'true') {
-        isAuthorized = true;
-        authUserId = 'test_mode';
-        authMethod = 'test';
       }
     }
 
@@ -167,10 +163,6 @@ export async function POST(request: NextRequest) {
         isAuthorized = true;
         authUserId = 'cookie_admin';
         authMethod = 'cookie';
-      } else if (process.env.PART5_TEST_MODE === 'true') {
-        isAuthorized = true;
-        authUserId = 'test_mode';
-        authMethod = 'test';
       }
     }
 

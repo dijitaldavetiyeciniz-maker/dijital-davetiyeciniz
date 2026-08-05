@@ -59,9 +59,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       if (storedCookie && verifyAdminCookie(weddingId, storedCookie)) {
         isAuthorized = true;
         authUserId = 'cookie_admin';
-      } else if (process.env.PART5_TEST_MODE === 'true') {
-        isAuthorized = true;
-        authUserId = 'test_mode';
       }
     }
 
