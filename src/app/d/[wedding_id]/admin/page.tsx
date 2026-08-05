@@ -677,16 +677,42 @@ export default function CoupleAdminPage({
       photo_focal_point: photoFocalPoint
     };
 
-    const { error } = await supabase
-      .from('weddings')
-      .update(payload)
-      .eq('id', wedding.id);
-      
-    if (!error) {
-      alert('✅ Tüm ayarlar başarıyla kaydedildi!');
-      setPreviewKey(Date.now()); // Iframe'i yenile
-    } else {
-      alert('Hata oluştu: ' + error.message);
+    const attemptSave = async () => {
+      return supabase.from('weddings').update(payload).eq('id', wedding.id);
+    };
+
+    try {
+      let { error } = await attemptSave();
+
+      // "Failed to fetch" gibi ağ seviyesi hatalar genelde anlıktır (Wi-Fi
+      // kesintisi, sunucunun o an meşgul olması vb.) - kullanıcının işini
+      // kaybetmemesi için bir kez daha deniyoruz, sonra pes ediyoruz.
+      if (error && /fetch/i.test(error.message || '')) {
+        await new Promise((r) => setTimeout(r, 1500));
+        ({ error } = await attemptSave());
+      }
+
+      if (!error) {
+        alert('✅ Tüm ayarlar başarıyla kaydedildi!');
+        setPreviewKey(Date.now()); // Iframe'i yenile
+      } else {
+        alert(
+          'Hata oluştu: ' + error.message +
+          ' | code=' + (error as any).code +
+          ' | details=' + (error as any).details +
+          ' | hint=' + (error as any).hint +
+          ' | payloadBytes=' + JSON.stringify(payload).length
+        );
+      }
+    } catch (err: any) {
+      // supabase-js bazı ağ hatalarını fırlatabilir (return etmek yerine) -
+      // bunu da yakalayıp aynı diyalogda gösteriyoruz ki CI logunda kaybolmasın.
+      alert(
+        'Hata oluştu (catch): ' + (err?.message || String(err)) +
+        ' | name=' + err?.name +
+        ' | cause=' + JSON.stringify(err?.cause) +
+        ' | payloadBytes=' + JSON.stringify(payload).length
+      );
     }
   }
 
@@ -1190,7 +1216,7 @@ export default function CoupleAdminPage({
   const totalGuests = rsvps.filter(r => r.is_attending).reduce((sum, curr) => sum + curr.guest_count, 0);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-50 via-rose-50/20 to-slate-100 p-4 md:p-8 text-slate-800 selection:bg-rose-200">
+    <div className="min-w-0 min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-50 via-rose-50/20 to-slate-100 p-4 md:p-8 text-slate-800 selection:bg-rose-200">
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] p-4 z-40 lg:hidden flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -1220,7 +1246,7 @@ export default function CoupleAdminPage({
       <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8">
         
         {/* SOL KOLON: İçerik, Sekmeler ve Ayarlar */}
-        <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6">
+        <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6 min-w-0">
           <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
             <div>
               <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
@@ -3500,8 +3526,8 @@ export default function CoupleAdminPage({
 
       {/* SAĞ KOLON: Canlı Önizleme (Sürekli Görünür ve Aktif) */}
       <div className="lg:col-span-5 xl:col-span-4 relative">
-        <div className="relative h-[850px] lg:sticky lg:top-8 flex flex-col gap-3">
-          <div className="flex justify-between items-center bg-slate-800 text-white px-4 py-2.5 rounded-2xl shadow-md border border-slate-700">
+        <div className="relative lg:h-[850px] lg:sticky lg:top-8 flex flex-col gap-3">
+          <div className="hidden lg:flex justify-between items-center bg-slate-800 text-white px-4 py-2.5 rounded-2xl shadow-md border border-slate-700">
             <span className="text-[11px] font-bold tracking-wider text-slate-300 flex items-center gap-1 shrink-0">
               📱 Canlı Önizleme
             </span>
@@ -3535,7 +3561,7 @@ export default function CoupleAdminPage({
             </div>
           </div>
 
-          <div className="w-full flex justify-center">
+          <div className="hidden lg:flex w-full justify-center">
             <div 
               className={`relative h-[800px] w-full bg-slate-800 rounded-[3rem] p-4 shadow-2xl border-4 border-slate-700 transition-all duration-350 ${
                 previewDevice === 'iphone' ? 'max-w-[375px]' : previewDevice === 'android' ? 'max-w-[412px]' : 'max-w-[700px]'

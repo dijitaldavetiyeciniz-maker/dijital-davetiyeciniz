@@ -12,12 +12,14 @@ const getSecretKey = () => {
 
 const KEY_VERSION = parseInt(process.env.GUEST_TOKEN_ACTIVE_KEY_VERSION || '1', 10);
 
+export type RsvpStatus = "pending" | "attending" | "not_attending" | "undecided";
+
 export type PublicGuestContext = {
   displayName: string;
   groupDisplayName: string | null;
   allowedPlusOnes: number;
   allowedChildren: number;
-  rsvpStatus: "attending" | "not_attending" | "undecided" | null;
+  rsvpStatus: RsvpStatus;
   tableLabel: string | null;
 };
 
@@ -40,7 +42,13 @@ export type TokenDiagnostic =
   | 'wedding_slug_mismatch'
   | 'unknown_error';
 
-export async function resolveGuestTokenDetailed(token: string, weddingSlug: string): Promise<{ resolved: PublicGuestContext | null; diagnostic?: { reason: TokenDiagnostic } }> {
+export type TokenDiagnosticDetail = {
+  reason: TokenDiagnostic;
+  queryErrorCode?: string;
+  supabaseHost?: string;
+};
+
+export async function resolveGuestTokenDetailed(token: string, weddingSlug: string): Promise<{ resolved: PublicGuestContext | null; diagnostic?: TokenDiagnosticDetail }> {
   const payload = verifyGuestToken(token);
   if (!payload) return { resolved: null, diagnostic: { reason: 'invalid_token' } };
 
@@ -95,7 +103,7 @@ export async function resolveGuestTokenDetailed(token: string, weddingSlug: stri
         groupDisplayName: (guest.guest_groups as any)?.name ?? null,
         allowedPlusOnes: guest.plus_ones_allowed || 0,
         allowedChildren: guest.children_count || 0,
-        rsvpStatus: (guest.rsvp_status as any) ?? null,
+        rsvpStatus: (guest.rsvp_status as RsvpStatus) ?? "pending",
         tableLabel: (seatData?.tables as any)?.name ?? null,
       }
     };

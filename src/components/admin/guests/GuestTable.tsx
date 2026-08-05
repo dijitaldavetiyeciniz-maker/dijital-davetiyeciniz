@@ -7,11 +7,15 @@ import GuestTokenActions from './GuestTokenActions';
 export default function GuestTable({ 
   guests, 
   onRenew, 
-  onRevoke 
+  onRevoke,
+  onEdit,
+  onDelete
 }: { 
   guests: Guest[], 
   onRenew: (id: string) => void,
-  onRevoke: (id: string) => void
+  onRevoke: (id: string) => void,
+  onEdit: (guest: Guest) => void,
+  onDelete: (id: string) => void
 }) {
   return (
     <div className="overflow-x-auto border rounded-md">
@@ -49,7 +53,13 @@ export default function GuestTable({
                   {!guest.rsvp_status && <span className="text-slate-400">Bekliyor</span>}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <GuestTokenActions guest={guest} onRenew={onRenew} onRevoke={onRevoke} />
+                  <GuestTokenActions 
+                    guest={guest} 
+                    onRenew={onRenew} 
+                    onRevoke={onRevoke} 
+                    onEdit={onEdit} 
+                    onDelete={onDelete} 
+                  />
                 </td>
               </tr>
             ))

@@ -168,7 +168,7 @@ test.describe('Server Repository DB Integration', () => {
 
       expect(resolvedA?.groupDisplayName).toBeNull();
       expect(resolvedA?.tableLabel).toBeNull();
-      expect(resolvedA?.rsvpStatus).toBeNull();
+      expect(resolvedA?.rsvpStatus).toBe("pending");
 
       // 7. Redaction Assertions
       expect(resolvedA).not.toHaveProperty('email');
@@ -246,6 +246,8 @@ test.describe('Server Repository DB Integration', () => {
           "tableLabel",
         ].sort()
       );
+
+      expect(resolvedA_reactivated?.rsvpStatus).toBe("pending");
 
       const resolvedAny = resolvedA_reactivated as any;
       expect(resolvedAny.id).toBeUndefined();
