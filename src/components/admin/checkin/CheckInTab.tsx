@@ -45,6 +45,7 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
   }, [weddingId]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCheckedInCount();
   }, [fetchCheckedInCount]);
 
