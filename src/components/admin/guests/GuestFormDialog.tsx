@@ -6,12 +6,14 @@ export default function GuestFormDialog({
   weddingId, 
   onClose, 
   onSuccess,
-  initialData 
+  initialData,
+  groups 
 }: { 
   weddingId: string, 
   onClose: () => void, 
   onSuccess: () => void,
-  initialData?: any 
+  initialData?: any,
+  groups?: any[]
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,6 +22,7 @@ export default function GuestFormDialog({
   const [lastName, setLastName] = useState(initialData?.last_name || '');
   const [plusOnes, setPlusOnes] = useState(initialData?.plus_ones_allowed || 0);
   const [children, setChildren] = useState(initialData?.children_count || 0);
+  const [groupId, setGroupId] = useState<string>(initialData?.group_id || '');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +34,7 @@ export default function GuestFormDialog({
       const method = initialData ? 'PUT' : 'POST';
 
       const payload = initialData 
-        ? { first_name: firstName, last_name: lastName, plus_ones_allowed: plusOnes, children_count: children }
+        ? { first_name: firstName, last_name: lastName, plus_ones_allowed: plusOnes, children_count: children, group_id: groupId || null }
         : {
             wedding_id: weddingId,
             guests: [{
@@ -39,6 +42,7 @@ export default function GuestFormDialog({
               last_name: lastName,
               plus_ones_allowed: plusOnes,
               children_count: children,
+              group_id: groupId || null
             }]
           };
 
@@ -88,6 +92,22 @@ export default function GuestFormDialog({
               <input type="number" min="0" max="10" value={children} onChange={e => setChildren(parseInt(e.target.value) || 0)} className="w-full border rounded p-2 text-sm" />
             </div>
           </div>
+          
+          {groups && groups.length > 0 && (
+            <div>
+              <label className="block text-sm mb-1">Grup</label>
+              <select 
+                value={groupId} 
+                onChange={e => setGroupId(e.target.value)} 
+                className="w-full border rounded p-2 text-sm"
+              >
+                <option value="">Grup Seçin (İsteğe bağlı)</option>
+                {groups.map(g => (
+                  <option key={g.id} value={g.id}>{g.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {error && <div className="text-red-500 text-sm">{error}</div>}
 

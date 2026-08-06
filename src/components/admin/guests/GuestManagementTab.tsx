@@ -8,24 +8,39 @@ import GuestFormDialog from './GuestFormDialog';
 import GuestImportDialog from './GuestImportDialog';
 import GuestExportDialog from './GuestExportDialog';
 import GuestBulkActions from './GuestBulkActions';
+import GroupManagementDialog from './GroupManagementDialog';
 
 export default function GuestManagementTab({ weddingId }: { weddingId: string }) {
   const [guests, setGuests] = useState<Guest[]>([]);
+  const [groups, setGroups] = useState<GuestGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [rsvpFilter, setRsvpFilter] = useState('all');
+  const [groupFilter, setGroupFilter] = useState('all');
+  const [selectedGuests, setSelectedGuests] = useState<string[]>([]);
   
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingGuest, setEditingGuest] = useState<Guest | undefined>(undefined);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isGroupManageOpen, setIsGroupManageOpen] = useState(false);
 
-  const fetchGuests = async () => {
+  const fetchGuestsAndGroups = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/guests?wedding_id=${weddingId}`);
-      if (res.ok) {
-        const data = await res.json();
+      const [guestsRes, groupsRes] = await Promise.all([
+        fetch(`/api/guests?wedding_id=${weddingId}`),
+        fetch(`/api/guest-groups?wedding_id=${weddingId}`)
+      ]);
+      
+      if (guestsRes.ok) {
+        const data = await guestsRes.json();
         setGuests(data.guests);
+      }
+      
+      if (groupsRes.ok) {
+        const data = await groupsRes.json();
+        setGroups(data.groups);
       }
     } catch (e) {
       console.error(e);
@@ -36,7 +51,7 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
 
   useEffect(() => {
     // eslint-disable-next-line
-    fetchGuests();
+    fetchGuestsAndGroups();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [weddingId]);
 
@@ -45,7 +60,7 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
     try {
       const res = await fetch(`/api/guests/${guestId}/renew`, { method: 'POST' });
       if (res.ok) {
-        fetchGuests();
+        fetchGuestsAndGroups();
       }
     } catch (e) {
       console.error(e);
@@ -56,7 +71,7 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
     try {
       const res = await fetch(`/api/guests/${guestId}/revoke`, { method: 'POST' });
       if (res.ok) {
-        fetchGuests();
+        fetchGuestsAndGroups();
       }
     } catch (e) {
       console.error(e);
@@ -72,7 +87,7 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
     try {
       const res = await fetch(`/api/guests/${guestId}`, { method: 'DELETE' });
       if (res.ok) {
-        fetchGuests();
+        fetchGuestsAndGroups();
       } else {
         alert('Misafir silinirken bir hata oluştu.');
       }
@@ -82,15 +97,65 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
     }
   };
 
-  const filteredGuests = guests.filter(g => 
-    `${g.first_name} ${g.last_name}`.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleToggleSelect = (guestId: string) => {
+    setSelectedGuests(prev => 
+      prev.includes(guestId) ? prev.filter(id => id !== guestId) : [...prev, guestId]
+    );
+  };
+
+  const handleToggleSelectAll = () => {
+    if (selectedGuests.length === filteredGuests.length && filteredGuests.length > 0) {
+      setSelectedGuests([]);
+    } else {
+      setSelectedGuests(filteredGuests.map(g => g.id));
+    }
+  };
+
+  const handleBulkAction = async (action: string, payload?: any) => {
+    if (selectedGuests.length === 0) return;
+    
+    try {
+      const res = await fetch('/api/guests/bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wedding_id: weddingId,
+          guest_ids: selectedGuests,
+          action,
+          ...payload
+        })
+      });
+
+      if (res.ok) {
+        setSelectedGuests([]); // İşlem bitince seçimi temizle
+        fetchGuestsAndGroups();
+      } else {
+        alert('Toplu işlem sırasında bir hata oluştu.');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Toplu işlem sırasında bir hata oluştu.');
+    }
+  };
+
+  const filteredGuests = guests.filter(g => {
+    const matchSearch = `${g.first_name} ${g.last_name}`.toLowerCase().includes(search.toLowerCase());
+    
+    // RSVP Durumu: (Eğer g.rsvp_status null/undefined ise db'de 'pending' demektir)
+    const currentRsvp = g.rsvp_status || 'pending';
+    const matchRsvp = rsvpFilter === 'all' || currentRsvp === rsvpFilter;
+
+    const matchGroup = groupFilter === 'all' || g.group_id === groupFilter;
+
+    return matchSearch && matchRsvp && matchGroup;
+  });
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h2 className="text-xl font-semibold">Misafir Yönetimi</h2>
         <div className="flex flex-wrap gap-2">
+          <button onClick={() => setIsGroupManageOpen(true)} className="px-4 py-2 border rounded-md text-sm bg-slate-50">Gruplar</button>
           <button onClick={() => setIsImportOpen(true)} className="px-4 py-2 border rounded-md text-sm">İçe Aktar (CSV/XLSX)</button>
           <button onClick={() => setIsExportOpen(true)} className="px-4 py-2 border rounded-md text-sm">Dışa Aktar</button>
           <button onClick={() => {
@@ -100,9 +165,21 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
         </div>
       </div>
       
-      <GuestFilters search={search} setSearch={setSearch} />
+      <GuestFilters 
+        search={search} 
+        setSearch={setSearch} 
+        rsvpFilter={rsvpFilter}
+        setRsvpFilter={setRsvpFilter}
+        groupFilter={groupFilter}
+        setGroupFilter={setGroupFilter}
+        groups={groups}
+      />
       
-      <GuestBulkActions />
+      <GuestBulkActions 
+        selectedCount={selectedGuests.length}
+        onAction={handleBulkAction}
+        groups={groups}
+      />
 
       {loading ? (
         <div className="text-center py-10">Yükleniyor...</div>
@@ -113,6 +190,9 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
           onRevoke={handleRevoke} 
           onEdit={handleEdit}
           onDelete={handleDelete}
+          selectedGuests={selectedGuests}
+          onToggleSelect={handleToggleSelect}
+          onToggleSelectAll={handleToggleSelectAll}
         />
       )}
 
@@ -120,6 +200,7 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
         <GuestFormDialog 
           weddingId={weddingId} 
           initialData={editingGuest}
+          groups={groups}
           onClose={() => {
             setIsFormOpen(false);
             setEditingGuest(undefined);
@@ -127,7 +208,7 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
           onSuccess={() => { 
             setIsFormOpen(false); 
             setEditingGuest(undefined);
-            fetchGuests(); 
+            fetchGuestsAndGroups(); 
           }} 
         />
       )}
@@ -136,7 +217,7 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
         <GuestImportDialog 
           weddingId={weddingId} 
           onClose={() => setIsImportOpen(false)} 
-          onSuccess={() => { setIsImportOpen(false); fetchGuests(); }} 
+          onSuccess={() => { setIsImportOpen(false); fetchGuestsAndGroups(); }} 
         />
       )}
 
@@ -144,6 +225,14 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
         <GuestExportDialog 
           guests={guests} 
           onClose={() => setIsExportOpen(false)} 
+        />
+      )}
+
+      {isGroupManageOpen && (
+        <GroupManagementDialog 
+          weddingId={weddingId} 
+          onClose={() => setIsGroupManageOpen(false)} 
+          onGroupsChanged={() => fetchGuestsAndGroups()} 
         />
       )}
     </div>
