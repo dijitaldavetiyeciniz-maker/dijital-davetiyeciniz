@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { Guest } from './types';
-import { Edit2, Trash2, Copy, RefreshCw, Ban, Undo2 } from 'lucide-react';
+import { Edit2, Trash2, Copy, RefreshCw, Ban, Undo2, QrCode, X } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 export default function GuestTokenActions({ 
   guest, 
@@ -18,6 +19,7 @@ export default function GuestTokenActions({
   onDelete: (id: string) => void
 }) {
   const [copied, setCopied] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
 
   const handleCopy = () => {
     if (guest.tokenUrl) {
@@ -78,6 +80,13 @@ export default function GuestTokenActions({
         >
           <Copy className="w-4 h-4" />
         </button>
+        <button 
+          onClick={() => setShowQrModal(true)}
+          className="p-1.5 text-slate-600 hover:bg-indigo-100 hover:text-indigo-700 rounded-md transition-colors"
+          title="QR Kod Görüntüle"
+        >
+          <QrCode className="w-4 h-4" />
+        </button>
         <div className="w-px h-4 bg-slate-300 mx-1"></div>
         <button 
           onClick={() => onEdit(guest)} 
@@ -117,6 +126,47 @@ export default function GuestTokenActions({
           <Trash2 className="w-4 h-4" />
         </button>
       </div>
+      
+      {/* QR Modal */}
+      {showQrModal && guest.tokenUrl && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="font-semibold text-slate-800">QR Kod</h3>
+              <button 
+                onClick={() => setShowQrModal(false)}
+                className="text-slate-500 hover:text-slate-700 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-8 flex flex-col items-center justify-center bg-slate-50">
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-4">
+                <QRCodeSVG 
+                  value={guest.tokenUrl} 
+                  size={200}
+                  level="H"
+                  includeMargin={true}
+                />
+              </div>
+              <p className="text-sm font-medium text-slate-700 text-center">
+                {guest.first_name} {guest.last_name}
+              </p>
+              <p className="text-xs text-slate-500 text-center mt-1">
+                Kapıdan giriş (check-in) için bu kodu okutun
+              </p>
+            </div>
+            <div className="p-4 border-t bg-white flex justify-end">
+              <button 
+                onClick={() => setShowQrModal(false)}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-colors"
+              >
+                Kapat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
