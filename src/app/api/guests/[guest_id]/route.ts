@@ -26,8 +26,13 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ guest
     const supabase = await createAdminClient();
     const { data: { session } } = await supabase.auth.getSession();
 
-    // 1. Önce misafiri bul ve wedding_id'sini al
-    const { data: guest, error: guestError } = await supabase
+    // 1. Önce misafiri bul ve wedding_id'sini al. Service-role client ile:
+    // bu sorgu yetki kararından ÖNCE çalışıyor, RLS'e tabi client kullanılırsa
+    // yetkisiz istekler (session/cookie yok) burada "misafir yok" (404) gibi
+    // görünür - oysa doğrusu "401 yetkisiz". (bkz. bugünkü renew/revoke
+    // düzeltmesiyle aynı desen)
+    const lookupClient = createServerServiceRoleClient();
+    const { data: guest, error: guestError } = await lookupClient
       .from('guests')
       .select('id, wedding_id')
       .eq('id', guest_id)
@@ -112,7 +117,10 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ gu
     const supabase = await createAdminClient();
     const { data: { session } } = await supabase.auth.getSession();
 
-    const { data: guest, error: guestError } = await supabase
+    // Ayni sebep: misafiri bulma sorgusu yetki kararindan once, service-role
+    // ile calisiyor (bkz. yukaridaki PUT fonksiyonundaki aciklama).
+    const lookupClient = createServerServiceRoleClient();
+    const { data: guest, error: guestError } = await lookupClient
       .from('guests')
       .select('id, wedding_id')
       .eq('id', guest_id)
