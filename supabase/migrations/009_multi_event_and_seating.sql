@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS public.guest_seat_assignments (
     guest_id UUID NOT NULL REFERENCES public.guests(id) ON DELETE CASCADE,
     seat_count INT NOT NULL DEFAULT 1, -- guest + plus_ones + children
     created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now(),
     UNIQUE(event_id, guest_id) -- A guest can only be seated once per event
 );
 
@@ -79,9 +80,12 @@ USING (wedding_id IN (SELECT id FROM public.weddings WHERE is_paid = true AND de
 -- They must only be retrieved via secure API endpoints utilizing the guest token.
 
 -- Grants
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.invitation_events TO anon, authenticated;
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.seating_tables TO anon, authenticated;
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.guest_seat_assignments TO anon, authenticated;
+GRANT SELECT ON public.invitation_events TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.invitation_events TO authenticated;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.seating_tables TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.guest_seat_assignments TO authenticated;
+
 
 -- 5. Atomic Capacity Check RPC Function
 CREATE OR REPLACE FUNCTION public.assign_guest_to_table(
