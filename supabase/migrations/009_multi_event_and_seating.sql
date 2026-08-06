@@ -89,20 +89,22 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON public.guest_seat_assignments TO authent
 
 -- 5. Atomic Capacity Check RPC Function
 CREATE OR REPLACE FUNCTION public.assign_guest_to_table(
-    p_wedding_id UUID,
-    p_event_id UUID,
-    p_table_id UUID,
-    p_guest_id UUID,
-    p_seat_count INT
-) RETURNS JSONB
+    p_wedding_id uuid,
+    p_event_id uuid,
+    p_table_id uuid,
+    p_guest_id uuid,
+    p_seat_count integer
+) RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER -- Runs with privileges of creator
+SET search_path = public
+VOLATILE
+PARALLEL UNSAFE
 AS $$
 DECLARE
     v_table_capacity INT;
     v_current_occupancy INT;
     v_existing_assignment_id UUID;
-    v_wedding_owner UUID;
     v_result JSONB;
 BEGIN
     -- Only owners can execute this? Actually SECURITY DEFINER bypasses RLS, so we MUST manually check auth.uid()
@@ -160,4 +162,5 @@ BEGIN
     RETURN v_result;
 END;
 $$;
-GRANT EXECUTE ON FUNCTION public.assign_guest_to_table(UUID, UUID, UUID, UUID, INT) TO authenticated, anon;
+REVOKE ALL ON FUNCTION public.assign_guest_to_table(uuid, uuid, uuid, uuid, integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.assign_guest_to_table(uuid, uuid, uuid, uuid, integer) TO authenticated;
