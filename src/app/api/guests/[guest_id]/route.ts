@@ -12,7 +12,9 @@ const guestUpdateSchema = z.object({
   special_needs: z.string().optional().nullable(),
   plus_ones_allowed: z.number().int().min(0).default(0),
   children_count: z.number().int().min(0).default(0),
-  rsvp_status: z.enum(['attending', 'not_attending', 'undecided']).optional().nullable()
+  rsvp_status: z.enum(['attending', 'not_attending', 'undecided']).optional().nullable(),
+  notes: z.string().optional().nullable(),
+  group_id: z.string().uuid().optional().nullable()
 });
 
 export async function PUT(request: NextRequest, props: { params: Promise<{ guest_id: string }> }) {
@@ -24,8 +26,13 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ guest
     const supabase = await createAdminClient();
     const { data: { session } } = await supabase.auth.getSession();
 
-    // 1. Önce misafiri bul ve wedding_id'sini al
-    const { data: guest, error: guestError } = await supabase
+    // 1. Önce misafiri bul ve wedding_id'sini al. Service-role client ile:
+    // bu sorgu yetki kararından ÖNCE çalışıyor, RLS'e tabi client kullanılırsa
+    // yetkisiz istekler (session/cookie yok) burada "misafir yok" (404) gibi
+    // görünür - oysa doğrusu "401 yetkisiz". (bkz. bugünkü renew/revoke
+    // düzeltmesiyle aynı desen)
+    const lookupClient = createServerServiceRoleClient();
+    const { data: guest, error: guestError } = await lookupClient
       .from('guests')
       .select('id, wedding_id')
       .eq('id', guest_id)
@@ -97,7 +104,7 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ guest
     return NextResponse.json({ guest: updatedGuest });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Geçersiz veri', details: error.errors }, { status: 400 });
+      return NextResponse.json({ error: 'Geçersiz veri', details: (error as any).errors }, { status: 400 });
     }
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
@@ -110,7 +117,10 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ gu
     const supabase = await createAdminClient();
     const { data: { session } } = await supabase.auth.getSession();
 
-    const { data: guest, error: guestError } = await supabase
+    // Ayni sebep: misafiri bulma sorgusu yetki kararindan once, service-role
+    // ile calisiyor (bkz. yukaridaki PUT fonksiyonundaki aciklama).
+    const lookupClient = createServerServiceRoleClient();
+    const { data: guest, error: guestError } = await lookupClient
       .from('guests')
       .select('id, wedding_id')
       .eq('id', guest_id)

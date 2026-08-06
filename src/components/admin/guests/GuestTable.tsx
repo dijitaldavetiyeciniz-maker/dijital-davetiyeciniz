@@ -9,19 +9,35 @@ export default function GuestTable({
   onRenew, 
   onRevoke,
   onEdit,
-  onDelete
+  onDelete,
+  selectedGuests = [],
+  onToggleSelect,
+  onToggleSelectAll
 }: { 
   guests: Guest[], 
   onRenew: (id: string) => void,
   onRevoke: (id: string) => void,
   onEdit: (guest: Guest) => void,
-  onDelete: (id: string) => void
+  onDelete: (id: string) => void,
+  selectedGuests?: string[],
+  onToggleSelect?: (id: string) => void,
+  onToggleSelectAll?: () => void
 }) {
+  const allSelected = guests.length > 0 && selectedGuests.length === guests.length;
+
   return (
     <div className="overflow-x-auto border rounded-md">
       <table className="w-full text-sm text-left">
         <thead className="bg-slate-50 text-slate-700">
           <tr>
+            <th className="px-4 py-3 w-12">
+              <input 
+                type="checkbox" 
+                checked={allSelected}
+                onChange={onToggleSelectAll}
+                className="rounded border-slate-300"
+              />
+            </th>
             <th className="px-4 py-3">Misafir</th>
             <th className="px-4 py-3">İletişim</th>
             <th className="px-4 py-3">Durum</th>
@@ -31,12 +47,22 @@ export default function GuestTable({
         <tbody className="divide-y">
           {guests.length === 0 ? (
             <tr>
-              <td colSpan={4} className="px-4 py-8 text-center text-slate-500">Kayıtlı misafir bulunamadı.</td>
+              <td colSpan={5} className="px-4 py-8 text-center text-slate-500">Kayıtlı misafir bulunamadı.</td>
             </tr>
           ) : (
-            guests.map((guest) => (
-              <tr key={guest.id} className={guest.token_revoked_at ? 'bg-red-50/30 opacity-70' : ''}>
-                <td className="px-4 py-3">
+            guests.map((guest) => {
+              const isSelected = selectedGuests.includes(guest.id);
+              return (
+                <tr key={guest.id} className={`${guest.token_revoked_at ? 'bg-red-50/30 opacity-70' : ''} ${isSelected ? 'bg-blue-50/50' : ''}`}>
+                  <td className="px-4 py-3">
+                    <input 
+                      type="checkbox" 
+                      checked={isSelected}
+                      onChange={() => onToggleSelect && onToggleSelect(guest.id)}
+                      className="rounded border-slate-300"
+                    />
+                  </td>
+                  <td className="px-4 py-3">
                   <div className="font-medium">{guest.first_name} {guest.last_name}</div>
                   <div className="text-xs text-slate-500">
                     +{guest.plus_ones_allowed} Yetişkin, {guest.children_count} Çocuk
@@ -62,7 +88,8 @@ export default function GuestTable({
                   />
                 </td>
               </tr>
-            ))
+            );
+          })
           )}
         </tbody>
       </table>

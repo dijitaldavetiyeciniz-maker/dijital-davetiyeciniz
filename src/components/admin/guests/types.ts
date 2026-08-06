@@ -1,5 +1,13 @@
+export type GuestGroup = {
+  id: string;
+  wedding_id: string;
+  name: string;
+  created_at: string;
+};
+
 export type Guest = {
   id: string;
+  group_id?: string | null;
   public_id: string;
   token_version: number;
   token_revoked_at?: string | null;

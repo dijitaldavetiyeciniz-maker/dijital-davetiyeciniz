@@ -6,17 +6,17 @@ import { checkRateLimit } from '@/lib/rateLimit';
 
 // Zod schemas
 const GuestSchema = z.object({
-  first_name: z.string().min(1).max(50),
-  last_name: z.string().min(1).max(50),
-  phone: z.string().max(20).optional().nullable(),
-  email: z.string().email().optional().nullable(),
-  meal_preference: z.string().max(100).optional().nullable(),
-  allergy_notes: z.string().max(500).optional().nullable(),
-  special_needs: z.string().max(500).optional().nullable(),
-  plus_ones_allowed: z.number().int().min(0).max(10).default(0),
-  children_count: z.number().int().min(0).max(10).default(0),
-  notes: z.string().max(1000).optional().nullable(),
-  group_id: z.string().uuid().optional().nullable(),
+  first_name: z.string().min(1),
+  last_name: z.string().min(1),
+  plus_ones_allowed: z.number().int().min(0).default(0),
+  children_count: z.number().int().min(0).default(0),
+  group_id: z.string().uuid().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  email: z.string().email().nullable().optional().or(z.literal('')),
+  meal_preference: z.string().nullable().optional(),
+  allergy_notes: z.string().nullable().optional(),
+  special_needs: z.string().nullable().optional(),
+  notes: z.string().nullable().optional()
 });
 
 const PostGuestsSchema = z.object({

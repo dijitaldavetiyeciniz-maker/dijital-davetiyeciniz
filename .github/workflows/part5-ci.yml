@@ -4,11 +4,17 @@ on:
   push:
     branches:
       - main
-      - ci/part5a-final-fix
   pull_request:
     branches:
       - main
   workflow_dispatch:
+  schedule:
+    # Her gece 03:00 UTC'de (TR saatiyle 06:00) tam 17 flagship şablonunun
+    # tümünü denetler (FULL_FLAGSHIP_AUDIT altında). Normal push/PR
+    # koşumları hızlı bir örnek küme kullanır (bkz.
+    # tests/flagship-visual-audit-generator.spec.ts) - kapsam kaybı
+    # olmasın diye tam denetim burada, her push'u yavaşlatmadan yapılıyor.
+    - cron: '0 3 * * *'
 
 jobs:
   test:
@@ -168,5 +174,9 @@ jobs:
           exit 1
 
       - name: Run critical regression tests
+        env:
+          # Sadece geceleyin (schedule) tetiklenince 17 sablonun TAMAMI
+          # calisir; normal push/PR'da hizli ornek kume kullanilir.
+          FULL_FLAGSHIP_AUDIT: ${{ github.event_name == 'schedule' && 'true' || 'false' }}
         run: |
           npx playwright test tests/opening-animations.spec.ts tests/modern-event-layout.spec.ts tests/flagship-visual-audit-generator.spec.ts tests/visual-regression.spec.ts --workers=1
