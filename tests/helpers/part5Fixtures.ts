@@ -1,9 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 import { expect } from "@playwright/test";
 import crypto from "crypto";
-import dotenv from "dotenv";
 
-dotenv.config({ path: ".env.local" });
+// Not: .env.local yukleme cagrisi (@dotenvx/dotenvx) kaldirildi - bu paket
+// package.json'da hic tanimli degildi (CI'da "Cannot find module" hatasi
+// veriyordu) ve zaten gereksizdi: CI ortaminda .env.local dosyasi yok,
+// ortam degiskenleri dogrudan GitHub Actions'in env bloklarindan geliyor,
+// Playwright de kendi ic mekanizmasiyla bunlari zaten process.env'e
+// enjekte ediyor (loglardaki "injected env" mesajlari bunu gosteriyor).
 
 export async function setupPart5Fixture(testSlugPrefix: string = 'part5-fixture') {
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
