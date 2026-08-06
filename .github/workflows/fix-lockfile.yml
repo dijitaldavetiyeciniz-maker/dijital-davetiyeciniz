@@ -1,0 +1,59 @@
+name: Fix package-lock.json (Linux)
+
+# Tek seferlik yardımcı workflow. package-lock.json'ı Linux runner uzerinde
+# yeniden uretip ayni branch'e otomatik commit+push eder. Bu branch'e her
+# push oldugunda calisir (workflow_dispatch, dosya henuz main'de olmadigi
+# icin Actions arayuzunde listelenmiyor - bu yuzden push tetikleyicisi
+# kullaniliyor). Isi bitince bu dosyayi silmek guvenlidir.
+
+on:
+  push:
+    branches:
+      - ci/part5a-final-fix
+    paths:
+      - '.github/workflows/fix-lockfile.yml'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Hangi branch icin lockfile yeniden uretilsin?'
+        required: true
+        default: 'ci/part5a-final-fix'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref_name }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Remove old lockfile and regenerate on Linux
+        run: |
+          rm -f package-lock.json
+          npm install
+
+      - name: Verify npm ci now works
+        run: |
+          rm -rf node_modules
+          npm ci
+
+      - name: Commit and push updated lockfile
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if git diff --cached --quiet; then
+            echo "package-lock.json zaten guncel, commit gerekmiyor."
+          else
+            git commit -m "chore: package-lock.json Linux ortaminda yeniden uretildi"
+            git push origin HEAD:${{ github.event.inputs.branch || github.ref_name }}
+          fi
