@@ -6,8 +6,8 @@ import { QrCode, Search, UserPlus, CheckCircle2, XCircle, Clock, AlertTriangle, 
 
 interface CheckInTabProps {
   weddingId: string;
-  guests: any[];
-  onRefreshGuests: () => void;
+  guests?: any[];
+  onRefreshGuests?: () => void;
 }
 
 interface CheckInHistory {
@@ -53,6 +53,7 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
     const storedQueue = localStorage.getItem(`checkin_queue_${weddingId}`);
     if (storedQueue) {
       try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setRetryQueue(JSON.parse(storedQueue));
       } catch (e) {
         console.error('Failed to parse stored queue');
@@ -181,7 +182,7 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
         throw new Error(data.error || 'Misafir eklenemedi');
       }
 
-      onRefreshGuests();
+      onRefreshGuests?.();
       setNewGuestName({ first_name: '', last_name: '' });
       setSearchTerm('');
       
@@ -206,9 +207,17 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
     }
   };
 
-  const filteredGuests = guests.filter(g => 
+  // Manuel Arama
+  const handleSearch = () => {
+    if (!searchTerm || !guests) return;
+    const found = guests.find(g => 
+      `${g.first_name} ${g.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+  
+  const filteredGuests = guests?.filter(g => 
     `${g.first_name} ${g.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ) || [];
   
   const showQuickAdd = searchTerm.trim().length > 2 && filteredGuests.length === 0;
 

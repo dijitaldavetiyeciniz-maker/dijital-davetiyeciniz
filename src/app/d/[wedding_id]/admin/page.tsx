@@ -15,6 +15,8 @@ import { sealStyles } from '@/data/sealStyles';
 import { getInitials } from '@/utils/getInitials';
 import GuestManagementTab from '@/components/admin/guests/GuestManagementTab';
 import CheckInTab from '@/components/admin/checkin/CheckInTab';
+import EventsTab from '@/components/admin/events/EventsTab';
+import SeatingTab from '@/components/admin/seating/SeatingTab';
 
 function getTemplatePreset(id: string) {
   const num = parseInt(id.replace('template', '')) || 1;
@@ -237,7 +239,7 @@ export default function CoupleAdminPage({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
-  const [activeTab, setActiveTab] = useState<'rsvps' | 'guests' | 'checkin' | 'design' | 'content' | 'payment'>('rsvps');
+  const [activeTab, setActiveTab] = useState<'rsvps' | 'guests' | 'events' | 'seating' | 'checkin' | 'design' | 'content' | 'payment'>('rsvps');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'attending' | 'not-attending'>('all');
   const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
@@ -1284,6 +1286,18 @@ export default function CoupleAdminPage({
             <Users className="w-4 h-4" /> Misafir Yönetimi
           </button>
           <button
+            onClick={() => setActiveTab('events')}
+            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'events' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          >
+            <Calendar className="w-4 h-4" /> Program
+          </button>
+          <button
+            onClick={() => setActiveTab('seating')}
+            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'seating' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          >
+            <Users className="w-4 h-4" /> Oturma Planı
+          </button>
+          <button
             onClick={() => setActiveTab('checkin')}
             className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'checkin' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
           >
@@ -1512,6 +1526,18 @@ export default function CoupleAdminPage({
           <div className="bg-white rounded-xl p-8 border shadow-sm">
             <GuestManagementTab weddingId={wedding.id} />
           </div>
+        )}
+
+        {activeTab === 'events' && (
+          <EventsTab weddingId={wedding.id} />
+        )}
+
+        {activeTab === 'seating' && (
+          <SeatingTab weddingId={wedding.id} />
+        )}
+
+        {activeTab === 'checkin' && (
+          <CheckInTab weddingId={wedding.id} />
         )}
 
         {activeTab === 'design' && (
