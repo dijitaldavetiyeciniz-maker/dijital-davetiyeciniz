@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ group });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Geçersiz veri', details: error.errors }, { status: 400 });
+      return NextResponse.json({ error: 'Geçersiz veri', details: (error as any).errors }, { status: 400 });
     }
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }

@@ -24,6 +24,13 @@ export default function GuestFormDialog({
   const [children, setChildren] = useState(initialData?.children_count || 0);
   const [groupId, setGroupId] = useState<string>(initialData?.group_id || '');
 
+  const [phone, setPhone] = useState(initialData?.phone || '');
+  const [email, setEmail] = useState(initialData?.email || '');
+  const [mealPreference, setMealPreference] = useState(initialData?.meal_preference || '');
+  const [allergyNotes, setAllergyNotes] = useState(initialData?.allergy_notes || '');
+  const [specialNeeds, setSpecialNeeds] = useState(initialData?.special_needs || '');
+  const [notes, setNotes] = useState(initialData?.notes || '');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -33,17 +40,25 @@ export default function GuestFormDialog({
       const url = initialData ? `/api/guests/${initialData.id}` : '/api/guests';
       const method = initialData ? 'PUT' : 'POST';
 
+      const payloadData = {
+        first_name: firstName, 
+        last_name: lastName, 
+        plus_ones_allowed: plusOnes, 
+        children_count: children, 
+        group_id: groupId || null,
+        phone: phone || null,
+        email: email || null,
+        meal_preference: mealPreference || null,
+        allergy_notes: allergyNotes || null,
+        special_needs: specialNeeds || null,
+        notes: notes || null
+      };
+
       const payload = initialData 
-        ? { first_name: firstName, last_name: lastName, plus_ones_allowed: plusOnes, children_count: children, group_id: groupId || null }
+        ? payloadData
         : {
             wedding_id: weddingId,
-            guests: [{
-              first_name: firstName,
-              last_name: lastName,
-              plus_ones_allowed: plusOnes,
-              children_count: children,
-              group_id: groupId || null
-            }]
+            guests: [payloadData]
           };
 
       const res = await fetch(url, {
@@ -65,8 +80,8 @@ export default function GuestFormDialog({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4">
+      <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-bold">{initialData ? 'Misafiri Düzenle' : 'Yeni Misafir Ekle'}</h3>
           <button onClick={onClose} className="text-xl">&times;</button>
@@ -90,6 +105,39 @@ export default function GuestFormDialog({
             <div>
               <label className="block text-sm mb-1">Çocuk İzni</label>
               <input type="number" min="0" max="10" value={children} onChange={e => setChildren(parseInt(e.target.value) || 0)} className="w-full border rounded p-2 text-sm" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm mb-1">Telefon</label>
+              <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className="w-full border rounded p-2 text-sm" placeholder="0555..." />
+            </div>
+            <div>
+              <label className="block text-sm mb-1">E-posta</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full border rounded p-2 text-sm" placeholder="ornek@mail.com" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm mb-1">Yemek Tercihi</label>
+              <input type="text" value={mealPreference} onChange={e => setMealPreference(e.target.value)} className="w-full border rounded p-2 text-sm" placeholder="Örn: Vejetaryen, Et" />
+            </div>
+            <div>
+              <label className="block text-sm mb-1">Alerji Notu</label>
+              <input type="text" value={allergyNotes} onChange={e => setAllergyNotes(e.target.value)} className="w-full border rounded p-2 text-sm" placeholder="Örn: Fıstık, Süt" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm mb-1">Özel İhtiyaçlar</label>
+              <input type="text" value={specialNeeds} onChange={e => setSpecialNeeds(e.target.value)} className="w-full border rounded p-2 text-sm" placeholder="Örn: Tekerlekli sandalye" />
+            </div>
+            <div>
+              <label className="block text-sm mb-1">Ek Notlar</label>
+              <input type="text" value={notes} onChange={e => setNotes(e.target.value)} className="w-full border rounded p-2 text-sm" placeholder="Misafir hakkında ek not" />
             </div>
           </div>
           

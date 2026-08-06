@@ -1,9 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { expect } from "@playwright/test";
 import crypto from "crypto";
-import dotenv from "dotenv";
+import dotenvx from "@dotenvx/dotenvx";
 
-dotenv.config({ path: ".env.local" });
+dotenvx.config({ path: ".env.local" });
 
 export async function setupPart5Fixture(testSlugPrefix: string = 'part5-fixture') {
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;

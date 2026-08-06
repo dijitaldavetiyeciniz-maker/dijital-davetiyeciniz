@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Guest } from './types';
+import { Guest, GuestGroup } from './types';
 import GuestTable from './GuestTable';
 import GuestFilters from './GuestFilters';
 import GuestFormDialog from './GuestFormDialog';

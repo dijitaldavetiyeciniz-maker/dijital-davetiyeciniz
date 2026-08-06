@@ -21,9 +21,9 @@ Error: Missing Supabase service-role environment variables for test fixture setu
   1  | import { createClient } from "@supabase/supabase-js";
   2  | import { expect } from "@playwright/test";
   3  | import crypto from "crypto";
-  4  | import dotenv from "dotenv";
+  4  | import dotenvx from "@dotenvx/dotenvx";
   5  | 
-  6  | dotenv.config({ path: ".env.local" });
+  6  | dotenvx.config({ path: ".env.local" });
   7  | 
   8  | export async function setupPart5Fixture(testSlugPrefix: string = 'part5-fixture') {
   9  |   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;

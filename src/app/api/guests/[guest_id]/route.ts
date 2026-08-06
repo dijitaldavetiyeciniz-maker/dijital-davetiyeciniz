@@ -12,7 +12,9 @@ const guestUpdateSchema = z.object({
   special_needs: z.string().optional().nullable(),
   plus_ones_allowed: z.number().int().min(0).default(0),
   children_count: z.number().int().min(0).default(0),
-  rsvp_status: z.enum(['attending', 'not_attending', 'undecided']).optional().nullable()
+  rsvp_status: z.enum(['attending', 'not_attending', 'undecided']).optional().nullable(),
+  notes: z.string().optional().nullable(),
+  group_id: z.string().uuid().optional().nullable()
 });
 
 export async function PUT(request: NextRequest, props: { params: Promise<{ guest_id: string }> }) {
@@ -97,7 +99,7 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ guest
     return NextResponse.json({ guest: updatedGuest });
   } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Geçersiz veri', details: error.errors }, { status: 400 });
+      return NextResponse.json({ error: 'Geçersiz veri', details: (error as any).errors }, { status: 400 });
     }
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
