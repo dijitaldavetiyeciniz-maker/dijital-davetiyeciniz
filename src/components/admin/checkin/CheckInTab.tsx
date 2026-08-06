@@ -26,8 +26,27 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
   const [scannerActive, setScannerActive] = useState(false);
   const [newGuestName, setNewGuestName] = useState({ first_name: '', last_name: '' });
   const [isAdding, setIsAdding] = useState(false);
+  const [checkedInCount, setCheckedInCount] = useState<number | null>(null);
 
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+
+  // Gercek check-in sayisini cek (rsvp_status degil - once buradaki
+  // sayac RSVP durumunu gosteriyordu, gercek check-in verisi degildi)
+  const fetchCheckedInCount = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/check-ins?wedding_id=${weddingId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setCheckedInCount(data.count);
+      }
+    } catch (e) {
+      console.error('Failed to fetch check-in count', e);
+    }
+  }, [weddingId]);
+
+  useEffect(() => {
+    fetchCheckedInCount();
+  }, [fetchCheckedInCount]);
 
   // Load retry queue from local storage on mount
   useEffect(() => {
@@ -75,6 +94,7 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
         setHistory(prev => prev.map(h => h.id === historyId ? { ...h, status: 'error', message: 'Zaten giriş yapıldı' } : h));
       } else if (data.success) {
         setHistory(prev => prev.map(h => h.id === historyId ? { ...h, status: 'success', message: 'Başarılı', name: `${data.guest?.first_name} ${data.guest?.last_name}` } : h));
+        fetchCheckedInCount();
       } else {
         setHistory(prev => prev.map(h => h.id === historyId ? { ...h, status: 'error', message: data.error || 'Hata' } : h));
       }
@@ -86,7 +106,7 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
         return [...prev, { id: historyId, token, guest_id: guestId, name, time: new Date().toLocaleTimeString() }];
       });
     }
-  }, []);
+  }, [fetchCheckedInCount]);
 
   // Process retry queue
   const flushRetryQueue = async () => {
@@ -200,7 +220,7 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
           <div>
             <p className="text-sm font-medium text-slate-500">Toplam Gelen</p>
             <h3 className="text-3xl font-bold text-slate-800">
-              {guests.filter(g => g.rsvp_status === 'attending').length} {/* We should fetch actual checkin count but this is a placeholder */}
+              {checkedInCount === null ? '...' : checkedInCount}
             </h3>
           </div>
           <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">

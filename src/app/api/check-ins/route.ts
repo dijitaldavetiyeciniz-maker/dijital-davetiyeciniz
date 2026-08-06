@@ -12,6 +12,64 @@ const checkInSchema = z.object({
   message: "Either token or guest_id must be provided"
 });
 
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const weddingId = searchParams.get('wedding_id');
+
+    if (!weddingId) {
+      return NextResponse.json({ error: 'wedding_id gerekli' }, { status: 400 });
+    }
+
+    const supabase = await createAdminClient();
+    const { data: { session } } = await supabase.auth.getSession();
+
+    let isAuthorized = false;
+    let authMethod = 'session';
+
+    if (session?.user) {
+      const { data: wedding } = await supabase
+        .from('weddings')
+        .select('id, user_id')
+        .eq('id', weddingId)
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (wedding) {
+        isAuthorized = true;
+      }
+    }
+
+    if (!isAuthorized) {
+      const cookieStore = await import('next/headers').then(m => m.cookies());
+      const storedCookie = cookieStore.get(`admin_auth_${weddingId}`)?.value;
+      const { verifyAdminCookie } = await import('@/lib/auth-cookie');
+
+      if (storedCookie && verifyAdminCookie(weddingId, storedCookie)) {
+        isAuthorized = true;
+        authMethod = 'cookie';
+      }
+    }
+
+    if (!isAuthorized) {
+      return NextResponse.json({ error: 'Yetkisiz erişim' }, { status: 401 });
+    }
+
+    const dbClient = authMethod === 'session' ? supabase : createServerServiceRoleClient();
+
+    const { count, error } = await dbClient
+      .from('check_ins')
+      .select('id', { count: 'exact', head: true })
+      .eq('wedding_id', weddingId);
+
+    if (error) throw error;
+
+    return NextResponse.json({ count: count || 0 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -30,16 +88,24 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Geçersiz veya süresi dolmuş token' }, { status: 400 });
       }
       
-      // Lookup by public_id
+      // Lookup by public_id - token_version'i de aliyoruz, cunku
+      // verifyGuestToken sadece imza/sure gecerliligine bakiyor, DB'deki
+      // guncel versiyonla eslesip eslesmedigine bakmiyor. Bu kontrol
+      // olmadan, "Yenile" ile degistirilmis (artik gecersiz olmasi
+      // gereken) eski bir QR kod hala kapida calisirdi.
       const { data: guestData, error: guestError } = await serviceRoleClient
         .from('guests')
-        .select('id, wedding_id')
+        .select('id, wedding_id, token_version')
         .eq('public_id', payload.publicId)
         .is('deleted_at', null)
         .single();
 
       if (guestError || !guestData) {
         return NextResponse.json({ error: 'Misafir bulunamadı' }, { status: 404 });
+      }
+
+      if (guestData.token_version !== payload.tokenVersion) {
+        return NextResponse.json({ error: 'Bu QR kod artık geçerli değil (misafirin linki yenilenmiş). Yeni QR kod gerekiyor.' }, { status: 400 });
       }
       
       guestLookupId = guestData.id;
