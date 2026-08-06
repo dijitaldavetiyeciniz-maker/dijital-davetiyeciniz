@@ -25,9 +25,12 @@ USING (
     )
 );
 
-CREATE POLICY "Allow public insert for rsvp logs" ON public.guest_rsvp_logs
-FOR INSERT TO public
-WITH CHECK (true);
+-- NOT: Buraya "public INSERT" politikası eklenmiyor - tetikleyici fonksiyon
+-- (asagida) SECURITY DEFINER oldugu icin RLS'e tabi degil, satirlari kendi
+-- basina ekleyebiliyor. Herkese acik bir INSERT izni, kotu niyetli birinin
+-- bu tabloya sahte log satirlari eklemesine (ya da var olan guest_id'leri
+-- foreign-key hatasi uzerinden kesfetmeye calismasina) izin verir - gereksiz
+-- bir güvenlik yüzeyi olur.
 
 -- Trigger function
 CREATE OR REPLACE FUNCTION public.log_guest_rsvp_change()

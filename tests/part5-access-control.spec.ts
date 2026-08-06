@@ -44,6 +44,22 @@ test.describe('PART 5A - Access Control E2E', () => {
     const revokeRes = await request.post(`/api/guests/${fixture.guestId}/revoke`);
     expect(revokeRes.status()).toBe(401);
 
+    // Başka organizer misafiri düzenler (PUT) → 401 (404 değil - misafir
+    // gerçekten var, sadece yetki yok)
+    const putGuestRes = await request.put(`/api/guests/${fixture.guestId}`, {
+      data: {
+        first_name: 'Hacker',
+        last_name: 'Man',
+        plus_ones_allowed: 0,
+        children_count: 0
+      }
+    });
+    expect(putGuestRes.status()).toBe(401);
+
+    // Başka organizer misafiri siler (DELETE) → 401 (404 değil)
+    const deleteGuestRes = await request.delete(`/api/guests/${fixture.guestId}`);
+    expect(deleteGuestRes.status()).toBe(401);
+
     // Response’ta SQL hata detayı yok
     const body = await renewRes.text();
     expect(body).not.toContain('SQL');
