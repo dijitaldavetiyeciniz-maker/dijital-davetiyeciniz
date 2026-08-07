@@ -44,18 +44,36 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
     }
   }, [weddingId]);
 
+  // --- Madde 1: Canlı sayaç (polling + visibilitychange) ---
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    // İlk yükleme
     fetchCheckedInCount();
+
+    // 5 saniyelik yoklama
+    const intervalId = setInterval(fetchCheckedInCount, 5000);
+
+    // Sekme/pencere tekrar odağa geldiğinde bir kez çağır
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchCheckedInCount();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [fetchCheckedInCount]);
 
-  // Load retry queue from local storage on mount
+  // Load retry queue from local storage on mount + auto-flush if online
   useEffect(() => {
     const storedQueue = localStorage.getItem(`checkin_queue_${weddingId}`);
     if (storedQueue) {
       try {
+        const parsed = JSON.parse(storedQueue);
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setRetryQueue(JSON.parse(storedQueue));
+        setRetryQueue(parsed);
       } catch (e) {
         console.error('Failed to parse stored queue');
       }
@@ -111,7 +129,7 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
   }, [fetchCheckedInCount]);
 
   // Process retry queue
-  const flushRetryQueue = async () => {
+  const flushRetryQueue = useCallback(async () => {
     if (retryQueue.length === 0) return;
     const currentQueue = [...retryQueue];
     setRetryQueue([]); // Clear immediately, will add back if fails
@@ -119,7 +137,33 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
     for (const item of currentQueue) {
       await processCheckIn(item.token, item.guest_id, item.name);
     }
-  };
+  }, [retryQueue, processCheckIn]);
+
+  // --- Madde 2 (kısım a): Online olunca otomatik flush ---
+  useEffect(() => {
+    const handleOnline = () => {
+      // Küçük gecikme ile ağ bağlantısının stabilize olmasını bekle
+      setTimeout(() => {
+        flushRetryQueue();
+      }, 1000);
+    };
+    window.addEventListener('online', handleOnline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+    };
+  }, [flushRetryQueue]);
+
+  // --- Madde 2 (kısım b): Mount'ta online ve kuyrukta öğe varsa otomatik flush ---
+  const mountFlushedRef = useRef(false);
+  useEffect(() => {
+    if (!mountFlushedRef.current && retryQueue.length > 0 && navigator.onLine) {
+      mountFlushedRef.current = true;
+      // Küçük gecikme ile bileşenin tam montajını bekle
+      setTimeout(() => {
+        flushRetryQueue();
+      }, 500);
+    }
+  }, [retryQueue, flushRetryQueue]);
 
   // Setup Scanner
   useEffect(() => {
