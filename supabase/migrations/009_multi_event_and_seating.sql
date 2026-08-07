@@ -58,21 +58,24 @@ ALTER TABLE public.invitation_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.seating_tables ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.guest_seat_assignments ENABLE ROW LEVEL SECURITY;
 
--- Hardened Owner Policies (WITH CHECK)
+-- Hardened Owner Policies (WITH CHECK) — idempotent
+DROP POLICY IF EXISTS "InvitationEvents Owner All" ON public.invitation_events;
 CREATE POLICY "InvitationEvents Owner All" ON public.invitation_events FOR ALL TO authenticated 
 USING (wedding_id IN (SELECT id FROM public.weddings WHERE user_id = auth.uid()))
 WITH CHECK (wedding_id IN (SELECT id FROM public.weddings WHERE user_id = auth.uid()));
 
+DROP POLICY IF EXISTS "SeatingTables Owner All" ON public.seating_tables;
 CREATE POLICY "SeatingTables Owner All" ON public.seating_tables FOR ALL TO authenticated 
 USING (wedding_id IN (SELECT id FROM public.weddings WHERE user_id = auth.uid()))
 WITH CHECK (wedding_id IN (SELECT id FROM public.weddings WHERE user_id = auth.uid()));
 
+DROP POLICY IF EXISTS "SeatAssignments Owner All" ON public.guest_seat_assignments;
 CREATE POLICY "SeatAssignments Owner All" ON public.guest_seat_assignments FOR ALL TO authenticated 
 USING (wedding_id IN (SELECT id FROM public.weddings WHERE user_id = auth.uid()))
 WITH CHECK (wedding_id IN (SELECT id FROM public.weddings WHERE user_id = auth.uid()));
 
--- Public Policies
--- Events should be readable by anyone if the wedding is public/active
+-- Public Policies — idempotent
+DROP POLICY IF EXISTS "InvitationEvents Public Select" ON public.invitation_events;
 CREATE POLICY "InvitationEvents Public Select" ON public.invitation_events FOR SELECT TO anon, authenticated 
 USING (wedding_id IN (SELECT id FROM public.weddings WHERE is_paid = true AND deleted_at IS NULL AND is_active = true));
 
@@ -107,10 +110,7 @@ DECLARE
     v_existing_assignment_id UUID;
     v_result JSONB;
 BEGIN
-    -- Only owners can execute this? Actually SECURITY DEFINER bypasses RLS, so we MUST manually check auth.uid()
-    -- Wait, if this is called from API via service-role, auth.uid() will be null.
-    -- The API will handle the owner check before calling this RPC via service-role, or we can just rely on the API.
-    -- But since we are creating it, let's keep it simple: API handles auth, RPC handles concurrency.
+    -- API handles auth, RPC handles concurrency with row-level locking.
 
     -- 1. Lock the table row for update to prevent concurrent race conditions
     SELECT capacity INTO v_table_capacity 
@@ -163,4 +163,6 @@ BEGIN
 END;
 $$;
 REVOKE ALL ON FUNCTION public.assign_guest_to_table(uuid, uuid, uuid, uuid, integer) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.assign_guest_to_table(uuid, uuid, uuid, uuid, integer) FROM anon;
 GRANT EXECUTE ON FUNCTION public.assign_guest_to_table(uuid, uuid, uuid, uuid, integer) TO authenticated;
+

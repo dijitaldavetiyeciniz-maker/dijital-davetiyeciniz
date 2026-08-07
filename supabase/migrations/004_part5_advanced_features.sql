@@ -71,8 +71,6 @@ SELECT
     w.font_family,
     w.names_font_family,
     w.background_image_url,
-    w.bride_photo_url,
-    w.groom_photo_url,
     w.music_url,
     w.music_autoplay,
     w.show_photos,
@@ -84,7 +82,6 @@ SELECT
     w.custom_overrides,
     w.photo_focal_point,
     w.created_at,
-    w.updated_at,
     w.language,
     w.published_at,
     w.publish_start,
@@ -98,17 +95,19 @@ WHERE w.deleted_at IS NULL AND w.is_active = true
   AND (w.publish_start IS NULL OR w.publish_start <= now())
   AND (w.publish_end IS NULL OR w.publish_end >= now());
 
--- 2. Modify guestbook_entries for Moderation
+-- 2. Modify guestbook_entries for Moderation (only if table exists)
 DO $$ 
 BEGIN 
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='guestbook_entries' AND column_name='status') THEN
-        ALTER TABLE public.guestbook_entries ADD COLUMN status TEXT DEFAULT 'pending'; -- pending, approved, rejected
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='guestbook_entries' AND column_name='moderated_by') THEN
-        ALTER TABLE public.guestbook_entries ADD COLUMN moderated_by UUID REFERENCES auth.users(id);
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='guestbook_entries' AND column_name='moderated_at') THEN
-        ALTER TABLE public.guestbook_entries ADD COLUMN moderated_at TIMESTAMPTZ DEFAULT NULL;
+    IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname='public' AND tablename='guestbook_entries') THEN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='guestbook_entries' AND column_name='status') THEN
+            ALTER TABLE public.guestbook_entries ADD COLUMN status TEXT DEFAULT 'pending'; -- pending, approved, rejected
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='guestbook_entries' AND column_name='moderated_by') THEN
+            ALTER TABLE public.guestbook_entries ADD COLUMN moderated_by UUID REFERENCES auth.users(id);
+        END IF;
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='guestbook_entries' AND column_name='moderated_at') THEN
+            ALTER TABLE public.guestbook_entries ADD COLUMN moderated_at TIMESTAMPTZ DEFAULT NULL;
+        END IF;
     END IF;
 END $$;
 

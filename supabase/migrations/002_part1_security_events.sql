@@ -74,8 +74,6 @@ SELECT
     w.font_family,
     w.names_font_family,
     w.background_image_url,
-    w.bride_photo_url,
-    w.groom_photo_url,
     w.music_url,
     w.music_autoplay,
     w.show_photos,
@@ -86,8 +84,7 @@ SELECT
     w.is_active,
     w.custom_overrides,
     w.photo_focal_point,
-    w.created_at,
-    w.updated_at
+    w.created_at
 FROM public.weddings w
 WHERE w.deleted_at IS NULL AND w.is_active = true;
 
@@ -95,7 +92,11 @@ WHERE w.deleted_at IS NULL AND w.is_active = true;
 ALTER TABLE public.weddings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.wedding_integrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.rsvps ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.guestbook_entries ENABLE ROW LEVEL SECURITY;
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname='public' AND tablename='guestbook_entries') THEN
+    EXECUTE 'ALTER TABLE public.guestbook_entries ENABLE ROW LEVEL SECURITY';
+  END IF;
+END $$;
 
 -- Clear old policies
 DROP POLICY IF EXISTS "Weddings Owner Select" ON public.weddings;
@@ -105,8 +106,12 @@ DROP POLICY IF EXISTS "Weddings Public Select" ON public.weddings;
 DROP POLICY IF EXISTS "Integrations Owner All" ON public.wedding_integrations;
 DROP POLICY IF EXISTS "RSVPs Owner All" ON public.rsvps;
 DROP POLICY IF EXISTS "RSVPs Public Insert" ON public.rsvps;
-DROP POLICY IF EXISTS "Guestbook Owner All" ON public.guestbook_entries;
-DROP POLICY IF EXISTS "Guestbook Public Insert" ON public.guestbook_entries;
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname='public' AND tablename='guestbook_entries') THEN
+    EXECUTE 'DROP POLICY IF EXISTS "Guestbook Owner All" ON public.guestbook_entries';
+    EXECUTE 'DROP POLICY IF EXISTS "Guestbook Public Insert" ON public.guestbook_entries';
+  END IF;
+END $$;
 
 -- 5. RLS Policies Definition
 -- Weddings: Owners can read, update, soft-delete their own record
@@ -141,14 +146,13 @@ CREATE POLICY "RSVPs Owner All" ON public.rsvps
     FOR ALL TO authenticated
     USING (wedding_id IN (SELECT id FROM public.weddings WHERE user_id = auth.uid()));
 
--- Guestbook: Guests can post wishes, Owners can view/manage
-CREATE POLICY "Guestbook Public Insert" ON public.guestbook_entries
-    FOR INSERT TO anon, authenticated
-    WITH CHECK (wedding_id IN (SELECT id FROM public.weddings WHERE is_paid = true AND deleted_at IS NULL));
-
-CREATE POLICY "Guestbook Owner All" ON public.guestbook_entries
-    FOR ALL TO authenticated
-    USING (wedding_id IN (SELECT id FROM public.weddings WHERE user_id = auth.uid()));
+-- Guestbook: Guests can post wishes, Owners can view/manage (conditional - table may not exist yet)
+DO $gb$ BEGIN
+  IF EXISTS (SELECT 1 FROM pg_tables WHERE schemaname='public' AND tablename='guestbook_entries') THEN
+    EXECUTE 'CREATE POLICY "Guestbook Public Insert" ON public.guestbook_entries FOR INSERT TO anon, authenticated WITH CHECK (wedding_id IN (SELECT id FROM public.weddings WHERE is_paid = true AND deleted_at IS NULL))';
+    EXECUTE 'CREATE POLICY "Guestbook Owner All" ON public.guestbook_entries FOR ALL TO authenticated USING (wedding_id IN (SELECT id FROM public.weddings WHERE user_id = auth.uid()))';
+  END IF;
+END $gb$;
 
 -- Grants
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.wedding_integrations TO authenticated;
