@@ -39,7 +39,8 @@ jobs:
           npm --version
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci || (echo "package-lock.json senkron degil (muhtemelen Windows'ta duzenlendi), Linux'ta npm install ile kendi kendini onariyor..." && npm install)
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
