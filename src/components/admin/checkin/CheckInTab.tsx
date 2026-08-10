@@ -6,8 +6,6 @@ import { QrCode, Search, UserPlus, CheckCircle2, XCircle, Clock, AlertTriangle, 
 
 interface CheckInTabProps {
   weddingId: string;
-  guests?: any[];
-  onRefreshGuests?: () => void;
 }
 
 interface CheckInHistory {
@@ -19,7 +17,7 @@ interface CheckInHistory {
   isRetry?: boolean;
 }
 
-export default function CheckInTab({ weddingId, guests, onRefreshGuests }: CheckInTabProps) {
+export default function CheckInTab({ weddingId }: CheckInTabProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [history, setHistory] = useState<CheckInHistory[]>([]);
   const [retryQueue, setRetryQueue] = useState<{ id: string, token?: string, guest_id?: string, name: string, time: string }[]>([]);
@@ -27,8 +25,31 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
   const [newGuestName, setNewGuestName] = useState({ first_name: '', last_name: '' });
   const [isAdding, setIsAdding] = useState(false);
   const [checkedInCount, setCheckedInCount] = useState<number | null>(null);
+  // page.tsx seviyesinde genel bir misafir state'i yok (her sekme kendi
+  // verisini kendi cekiyor, GuestManagementTab'daki desenle ayni) - bu
+  // bilesen de kendi listesini kendi cekiyor, disaridan prop beklemiyor.
+  // Onceki halde guests/onRefreshGuests prop olarak bekleniyordu ama
+  // page.tsx bunlari hic gecmiyordu, manuel arama hep "bulunamadi"
+  // donuyordu - gercekte var olan bir misafir bile eklenmeye calisilirdi.
+  const [guests, setGuests] = useState<any[]>([]);
 
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+
+  const fetchGuests = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/guests?wedding_id=${weddingId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setGuests(data.guests || []);
+      }
+    } catch (e) {
+      console.error('Failed to fetch guests for check-in search', e);
+    }
+  }, [weddingId]);
+
+  useEffect(() => {
+    fetchGuests();
+  }, [fetchGuests]);
 
   // Gercek check-in sayisini cek (rsvp_status degil - once buradaki
   // sayac RSVP durumunu gosteriyordu, gercek check-in verisi degildi)
@@ -44,18 +65,36 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
     }
   }, [weddingId]);
 
+  // --- Madde 1: Canlı sayaç (polling + visibilitychange) ---
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    // İlk yükleme
     fetchCheckedInCount();
+
+    // 5 saniyelik yoklama
+    const intervalId = setInterval(fetchCheckedInCount, 5000);
+
+    // Sekme/pencere tekrar odağa geldiğinde bir kez çağır
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchCheckedInCount();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [fetchCheckedInCount]);
 
-  // Load retry queue from local storage on mount
+  // Load retry queue from local storage on mount + auto-flush if online
   useEffect(() => {
     const storedQueue = localStorage.getItem(`checkin_queue_${weddingId}`);
     if (storedQueue) {
       try {
+        const parsed = JSON.parse(storedQueue);
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setRetryQueue(JSON.parse(storedQueue));
+        setRetryQueue(parsed);
       } catch (e) {
         console.error('Failed to parse stored queue');
       }
@@ -111,7 +150,7 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
   }, [fetchCheckedInCount]);
 
   // Process retry queue
-  const flushRetryQueue = async () => {
+  const flushRetryQueue = useCallback(async () => {
     if (retryQueue.length === 0) return;
     const currentQueue = [...retryQueue];
     setRetryQueue([]); // Clear immediately, will add back if fails
@@ -119,7 +158,33 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
     for (const item of currentQueue) {
       await processCheckIn(item.token, item.guest_id, item.name);
     }
-  };
+  }, [retryQueue, processCheckIn]);
+
+  // --- Madde 2 (kısım a): Online olunca otomatik flush ---
+  useEffect(() => {
+    const handleOnline = () => {
+      // Küçük gecikme ile ağ bağlantısının stabilize olmasını bekle
+      setTimeout(() => {
+        flushRetryQueue();
+      }, 1000);
+    };
+    window.addEventListener('online', handleOnline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+    };
+  }, [flushRetryQueue]);
+
+  // --- Madde 2 (kısım b): Mount'ta online ve kuyrukta öğe varsa otomatik flush ---
+  const mountFlushedRef = useRef(false);
+  useEffect(() => {
+    if (!mountFlushedRef.current && retryQueue.length > 0 && navigator.onLine) {
+      mountFlushedRef.current = true;
+      // Küçük gecikme ile bileşenin tam montajını bekle
+      setTimeout(() => {
+        flushRetryQueue();
+      }, 500);
+    }
+  }, [retryQueue, flushRetryQueue]);
 
   // Setup Scanner
   useEffect(() => {
@@ -183,7 +248,7 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
         throw new Error(data.error || 'Misafir eklenemedi');
       }
 
-      onRefreshGuests?.();
+      fetchGuests();
       setNewGuestName({ first_name: '', last_name: '' });
       setSearchTerm('');
       
@@ -208,14 +273,6 @@ export default function CheckInTab({ weddingId, guests, onRefreshGuests }: Check
     }
   };
 
-  // Manuel Arama
-  const handleSearch = () => {
-    if (!searchTerm || !guests) return;
-    const found = guests.find(g => 
-      `${g.first_name} ${g.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  };
-  
   const filteredGuests = guests?.filter(g => 
     `${g.first_name} ${g.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
