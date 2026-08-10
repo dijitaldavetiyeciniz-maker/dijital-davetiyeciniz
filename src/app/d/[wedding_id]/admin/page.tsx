@@ -6,7 +6,7 @@ import { mapEnumToDbEventType } from '@/lib/themes';
 import { getEventTypeConfig } from '@/data/eventTypeConfig';
 import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
 import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
-import { Heart, Upload, Link as LinkIcon, Download, Smartphone, Share2, Sparkles, MapPin, Search, Grid, Eye, CheckCircle2, Navigation, Wand2, Calendar, Clock, Lock, ShieldAlert, Monitor, Type, Palette, ArrowRight, Save, Shield, Settings, Info, Music, StopCircle, RefreshCw, X, Users, MessageSquare, Paintbrush, CreditCard, Copy, ExternalLink, Tablet, Trash2, Check, Volume2, VolumeX } from 'lucide-react';
+import { Heart, Upload, Link as LinkIcon, Download, Smartphone, Share2, Sparkles, MapPin, Search, Grid, Eye, CheckCircle2, Navigation, Wand2, Calendar, Clock, Lock, ShieldAlert, Monitor, Type, Palette, ArrowRight, Save, Shield, Settings, Info, Music, StopCircle, RefreshCw, X, Users, MessageSquare, Paintbrush, CreditCard, Copy, ExternalLink, Tablet, Trash2, Check, Volume2, VolumeX, QrCode } from 'lucide-react';
 import SafeImage from '@/components/ui/SafeImage';
 import { getRandomQuote } from '@/lib/aiQuotes';
 import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingAnimations';
@@ -14,6 +14,9 @@ import { envelopeStyles } from '@/data/envelopeStyles';
 import { sealStyles } from '@/data/sealStyles';
 import { getInitials } from '@/utils/getInitials';
 import GuestManagementTab from '@/components/admin/guests/GuestManagementTab';
+import CheckInTab from '@/components/admin/checkin/CheckInTab';
+import EventsTab from '@/components/admin/events/EventsTab';
+import SeatingTab from '@/components/admin/seating/SeatingTab';
 
 function getTemplatePreset(id: string) {
   const num = parseInt(id.replace('template', '')) || 1;
@@ -236,7 +239,7 @@ export default function CoupleAdminPage({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
-  const [activeTab, setActiveTab] = useState<'rsvps' | 'guests' | 'design' | 'content' | 'payment'>('rsvps');
+  const [activeTab, setActiveTab] = useState<'rsvps' | 'guests' | 'events' | 'seating' | 'checkin' | 'design' | 'content' | 'payment'>('rsvps');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'attending' | 'not-attending'>('all');
   const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
@@ -1282,6 +1285,24 @@ export default function CoupleAdminPage({
           >
             <Users className="w-4 h-4" /> Misafir Yönetimi
           </button>
+          <button
+            onClick={() => setActiveTab('events')}
+            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'events' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          >
+            <Calendar className="w-4 h-4" /> Program
+          </button>
+          <button
+            onClick={() => setActiveTab('seating')}
+            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'seating' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          >
+            <Users className="w-4 h-4" /> Oturma Planı
+          </button>
+          <button
+            onClick={() => setActiveTab('checkin')}
+            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'checkin' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          >
+            <QrCode className="w-4 h-4" /> QR Check-in
+          </button>
           <button 
             onClick={() => setActiveTab('design')} 
             className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'design' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
@@ -1505,6 +1526,18 @@ export default function CoupleAdminPage({
           <div className="bg-white rounded-xl p-8 border shadow-sm">
             <GuestManagementTab weddingId={wedding.id} />
           </div>
+        )}
+
+        {activeTab === 'events' && (
+          <EventsTab weddingId={wedding.id} />
+        )}
+
+        {activeTab === 'seating' && (
+          <SeatingTab weddingId={wedding.id} />
+        )}
+
+        {activeTab === 'checkin' && (
+          <CheckInTab weddingId={wedding.id} />
         )}
 
         {activeTab === 'design' && (

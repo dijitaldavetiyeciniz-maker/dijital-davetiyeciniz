@@ -11,6 +11,7 @@ import SnowEffect from '@/components/effects/SnowEffect';
 
 import BackgroundMusic from '@/components/BackgroundMusic';
 import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
+import EventsTimeline from '@/components/invitation/EventsTimeline';
 import { sanitizePublicWedding } from '@/lib/sanitizeWedding';
 import { predefinedThemes } from '@/lib/themes';
 import { resolveGuestToken } from '@/server/guestTokens';
@@ -30,7 +31,7 @@ export default async function WeddingPage({
   // Supabase'den veriyi çekiyoruz
   const { data: wedding, error } = await supabase
     .from('weddings')
-    .select('*')
+    .select('*, invitation_events(*)')
     .eq('slug', wedding_id)
     .single();
 
@@ -39,13 +40,24 @@ export default async function WeddingPage({
     notFound();
   }
 
-  // Misafir Token Çözümleme
   let guestContext = null;
   let guestErrorMsg = null;
+  let guestSeating: any[] = [];
+  
   if (sParams.guest) {
     guestContext = await resolveGuestToken(sParams.guest, wedding.slug);
     if (!guestContext) {
       guestErrorMsg = "Kişisel davet bağlantısı doğrulanamadı. Genel davetiyeyi görüntülüyorsunuz.";
+    } else {
+      // Fetch seating securely via service role since public select is not allowed on assignments
+      const { createServerServiceRoleClient } = await import('@/server/supabaseClient');
+      const sClient = createServerServiceRoleClient();
+      const { data: seats } = await sClient
+        .from('guest_seat_assignments')
+        .select('event_id, seating_tables(name)')
+        .eq('guest_id', (guestContext as any).id);
+      
+      if (seats) guestSeating = seats;
     }
   }
 
@@ -137,7 +149,16 @@ export default async function WeddingPage({
   const contentWithMusic = (
     <>
       {effectComponent}
-      {templateComponent}
+      <div className="relative z-10 flex flex-col items-center">
+        {templateComponent}
+        {cleanWedding.invitation_events && cleanWedding.invitation_events.length > 0 && (
+          <EventsTimeline 
+            events={cleanWedding.invitation_events} 
+            primaryColor={cleanWedding.primary_color}
+            textColor={cleanWedding.text_color}
+          />
+        )}
+      </div>
       <BackgroundMusic 
         url={cleanWedding.music_url} 
         isEnvelopeOpened={true} 
@@ -157,8 +178,20 @@ export default async function WeddingPage({
         </div>
       )}
       {greeting && (
-        <div className="fixed top-0 left-0 w-full bg-slate-900/80 backdrop-blur text-white text-center py-2 z-[9999] text-sm">
-          {greeting}
+        <div className="fixed top-0 left-0 w-full bg-slate-900/80 backdrop-blur text-white text-center py-2 z-[9999] text-sm flex flex-col items-center">
+          <span>{greeting}</span>
+          {guestSeating.length > 0 && (
+            <div className="mt-1 flex flex-wrap gap-2 justify-center">
+              {guestSeating.map((seat: any, i: number) => {
+                const event = wedding.invitation_events?.find((e: any) => e.id === seat.event_id);
+                return (
+                  <span key={i} className="bg-rose-500 text-white px-2 py-0.5 rounded text-xs font-semibold">
+                    {event ? event.title : 'Masa'}: {seat.seating_tables?.name}
+                  </span>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
       {contentWithMusic}
