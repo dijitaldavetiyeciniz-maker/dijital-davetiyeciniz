@@ -239,7 +239,11 @@ export default function CoupleAdminPage({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
-  const [activeTab, setActiveTab] = useState<'rsvps' | 'guests' | 'events' | 'seating' | 'checkin' | 'design' | 'content' | 'payment'>('rsvps');
+  const [activeTab, setActiveTab] = useState<'rsvps' | 'guests' | 'design' | 'content' | 'payment'>('rsvps');
+  // Misafir Yönetimi sekmesi çok genişlediği için Program/Oturma Planı/QR
+  // Check-in artık ayrı üst sekmeler değil, "Misafir Yönetimi" altında
+  // alt sekmeler.
+  const [guestSubTab, setGuestSubTab] = useState<'list' | 'events' | 'seating' | 'checkin'>('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'attending' | 'not-attending'>('all');
   const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
@@ -1285,24 +1289,6 @@ export default function CoupleAdminPage({
           >
             <Users className="w-4 h-4" /> Misafir Yönetimi
           </button>
-          <button
-            onClick={() => setActiveTab('events')}
-            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'events' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
-          >
-            <Calendar className="w-4 h-4" /> Program
-          </button>
-          <button
-            onClick={() => setActiveTab('seating')}
-            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'seating' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
-          >
-            <Users className="w-4 h-4" /> Oturma Planı
-          </button>
-          <button
-            onClick={() => setActiveTab('checkin')}
-            className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'checkin' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
-          >
-            <QrCode className="w-4 h-4" /> QR Check-in
-          </button>
           <button 
             onClick={() => setActiveTab('design')} 
             className={`px-6 py-3 font-medium text-sm flex items-center gap-2 border-b-2 whitespace-nowrap ${activeTab === 'design' ? 'border-rose-500 text-rose-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
@@ -1523,21 +1509,45 @@ export default function CoupleAdminPage({
         )}
 
         {activeTab === 'guests' && (
-          <div className="bg-white rounded-xl p-8 border shadow-sm">
-            <GuestManagementTab weddingId={wedding.id} />
+          <div>
+            {/* Misafir Yönetimi alt sekmeleri: Program/Oturma Planı/QR
+                Check-in artık burada, üst sekme çubuğunu şişirmiyor. */}
+            <div className="flex gap-2 mb-6 border-b border-slate-100 overflow-x-auto">
+              <button
+                onClick={() => setGuestSubTab('list')}
+                className={`px-4 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap ${guestSubTab === 'list' ? 'bg-white border border-b-0 border-slate-200 text-rose-600' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                Misafir Listesi
+              </button>
+              <button
+                onClick={() => setGuestSubTab('events')}
+                className={`px-4 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap flex items-center gap-1.5 ${guestSubTab === 'events' ? 'bg-white border border-b-0 border-slate-200 text-rose-600' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                <Calendar className="w-4 h-4" /> Program
+              </button>
+              <button
+                onClick={() => setGuestSubTab('seating')}
+                className={`px-4 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap ${guestSubTab === 'seating' ? 'bg-white border border-b-0 border-slate-200 text-rose-600' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                Oturma Planı
+              </button>
+              <button
+                onClick={() => setGuestSubTab('checkin')}
+                className={`px-4 py-2 text-sm font-medium rounded-t-lg whitespace-nowrap flex items-center gap-1.5 ${guestSubTab === 'checkin' ? 'bg-white border border-b-0 border-slate-200 text-rose-600' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                <QrCode className="w-4 h-4" /> QR Check-in
+              </button>
+            </div>
+
+            {guestSubTab === 'list' && (
+              <div className="bg-white rounded-xl p-8 border shadow-sm">
+                <GuestManagementTab weddingId={wedding.id} />
+              </div>
+            )}
+            {guestSubTab === 'events' && <EventsTab weddingId={wedding.id} />}
+            {guestSubTab === 'seating' && <SeatingTab weddingId={wedding.id} />}
+            {guestSubTab === 'checkin' && <CheckInTab weddingId={wedding.id} />}
           </div>
-        )}
-
-        {activeTab === 'events' && (
-          <EventsTab weddingId={wedding.id} />
-        )}
-
-        {activeTab === 'seating' && (
-          <SeatingTab weddingId={wedding.id} />
-        )}
-
-        {activeTab === 'checkin' && (
-          <CheckInTab weddingId={wedding.id} />
         )}
 
         {activeTab === 'design' && (

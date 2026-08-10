@@ -32,6 +32,7 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
   // page.tsx bunlari hic gecmiyordu, manuel arama hep "bulunamadi"
   // donuyordu - gercekte var olan bir misafir bile eklenmeye calisilirdi.
   const [guests, setGuests] = useState<any[]>([]);
+  const [guestsLoadError, setGuestsLoadError] = useState<string | null>(null);
 
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
@@ -41,9 +42,13 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
       if (res.ok) {
         const data = await res.json();
         setGuests(data.guests || []);
+        setGuestsLoadError(null);
+      } else {
+        setGuestsLoadError(`Misafir listesi yüklenemedi (${res.status})`);
       }
     } catch (e) {
       console.error('Failed to fetch guests for check-in search', e);
+      setGuestsLoadError('Misafir listesi yüklenemedi, bağlantınızı kontrol edin');
     }
   }, [weddingId]);
 
@@ -230,15 +235,18 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
     const name = `${newGuestName.first_name} ${newGuestName.last_name}`;
     
     try {
-      // 1. Add guest
+      // 1. Add guest - PostGuestsSchema { wedding_id, guests: [...] } bekliyor,
+      // duz obje (guests dizisi olmadan) "Invalid payload" hatasi veriyordu.
       const res = await fetch('/api/guests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           wedding_id: weddingId,
-          first_name: newGuestName.first_name,
-          last_name: newGuestName.last_name,
-          rsvp_status: 'attending' // implicitly attending if they are at the door
+          guests: [{
+            first_name: newGuestName.first_name,
+            last_name: newGuestName.last_name,
+            rsvp_status: 'attending' // implicitly attending if they are at the door
+          }]
         })
       });
       
@@ -252,8 +260,12 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
       setNewGuestName({ first_name: '', last_name: '' });
       setSearchTerm('');
       
-      // 2. Check-in guest
-      await processCheckIn(undefined, data.guest.id, name);
+      // 2. Check-in guest - API { guests: [...] } donuyor (tekil "guest" degil)
+      const newGuest = data.guests?.[0];
+      if (!newGuest?.id) {
+        throw new Error('Misafir oluşturuldu ama kimliği alınamadı');
+      }
+      await processCheckIn(undefined, newGuest.id, name);
       
     } catch (err: any) {
       alert(`Hata: ${err.message}. Lütfen bağlantınızı kontrol edin.`);
@@ -351,6 +363,13 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
               <Search className="w-5 h-5 mr-2 text-blue-600" />
               İsimle Manuel Arama
             </h3>
+
+            {guestsLoadError && (
+              <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-center justify-between">
+                <span>⚠️ {guestsLoadError}</span>
+                <button onClick={fetchGuests} className="underline font-medium">Tekrar dene</button>
+              </div>
+            )}
             
             <div className="relative mb-4">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
