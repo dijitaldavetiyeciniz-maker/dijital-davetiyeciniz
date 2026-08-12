@@ -177,10 +177,23 @@ export default function BotanicalCeramicLayout({ wedding,
                 isHero={true}
               />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-black/5 text-center relative">
-                <Flower2 className="w-16 h-16 opacity-20 mb-4" style={{ color: accentColor }} />
-                <span className="text-2xl font-serif opacity-40" style={{ fontFamily: `"${headingFont}", serif` }}>
-                  Görsel Bekleniyor
+              <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center relative overflow-hidden" style={{ background: `linear-gradient(160deg, ${accentColor}14, ${primaryColor}0a)` }}>
+                {/* Fotoğraf henüz eklenmemişse, boş bir "eksik" hissi yerine
+                    davetiyenin kendi tasarım dilinden bir monogram + botanik
+                    çerçeve gösteriyoruz - bu da tasarımın bilinçli bir parçası
+                    gibi duruyor, kırık bir yer tutucu gibi değil. */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.15]" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
+                  <path d="M20 180 Q 40 120 20 60 Q 60 80 70 30 Q 100 60 130 20 Q 140 70 180 60 Q 160 120 180 180" fill="none" stroke={accentColor} strokeWidth="1.5" />
+                </svg>
+                <span
+                  className="relative text-4xl md:text-5xl mb-3"
+                  style={{ fontFamily: `"${headingFont}", serif`, color: accentColor }}
+                >
+                  {(wedding.bride_name?.[0] || '').toUpperCase()}{(wedding.groom_name?.[0] || '').toUpperCase()}
+                </span>
+                <div className="relative w-10 h-px mb-3" style={{ backgroundColor: accentColor, opacity: 0.5 }} />
+                <span className="relative text-[10px] uppercase tracking-[0.3em] opacity-50" style={{ fontFamily: `"${bodyFont}", sans-serif` }}>
+                  {eventTitle}
                 </span>
               </div>
             )}
