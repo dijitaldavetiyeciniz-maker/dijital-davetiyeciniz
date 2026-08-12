@@ -97,19 +97,27 @@ export default function CinematicPosterLayout({ wedding,
             isHero={true}
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-gradient-to-b from-slate-950 via-slate-900 to-black text-center text-red-400 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.15)_0%,transparent_70%)] pointer-events-none" />
-            <Film className="w-24 h-24 opacity-30 mb-4 animate-pulse" />
-            <span className="text-6xl lg:text-8xl font-serif font-black tracking-widest text-slate-100 opacity-60">
+          <div 
+            className="w-full h-full flex flex-col items-center justify-center p-8 bg-slate-950 text-center text-red-400 relative overflow-hidden"
+            style={{
+              backgroundImage: 'url("https://images.unsplash.com/photo-1519035350952-38d18a3848cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8Nnx8cmVkJTIwY3VydGFpbiUyMHRleHR1cmV8ZW58MHx8fHwxNzg2NTQwMjM1fDA&ixlib=rb-4.1.0&q=80&w=1080")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            <div className="absolute inset-0 bg-black/60 mix-blend-multiply pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.3)_0%,transparent_70%)] pointer-events-none" />
+            <Film className="w-24 h-24 opacity-50 mb-4 animate-pulse relative z-10 text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]" />
+            <span className="text-6xl lg:text-8xl font-serif font-black tracking-widest text-slate-100 opacity-90 relative z-10 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
               {groomInitial ? `${brideInitial} & ${groomInitial}` : brideInitial}
             </span>
-            <p className="text-xs font-mono tracking-[0.4em] uppercase text-red-400/80 mt-6">SİNEMATİK AŞK HİKAYESİ</p>
+            <p className="text-xs font-mono tracking-[0.4em] uppercase text-red-300 mt-6 relative z-10 font-bold drop-shadow-md">SİNEMATİK AŞK HİKAYESİ</p>
           </div>
         )}
 
         {/* Gölgeler ve Vignette Efektleri */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#05070a] via-[#05070a]/20 to-transparent pointer-events-none lg:bg-gradient-to-r lg:from-[#05070a]/10 lg:via-[#05070a]/30 lg:to-[#05070a]" />
-        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 to-transparent pointer-events-none" />
+        <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/90 to-transparent pointer-events-none" />
       </div>
 
       {/* SAĞ TARAF: FİLM KÜNYESİ VE DETAYLAR */}
