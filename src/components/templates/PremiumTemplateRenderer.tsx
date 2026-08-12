@@ -679,7 +679,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   const renderLayout = () => {
     const layoutStyle = wedding.custom_overrides?.layoutStyle || themeConfig?.layoutStyle || templateId || 'monogram';
     const commonProps = {
-    selectedBackground, wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick, cardBgColor, cardBlur, cardSurfaceStyle };
+    templateId, selectedBackground, wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick, cardBgColor, cardBlur, cardSurfaceStyle };
     switch (layoutStyle) {
       case 'cinematic-poster':
         return (

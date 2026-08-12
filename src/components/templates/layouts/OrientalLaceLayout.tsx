@@ -1,9 +1,23 @@
-
 import React from 'react';
 import CountdownTimer from '../../CountdownTimer';
 
-export default function OrientalLaceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle }: any) {
-  if (wedding?.template_id === 'ottoman-illumination') {
+interface LayoutProps {
+  wedding: any;
+  primaryColor?: string;
+  textColor?: string;
+  headingFont?: string;
+  dateStr?: string;
+  renderRsvpButton: () => React.ReactNode;
+  renderGuestBook: () => React.ReactNode;
+  selectedBackground?: any;
+  cardSurfaceStyle?: any;
+  cardBgColor?: string;
+  mode?: 'preview' | 'public';
+  templateId?: string;
+}
+
+export default function OrientalLaceLayout({ wedding, primaryColor, textColor, headingFont, dateStr, renderRsvpButton, renderGuestBook, selectedBackground, cardSurfaceStyle, templateId }: LayoutProps) {
+  if ((templateId || wedding?.template_id) === 'ottoman-illumination') {
     return (
       <div 
         className="w-full min-h-[800px] max-w-4xl mx-auto flex flex-col md:flex-row relative shadow-2xl overflow-hidden border-8 border-double border-amber-900/50" 

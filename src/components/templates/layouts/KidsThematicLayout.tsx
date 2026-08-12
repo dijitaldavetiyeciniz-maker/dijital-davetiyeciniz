@@ -23,6 +23,7 @@ interface LayoutProps {
   handleMapClick: () => void;
   cardBgColor?: string;
   mode?: 'preview' | 'public';
+  templateId?: string;
 }
 
 export default function KidsThematicLayout({ wedding,
@@ -42,9 +43,9 @@ export default function KidsThematicLayout({ wedding,
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground, cardSurfaceStyle }: LayoutProps) {
+, selectedBackground, cardSurfaceStyle, templateId }: LayoutProps) {
   // 1. VARYANT BELİRLEME
-  const presetId = wedding.template_id || '';
+  const presetId = templateId || wedding.template_id || '';
   let variant: 'clouds-above' | 'little-racer' | 'blue-bear' | 'pink-princess' | 'storybook-birthday' | 'neutral' = 'neutral';
   
   if (presetId === 'clouds-above') {

@@ -24,6 +24,7 @@ interface LayoutProps {
   handleMapClick: () => void;
   cardBgColor?: string;
   mode?: 'preview' | 'public';
+  templateId?: string;
 }
 
 export default function MagazineEditorialLayout({ wedding,
@@ -77,7 +78,7 @@ export default function MagazineEditorialLayout({ wedding,
   let borderLine = 'border-slate-200';
   const fontSelection = `font-serif`;
 
-  const presetId = wedding.template_id || '';
+  const presetId = templateId || wedding.template_id || '';
   let variant: 'newspaper' | 'luxury' | 'editorial' = 'editorial';
   if (wedding.custom_overrides?.variant) {
     variant = wedding.custom_overrides.variant;
