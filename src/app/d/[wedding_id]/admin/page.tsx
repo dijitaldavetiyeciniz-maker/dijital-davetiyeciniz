@@ -1245,7 +1245,7 @@ export default function CoupleAdminPage({
               <button onClick={() => setShowMobilePreview(false)} className="text-slate-400 p-2 bg-slate-700 rounded-full">✕</button>
             </div>
             <div className="flex-1 overflow-y-auto relative">
-              <PremiumTemplateRenderer wedding={liveWeddingData} templateId={templateId} showEntranceAnimation={false} />
+              <PremiumTemplateRenderer wedding={liveWeddingData} templateId={templateId} />
             </div>
           </div>
         </div>
@@ -3621,7 +3621,6 @@ export default function CoupleAdminPage({
                       wedding={liveWeddingData} 
                       templateId={templateId} 
                       mode="preview"
-                      showEntranceAnimation={false}
                     />
                   </WeddingClientWrapper>
                 ) : (

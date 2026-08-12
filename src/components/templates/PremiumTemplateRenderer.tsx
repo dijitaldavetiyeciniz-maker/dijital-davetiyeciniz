@@ -11,7 +11,6 @@ import { getBackgroundStyle, isBackgroundLight } from '@/lib/backgrounds';
 import { supabase } from '@/lib/supabase';
 import { predefinedThemes } from '@/lib/themes';
 import BackgroundAnimation from '../BackgroundAnimation';
-import EntranceAnimation from '../invitation/EntranceAnimation';
 import { backgroundDesignRegistry } from '@/lib/registries';
 import FoldedSealLayout from './layouts/FoldedSealLayout';
 import GiantMonogramLayout from './layouts/GiantMonogramLayout';
@@ -73,15 +72,13 @@ interface TemplateProps {
   wedding: any;
   templateId: string;
   mode?: 'preview' | 'public';
-  showEntranceAnimation?: boolean;
 }
 
-export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'public', showEntranceAnimation = true }: TemplateProps) {
+export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'public' }: TemplateProps) {
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [guestMessages, setGuestMessages] = useState<any[]>([]);
-  const [isEntranceOpened, setIsEntranceOpened] = useState(false);
 
   useEffect(() => {
     async function fetchGuestMessages() {
@@ -139,32 +136,6 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
 
   // Load the concept configuration
   const themeConfig = predefinedThemes.find(t => t.id === templateId) || predefinedThemes[0];
-
-  // 17 flagship sablonun her biri icin ozel tasarlanmis, hazir acilis
-  // animasyonlari var (src/components/invitation/openings/) ama hicbiri
-  // hicbir sablona baglanmamisti. Id'ler ile animationType'lar birebir
-  // eslesiyor (bkz. EntranceAnimation.tsx'teki case listesi).
-  const FLAGSHIP_ANIMATION_MAP: Record<string, string> = {
-    'parisian-black-tie': 'parisianBlackTie',
-    'grand-opera-ballroom': 'grandOpera',
-    'moonlit-secret-garden': 'moonlitGarden',
-    'vogue-wedding-editorial': 'vogueEditorial',
-    'mediterranean-ceramic-garden': 'mediterraneanCeramic',
-    'ottoman-illumination': 'ottomanIllumination',
-    'coastal-sunset': 'coastalSunset',
-    'aurora-glass': 'auroraGlass',
-    'fine-art-botanical-watercolor': 'botanicalWatercolor',
-    'film-premiere-night': 'filmPremiere',
-    'minimal-swiss-gallery': 'swissGallery',
-    'royal-palace-invitation': 'royalPalace',
-    'henna-palace-night': 'hennaPalace',
-    'prince-ceremony': 'princeCeremony',
-    'storybook-babyshower': 'storybook',
-    'storybook-birthday': 'storybook',
-    'future-summit': 'futureSummit',
-  };
-  const entranceAnimationType = FLAGSHIP_ANIMATION_MAP[templateId] || 'minimalFade';
-
   
   const overrides = wedding.custom_overrides || {};
   
@@ -1310,19 +1281,6 @@ case 'asymmetric':
         overflowX: 'clip'
       }}
     >
-      {showEntranceAnimation && (
-        <EntranceAnimation
-          animationType={entranceAnimationType}
-          initials={`${brideInitial}${groomInitial}`}
-          brideName={wedding.bride_name}
-          groomName={wedding.groom_name}
-          eventDate={dateStr}
-          eventType={wedding.event_type}
-          onComplete={() => setIsEntranceOpened(true)}
-          backgroundAnimation={selectedBackground?.ornamentSet || overrides.background_animation || wedding.background_animation}
-          wedding={wedding}
-        />
-      )}
       <BackgroundAnimation type={selectedBackground?.ornamentSet || overrides.background_animation || wedding.background_animation} disableDefault={!!selectedBackground} />
       
 <style dangerouslySetInnerHTML={{ __html: `
