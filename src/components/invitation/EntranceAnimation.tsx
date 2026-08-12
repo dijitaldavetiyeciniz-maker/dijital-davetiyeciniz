@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import "@/styles/invitation-animations.css";
 import "@/styles/opening-animations.css";
 import { entranceAnimationTypes, entranceAnimationStyles, EntranceAnimationStyle } from "@/data/openingAnimations";
@@ -65,6 +65,36 @@ type EntranceAnimationProps = {
   backgroundDesign?: string;
   wedding?: any;
 };
+
+// Guvenlik agi: 17 ozel acilis bilesenden BIRINDE bir render hatasi
+// olursa (ornegin eksik/beklenmedik bir veri yuzunden), React'in
+// varsayilan davranisi TUM SAYFAYI beyaz/bos birakmaktir - misafir
+// hicbir sey goremez, hicbir yere tiklayamaz, tamamen sikismis kalir.
+// Bu boundary, hatayi yakalayip konsola loglar VE otomatik olarak
+// onComplete() cagirip kullaniciyi DOGRUDAN davetiyeye gecirir -
+// acilis animasyonu olmadan da olsa, misafir asla bos ekranda kalmaz.
+class OpeningErrorBoundary extends React.Component<
+  { onError: () => void; children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { onError: () => void; children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error('[EntranceAnimation] Açılış animasyonu hata verdi, davetiyeye doğrudan geçiliyor:', error, info);
+    this.props.onError();
+  }
+  render() {
+    if (this.state.hasError) {
+      return null;
+    }
+    return this.props.children;
+  }
+}
 
 // Reusable Particle components
 function FloatingPetals() {
@@ -464,7 +494,9 @@ function EntranceAnimation({
       aria-label="Davetiyeyi açmak için dokununuz"
     >
       {/* Render selected family layout */}
-      {renderFamily()}
+      <OpeningErrorBoundary onError={openOnce}>
+        {renderFamily()}
+      </OpeningErrorBoundary>
 
       {/* Render Particles */}
       <BackgroundAnimation type={backgroundAnimation || ""} />
