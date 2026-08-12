@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Html5QrcodeScanner, Html5QrcodeScanType } from 'html5-qrcode';
+import { Html5Qrcode } from 'html5-qrcode';
 import { QrCode, Search, UserPlus, CheckCircle2, XCircle, Clock, AlertTriangle, RefreshCcw } from 'lucide-react';
 
 interface CheckInTabProps {
@@ -22,6 +22,7 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
   const [history, setHistory] = useState<CheckInHistory[]>([]);
   const [retryQueue, setRetryQueue] = useState<{ id: string, token?: string, guest_id?: string, name: string, time: string }[]>([]);
   const [scannerActive, setScannerActive] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
   const [newGuestName, setNewGuestName] = useState({ first_name: '', last_name: '' });
   const [isAdding, setIsAdding] = useState(false);
   const [checkedInCount, setCheckedInCount] = useState<number | null>(null);
@@ -34,7 +35,7 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
   const [guests, setGuests] = useState<any[]>([]);
   const [guestsLoadError, setGuestsLoadError] = useState<string | null>(null);
 
-  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
 
   const fetchGuests = useCallback(async () => {
     try {
@@ -191,36 +192,58 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
     }
   }, [retryQueue, flushRetryQueue]);
 
-  // Setup Scanner
+  // Setup Scanner - Html5Qrcode (dusuk seviye API) kullaniyoruz, ustteki
+  // Html5QrcodeScanner (yuksek seviye) DEGIL - iki bilinen mobil sorununu
+  // cozuyor: (1) hangi kamera (on/arka) kullanilacagi belirtilmemisti,
+  // kutuphane kullaniciya ayri bir secim adimi dayatiyordu; (2) izin istegi
+  // bizim "Kamerayi Ac" butonumuzdan AYRI, ikinci bir buton olarak
+  // geliyordu ("Request Camera Permissions") - kafa karistiriciydi, "acilmiyor"
+  // hissi veriyordu. Artik tek tikla, dogrudan arka kamerayla baslıyor,
+  // basarisiz olursa GORUNUR bir hata gosteriyor (onceden sessizce yutuluyordu).
   useEffect(() => {
     if (scannerActive && !scannerRef.current) {
-      const scanner = new Html5QrcodeScanner("reader", { 
-        fps: 10, 
-        qrbox: {width: 250, height: 250},
-        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
-      }, false);
-      
+      setCameraError(null);
+      const html5QrCode = new Html5Qrcode("reader");
+      scannerRef.current = html5QrCode;
+
       let lastScanned = '';
-      
-      scanner.render((decodedText) => {
-        if (decodedText !== lastScanned) {
-          lastScanned = decodedText;
-          // Assume decodedText is the token
-          processCheckIn(decodedText, undefined, "QR Okutuldu...");
-          // Reset last scanned after 3 seconds to allow rescanning same person if needed
-          setTimeout(() => { lastScanned = ''; }, 3000);
+
+      html5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        (decodedText) => {
+          if (decodedText !== lastScanned) {
+            lastScanned = decodedText;
+            // Assume decodedText is the token
+            processCheckIn(decodedText, undefined, "QR Okutuldu...");
+            // Reset last scanned after 3 seconds to allow rescanning same person if needed
+            setTimeout(() => { lastScanned = ''; }, 3000);
+          }
+        },
+        () => {
+          // Her karede cagrilan, QR bulunamama hatasi - normal, sessiz kalmali
         }
-      }, (error) => {
-        // silent
+      ).catch((err) => {
+        console.error('Camera start failed', err);
+        setCameraError(
+          err?.name === 'NotAllowedError'
+            ? 'Kamera izni reddedildi. Tarayıcı ayarlarından bu site için kamera iznini açın.'
+            : err?.name === 'NotFoundError'
+            ? 'Kamera bulunamadı. Cihazınızda kamera olduğundan emin olun.'
+            : `Kamera başlatılamadı: ${err?.message || err}`
+        );
+        scannerRef.current = null;
+        setScannerActive(false);
       });
-      
-      scannerRef.current = scanner;
     }
 
     return () => {
       if (scannerRef.current) {
-        scannerRef.current.clear().catch(console.error);
+        const scanner = scannerRef.current;
         scannerRef.current = null;
+        scanner.stop().then(() => scanner.clear()).catch(() => {
+          // Zaten durmus/temizlenmis olabilir, sessizce gec
+        });
       }
     };
   }, [scannerActive, processCheckIn]);
@@ -293,6 +316,15 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
 
   return (
     <div className="space-y-6">
+      {/* html5-qrcode kutuphanesinin varsayilan "Powered by ScanApp"
+          filigranini gizle - kendi kodumuz degil, kutuphanenin dahili
+          UI'i, href'e gore hedefliyoruz (class isimleri versiyona gore
+          degisebilir ama URL sabit kalir). */}
+      <style>{`
+        #reader a[href*="scanapp.org"] {
+          display: none !important;
+        }
+      `}</style>
       {/* Top Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
@@ -347,6 +379,11 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
               </button>
             </div>
             
+            {cameraError && (
+              <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                ⚠️ {cameraError}
+              </div>
+            )}
             {scannerActive ? (
               <div id="reader" className="w-full overflow-hidden rounded-lg border-2 border-dashed border-indigo-200"></div>
             ) : (

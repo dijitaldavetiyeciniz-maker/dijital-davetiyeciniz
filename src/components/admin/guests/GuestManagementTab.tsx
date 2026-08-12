@@ -14,6 +14,7 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
   const [guests, setGuests] = useState<Guest[]>([]);
   const [groups, setGroups] = useState<GuestGroup[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [rsvpFilter, setRsvpFilter] = useState('all');
   const [groupFilter, setGroupFilter] = useState('all');
@@ -36,6 +37,13 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
       if (guestsRes.ok) {
         const data = await guestsRes.json();
         setGuests(data.guests);
+        setLoadError(null);
+      } else {
+        // Onceden burada hicbir hata gosterilmiyordu - istek basarisiz
+        // oldugunda tablo sessizce bos kaliyordu, kullanici hicbir sey
+        // gormuyordu ("bir kere gordum sonra kayboldu" hissi buradan).
+        const errBody = await guestsRes.json().catch(() => ({}));
+        setLoadError(`Misafir listesi yüklenemedi (${guestsRes.status}): ${errBody.error || 'bilinmeyen hata'}`);
       }
       
       if (groupsRes.ok) {
@@ -44,6 +52,7 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
       }
     } catch (e) {
       console.error(e);
+      setLoadError('Misafir listesi yüklenemedi, bağlantınızı kontrol edin');
     } finally {
       setLoading(false);
     }
@@ -180,6 +189,13 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
         onAction={handleBulkAction}
         groups={groups}
       />
+
+      {loadError && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-center justify-between">
+          <span>⚠️ {loadError}</span>
+          <button onClick={fetchGuestsAndGroups} className="underline font-medium whitespace-nowrap ml-4">Tekrar dene</button>
+        </div>
+      )}
 
       {loading ? (
         <div className="text-center py-10">Yükleniyor...</div>
