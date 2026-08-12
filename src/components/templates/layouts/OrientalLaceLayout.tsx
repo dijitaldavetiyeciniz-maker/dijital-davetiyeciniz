@@ -14,12 +14,12 @@ export default function OrientalLaceLayout({ wedding, primaryColor, textColor, h
           backgroundPosition: 'center'
         }}
       >
-        <div className="absolute inset-0 bg-slate-950/80 mix-blend-multiply z-0"></div>
+        <div className="absolute inset-0 bg-slate-950/60 z-0"></div>
         
         {/* Sol/Üst Süsleme ve İsim */}
         <div className="w-full md:w-1/3 p-12 flex flex-col items-center justify-center bg-black/60 border-b-8 md:border-b-0 md:border-r-8 border-amber-600 relative z-10 backdrop-blur-sm">
           <div 
-            className="absolute inset-0 opacity-20 pointer-events-none mix-blend-color-dodge"
+            className="absolute inset-0 opacity-40 pointer-events-none mix-blend-color-dodge"
             style={{
               backgroundImage: 'url("https://images.unsplash.com/photo-1545873509-33e944ca7655?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mnx8Z29sZCUyMGxlYWYlMjB0ZXh0dXJlfGVufDB8fHx8MTc4NjU0MDE1NHww&ixlib=rb-4.1.0&q=80&w=1080")',
               backgroundSize: 'cover'
@@ -51,7 +51,7 @@ export default function OrientalLaceLayout({ wedding, primaryColor, textColor, h
         {/* Sağ/Alt İçerik */}
         <div className="w-full md:w-2/3 p-8 sm:p-16 flex flex-col justify-center items-center relative z-10 bg-slate-900/70 backdrop-blur-md">
           <div 
-            className="absolute inset-0 opacity-10 pointer-events-none mix-blend-overlay"
+            className="absolute inset-0 opacity-25 pointer-events-none mix-blend-overlay"
             style={{
               backgroundImage: 'url("https://images.unsplash.com/photo-1545873509-33e944ca7655?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mnx8Z29sZCUyMGxlYWYlMjB0ZXh0dXJlfGVufDB8fHx8MTc4NjU0MDE1NHww&ixlib=rb-4.1.0&q=80&w=1080")',
               backgroundSize: 'cover'

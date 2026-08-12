@@ -278,7 +278,7 @@ export default function KidsThematicLayout({ wedding,
           backgroundAttachment: 'fixed'
         }}
       >
-        <div className="absolute inset-0 bg-white/70 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-white/20"></div>
 
         <div data-testid="invitation-card-surface" className="max-w-[480px] mx-auto rounded-none p-12 shadow-2xl bg-white/90 border-[12px] border-sky-200 flex flex-col relative overflow-hidden">
           

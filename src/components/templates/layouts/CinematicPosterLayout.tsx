@@ -105,7 +105,7 @@ export default function CinematicPosterLayout({ wedding,
               backgroundPosition: 'center'
             }}
           >
-            <div className="absolute inset-0 bg-black/60 mix-blend-multiply pointer-events-none" />
+            <div className="absolute inset-0 bg-black/40 pointer-events-none" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.3)_0%,transparent_70%)] pointer-events-none" />
             <Film className="w-24 h-24 opacity-50 mb-4 animate-pulse relative z-10 text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]" />
             <span className="text-6xl lg:text-8xl font-serif font-black tracking-widest text-slate-100 opacity-90 relative z-10 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
