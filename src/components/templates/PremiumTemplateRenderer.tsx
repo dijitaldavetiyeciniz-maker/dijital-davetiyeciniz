@@ -59,6 +59,11 @@ import CrownJewelBoxLayout from './layouts/CrownJewelBoxLayout';
 import StorybookLayout from './layouts/StorybookLayout';
 import HotAirBalloonLayout from './layouts/HotAirBalloonLayout';
 import EngagementTableLayout from './layouts/EngagementTableLayout';
+import CinematicGardenJourneyLayout from './layouts/CinematicGardenJourneyLayout';
+import BlackTieCinemaLayout from './layouts/BlackTieCinemaLayout';
+import CelestialJourneyLayout from './layouts/CelestialJourneyLayout';
+import DestinationFilmLayout from './layouts/DestinationFilmLayout';
+import StorybookDreamLayout from './layouts/StorybookDreamLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1270,6 +1275,11 @@ case 'asymmetric':
       case 'underwater-journey': return <UnderwaterJourneyLayout {...commonProps} />;
       case 'museum-exhibition': return <MuseumExhibitionLayout {...commonProps} />;
       case 'obsidian-soundboard': return <ObsidianSoundboardLayout {...commonProps} />;
+      case 'cinematic-garden-journey': return <CinematicGardenJourneyLayout {...commonProps} />;
+      case 'cinematic-black-tie': return <BlackTieCinemaLayout {...commonProps} />;
+      case 'cinematic-celestial': return <CelestialJourneyLayout {...commonProps} />;
+      case 'cinematic-destination-journey': return <DestinationFilmLayout {...commonProps} />;
+      case 'cinematic-storybook': return <StorybookDreamLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }
