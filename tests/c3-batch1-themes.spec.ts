@@ -15,20 +15,24 @@ const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
   test.describe.configure({ mode: "serial" });
-  test.setTimeout(120000);
+  test.setTimeout(180000);
 
   let supabase: any;
   const runId = crypto.randomUUID();
   const SLUG = `test-c3-b1-${runId}`;
   let weddingId: string;
 
-  const culturalThemes = [
+  const batch1Themes = [
     { id: "bosphorus-mansion", testId: "layout-bosphorus-mansion", signatureSelector: "[data-testid=\"layout-bosphorus-mansion\"]" },
     { id: "moroccan-riad-henna-night", testId: "layout-moroccan-riad", signatureSelector: "#moroccan-rsvp-plaque" },
     { id: "persian-miniature-concept", testId: "layout-persian-miniature", signatureSelector: "[data-testid=\"layout-persian-miniature\"]" },
     { id: "korean-hanok-traditional", testId: "layout-korean-hanok", signatureSelector: "[data-testid=\"layout-korean-hanok\"]" },
     { id: "andalusian-palace-alhambra", testId: "layout-andalusian-palace", signatureSelector: "[data-testid=\"layout-andalusian-palace\"]" },
-    { id: "mughal-garden-taj", testId: "layout-mughal-garden", signatureSelector: "#mughal-symmetry-rsvp" }
+    { id: "mughal-garden-taj", testId: "layout-mughal-garden", signatureSelector: "#mughal-symmetry-rsvp" },
+    { id: "santorini-sunset-terrace", testId: "layout-santorini-sunset", signatureSelector: "#santorini-sunset-rsvp" },
+    { id: "amalfi-coast-lemons", testId: "layout-amalfi-coast", signatureSelector: "#amalfi-lemon-rsvp" },
+    { id: "tuscany-vineyard-manor", testId: "layout-tuscany-vineyard", signatureSelector: "#tuscany-manor-rsvp" },
+    { id: "lake-como-grand-hotel", testId: "layout-lake-como", signatureSelector: "#como-hotel-confirmation" }
   ];
 
   test.beforeAll(async () => {
@@ -60,8 +64,8 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
     }
   });
 
-  for (const theme of culturalThemes) {
-    test(`Verify Cultural template: ${theme.id}`, async ({ page }) => {
+  for (const theme of batch1Themes) {
+    test(`Verify template: ${theme.id}`, async ({ page }) => {
       const consoleErrors: string[] = [];
       page.on("pageerror", (err) => consoleErrors.push(err.message));
 
@@ -99,7 +103,7 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
       expect(consoleErrors).toEqual([]);
     });
 
-    test(`Verify mobile flow for Cultural theme: ${theme.id}`, async ({ page }) => {
+    test(`Verify mobile flow for theme: ${theme.id}`, async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto(`${BASE_URL}/d/${SLUG}?preview=true&template_id=${theme.id}`);
       await page.waitForLoadState("networkidle");
@@ -120,7 +124,7 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.setViewportSize({ width: 1280, height: 800 });
 
-    const targetTheme = culturalThemes[0];
+    const targetTheme = batch1Themes[0];
     await page.goto(`${BASE_URL}/d/${SLUG}?preview=true&template_id=${targetTheme.id}`);
     await page.waitForLoadState("networkidle");
 

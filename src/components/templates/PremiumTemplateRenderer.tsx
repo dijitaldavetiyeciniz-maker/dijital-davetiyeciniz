@@ -70,6 +70,10 @@ import PersianMiniatureLayout from './layouts/PersianMiniatureLayout';
 import KoreanHanokLayout from './layouts/KoreanHanokLayout';
 import AndalusianPalaceLayout from './layouts/AndalusianPalaceLayout';
 import MughalGardenLayout from './layouts/MughalGardenLayout';
+import SantoriniSunsetLayout from './layouts/SantoriniSunsetLayout';
+import AmalfiCoastLayout from './layouts/AmalfiCoastLayout';
+import TuscanyVineyardLayout from './layouts/TuscanyVineyardLayout';
+import LakeComoLayout from './layouts/LakeComoLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1292,6 +1296,10 @@ case 'asymmetric':
       case 'korean-hanok-traditional': return <KoreanHanokLayout {...commonProps} />;
       case 'andalusian-palace-alhambra': return <AndalusianPalaceLayout {...commonProps} />;
       case 'mughal-garden-taj': return <MughalGardenLayout {...commonProps} />;
+      case 'santorini-sunset-terrace': return <SantoriniSunsetLayout {...commonProps} />;
+      case 'amalfi-coast-lemons': return <AmalfiCoastLayout {...commonProps} />;
+      case 'tuscany-vineyard-manor': return <TuscanyVineyardLayout {...commonProps} />;
+      case 'lake-como-grand-hotel': return <LakeComoLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }

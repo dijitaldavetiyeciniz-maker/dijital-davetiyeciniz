@@ -55,13 +55,13 @@ This document defines the visual contracts and design fingerprints for the templ
 | `bosphorus-mansion` | Kültürel | Cultural | `Cinematic Scroll` | `coastalSunset` | scroll-bridge-ferry-drift | **10/10** | `IMPLEMENTED` |
 | `moroccan-riad-henna-night` | Kültürel | Cultural | `Moroccan Henna Pavilion` | `candleLighting` | scroll-open-riad-doors-henna | **8/10** | `IMPLEMENTED` |
 | `japanese-folding-screen-sakura` | Kültürel | Cultural | `Japanese Folding Screen` | `japaneseShoji` | scroll-unfold-gold-screen | **10/10** | `IMPLEMENTED` |
-| `santorini-sunset-terrace` | Doğal | Destination | `Santorini Blue Split` | `coastalSunset` | scroll-bougainvillea-blooms | **10/10** | `LOCKED` |
-| `amalfi-coast-lemons` | Doğal | Destination | `Santorini Blue Split` | `mediterraneanCeramic` | scroll-majolica-tile-reveal | **6/10** | `LOCKED` |
-| `tuscany-vineyard-manor` | Doğal | Destination | `Vineyard Story Chapters` | `flowerBloom` | scroll-vineyard-depth-parallax | **10/10** | `LOCKED` |
+| `santorini-sunset-terrace` | Doğal | Destination | `Santorini Blue Split` | `coastalSunset` | scroll-bougainvillea-blooms | **10/10** | `IMPLEMENTED` |
+| `amalfi-coast-lemons` | Doğal | Destination | `Santorini Blue Split` | `mediterraneanCeramic` | scroll-majolica-tile-reveal | **6/10** | `IMPLEMENTED` |
+| `tuscany-vineyard-manor` | Doğal | Destination | `Vineyard Story Chapters` | `flowerBloom` | scroll-vineyard-depth-parallax | **10/10** | `IMPLEMENTED` |
 | `provence-lavender-estate` | Doğal | Destination | `Vineyard Story Chapters` | `sakuraWind` | scroll-lavender-petals-scatter | **7/10** | `LOCKED` |
 | `cotswolds-garden-estate` | Doğal | Destination | `English Rose Garden` | `castleGates` | scroll-grow-climbing-ivy | **9/10** | `LOCKED` |
 | `swiss-alps-chalet` | Doğal | Destination | `Mountain Elevation Journey` | `castleGates` | scroll-chalet-snow-depth | **10/10** | `LOCKED` |
-| `lake-como-grand-hotel` | Lüks | Destination | `Luxury Hotel Editorial` | `royalHall` | scroll-villa-arches-frame | **10/10** | `LOCKED` |
+| `lake-como-grand-hotel` | Lüks | Destination | `Luxury Hotel Editorial` | `royalHall` | scroll-villa-arches-frame | **10/10** | `IMPLEMENTED` |
 | `venice-canal-palazzo` | Lüks | Destination | `Horizontal Canal Journey` | `curtain` | scroll-gondola-slides-across-screen | **10/10** | `IMPLEMENTED` |
 | `paris-eiffel-editorial` | Lüks | Destination | `Fashion Editorial` | `vogueEditorial` | scroll-haussmann-molding-slide | **10/10** | `LOCKED` |
 | `cote-d-azur-yacht-club` | Lüks | Destination | `Riviera Yacht Club` | `minimalFade` | scroll-yacht-steers-compass | **9/10** | `LOCKED` |

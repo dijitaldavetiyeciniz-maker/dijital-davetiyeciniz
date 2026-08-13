@@ -1888,7 +1888,7 @@
         "culturalIdentity"
       ],
       "differenceScore": 10,
-      "status": "LOCKED"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "amalfi-coast-lemons",
@@ -1919,7 +1919,7 @@
         "culturalIdentity"
       ],
       "differenceScore": 6,
-      "status": "LOCKED"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "tuscany-vineyard-manor",
@@ -1954,7 +1954,7 @@
         "culturalIdentity"
       ],
       "differenceScore": 10,
-      "status": "LOCKED"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "provence-lavender-estate",
@@ -2090,7 +2090,7 @@
         "culturalIdentity"
       ],
       "differenceScore": 10,
-      "status": "LOCKED"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "venice-canal-palazzo",
