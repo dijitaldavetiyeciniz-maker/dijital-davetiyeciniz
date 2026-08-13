@@ -23,6 +23,7 @@ interface LayoutProps {
   handleMapClick: () => void;
   cardBgColor?: string;
   mode?: 'preview' | 'public';
+  templateId?: string;
 }
 
 export default function KidsThematicLayout({ wedding,
@@ -42,9 +43,9 @@ export default function KidsThematicLayout({ wedding,
   handleMapClick,
   cardBgColor = '#ffffff',
   mode = 'public'
-, selectedBackground, cardSurfaceStyle }: LayoutProps) {
+, selectedBackground, cardSurfaceStyle, templateId }: LayoutProps) {
   // 1. VARYANT BELİRLEME
-  const presetId = wedding.template_id || '';
+  const presetId = templateId || wedding.template_id || '';
   let variant: 'clouds-above' | 'little-racer' | 'blue-bear' | 'pink-princess' | 'storybook-birthday' | 'neutral' = 'neutral';
   
   if (presetId === 'clouds-above') {
@@ -267,21 +268,30 @@ export default function KidsThematicLayout({ wedding,
 
   if (presetId === 'storybook-babyshower') {
     return (
-      <div className="w-full min-h-screen bg-sky-200 py-12 relative z-10 animate-fade-in font-sans" style={{ fontFamily: `"${bodyFont}", sans-serif` }}>
-        <div data-testid="invitation-card-surface" className="max-w-[480px] mx-auto rounded-none p-12 shadow-[10px_10px_0px_0px_rgba(2,132,199,0.5)] bg-sky-50 border-[12px] border-sky-400 flex flex-col relative overflow-hidden">
+      <div 
+        className="w-full min-h-screen py-12 relative z-10 animate-fade-in font-sans" 
+        style={{ 
+          fontFamily: `"${bodyFont}", sans-serif`,
+          backgroundColor: '#f0f9ff',
+          backgroundImage: 'url("https://images.unsplash.com/photo-1649750555596-e90e79106943?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8MXx8dGVkZHklMjBiZWFyJTIwcGFzdGVsJTIwaWxsdXN0cmF0aW9ufGVufDB8fHx8MTc4NjU0MDI3N3ww&ixlib=rb-4.1.0&q=80&w=1080")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        <div className="absolute inset-0 bg-white/20"></div>
+
+        <div data-testid="invitation-card-surface" className="max-w-[480px] mx-auto rounded-none p-12 shadow-2xl bg-white/90 border-[12px] border-sky-200 flex flex-col relative overflow-hidden">
           
-          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-sky-100 to-transparent pointer-events-none" />
+          <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-sky-100 to-transparent pointer-events-none" />
           
           <div className="relative z-10 w-full flex flex-col items-center text-center">
-            <svg className="w-16 h-16 text-sky-400 mb-4 opacity-80 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
-               <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
-            </svg>
             
-            <h3 className="font-medium tracking-[0.3em] uppercase text-xs mb-2 text-sky-600">
+            <h3 className="font-medium tracking-[0.3em] uppercase text-xs mb-2 text-sky-600 drop-shadow-sm mt-4">
               {finalEventTitle}
             </h3>
             
-            <h1 className="text-4xl sm:text-5xl font-light text-sky-900 mb-2 w-full" style={{ fontFamily: `"${headingFont}", serif` }}>
+            <h1 className="text-4xl sm:text-5xl font-light text-sky-900 mb-2 w-full drop-shadow-sm" style={{ fontFamily: `"${headingFont}", serif` }}>
               {resolvedHeroName}
             </h1>
             

@@ -64,6 +64,16 @@ import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
 import LavenderGardenLayout from './layouts/LavenderGardenLayout';
 import EmeraldEleganceLayout from './layouts/EmeraldEleganceLayout';
+import HorizontalCanalJourneyLayout from './layouts/HorizontalCanalJourneyLayout';
+import VerticalBalloonJourneyLayout from './layouts/VerticalBalloonJourneyLayout';
+import JapaneseFoldingScreenLayout from './layouts/JapaneseFoldingScreenLayout';
+import AnatolianGridLayout from './layouts/AnatolianGridLayout';
+import ArchitecturalBlueprintLayout from './layouts/ArchitecturalBlueprintLayout';
+import HolographicInterfaceLayout from './layouts/HolographicInterfaceLayout';
+import ObservatoryLayout from './layouts/ObservatoryLayout';
+import UnderwaterJourneyLayout from './layouts/UnderwaterJourneyLayout';
+import MuseumExhibitionLayout from './layouts/MuseumExhibitionLayout';
+import ObsidianSoundboardLayout from './layouts/ObsidianSoundboardLayout';
 import InvitationActionRow from './InvitationActionRow';
 
 
@@ -679,7 +689,7 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   const renderLayout = () => {
     const layoutStyle = wedding.custom_overrides?.layoutStyle || themeConfig?.layoutStyle || templateId || 'monogram';
     const commonProps = {
-    selectedBackground, wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick, cardBgColor, cardBlur, cardSurfaceStyle };
+    templateId, selectedBackground, wedding, primaryColor, textColor, headingFont, bodyFont, accentFont, dateObj, dateStr, timeStr, eventTitle, renderTimer, renderRsvpButton, renderGuestBook, renderQuote, handleMapClick, cardBgColor, cardBlur, cardSurfaceStyle };
     switch (layoutStyle) {
       case 'cinematic-poster':
         return (
@@ -1250,6 +1260,16 @@ case 'asymmetric':
       case 'storybook-kids': return <KidsThematicLayout {...commonProps} />;
       case 'future-summit':
       case 'modern-event': return <ModernEventLayout {...commonProps} />;
+      case 'horizontal-canal-journey': return <HorizontalCanalJourneyLayout {...commonProps} />;
+      case 'vertical-balloon-journey': return <VerticalBalloonJourneyLayout {...commonProps} />;
+      case 'japanese-folding-screen': return <JapaneseFoldingScreenLayout {...commonProps} />;
+      case 'anatolian-grid': return <AnatolianGridLayout {...commonProps} />;
+      case 'architectural-blueprint': return <ArchitecturalBlueprintLayout {...commonProps} />;
+      case 'holographic-interface': return <HolographicInterfaceLayout {...commonProps} />;
+      case 'observatory': return <ObservatoryLayout {...commonProps} />;
+      case 'underwater-journey': return <UnderwaterJourneyLayout {...commonProps} />;
+      case 'museum-exhibition': return <MuseumExhibitionLayout {...commonProps} />;
+      case 'obsidian-soundboard': return <ObsidianSoundboardLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }

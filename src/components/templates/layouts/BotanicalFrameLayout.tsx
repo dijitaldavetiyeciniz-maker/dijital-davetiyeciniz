@@ -96,9 +96,18 @@ export default function BotanicalFrameLayout({ wedding,
         {/* Ana Katmanlı Yüzey */}
         <div className="w-full max-w-4xl relative z-10">
           
-          {/* Arkadaki Suluboya / Botanik Süs Katmanı (Simüle Edilmiş) */}
-          <div className="absolute -top-12 -left-12 w-64 h-64 bg-emerald-100/40 rounded-full blur-3xl mix-blend-multiply" />
-          <div className="absolute -bottom-24 -right-12 w-80 h-80 bg-rose-100/40 rounded-full blur-3xl mix-blend-multiply" />
+          {/* Arkadaki Suluboya / Botanik Süs Katmanı - once sadece
+              bulanik renk lekeleri vardi, description'in vaat ettigi
+              "el cizimi cicek celenkleri" hissi hic yoktu. Gercek bir
+              cicek fotografiyla, kose/kenar cerceve olarak. */}
+          <div
+            className="absolute -top-16 -left-16 w-72 h-72 rounded-full opacity-[0.22] mix-blend-multiply pointer-events-none"
+            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1496661415325-ef852f9e8e7c?q=80&w=800&auto=format&fit=crop)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+          />
+          <div
+            className="absolute -bottom-20 -right-16 w-80 h-80 rounded-full opacity-[0.22] mix-blend-multiply pointer-events-none"
+            style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1496661415325-ef852f9e8e7c?q=80&w=800&auto=format&fit=crop)', backgroundSize: 'cover', backgroundPosition: 'center', transform: 'scaleX(-1)' }}
+          />
 
           {/* İsim / Tarih Yüzeyi (Bağımsız Sanat Yüzeyi) */}
           <div className="w-full bg-white/60 backdrop-blur-md border border-emerald-900/10 p-12 md:p-24 shadow-[0_20px_50px_rgba(0,0,0,0.03)] relative mb-12">

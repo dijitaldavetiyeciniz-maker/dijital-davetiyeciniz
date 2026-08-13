@@ -32,10 +32,11 @@ interface LayoutProps {
   handleMapClick: () => void;
   cardBgColor?: string;
   mode?: 'preview' | 'public';
+  templateId?: string;
 }
 
 function TechLaunchView({ props, semanticData }: { props: LayoutProps, semanticData: any }) {
-  const { wedding, primaryColor, textColor, headingFont, bodyFont, dateObj, dateStr, timeStr, renderTimer, renderRsvpButton, handleMapClick, cardSurfaceStyle } = props;
+  const { wedding, primaryColor, textColor, headingFont, bodyFont, dateObj, dateStr, timeStr, renderTimer, renderRsvpButton, handleMapClick, cardSurfaceStyle, templateId } = props;
   const { overrides, primaryName, secondaryName, eventTitle } = semanticData;
   const speakers: Speaker[] = overrides.speakers || [
     { name: 'Dr. Sarah Connor', role: 'Chief AI Officer', company: 'Cyberdyne' },
@@ -331,10 +332,10 @@ function NeonPartyView({ props, semanticData }: { props: LayoutProps, semanticDa
 }
 
 export default function ModernEventLayout(props: LayoutProps) {
-  const { wedding, eventTitle } = props;
+  const { wedding, eventTitle, templateId } = props;
   
   // 1. ETKİNLİK VARYANT TESPİTİ
-  const presetId = wedding.template_id || '';
+  const presetId = templateId || wedding.template_id || '';
   const overrides = wedding.custom_overrides || {};
   let variant: 'tech-launch' | 'graduation' | 'gala' | 'neon-party' = overrides.event_variant || 'tech-launch';
 
