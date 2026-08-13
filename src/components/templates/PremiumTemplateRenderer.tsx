@@ -64,6 +64,12 @@ import BlackTieCinemaLayout from './layouts/BlackTieCinemaLayout';
 import CelestialJourneyLayout from './layouts/CelestialJourneyLayout';
 import DestinationFilmLayout from './layouts/DestinationFilmLayout';
 import StorybookDreamLayout from './layouts/StorybookDreamLayout';
+import BosphorusMansionLayout from './layouts/BosphorusMansionLayout';
+import MoroccanRiadLayout from './layouts/MoroccanRiadLayout';
+import PersianMiniatureLayout from './layouts/PersianMiniatureLayout';
+import KoreanHanokLayout from './layouts/KoreanHanokLayout';
+import AndalusianPalaceLayout from './layouts/AndalusianPalaceLayout';
+import MughalGardenLayout from './layouts/MughalGardenLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1280,6 +1286,12 @@ case 'asymmetric':
       case 'cinematic-celestial': return <CelestialJourneyLayout {...commonProps} />;
       case 'cinematic-destination-journey': return <DestinationFilmLayout {...commonProps} />;
       case 'cinematic-storybook': return <StorybookDreamLayout {...commonProps} />;
+      case 'bosphorus-mansion': return <BosphorusMansionLayout {...commonProps} />;
+      case 'moroccan-riad-henna-night': return <MoroccanRiadLayout {...commonProps} />;
+      case 'persian-miniature-concept': return <PersianMiniatureLayout {...commonProps} />;
+      case 'korean-hanok-traditional': return <KoreanHanokLayout {...commonProps} />;
+      case 'andalusian-palace-alhambra': return <AndalusianPalaceLayout {...commonProps} />;
+      case 'mughal-garden-taj': return <MughalGardenLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }

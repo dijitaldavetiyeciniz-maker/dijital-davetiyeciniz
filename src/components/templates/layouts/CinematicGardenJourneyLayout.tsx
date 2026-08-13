@@ -83,7 +83,7 @@ export default function CinematicGardenJourneyLayout({
       data-testid="layout-cinematic-garden-journey"
     >
       {/* Sticky viewport for animation tracking */}
-      <div className={prefersReducedMotion ? 'relative w-full' : 'sticky top-0 h-dvh w-full overflow-hidden flex flex-col justify-between z-10'}>
+      <div className={prefersReducedMotion ? 'relative w-full flex flex-col' : 'sticky top-0 h-dvh w-full overflow-hidden flex flex-col justify-between z-10'}>
         
         {/* Dynamic Sunlight / Glow overlays */}
         {!prefersReducedMotion && (
@@ -111,7 +111,7 @@ export default function CinematicGardenJourneyLayout({
 
         {/* ----------------- SCENE 1: ENTRANCE ----------------- */}
         {(prefersReducedMotion || (progress >= 0 && progress < 0.22)) && (
-          <div className="absolute inset-0 flex flex-col justify-center items-center p-6 text-center animate-fade-in z-20">
+          <div className={prefersReducedMotion ? "relative w-full min-h-screen flex flex-col justify-center items-center p-6 text-center border-b border-emerald-950/20 py-24" : "absolute inset-0 flex flex-col justify-center items-center p-6 text-center animate-fade-in z-20"}>
             {/* Parallax foliage framing elements */}
             {!prefersReducedMotion && (
               <>
@@ -135,7 +135,7 @@ export default function CinematicGardenJourneyLayout({
               {wedding.bride_name} <span className="text-2xl font-serif italic text-emerald-300/60 block my-2">&</span> {wedding.groom_name}
             </div>
             <div className="h-px w-20 bg-emerald-500/30 my-8" />
-            <p className="text-xs uppercase tracking-[0.25em] text-emerald-200/80 font-mono">
+            <p className="text-xs uppercase tracking-[0.3em] text-emerald-200/80 font-mono">
               SCROLL DOWN TO ENTER THE GARDEN
             </p>
           </div>
@@ -143,7 +143,7 @@ export default function CinematicGardenJourneyLayout({
 
         {/* ----------------- SCENE 2: NAMES REVEAL & QUOTE ----------------- */}
         {(prefersReducedMotion || (progress >= 0.22 && progress < 0.45)) && (
-          <div className="absolute inset-0 flex flex-col justify-center items-center p-6 text-center z-20">
+          <div className={prefersReducedMotion ? "relative w-full min-h-screen flex flex-col justify-center items-center p-6 text-center border-b border-emerald-950/20 py-24" : "absolute inset-0 flex flex-col justify-center items-center p-6 text-center z-20"}>
             <div className="relative w-36 h-36 mb-6">
               {/* Blooming Flower SVG */}
               <svg 
@@ -167,18 +167,18 @@ export default function CinematicGardenJourneyLayout({
 
         {/* ----------------- SCENE 3: EVENT DETAILS ----------------- */}
         {(prefersReducedMotion || (progress >= 0.45 && progress < 0.68)) && (
-          <div className="absolute inset-0 flex flex-col justify-center items-center p-6 text-center z-20">
+          <div className={prefersReducedMotion ? "relative w-full min-h-screen flex flex-col justify-center items-center p-6 text-center border-b border-emerald-950/20 py-24" : "absolute inset-0 flex flex-col justify-center items-center p-6 text-center z-20"}>
             <span className="text-[10px] tracking-[0.3em] text-amber-400 font-bold uppercase mb-8">EVENT INFORMATION</span>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-2xl text-sm font-semibold mb-10 font-mono">
               <div className="flex flex-col gap-2 p-6 rounded-2xl border border-amber-500/20 bg-amber-950/20 backdrop-blur-md hover:border-amber-400/40 transition-colors">
-                <Calendar className="w-6 h-6 mx-auto text-amber-400 mb-2" />
+                <Calendar className="w-5 h-5 mx-auto text-amber-400 mb-2" />
                 <span className="text-amber-100 text-lg uppercase">{dateStr}</span>
                 <span className="text-amber-300/80">{timeStr}</span>
               </div>
 
               <div className="flex flex-col gap-2 p-6 rounded-2xl border border-amber-500/20 bg-amber-950/20 backdrop-blur-md hover:border-amber-400/40 transition-colors">
-                <MapPin className="w-6 h-6 mx-auto text-amber-400 mb-2" />
+                <MapPin className="w-5 h-5 mx-auto text-amber-400 mb-2" />
                 <span className="text-amber-100 text-lg uppercase">{wedding.venue_name || 'Garden Venue'}</span>
                 {wedding.venue_address && (
                   <span className="text-amber-300/80 leading-normal text-xs">{wedding.venue_address}</span>
@@ -200,7 +200,7 @@ export default function CinematicGardenJourneyLayout({
 
         {/* ----------------- SCENE 4: FLOATING MEDIA GALLERY ----------------- */}
         {(prefersReducedMotion || (progress >= 0.68 && progress < 0.85)) && (
-          <div className="absolute inset-0 flex flex-col justify-center items-center p-6 text-center z-20">
+          <div className={prefersReducedMotion ? "relative w-full min-h-screen flex flex-col justify-center items-center p-6 text-center border-b border-emerald-950/20 py-24" : "absolute inset-0 flex flex-col justify-center items-center p-6 text-center z-20"}>
             <span className="text-[10px] tracking-[0.3em] text-emerald-400 font-bold uppercase mb-8">MEMORY LEAVES</span>
             
             {/* Hanging photo frames */}
@@ -229,7 +229,7 @@ export default function CinematicGardenJourneyLayout({
 
         {/* ----------------- SCENE 5: RSVP & LANTERN WISHES ----------------- */}
         {(prefersReducedMotion || (progress >= 0.85 && progress <= 1)) && (
-          <div className="absolute inset-0 flex flex-col justify-center items-center p-6 text-center z-20 overflow-y-auto">
+          <div className={prefersReducedMotion ? "relative w-full min-h-screen flex flex-col justify-center items-center p-6 text-center py-24" : "absolute inset-0 flex flex-col justify-center items-center p-6 text-center z-20 overflow-y-auto"}>
             {/* Hanging Lantern SVGs */}
             {!prefersReducedMotion && (
               <div className="absolute top-10 left-0 w-full flex justify-around pointer-events-none z-10">

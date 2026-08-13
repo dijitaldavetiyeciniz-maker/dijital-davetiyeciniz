@@ -85,6 +85,33 @@ export default async function WeddingPage({
     if (sParams.effect_type) wedding.effect_type = sParams.effect_type;
     if (sParams.font_family) wedding.font_family = sParams.font_family;
     if (sParams.names_font_family) wedding.names_font_family = sParams.names_font_family;
+    
+    if (!wedding.invitation_events || wedding.invitation_events.length === 0) {
+      wedding.invitation_events = [
+        {
+          id: 'mock-event-1',
+          wedding_id: wedding.id,
+          type: 'nikah',
+          title: 'Kıyım Töreni',
+          start_time: '2027-09-20T18:00:00.000Z',
+          timezone: 'Europe/Istanbul',
+          venue_name: 'Yalı Rıhtımı',
+          venue_address: 'Yalı Sokak No 12, Tarabya',
+          is_primary: true
+        },
+        {
+          id: 'mock-event-2',
+          wedding_id: wedding.id,
+          type: 'cocktail',
+          title: 'Kokteyl ve Resepsiyon',
+          start_time: '2027-09-20T19:30:00.000Z',
+          timezone: 'Europe/Istanbul',
+          venue_name: 'Yalı Bahçesi',
+          venue_address: 'Yalı Sokak No 12, Tarabya',
+          is_primary: false
+        }
+      ];
+    }
   }
 
   // PAYWALL (Ödeme Duvarı) Kontrolü (Bypass if in preview mode)
@@ -105,6 +132,7 @@ export default async function WeddingPage({
     );
   }
 
+  console.log("DEBUG EVENT INJECTION: slug =", wedding.slug, "events =", JSON.stringify(wedding.invitation_events));
   const cleanWedding = sanitizePublicWedding(wedding);
 
   // Veritabanından gelen template_id değerine göre uygun şablonu render et.
