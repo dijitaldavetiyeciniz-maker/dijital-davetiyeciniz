@@ -332,7 +332,7 @@ function NeonPartyView({ props, semanticData }: { props: LayoutProps, semanticDa
 }
 
 export default function ModernEventLayout(props: LayoutProps) {
-  const { wedding, eventTitle } = props;
+  const { wedding, eventTitle, templateId } = props;
   
   // 1. ETKİNLİK VARYANT TESPİTİ
   const presetId = templateId || wedding.template_id || '';

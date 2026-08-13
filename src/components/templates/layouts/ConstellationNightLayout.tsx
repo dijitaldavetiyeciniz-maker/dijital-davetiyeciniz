@@ -63,7 +63,13 @@ export default function ConstellationNightLayout({
   cardSurfaceStyle,
   mode = 'public'
 , selectedBackground}: LayoutProps) {
-  const themeCyan = primaryColor || '#38bdf8';
+  const isMoonlitGarden = wedding?.template_id === 'moonlit-secret-garden';
+  // Description "Gece bahçesi, ay ışığı süzülmeleri ve yasemin sarmaşıkları.
+  // Derin gümüş ve zümrüt tonları" diyordu ama kod tamamen uzay/galaksi
+  // temasindaydi (yildiz haritasi, enlem/boylam) - bahce/yasemin teması hiç
+  // yoktu. Gercek bir gece bahcesi fotografiyla + zumrut-altin paletiyle
+  // asil vaat edilen atmosfere getiriyoruz.
+  const themeCyan = isMoonlitGarden ? '#c9a962' : (primaryColor || '#38bdf8');
   const mainBg = cardBgColor || '#030712';
   
   const latitude = `${dateObj.getDate()}°${(dateObj.getMonth() + 1) * 4}'N`;
@@ -79,7 +85,12 @@ export default function ConstellationNightLayout({
       className="min-h-screen w-full relative overflow-x-hidden flex"
       style={{ ...(selectedBackground?.background ? { background: selectedBackground.background } : {}), fontFamily: `"${bodyFont}", sans-serif`,
         ...cardSurfaceStyle,
-        backgroundImage: 'radial-gradient(circle at 50% 0%, #0f1b3d 0%, #030712 80%)',
+        backgroundImage: isMoonlitGarden
+          ? 'linear-gradient(180deg, rgba(3,10,8,0.75) 0%, rgba(3,10,8,0.88) 60%, rgba(3,10,8,0.95) 100%), url(https://images.unsplash.com/photo-1761158497624-db4f4c65940e?q=80&w=2000&auto=format&fit=crop)'
+          : 'radial-gradient(circle at 50% 0%, #0f1b3d 0%, #030712 80%)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
         color: textColor || '#f0f9ff'
       }}
       data-testid="invitation-card-surface invitation-content-surface hero-text-surface date-surface venue-surface countdown-surface action-surface"
@@ -96,7 +107,10 @@ export default function ConstellationNightLayout({
           </div>
         </div>
       )}
-      {/* Background Star Map */}
+      {/* Background Star Map - uzay/galaksi teması, sadece uzay temalı
+          diğer şablonlarda gösterilir, moonlit-secret-garden'da bahçe
+          fotoğrafı zaten atmosferi taşıyor. */}
+      {!isMoonlitGarden && (
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none opacity-60">
         <svg className="absolute inset-0 w-full h-full stroke-sky-300/20 fill-none" preserveAspectRatio="xMidYMid slice">
           <path d="M100,150 L200,80 L350,120 L400,250 L300,350 L150,300 Z" strokeWidth="0.5" strokeDasharray="4 4" />
@@ -126,6 +140,28 @@ export default function ConstellationNightLayout({
           />
         ))}
       </div>
+      )}
+      {isMoonlitGarden && (
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+          {/* Az sayıda, seyrek yıldız - "ay ışığında parıldayan çiy" hissi,
+              yıldız haritası olmadan, fotoğrafı boğmadan. */}
+          {stars.slice(0, 18).map((star, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full bg-amber-100"
+              style={{
+                top: star.top,
+                left: star.left,
+                width: star.size,
+                height: star.size,
+                opacity: star.opacity * 0.6,
+                animation: `pulse ${star.animDur} infinite alternate`,
+                animationDelay: star.animDelay
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Main Layout Container */}
       <div className="relative z-10 w-full min-h-screen flex flex-col lg:flex-row items-center justify-center p-6 md:p-12 lg:p-24 gap-12 lg:gap-24">
@@ -135,7 +171,7 @@ export default function ConstellationNightLayout({
           
           <div className="flex items-center gap-3 py-2 px-6 rounded-full bg-sky-950/40 border border-sky-400/30 text-xs md:text-sm font-mono tracking-[0.3em] uppercase text-sky-300 shadow-[0_0_20px_rgba(56,189,248,0.2)] backdrop-blur-md">
             <Compass className="w-4 h-4 md:w-5 md:h-5" />
-            <span>{latitude} {longitude}</span>
+            <span>{isMoonlitGarden ? 'Ay Işığında Bir Davet' : `${latitude} ${longitude}`}</span>
           </div>
 
           <div className="space-y-6 w-full">
@@ -234,7 +270,7 @@ export default function ConstellationNightLayout({
                 <div className="relative flex items-center justify-between px-8 h-full text-sky-50 font-medium tracking-wide text-sm md:text-base uppercase">
                   <div className="flex items-center gap-4">
                     <Navigation className="w-5 h-5 text-sky-400 group-hover:animate-pulse" />
-                    <span>Gökyüzü Konumu</span>
+                    <span>{isMoonlitGarden ? 'Bahçeye Yol Tarifi' : 'Gökyüzü Konumu'}</span>
                   </div>
                   <Star className="w-5 h-5 opacity-40 group-hover:opacity-100 transition-opacity group-hover:text-sky-300" />
                 </div>
