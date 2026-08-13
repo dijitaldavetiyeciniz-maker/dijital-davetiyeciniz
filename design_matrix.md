@@ -5,11 +5,11 @@ This document defines the visual contracts and design fingerprints for the templ
 ## 1. Summary Metrics
 
 - **Existing Unique Designs:** 48
-- **Tier 1 (Locked) Planned Unique:** 93
-- **Tier 2 (Stretch) Planned Unique:** 39
-- **Total Planned Unique Designs:** 132
-- **Projected Total Unique Designs:** 180
-- **Tier 3 (Rejected/Merged) Ideas:** 10
+- **Tier 1 (Locked) Planned Unique:** 90
+- **Tier 2 (Stretch) Planned Unique:** 34
+- **Total Planned Unique Designs:** 124
+- **Projected Total Unique Designs:** 172
+- **Tier 3 (Rejected/Merged) Ideas:** 16
 
 ---
 
@@ -25,63 +25,61 @@ This document defines the visual contracts and design fingerprints for the templ
 | `eclipse-ceremony` | Karanlık | Celestial / Fantasy | `Cinematic Scroll` | `eclipseReveal` | scroll-eclipse-unfold | **10/10** |
 | `aurora-dreamscape` | Doğal | Celestial / Fantasy | `Holographic Interface` | `auroraGlass` | scroll-aurora-shift | **7/10** |
 | `cosmic-garden` | Doğal | Celestial / Fantasy | `Celestial Map` | `moonlitGarden` | scroll-blooming-constellation | **7/10** |
-| `planetarium-romance` | Modern | Celestial / Fantasy | `Observatory` | `spotlight` | scroll-lens-focus-names | **10/10** |
-| `enchanted-forest` | Doğal | Fairy Tale | `Pop-up Book` | `gardenGate` | scroll-bloom-flowers-vines | **10/10** |
-| `crystal-castle` | Lüks | Fairy Tale | `Pop-up Book` | `royalPalace` | scroll-shatter-reveal-details | **10/10** |
-| `secret-fairy-garden` | Doğal | Fairy Tale | `Pop-up Book` | `gardenGate` | scroll-fairy-dust-draw-path | **6/10** |
-| `storybook-kingdom` | Klasik | Fairy Tale | `Story Chapters` | `book` | scroll-open-storybook-pages | **10/10** |
+| `planetarium-romance` | Modern | Celestial / Fantasy | `Observatory` | `observatoryDome` | scroll-lens-focus-names | **10/10** |
+| `enchanted-forest` | Doğal | Fairy Tale | `Pop-up Book` | `flowerBloom` | scroll-bloom-flowers-vines | **10/10** |
+| `crystal-castle` | Lüks | Fairy Tale | `Pop-up Book` | `crystalShatter` | scroll-shatter-reveal-details | **10/10** |
+| `secret-fairy-garden` | Doğal | Fairy Tale | `Pop-up Book` | `magicPortal` | scroll-fairy-dust-draw-path | **7/10** |
+| `storybook-kingdom` | Klasik | Fairy Tale | `Story Chapters` | `origamiUnfold` | scroll-open-storybook-pages | **10/10** |
 | `midnight-carriage` | Karanlık | Fairy Tale | `Cinematic Scroll` | `curtain` | scroll-carriage-moves | **10/10** |
-| `floating-lantern-kingdom` | Doğal | Fairy Tale | `Cinematic Scroll` | `starryNight` | scroll-lanterns-float-up | **10/10** |
-| `enchanted-library` | Klasik | Fairy Tale | `Story Chapters` | `book` | scroll-bookshelf-reveal-chapters | **10/10** |
+| `floating-lantern-kingdom` | Doğal | Fairy Tale | `Cinematic Scroll` | `floatingLanterns` | scroll-lanterns-float-up | **10/10** |
+| `enchanted-library` | Klasik | Fairy Tale | `Story Chapters` | `royalParchment` | scroll-bookshelf-reveal-chapters | **10/10** |
 | `olympus-celebration` | Lüks | Mythological | `Museum Exhibition` | `royalPalace` | scroll-marble-pedestal-rise | **10/10** |
 | `poseidon-palace` | Karanlık | Mythological | `Underwater Journey` | `curtain` | scroll-underwater-submerge | **10/10** |
 | `aphrodite-garden` | Doğal | Mythological | `Museum Exhibition` | `botanicalBlossom` | scroll-seafoam-roses-reveal | **7/10** |
 | `apollo-sun-temple` | Lüks | Mythological | `Museum Exhibition` | `spotlight` | scroll-sunbeams-illuminate-details | **7/10** |
 | `artemis-moon-garden` | Karanlık | Mythological | `Celestial Map` | `moonlitGarden` | scroll-silver-arrow-trajectory | **7/10** |
-| `atlantis-ceremony` | Karanlık | Mythological | `Underwater Journey` | `nazarDome` | scroll-dive-atlantis-ruins | **6/10** |
+| `atlantis-ceremony` | Karanlık | Mythological | `Underwater Journey` | `underwaterDive` | scroll-dive-atlantis-ruins | **6/10** |
 | `surreal-cloud-palace` | Modern | Surreal / Artistic | `Vertical Spatial Journey` | `cloudBaloon` | scroll-floating-palace-rise | **10/10** |
 | `infinite-staircase` | Modern | Surreal / Artistic | `Vertical Spatial Journey` | `elevator` | scroll-infinite-staircase-traverse | **10/10** |
 | `dream-door` | Modern | Surreal / Artistic | `Vertical Spatial Journey` | `door` | scroll-door-opens-zoom | **10/10** |
 | `mirror-world` | Modern | Surreal / Artistic | `Vertical Spatial Journey` | `mirror` | scroll-broken-mirror-reassemble | **10/10** |
 | `melting-gold` | Lüks | Surreal / Artistic | `Vertical Spatial Journey` | `spotlight` | scroll-gold-drips-form-borders | **10/10** |
-| `paper-moon` | Doğal | Surreal / Artistic | `Paper Cut Diorama` | `book` | scroll-shadowbox-depth-shift | **10/10** |
+| `paper-moon` | Doğal | Surreal / Artistic | `Paper Cut Diorama` | `paperCutReveal` | scroll-shadowbox-depth-shift | **10/10** |
 | `ink-and-gold` | Lüks | Surreal / Artistic | `Paper Cut Diorama` | `ottomanIllumination` | scroll-kintsugi-fractures-join | **10/10** |
 | `seljuk-geometry` | Kültürel | Cultural | `Anatolian Grid` | `nazarDome` | scroll-assemble-seljuk-mosaic | **10/10** |
 | `moroccan-riad` | Kültürel | Cultural | `Moroccan Riad Layout` | `door` | scroll-open-riad-double-doors | **10/10** |
 | `persian-garden` | Kültürel | Cultural | `Persian Manuscript` | `ottomanIllumination` | scroll-illuminate-manuscript-colors | **10/10** |
-| `japanese-zen-garden` | Kültürel | Cultural | `Japanese Shoji Page` | `book` | scroll-slide-shoji-panels | **10/10** |
+| `japanese-zen-garden` | Kültürel | Cultural | `Japanese Shoji Page` | `japaneseShoji` | scroll-slide-shoji-panels | **10/10** |
 | `turkish-tile-garden` | Kültürel | Cultural | `Anatolian Grid` | `nazarDome` | scroll-glazed-tile-reveal-sparkle | **6/10** |
-| `cappadocia-sunset-balloon` | Kültürel | Cultural | `Vertical Balloon Journey` | `coastalSunset` | scroll-balloons-rise-up | **10/10** |
+| `cappadocia-sunset-balloon` | Kültürel | Cultural | `Vertical Balloon Journey` | `hotAirBalloonRise` | scroll-balloons-rise-up | **10/10** |
 | `bosphorus-mansion` | Kültürel | Cultural | `Cinematic Scroll` | `coastalSunset` | scroll-bridge-ferry-drift | **10/10** |
-| `moroccan-riad-henna-night` | Kültürel | Cultural | `Moroccan Riad Layout` | `door` | scroll-open-riad-doors-henna | **5/10** |
-| `japanese-folding-screen-sakura` | Kültürel | Cultural | `Japanese Folding Screen` | `book` | scroll-unfold-gold-screen | **10/10** |
+| `moroccan-riad-henna-night` | Kültürel | Cultural | `Moroccan Henna Pavilion` | `candleLighting` | scroll-open-riad-doors-henna | **8/10** |
+| `japanese-folding-screen-sakura` | Kültürel | Cultural | `Japanese Folding Screen` | `japaneseShoji` | scroll-unfold-gold-screen | **10/10** |
 | `santorini-sunset-terrace` | Doğal | Destination | `Santorini Blue Split` | `coastalSunset` | scroll-bougainvillea-blooms | **10/10** |
 | `amalfi-coast-lemons` | Doğal | Destination | `Santorini Blue Split` | `mediterraneanCeramic` | scroll-majolica-tile-reveal | **6/10** |
-| `tuscany-vineyard-manor` | Doğal | Destination | `Vineyard Story Chapters` | `gardenGate` | scroll-vineyard-depth-parallax | **10/10** |
-| `provence-lavender-estate` | Doğal | Destination | `Vineyard Story Chapters` | `gardenGate` | scroll-lavender-petals-scatter | **6/10** |
-| `cotswolds-garden-estate` | Doğal | Destination | `Vineyard Story Chapters` | `gardenGate` | scroll-climbing-roses-grow | **5/10** |
-| `swiss-alps-chalet` | Doğal | Destination | `Mountain Elevation Journey` | `gardenGate` | scroll-chalet-snow-depth | **10/10** |
+| `tuscany-vineyard-manor` | Doğal | Destination | `Vineyard Story Chapters` | `flowerBloom` | scroll-vineyard-depth-parallax | **10/10** |
+| `provence-lavender-estate` | Doğal | Destination | `Vineyard Story Chapters` | `sakuraWind` | scroll-lavender-petals-scatter | **7/10** |
+| `cotswolds-garden-estate` | Doğal | Destination | `English Rose Garden` | `castleGates` | scroll-grow-climbing-ivy | **9/10** |
+| `swiss-alps-chalet` | Doğal | Destination | `Mountain Elevation Journey` | `castleGates` | scroll-chalet-snow-depth | **10/10** |
 | `lake-como-grand-hotel` | Lüks | Destination | `Luxury Hotel Editorial` | `royalHall` | scroll-villa-arches-frame | **10/10** |
 | `venice-canal-palazzo` | Lüks | Destination | `Horizontal Canal Journey` | `curtain` | scroll-gondola-slides-across-screen | **10/10** |
 | `paris-eiffel-editorial` | Lüks | Destination | `Fashion Editorial` | `vogueEditorial` | scroll-haussmann-molding-slide | **10/10** |
-| `cote-d-azur-yacht-club` | Lüks | Destination | `Luxury Hotel Editorial` | `coastalSunset` | scroll-yacht-drifts-across-sea | **5/10** |
-| `cappadocia-valley-baloons` | Doğal | Destination | `Vertical Balloon Journey` | `coastalSunset` | scroll-balloons-rise-up-valley | **4/10** |
-| `istanbul-ferry-bosphorus` | Kültürel | Destination | `Cinematic Scroll` | `coastalSunset` | scroll-maiden-tower-ferry-drift | **4/10** |
-| `bali-temple-garden` | Doğal | Destination | `Vineyard Story Chapters` | `gardenGate` | scroll-temple-gates-part | **6/10** |
+| `cote-d-azur-yacht-club` | Lüks | Destination | `Riviera Yacht Club` | `minimalFade` | scroll-yacht-steers-compass | **9/10** |
+| `bali-temple-garden` | Doğal | Destination | `Vineyard Story Chapters` | `origamiUnfold` | scroll-temple-gates-part | **7/10** |
 | `safari-adventure-jungle` | Çocuk | Children | `Kids Adventure Map` | `cloudBalloon` | scroll-safari-jeep-drive-track | **9/10** |
-| `underwater-kingdom-marine` | Çocuk | Children | `Underwater Journey` | `cloudBalloon` | scroll-dive-submarine-ocean | **9/10** |
-| `dinosaur-expedition-park` | Çocuk | Children | `Kids Adventure Map` | `cloudBalloon` | scroll-hatch-dino-egg | **5/10** |
-| `space-explorer-orbit` | Çocuk | Children | `Space Mission` | `starryNight` | scroll-rocket-launch-orbit | **9/10** |
+| `underwater-kingdom-marine` | Çocuk | Children | `Underwater Journey` | `underwaterDive` | scroll-dive-submarine-ocean | **9/10** |
+| `dinosaur-expedition-park` | Çocuk | Children | `Dino Excavation Site` | `minimalFade` | scroll-brush-reveals-fossils | **9/10** |
+| `space-explorer-orbit` | Çocuk | Children | `Space Mission` | `rocketLaunch` | scroll-rocket-launch-orbit | **9/10** |
 | `woodland-fairy-wonderland` | Çocuk | Children | `Story Chapters` | `storybook` | scroll-grow-fairy-mushrooms | **8/10** |
-| `candy-kingdom-sweet` | Çocuk | Children | `Kids Adventure Map` | `cloudBalloon` | scroll-roll-gumball-machine | **5/10** |
+| `candy-kingdom-sweet` | Çocuk | Children | `Candy Conveyor Belt` | `cloudBalloon` | scroll-candy-machine-dispense | **8/10** |
 | `circus-carnival-tent` | Çocuk | Children | `Theatre Program` | `curtain` | scroll-carousel-horses-rotate | **10/10** |
-| `pirate-treasure-island` | Çocuk | Children | `Kids Adventure Map` | `book` | scroll-track-ship-treasure-x | **7/10** |
-| `princess-garden-castle` | Çocuk | Children | `Story Chapters` | `storybook` | scroll-reveal-princess-castle | **4/10** |
+| `pirate-treasure-island` | Çocuk | Children | `Kids Adventure Map` | `treasureMap` | scroll-track-ship-treasure-x | **7/10** |
+| `princess-garden-castle` | Çocuk | Children | `Princess Pop-up Book` | `storybook` | scroll-castle-towers-elevate | **7/10** |
 | `little-prince-asteroid` | Çocuk | Children | `Space Mission` | `storybook` | scroll-prince-fly-birds | **8/10** |
 | `circumcision-ottoman-prince` | Sünnet | Circumcision | `Anatolian Grid` | `ottomanIllumination` | scroll-unroll-ottoman-decree | **8/10** |
 | `circumcision-modern-prince` | Sünnet | Circumcision | `Minimalist Grid` | `minimalFade` | scroll-minimal-golden-borders | **9/10** |
 | `circumcision-sailor-captain` | Sünnet | Circumcision | `Horizontal Journey` | `cloudBalloon` | scroll-sailor-ship-sails | **10/10** |
-| `circumcision-astronaut-boy` | Sünnet | Circumcision | `Space Mission` | `starryNight` | scroll-rocket-launch-orbit | **7/10** |
+| `circumcision-astronaut-boy` | Sünnet | Circumcision | `Space Mission` | `rocketLaunch` | scroll-rocket-launch-orbit | **7/10** |
 | `circumcision-football-star` | Sünnet | Circumcision | `Horizontal Journey` | `spotlight` | scroll-kick-football-goal | **10/10** |
 | `circumcision-race-car-champion` | Sünnet | Circumcision | `Horizontal Journey` | `minimalFade` | scroll-racecar-drives-track | **6/10** |
 | `rooftop-celebration` | Nişan | Engagement / Henna | `Horizontal Journey` | `spotlight` | scroll-citylights-glow-names | **10/10** |
@@ -89,8 +87,7 @@ This document defines the visual contracts and design fingerprints for the templ
 | `paris-apartment-chic` | Nişan | Engagement / Henna | `Fashion Editorial` | `parisianBlackTie` | scroll-iron-railings-fade-in | **6/10** |
 | `cherry-blossom-engagement` | Nişan | Engagement / Henna | `Horizontal Journey` | `botanicalBlossom` | scroll-sakura-petals-shower | **10/10** |
 | `mediterranean-terrace-engagement` | Nişan | Engagement / Henna | `Santorini Blue Split` | `mediterraneanCeramic` | scroll-bougainvillea-swirls | **6/10** |
-| `bohemian-henna-night` | Kına Gecesi | Engagement / Henna | `Vineyard Story Chapters` | `gardenGate` | scroll-pampas-sway-breeze | **10/10** |
-| `moroccan-riad-henna-pavilion` | Kına Gecesi | Engagement / Henna | `Moroccan Riad Layout` | `door` | scroll-open-riad-double-gates | **4/10** |
+| `bohemian-henna-night` | Kına Gecesi | Engagement / Henna | `Vineyard Story Chapters` | `flowerBloom` | scroll-pampas-sway-breeze | **10/10** |
 | `anatolian-henna-night` | Kına Gecesi | Engagement / Henna | `Persian Manuscript` | `ottomanIllumination` | scroll-illuminate-anatolian-rug | **10/10** |
 | `ai-summit-corporate` | Kurumsal | Corporate | `Holographic Interface` | `futureSummit` | scroll-animate-circuit-board-drawing | **8/10** |
 | `medical-congress-clinical` | Kurumsal | Corporate | `Minimalist Grid` | `minimalFade` | scroll-draw-dna-double-helix | **10/10** |
@@ -104,7 +101,7 @@ This document defines the visual contracts and design fingerprints for the templ
 | `gatsby-art-deco-lux` | Lüks | Luxury Premium | `Gatsby Geometry` | `grandOpera` | scroll-art-deco-gates-part | **10/10** |
 | `venetian-masquerade-lux` | Lüks | Luxury Premium | `Gatsby Geometry` | `curtain` | scroll-venetian-mask-reveal | **6/10** |
 | `manhattan-black-tie-lux` | Lüks | Luxury Premium | `Gatsby Geometry` | `parisianBlackTie` | scroll-skyline-elevate | **8/10** |
-| `luxury-perfume-launch-style` | Lüks | Luxury Premium | `Fashion Editorial` | `vogueEditorial` | scroll-silk-sheets-ripple | **5/10** |
+| `luxury-perfume-launch-style` | Lüks | Luxury Premium | `Fashion Editorial` | `glassReveal` | scroll-light-beams-refract | **10/10** |
 | `experimental-time-capsule` | Modern | Experimental | `Horizontal Journey` | `spotlight` | scroll-sandglass-empties | **6/10** |
 | `experimental-parallel-universe` | Modern | Experimental | `Split Screen Layout` | `door` | scroll-split-panels-converge | **10/10** |
 | `experimental-infinite-gallery` | Modern | Experimental | `Museum Exhibition` | `minimalFade` | scroll-art-frames-shift | **10/10** |
@@ -119,43 +116,38 @@ This document defines the visual contracts and design fingerprints for the templ
 |-------------|----------|------------|---------------|---------|------------------|------------|
 | `galaxy-ballroom` | Lüks | Celestial / Fantasy | `Cinematic Scroll` | `royalHall` | scroll-galaxy-spin | **7/10** |
 | `astral-cathedral` | Karanlık | Celestial / Fantasy | `Stained Glass` | `nazarDome` | scroll-illuminate-stained-glass | **10/10** |
-| `starlight-canyon` | Doğal | Celestial / Fantasy | `Cinematic Scroll` | `coastalSunset` | scroll-canyon-depth | **5/10** |
-| `rose-castle` | Doğal | Fairy Tale | `Pop-up Book` | `envelope` | scroll-unroll-rose-briar | **7/10** |
+| `starlight-canyon` | Doğal | Celestial / Fantasy | `Canyon Crevice Journey` | `minimalFade` | scroll-canyon-depth | **9/10** |
+| `rose-castle` | Doğal | Fairy Tale | `Pop-up Book` | `flowerBloom` | scroll-unroll-rose-briar | **7/10** |
 | `magic-mirror-ball` | Lüks | Fairy Tale | `Cinematic Scroll` | `mirror` | scroll-mirror-shimmer-clear | **10/10** |
-| `whispering-forest` | Doğal | Fairy Tale | `Pop-up Book` | `gardenGate` | scroll-leaves-blow-across | **6/10** |
+| `whispering-forest` | Doğal | Fairy Tale | `Pop-up Book` | `castleGates` | scroll-leaves-blow-across | **7/10** |
 | `phoenix-palace` | Karanlık | Mythological | `Cinematic Scroll` | `curtain` | scroll-ash-rises-gold-wings | **10/10** |
 | `pegasus-sky` | Doğal | Mythological | `Celestial Map` | `starryNight` | scroll-pegasus-flight-parallax | **6/10** |
 | `medusa-marble` | Karanlık | Mythological | `Museum Exhibition` | `royalPalace` | scroll-snake-coils-slither | **6/10** |
 | `oracle-of-delphi` | Karanlık | Mythological | `Observatory` | `spotlight` | scroll-smoke-clears-reveal-text | **6/10** |
 | `watercolor-dream` | Doğal | Surreal / Artistic | `Paper Cut Diorama` | `botanicalWatercolor` | scroll-ink-bleeds-in | **7/10** |
-| `origami-world` | Minimalist | Surreal / Artistic | `Paper Cut Diorama` | `book` | scroll-origami-crane-flaps | **9/10** |
+| `origami-world` | Minimalist | Surreal / Artistic | `Paper Cut Diorama` | `origamiUnfold` | scroll-origami-crane-flaps | **9/10** |
 | `glass-garden` | Modern | Surreal / Artistic | `Vertical Spatial Journey` | `glassReveal` | scroll-clear-foggy-glass | **7/10** |
-| `persian-miniature-concept` | Kültürel | Cultural | `Persian Manuscript` | `ottomanIllumination` | scroll-unroll-miniature-panels | **5/10** |
-| `korean-hanok-traditional` | Kültürel | Cultural | `Japanese Shoji Page` | `book` | scroll-slide-hanji-windows | **5/10** |
-| `andalusian-palace-alhambra` | Kültürel | Cultural | `Moroccan Riad Layout` | `door` | scroll-open-myrtle-gates | **5/10** |
-| `mughal-garden-taj` | Kültürel | Cultural | `Persian Manuscript` | `ottomanIllumination` | scroll-reflect-pool-water | **5/10** |
+| `persian-miniature-concept` | Kültürel | Cultural | `Ancient Scroll` | `royalParchment` | scroll-unroll-manuscript-horizontal | **10/10** |
+| `korean-hanok-traditional` | Kültürel | Cultural | `Korean Hanok Page` | `door` | scroll-slide-hanji-windows | **8/10** |
+| `andalusian-palace-alhambra` | Kültürel | Cultural | `Alhambra Court of Myrtles` | `waterWave` | scroll-reflection-pool-refract | **9/10** |
+| `mughal-garden-taj` | Kültürel | Cultural | `Taj Mahal Fountain` | `mirror` | scroll-reflection-water-channel | **8/10** |
 | `scandinavian-forest-nordic` | Doğal | Cultural | `Minimalist Grid` | `minimalFade` | scroll-minimal-line-drawing | **10/10** |
-| `alpine-lodge-woodlands` | Doğal | Cultural | `Cinematic Scroll` | `gardenGate` | scroll-snowflakes-drift-down | **10/10** |
-| `maldives-overwater-sunset` | Doğal | Destination | `Santorini Blue Split` | `coastalSunset` | scroll-beach-sand-reveal | **5/10** |
-| `kyoto-sakura-shrine` | Kültürel | Destination | `Japanese Folding Screen` | `book` | scroll-unfold-shrine-screen | **5/10** |
+| `alpine-lodge-woodlands` | Doğal | Cultural | `Cinematic Scroll` | `castleGates` | scroll-snowflakes-drift-down | **10/10** |
+| `maldives-overwater-sunset` | Doğal | Destination | `Ocean Bungalow Navigation` | `underwaterDive` | scroll-dive-into-lagoon | **8/10** |
 | `toy-train-railway` | Çocuk | Children | `Horizontal Journey` | `cloudBalloon` | scroll-train-moves-along-track | **10/10** |
-| `farm-adventure-animals` | Çocuk | Children | `Kids Adventure Map` | `cloudBalloon` | scroll-tractor-drives-pastures | **5/10** |
-| `robot-laboratory-science` | Çocuk | Children | `Holographic Interface` | `minimalFade` | scroll-gears-rotate-assemble | **7/10** |
-| `ocean-explorer-submarine` | Çocuk | Children | `Underwater Journey` | `cloudBalloon` | scroll-sea-diver-submerge | **5/10** |
-| `arctic-animals-snowy` | Çocuk | Children | `Mountain Elevation Journey` | `cloudBalloon` | scroll-polarbears-slide-ice | **6/10** |
+| `farm-adventure-animals` | Çocuk | Children | `Barnyard Landscape` | `cloudBalloon` | scroll-tractor-crosses-pasture | **7/10** |
 | `circumcision-aviation-pilot` | Sünnet | Circumcision | `Horizontal Journey` | `cloudBalloon` | scroll-biplane-flies-clouds | **6/10** |
 | `circumcision-bosphorus-prince` | Sünnet | Circumcision | `Anatolian Grid` | `nazarDome` | scroll-reveal-maiden-tower | **8/10** |
 | `circumcision-seljuk-prince` | Sünnet | Circumcision | `Anatolian Grid` | `nazarDome` | scroll-assemble-seljuk-eagle | **8/10** |
-| `circumcision-adventure-map` | Sünnet | Circumcision | `Kids Adventure Map` | `book` | scroll-trail-draws-x | **9/10** |
+| `circumcision-adventure-map` | Sünnet | Circumcision | `Kids Adventure Map` | `origamiUnfold` | scroll-trail-draws-x | **9/10** |
 | `candle-courtyard-henna` | Kına Gecesi | Engagement / Henna | `Cinematic Scroll` | `curtain` | scroll-light-candles-row | **10/10** |
 | `moonlit-henna-garden-celebration` | Kına Gecesi | Engagement / Henna | `Celestial Map` | `moonlitGarden` | scroll-sparkles-lantern-illuminate | **8/10** |
 | `creative-festival-experimental` | Kurumsal | Corporate | `Holographic Interface` | `spotlight` | scroll-distorted-poster-morph | **9/10** |
 | `biotech-congress-microscopic` | Kurumsal | Corporate | `Holographic Interface` | `futureSummit` | scroll-cell-splitting-animation | **7/10** |
-| `regal-dynasty-lux` | Lüks | Luxury Premium | `Royal Decree` | `royalPalace` | scroll-unroll-purple-scroll | **4/10** |
-| `vanderbilt-estate-lux` | Lüks | Luxury Premium | `Royal Decree` | `gardenGate` | scroll-estate-gates-part | **7/10** |
-| `experimental-analog-television` | Karanlık | Experimental | `Obsidian Soundboard` | `spotlight` | scroll-television-dials-turn | **7/10** |
-| `experimental-architects-blueprint` | Minimalist | Experimental | `Architectural Blueprint` | `minimalFade` | scroll-blueprint-dimensions | **4/10** |
-| `experimental-secret-agent` | Karanlık | Experimental | `Obsidian Soundboard` | `book` | scroll-unseal-classified-doc | **10/10** |
+| `regal-dynasty-lux` | Lüks | Luxury Premium | `Royal Decree` | `royalHall` | scroll-banners-unfurl | **7/10** |
+| `vanderbilt-estate-lux` | Lüks | Luxury Premium | `Royal Decree` | `castleGates` | scroll-estate-gates-part | **7/10** |
+| `experimental-analog-television` | Karanlık | Experimental | `Obsidian Soundboard` | `minimalFade` | scroll-television-dials-turn | **8/10** |
+| `experimental-secret-agent` | Karanlık | Experimental | `Obsidian Soundboard` | `origamiUnfold` | scroll-unseal-classified-doc | **10/10** |
 
 ---
 
@@ -311,7 +303,7 @@ Here are the detailed design signatures for key planned templates:
 - **Photo Treatment:** circular-portrait
 - **Decorative Language:** measurement-grids
 - **Content Flow:** vertical-spatial
-- **Opening Animation:** spotlight (`spotlight` family)
+- **Opening Animation:** observatoryDome (`observatory` family)
 - **Motion Language:** viewfinder-focus
 - **Signature Moment:** scroll-lens-focus-names
 - **Difference Score:** 10/10 (Compared to `None`)
@@ -320,19 +312,19 @@ Here are the detailed design signatures for key planned templates:
 ### `starlight-canyon` — Starlight Canyon
 - **Category:** Doğal
 - **Collection:** Celestial / Fantasy
-- **Layout Family:** Cinematic Scroll
+- **Layout Family:** Canyon Crevice Journey
 - **Hero Composition:** canyon-rock-arch-sky
-- **Visual Language:** terracotta-warm-indigo
-- **Typography:** Cinzel + Cormorant Garamond
-- **Background Type:** night-canyon-milkyway
-- **Photo Treatment:** cinematic-crop
+- **Visual Language:** terracotta-warm-indigo-modern
+- **Typography:** Space Grotesk + Inter
+- **Background Type:** night-canyon-milkyway-dark
+- **Photo Treatment:** parallax-depth-layer
 - **Decorative Language:** organic-rock-shapes
-- **Content Flow:** vertical-parallax
-- **Opening Animation:** coastalSunset (`coastalSunset` family)
-- **Motion Language:** parallax-rise
+- **Content Flow:** horizontal-scroll-canyon
+- **Opening Animation:** minimalFade (`minimalFade` family)
+- **Motion Language:** parallax-rise-horizontal
 - **Signature Moment:** scroll-canyon-depth
-- **Difference Score:** 5/10 (Compared to `coastal-sunset`)
-- **Key Differences:** hero, background, photoTreatment, decorativeLanguage, motionLanguage
+- **Difference Score:** 9/10 (Compared to `coastal-sunset`)
+- **Key Differences:** layout, hero, typography, background, photoTreatment, opening, motionLanguage, contentFlow, decorativeLanguage
 
 ### `enchanted-forest` — Enchanted Forest
 - **Category:** Doğal
@@ -345,7 +337,7 @@ Here are the detailed design signatures for key planned templates:
 - **Photo Treatment:** torn-paper
 - **Decorative Language:** fairies-and-mushrooms
 - **Content Flow:** vertical-unfold
-- **Opening Animation:** gardenGate (`gardenGate` family)
+- **Opening Animation:** flowerBloom (`flowerBloom` family)
 - **Motion Language:** organic-unfold
 - **Signature Moment:** scroll-bloom-flowers-vines
 - **Difference Score:** 10/10 (Compared to `None`)
@@ -362,7 +354,7 @@ Here are the detailed design signatures for key planned templates:
 - **Photo Treatment:** reflection
 - **Decorative Language:** crystal-stars
 - **Content Flow:** vertical-spatial
-- **Opening Animation:** royalPalace (`royalPalace` family)
+- **Opening Animation:** crystalShatter (`crystalShatter` family)
 - **Motion Language:** crystalline-shimmer
 - **Signature Moment:** scroll-shatter-reveal-details
 - **Difference Score:** 10/10 (Compared to `None`)
@@ -379,11 +371,11 @@ Here are the detailed design signatures for key planned templates:
 - **Photo Treatment:** polaroid
 - **Decorative Language:** fairy-dust-trails
 - **Content Flow:** vertical-spatial
-- **Opening Animation:** gardenGate (`gardenGate` family)
+- **Opening Animation:** magicPortal (`magicPortal` family)
 - **Motion Language:** gentle-float
 - **Signature Moment:** scroll-fairy-dust-draw-path
-- **Difference Score:** 6/10 (Compared to `enchanted-forest`)
-- **Key Differences:** hero, visualLanguage, background, photoTreatment, decorativeLanguage, motionLanguage
+- **Difference Score:** 7/10 (Compared to `enchanted-forest`)
+- **Key Differences:** hero, visualLanguage, background, photoTreatment, decorativeLanguage, motionLanguage, opening
 
 ### `storybook-kingdom` — Storybook Kingdom
 - **Category:** Klasik
@@ -396,7 +388,7 @@ Here are the detailed design signatures for key planned templates:
 - **Photo Treatment:** torn-paper
 - **Decorative Language:** heraldic-animals
 - **Content Flow:** vertical-unfold
-- **Opening Animation:** book (`book` family)
+- **Opening Animation:** origamiUnfold (`origamiUnfold` family)
 - **Motion Language:** page-flip
 - **Signature Moment:** scroll-open-storybook-pages
 - **Difference Score:** 10/10 (Compared to `storybook-babyshower`)
@@ -427,6 +419,12 @@ These ideas were evaluated but rejected or merged to prevent catalog bloating an
 
 | Template ID | Category | Original Name | Reason for Rejection / Merging |
 |-------------|----------|---------------|--------------------------------|
+| `cappadocia-valley-baloons` | Destination | Cappadocia Valley Balloons | Merged with cappadocia-sunset-balloon. Avoids code layout duplicates. |
+| `istanbul-ferry-bosphorus` | Destination | Istanbul Ferry Bosphorus | Merged with bosphorus-mansion. Ferry ride concept unified under the main yalı/Bosphorus design. |
+| `kyoto-sakura-shrine` | Destination | Kyoto Sakura Shrine | Merged with japanese-folding-screen-sakura to avoid layout screen duplication. |
+| `ocean-explorer-submarine` | Children | Ocean Explorer Submarine | Merged with underwater-kingdom-marine to avoid duplicating underwater diver cartoon grids. |
+| `moroccan-riad-henna-pavilion` | Henna | Moroccan Riad Henna Pavilion | Merged with moroccan-riad-henna-night to avoid redundant courtyard/mosaic code duplication. |
+| `experimental-architects-blueprint` | Minimalist | Architects Blueprint | Merged with architecture-conference-blueprint as both represented architectural drafts. |
 | `cappadocia-balloon-duplicate` | Destination | Cappadocia Balloon | Duplicate of cappadocia-sunset-balloon. Concepts merged to avoid creating layout copies with minor color changes. |
 | `moroccan-riad-henna-duplicate` | Henna | Moroccan Riad Henna | Merged with moroccan-riad-henna-night to avoid catalog bloating with redundant layouts. |
 | `pink-princess-var-3` | Children | Pink Princess Var 3 | Rejected. Violates rule of no cosmetic variants as distinct unique templates. |
