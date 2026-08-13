@@ -5,12 +5,12 @@ import path from 'path';
 
 test.describe('PART 3 — Programmatic Registry & Layout Audit', () => {
 
-  test('All 75 active presets in predefinedThemes must have unique IDs and zero duplicates', () => {
+  test('All 90 active presets in predefinedThemes must have unique IDs and zero duplicates', () => {
     const ids = predefinedThemes.map(t => t.id);
     const uniqueIds = new Set(ids);
 
-    expect(ids.length).toBe(75);
-    expect(uniqueIds.size).toBe(75);
+    expect(ids.length).toBe(90);
+    expect(uniqueIds.size).toBe(90);
   });
 
   test('All 17 Flagship presets must be selectable in predefinedThemes and catalog', () => {
