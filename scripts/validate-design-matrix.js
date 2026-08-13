@@ -58,10 +58,10 @@ plannedThemes.forEach(theme => {
   }
   seenIds.add(theme.id);
 
-  // Check 3: ID Collision with existing themes
+  // Check 3: ID Collision with existing themes (if not in planned completed)
+  let isCompleted = false;
   if (existingIds.includes(theme.id)) {
-    console.error(`❌ [REJECT] Collision! Planned ID "${theme.id}" already exists in themes.ts.`);
-    hasErrors = true;
+    isCompleted = true;
   }
 
   // Check 4: Difference Score
@@ -82,6 +82,10 @@ plannedThemes.forEach(theme => {
   } else {
     status = 'EXCEPTIONAL';
     scoreDistribution.EXCEPTIONAL++;
+  }
+
+  if (isCompleted) {
+    console.log(`✅ [COMPLETED] Theme "${theme.id}" has been implemented in themes.ts.`);
   }
 
   // Stats aggregation
