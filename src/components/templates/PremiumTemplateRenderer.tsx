@@ -113,6 +113,10 @@ import ChampagnePenthouseLayout from './layouts/ChampagnePenthouseLayout';
 import GrandHotelBallroomLayout from './layouts/GrandHotelBallroomLayout';
 import MonacoEveningLayout from './layouts/MonacoEveningLayout';
 import PrivateEstateGalaLayout from './layouts/PrivateEstateGalaLayout';
+import ArchitecturalWhiteSpaceLayout from './layouts/ArchitecturalWhiteSpaceLayout';
+import TypographicMonumentLayout from './layouts/TypographicMonumentLayout';
+import GalleryCatalogueLayout from './layouts/GalleryCatalogueLayout';
+import PaperFoldEditorialLayout from './layouts/PaperFoldEditorialLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1378,6 +1382,10 @@ case 'asymmetric':
       case 'grand-hotel-ballroom': return <GrandHotelBallroomLayout {...commonProps} />;
       case 'monaco-evening': return <MonacoEveningLayout {...commonProps} />;
       case 'private-estate-gala': return <PrivateEstateGalaLayout {...commonProps} />;
+      case 'architectural-white-space': return <ArchitecturalWhiteSpaceLayout {...commonProps} />;
+      case 'typographic-monument': return <TypographicMonumentLayout {...commonProps} />;
+      case 'gallery-catalogue': return <GalleryCatalogueLayout {...commonProps} />;
+      case 'paper-fold-editorial': return <PaperFoldEditorialLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }
