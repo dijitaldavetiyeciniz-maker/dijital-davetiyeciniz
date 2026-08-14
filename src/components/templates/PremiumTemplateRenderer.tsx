@@ -103,6 +103,11 @@ import MidnightRadioLayout from './layouts/MidnightRadioLayout';
 import AnalogTelevisionLayout from './layouts/AnalogTelevisionLayout';
 import SecretAgentInvitationLayout from './layouts/SecretAgentInvitationLayout';
 import VinylLoveStoryLayout from './layouts/VinylLoveStoryLayout';
+import HennaCourtyardRitualLayout from './layouts/HennaCourtyardRitualLayout';
+import EngagementRingAtelierLayout from './layouts/EngagementRingAtelierLayout';
+import RoseGoldEngagementLayout from './layouts/RoseGoldEngagementLayout';
+import AnatolianHennaProcessionLayout from './layouts/AnatolianHennaProcessionLayout';
+import CandlelightEngagementTableLayout from './layouts/CandlelightEngagementTableLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1358,6 +1363,11 @@ case 'asymmetric':
       case 'analog-television': return <AnalogTelevisionLayout {...commonProps} />;
       case 'secret-agent-invitation': return <SecretAgentInvitationLayout {...commonProps} />;
       case 'vinyl-love-story': return <VinylLoveStoryLayout {...commonProps} />;
+      case 'henna-courtyard-ritual': return <HennaCourtyardRitualLayout {...commonProps} />;
+      case 'engagement-ring-atelier': return <EngagementRingAtelierLayout {...commonProps} />;
+      case 'rose-gold-engagement': return <RoseGoldEngagementLayout {...commonProps} />;
+      case 'anatolian-henna-procession': return <AnatolianHennaProcessionLayout {...commonProps} />;
+      case 'candlelight-engagement-table': return <CandlelightEngagementTableLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }
