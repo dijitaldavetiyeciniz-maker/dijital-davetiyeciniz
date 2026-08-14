@@ -22,13 +22,18 @@ test.describe("C3-B3 - Children & Circumcision Templates E2E", () => {
   const SLUG = `test-c3-b3-${runId}`;
   let weddingId: string;
 
-  // C3-B3A Children templates list
+  // C3-B3 Children & Circumcision templates list
   const childrenThemes = [
     { id: "dinosaur-expedition", testId: "layout-dinosaur-expedition", signatureSelector: "#dinosaur-rsvp" },
     { id: "pirate-treasure-map", testId: "layout-pirate-treasure", signatureSelector: "#pirate-rsvp" },
     { id: "robot-laboratory", testId: "layout-robot-laboratory", signatureSelector: "#robot-rsvp" },
     { id: "toy-train-journey", testId: "layout-toy-train", signatureSelector: "#train-rsvp" },
-    { id: "underwater-kids-kingdom", testId: "layout-underwater-kids", signatureSelector: "#underwater-rsvp" }
+    { id: "underwater-kids-kingdom", testId: "layout-underwater-kids", signatureSelector: "#underwater-rsvp" },
+    { id: "little-captain-ceremony", testId: "layout-little-captain", signatureSelector: "#captain-rsvp" },
+    { id: "junior-pilot-ceremony", testId: "layout-junior-pilot", signatureSelector: "#pilot-rsvp" },
+    { id: "stadium-champion-ceremony", testId: "layout-stadium-champion", signatureSelector: "#stadium-rsvp" },
+    { id: "astronaut-mission-ceremony", testId: "layout-astronaut-mission", signatureSelector: "#astronaut-rsvp" },
+    { id: "adventure-map-ceremony", testId: "layout-adventure-map", signatureSelector: "#adventure-rsvp" }
   ];
 
   test.beforeAll(async () => {

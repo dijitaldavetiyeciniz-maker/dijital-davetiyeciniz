@@ -88,6 +88,11 @@ import PirateTreasureMapLayout from './layouts/PirateTreasureMapLayout';
 import RobotLaboratoryLayout from './layouts/RobotLaboratoryLayout';
 import ToyTrainJourneyLayout from './layouts/ToyTrainJourneyLayout';
 import UnderwaterKidsKingdomLayout from './layouts/UnderwaterKidsKingdomLayout';
+import LittleCaptainLayout from './layouts/LittleCaptainLayout';
+import JuniorPilotLayout from './layouts/JuniorPilotLayout';
+import StadiumChampionLayout from './layouts/StadiumChampionLayout';
+import AstronautMissionLayout from './layouts/AstronautMissionLayout';
+import AdventureMapLayout from './layouts/AdventureMapLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1328,6 +1333,11 @@ case 'asymmetric':
       case 'robot-laboratory': return <RobotLaboratoryLayout {...commonProps} />;
       case 'toy-train-journey': return <ToyTrainJourneyLayout {...commonProps} />;
       case 'underwater-kids-kingdom': return <UnderwaterKidsKingdomLayout {...commonProps} />;
+      case 'little-captain-ceremony': return <LittleCaptainLayout {...commonProps} />;
+      case 'junior-pilot-ceremony': return <JuniorPilotLayout {...commonProps} />;
+      case 'stadium-champion-ceremony': return <StadiumChampionLayout {...commonProps} />;
+      case 'astronaut-mission-ceremony': return <AstronautMissionLayout {...commonProps} />;
+      case 'adventure-map-ceremony': return <AdventureMapLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }

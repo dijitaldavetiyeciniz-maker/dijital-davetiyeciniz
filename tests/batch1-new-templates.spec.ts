@@ -15,6 +15,16 @@ test.describe('PART 3 — Batch C1 New Unique Templates E2E Validation', () => {
       'underwater-journey',
       'experimental-infinite-gallery',
       'experimental-midnight-radio',
+      'dinosaur-expedition',
+      'pirate-treasure-map',
+      'robot-laboratory',
+      'toy-train-journey',
+      'underwater-kids-kingdom',
+      'little-captain-ceremony',
+      'junior-pilot-ceremony',
+      'stadium-champion-ceremony',
+      'astronaut-mission-ceremony',
+      'adventure-map-ceremony',
     ];
 
     for (const tplId of newTemplateIds) {
