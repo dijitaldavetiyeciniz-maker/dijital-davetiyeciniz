@@ -22,13 +22,18 @@ test.describe("C3-B5 - Engagement & Luxury Templates E2E", () => {
   const SLUG = `test-c3-b5-${runId}`;
   let weddingId: string;
 
-  // C3-B5A Henna/Engagement templates list
+  // C3-B5 Henna/Engagement & Luxury templates list
   const engagementThemes = [
     { id: "henna-courtyard-ritual", testId: "layout-henna-courtyard", signatureSelector: "#henna-rsvp" },
     { id: "engagement-ring-atelier", testId: "layout-ring-atelier", signatureSelector: "#atelier-rsvp" },
     { id: "rose-gold-engagement", testId: "layout-rose-gold", signatureSelector: "#rose-rsvp" },
     { id: "anatolian-henna-procession", testId: "layout-anatolian-henna", signatureSelector: "#anatolian-rsvp" },
-    { id: "candlelight-engagement-table", testId: "layout-candlelight-table", signatureSelector: "#candlelight-rsvp" }
+    { id: "candlelight-engagement-table", testId: "layout-candlelight-table", signatureSelector: "#candlelight-rsvp" },
+    { id: "venetian-masked-ball", testId: "layout-masked-ball", signatureSelector: "#masked-rsvp" },
+    { id: "champagne-penthouse", testId: "layout-penthouse", signatureSelector: "#penthouse-rsvp" },
+    { id: "grand-hotel-ballroom", testId: "layout-ballroom", signatureSelector: "#ballroom-rsvp" },
+    { id: "monaco-evening", testId: "layout-monaco", signatureSelector: "#monaco-rsvp" },
+    { id: "private-estate-gala", testId: "layout-estate-gala", signatureSelector: "#estate-rsvp" }
   ];
 
   test.beforeAll(async () => {

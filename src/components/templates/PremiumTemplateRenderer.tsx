@@ -108,6 +108,11 @@ import EngagementRingAtelierLayout from './layouts/EngagementRingAtelierLayout';
 import RoseGoldEngagementLayout from './layouts/RoseGoldEngagementLayout';
 import AnatolianHennaProcessionLayout from './layouts/AnatolianHennaProcessionLayout';
 import CandlelightEngagementTableLayout from './layouts/CandlelightEngagementTableLayout';
+import VenetianMaskedBallLayout from './layouts/VenetianMaskedBallLayout';
+import ChampagnePenthouseLayout from './layouts/ChampagnePenthouseLayout';
+import GrandHotelBallroomLayout from './layouts/GrandHotelBallroomLayout';
+import MonacoEveningLayout from './layouts/MonacoEveningLayout';
+import PrivateEstateGalaLayout from './layouts/PrivateEstateGalaLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1368,6 +1373,11 @@ case 'asymmetric':
       case 'rose-gold-engagement': return <RoseGoldEngagementLayout {...commonProps} />;
       case 'anatolian-henna-procession': return <AnatolianHennaProcessionLayout {...commonProps} />;
       case 'candlelight-engagement-table': return <CandlelightEngagementTableLayout {...commonProps} />;
+      case 'venetian-masked-ball': return <VenetianMaskedBallLayout {...commonProps} />;
+      case 'champagne-penthouse': return <ChampagnePenthouseLayout {...commonProps} />;
+      case 'grand-hotel-ballroom': return <GrandHotelBallroomLayout {...commonProps} />;
+      case 'monaco-evening': return <MonacoEveningLayout {...commonProps} />;
+      case 'private-estate-gala': return <PrivateEstateGalaLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }
