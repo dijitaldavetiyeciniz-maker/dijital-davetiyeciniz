@@ -310,6 +310,7 @@ export default function CoupleAdminPage({
   const [activeMainTab, setActiveMainTab] = useState<'genel'|'tema'|'animasyon'|'moduller'|'entegrasyonlar'>('genel');
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [templateCategory, setTemplateCategory] = useState('all');
+  const [templateSearch, setTemplateSearch] = useState('');
   const [visibleCount, setVisibleCount] = useState(12);
   const [showManualTelegram, setShowManualTelegram] = useState(false);
   const [showPaletteMenu, setShowPaletteMenu] = useState(false);
@@ -1789,6 +1790,17 @@ export default function CoupleAdminPage({
                     Etkinliğinizin tarzına uygun hazır bir tasarım seçin. Renkleri, yazıları, arka planı ve animasyonları daha sonra düzenleyebilirsiniz.
                   </p>
                   
+                  {/* Template Search Input */}
+                  <div className="mb-3">
+                    <input 
+                      type="text"
+                      placeholder="Şablon adı, kategori veya anahtar kelime ara..."
+                      value={templateSearch}
+                      onChange={(e) => setTemplateSearch(e.target.value)}
+                      className="w-full h-10 px-3 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500/20 bg-white"
+                    />
+                  </div>
+                  
                   {/* Category Tabs */}
                   <div className="flex gap-1.5 overflow-x-auto pb-2 mb-4 scrollbar-thin">
                     {[
@@ -1797,6 +1809,7 @@ export default function CoupleAdminPage({
                       { id: 'engagement', label: 'Nişan' },
                       { id: 'henna', label: 'Kına' },
                       { id: 'circumcision', label: 'Sünnet' },
+                      { id: 'children', label: 'Çocuk' },
                       { id: 'baby_shower', label: 'Baby Shower' },
                       { id: 'birthday', label: 'Doğum Günü' },
                       { id: 'corporate', label: 'Kurumsal' },
@@ -1824,10 +1837,26 @@ export default function CoupleAdminPage({
                     <div className="max-h-[600px] overflow-y-auto border rounded-2xl p-4 bg-white/60 backdrop-blur-sm shadow-inner grid grid-cols-1 md:grid-cols-2 gap-4">
                       {(() => {
                         const filteredThemes = themes.filter(theme => {
+                          // Search filter
+                          if (templateSearch.trim()) {
+                            const query = templateSearch.toLowerCase();
+                            const matchesName = theme.name?.toLowerCase().includes(query);
+                            const matchesId = theme.id?.toLowerCase().includes(query);
+                            const matchesCategory = theme.category?.toLowerCase().includes(query);
+                            if (!matchesName && !matchesId && !matchesCategory) {
+                              return false;
+                            }
+                          }
+                          // Category tab filter
                           if (templateCategory === 'all') return true;
-                          if (templateCategory === 'minimal' || templateCategory === 'Minimalist') return theme.category === 'Minimalist';
-                          if (templateCategory === 'luxury' || templateCategory === 'Lüks') return theme.category === 'Lüks';
-                          if (templateCategory === 'bohemian' || templateCategory === 'Doğal') return theme.category === 'Doğal';
+                          if (templateCategory === 'minimal') return theme.category === 'Minimalist';
+                          if (templateCategory === 'luxury') return theme.category === 'Lüks';
+                          if (templateCategory === 'bohemian') return theme.category === 'Doğal';
+                          if (templateCategory === 'children') return theme.category === 'Çocuk';
+                          if (templateCategory === 'circumcision') return theme.category === 'Sünnet';
+                          if (templateCategory === 'henna') return theme.category === 'Kına Gecesi';
+                          if (templateCategory === 'engagement') return theme.category === 'Nişan';
+                          if (templateCategory === 'corporate') return theme.category === 'Kurumsal';
                           
                           return theme.eventType === templateCategory;
                         });
@@ -1867,6 +1896,7 @@ export default function CoupleAdminPage({
                                     src={theme.thumbnail} 
                                     alt={theme.name} 
                                     className="w-full h-full object-cover relative z-10" 
+                                    loading="lazy"
                                     onError={(e) => {
                                       (e.target as any).style.display = 'none';
                                     }}
