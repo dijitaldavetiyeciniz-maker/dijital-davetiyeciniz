@@ -67,7 +67,7 @@
         "contentFlow"
       ],
       "differenceScore": 10,
-      "status": "LOCKED"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "starlight-covenant",
@@ -132,7 +132,7 @@
         "contentFlow"
       ],
       "differenceScore": 10,
-      "status": "LOCKED"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "aurora-dreamscape",
@@ -196,7 +196,7 @@
         "contentFlow"
       ],
       "differenceScore": 7,
-      "status": "LOCKED"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "galaxy-ballroom",
@@ -263,7 +263,7 @@
         "culturalIdentity"
       ],
       "differenceScore": 10,
-      "status": "STRETCH"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "planetarium-romance",

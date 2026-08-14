@@ -20,11 +20,11 @@ This document defines the visual contracts and design fingerprints for the templ
 | Template ID | Category | Collection | Layout Family | Opening | Signature Moment | Diff Score | Status |
 |-------------|----------|------------|---------------|---------|------------------|------------|--------|
 | `celestial-kingdom` | Modern | Celestial / Fantasy | `Celestial Map` | `constellationDraw` | scroll-assemble-constellation | **10/10** | `LOCKED` |
-| `moon-palace` | Karanlık | Celestial / Fantasy | `Cinematic Scroll` | `eclipseReveal` | scroll-lunar-phases-morph | **10/10** | `LOCKED` |
+| `moon-palace` | Karanlık | Celestial / Fantasy | `Cinematic Scroll` | `eclipseReveal` | scroll-lunar-phases-morph | **10/10** | `IMPLEMENTED` |
 | `starlight-covenant` | Karanlık | Celestial / Fantasy | `Celestial Map` | `starryNight` | scroll-constellation-monogram | **6/10** | `LOCKED` |
-| `eclipse-ceremony` | Karanlık | Celestial / Fantasy | `Cinematic Scroll` | `eclipseReveal` | scroll-eclipse-unfold | **10/10** | `LOCKED` |
+| `eclipse-ceremony` | Karanlık | Celestial / Fantasy | `Cinematic Scroll` | `eclipseReveal` | scroll-eclipse-unfold | **10/10** | `IMPLEMENTED` |
 | `aurora-dreamscape` | Doğal | Celestial / Fantasy | `Holographic Interface` | `auroraGlass` | scroll-aurora-shift | **7/10** | `LOCKED` |
-| `cosmic-garden` | Doğal | Celestial / Fantasy | `Celestial Map` | `moonlitGarden` | scroll-blooming-constellation | **7/10** | `LOCKED` |
+| `cosmic-garden` | Doğal | Celestial / Fantasy | `Celestial Map` | `moonlitGarden` | scroll-blooming-constellation | **7/10** | `IMPLEMENTED` |
 | `planetarium-romance` | Modern | Celestial / Fantasy | `Observatory` | `observatoryDome` | scroll-lens-focus-names | **10/10** | `IMPLEMENTED` |
 | `enchanted-forest` | Doğal | Fairy Tale | `Pop-up Book` | `flowerBloom` | scroll-bloom-flowers-vines | **10/10** | `LOCKED` |
 | `crystal-castle` | Lüks | Fairy Tale | `Pop-up Book` | `crystalShatter` | scroll-shatter-reveal-details | **10/10** | `LOCKED` |
@@ -115,7 +115,7 @@ This document defines the visual contracts and design fingerprints for the templ
 | Template ID | Category | Collection | Layout Family | Opening | Signature Moment | Diff Score | Status |
 |-------------|----------|------------|---------------|---------|------------------|------------|--------|
 | `galaxy-ballroom` | Lüks | Celestial / Fantasy | `Cinematic Scroll` | `royalHall` | scroll-galaxy-spin | **7/10** | `STRETCH` |
-| `astral-cathedral` | Karanlık | Celestial / Fantasy | `Stained Glass` | `nazarDome` | scroll-illuminate-stained-glass | **10/10** | `STRETCH` |
+| `astral-cathedral` | Karanlık | Celestial / Fantasy | `Stained Glass` | `nazarDome` | scroll-illuminate-stained-glass | **10/10** | `IMPLEMENTED` |
 | `starlight-canyon` | Doğal | Celestial / Fantasy | `Canyon Crevice Journey` | `minimalFade` | scroll-canyon-depth | **9/10** | `STRETCH` |
 | `rose-castle` | Doğal | Fairy Tale | `Pop-up Book` | `flowerBloom` | scroll-unroll-rose-briar | **7/10** | `STRETCH` |
 | `magic-mirror-ball` | Lüks | Fairy Tale | `Cinematic Scroll` | `mirror` | scroll-mirror-shimmer-clear | **10/10** | `STRETCH` |
@@ -190,7 +190,7 @@ Here are the detailed design signatures for key planned templates:
 - **Signature Moment:** scroll-lunar-phases-morph
 - **Difference Score:** 10/10 (Compared to `None`)
 - **Key Differences:** layout, hero, typography, background, photoTreatment, opening, motionLanguage, decorativeLanguage, contentFlow
-- **Status:** `LOCKED`
+- **Status:** `IMPLEMENTED`
 
 ### `starlight-covenant` — Starlight Covenant
 - **Category:** Karanlık
@@ -226,7 +226,7 @@ Here are the detailed design signatures for key planned templates:
 - **Signature Moment:** scroll-eclipse-unfold
 - **Difference Score:** 10/10 (Compared to `None`)
 - **Key Differences:** layout, hero, typography, background, photoTreatment, opening, motionLanguage, decorativeLanguage, contentFlow
-- **Status:** `LOCKED`
+- **Status:** `IMPLEMENTED`
 
 ### `aurora-dreamscape` — Aurora Dreamscape
 - **Category:** Doğal
@@ -262,7 +262,7 @@ Here are the detailed design signatures for key planned templates:
 - **Signature Moment:** scroll-blooming-constellation
 - **Difference Score:** 7/10 (Compared to `moonlit-secret-garden`)
 - **Key Differences:** layout, hero, background, photoTreatment, decorativeLanguage, motionLanguage, contentFlow
-- **Status:** `LOCKED`
+- **Status:** `IMPLEMENTED`
 
 ### `galaxy-ballroom` — Galaxy Ballroom
 - **Category:** Lüks
@@ -298,7 +298,7 @@ Here are the detailed design signatures for key planned templates:
 - **Signature Moment:** scroll-illuminate-stained-glass
 - **Difference Score:** 10/10 (Compared to `None`)
 - **Key Differences:** layout, hero, typography, background, photoTreatment, opening, motionLanguage, decorativeLanguage, contentFlow, culturalIdentity
-- **Status:** `STRETCH`
+- **Status:** `IMPLEMENTED`
 
 ### `planetarium-romance` — Planetarium Romance
 - **Category:** Modern

@@ -74,6 +74,10 @@ import SantoriniSunsetLayout from './layouts/SantoriniSunsetLayout';
 import AmalfiCoastLayout from './layouts/AmalfiCoastLayout';
 import TuscanyVineyardLayout from './layouts/TuscanyVineyardLayout';
 import LakeComoLayout from './layouts/LakeComoLayout';
+import MoonPalaceLayout from './layouts/MoonPalaceLayout';
+import EclipseCeremonyLayout from './layouts/EclipseCeremonyLayout';
+import CosmicGardenLayout from './layouts/CosmicGardenLayout';
+import AstralCathedralLayout from './layouts/AstralCathedralLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1300,6 +1304,10 @@ case 'asymmetric':
       case 'amalfi-coast-lemons': return <AmalfiCoastLayout {...commonProps} />;
       case 'tuscany-vineyard-manor': return <TuscanyVineyardLayout {...commonProps} />;
       case 'lake-como-grand-hotel': return <LakeComoLayout {...commonProps} />;
+      case 'moon-palace': return <MoonPalaceLayout {...commonProps} />;
+      case 'eclipse-ceremony': return <EclipseCeremonyLayout {...commonProps} />;
+      case 'cosmic-garden': return <CosmicGardenLayout {...commonProps} />;
+      case 'astral-cathedral': return <AstralCathedralLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }
