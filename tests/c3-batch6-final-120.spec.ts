@@ -22,12 +22,16 @@ test.describe("C3-B6 - Final 120 Templates E2E", () => {
   const SLUG = `test-c3-b6-${runId}`;
   let weddingId: string;
 
-  // C3-B6A Minimal/Editorial templates list
+  // C3-B6 Minimal/Editorial & Category Gap templates list
   const templates = [
     { id: "architectural-white-space", testId: "layout-architectural-white", signatureSelector: "#architectural-rsvp" },
     { id: "typographic-monument", testId: "layout-typographic-monument", signatureSelector: "#monument-rsvp" },
     { id: "gallery-catalogue", testId: "layout-catalogue", signatureSelector: "#catalogue-rsvp" },
-    { id: "paper-fold-editorial", testId: "layout-paper-fold", signatureSelector: "#paper-fold-rsvp" }
+    { id: "paper-fold-editorial", testId: "layout-paper-fold", signatureSelector: "#paper-fold-rsvp" },
+    { id: "botanical-herbarium", testId: "layout-herbarium", signatureSelector: "#herbarium-rsvp" },
+    { id: "ceramic-studio", testId: "layout-ceramic", signatureSelector: "#ceramic-rsvp" },
+    { id: "perfume-atelier", testId: "layout-perfume", signatureSelector: "#perfume-rsvp" },
+    { id: "desert-night-camp", testId: "layout-desert-camp", signatureSelector: "#desert-rsvp" }
   ];
 
   test.beforeAll(async () => {

@@ -117,6 +117,10 @@ import ArchitecturalWhiteSpaceLayout from './layouts/ArchitecturalWhiteSpaceLayo
 import TypographicMonumentLayout from './layouts/TypographicMonumentLayout';
 import GalleryCatalogueLayout from './layouts/GalleryCatalogueLayout';
 import PaperFoldEditorialLayout from './layouts/PaperFoldEditorialLayout';
+import BotanicalHerbariumLayout from './layouts/BotanicalHerbariumLayout';
+import CeramicStudioLayout from './layouts/CeramicStudioLayout';
+import PerfumeAtelierLayout from './layouts/PerfumeAtelierLayout';
+import DesertNightCampLayout from './layouts/DesertNightCampLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1386,6 +1390,10 @@ case 'asymmetric':
       case 'typographic-monument': return <TypographicMonumentLayout {...commonProps} />;
       case 'gallery-catalogue': return <GalleryCatalogueLayout {...commonProps} />;
       case 'paper-fold-editorial': return <PaperFoldEditorialLayout {...commonProps} />;
+      case 'botanical-herbarium': return <BotanicalHerbariumLayout {...commonProps} />;
+      case 'ceramic-studio': return <CeramicStudioLayout {...commonProps} />;
+      case 'perfume-atelier': return <PerfumeAtelierLayout {...commonProps} />;
+      case 'desert-night-camp': return <DesertNightCampLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }
