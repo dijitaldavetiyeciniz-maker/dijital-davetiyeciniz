@@ -93,6 +93,11 @@ import JuniorPilotLayout from './layouts/JuniorPilotLayout';
 import StadiumChampionLayout from './layouts/StadiumChampionLayout';
 import AstronautMissionLayout from './layouts/AstronautMissionLayout';
 import AdventureMapLayout from './layouts/AdventureMapLayout';
+import MedicalCongressEditorialLayout from './layouts/MedicalCongressEditorialLayout';
+import AIFutureSummitLayout from './layouts/AIFutureSummitLayout';
+import ArchitectureForumBlueprintLayout from './layouts/ArchitectureForumBlueprintLayout';
+import InvestorNightPrivateLayout from './layouts/InvestorNightPrivateLayout';
+import SustainabilityForumLayout from './layouts/SustainabilityForumLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1338,6 +1343,11 @@ case 'asymmetric':
       case 'stadium-champion-ceremony': return <StadiumChampionLayout {...commonProps} />;
       case 'astronaut-mission-ceremony': return <AstronautMissionLayout {...commonProps} />;
       case 'adventure-map-ceremony': return <AdventureMapLayout {...commonProps} />;
+      case 'medical-congress-editorial': return <MedicalCongressEditorialLayout {...commonProps} />;
+      case 'ai-future-summit': return <AIFutureSummitLayout {...commonProps} />;
+      case 'architecture-forum-blueprint': return <ArchitectureForumBlueprintLayout {...commonProps} />;
+      case 'investor-night-private': return <InvestorNightPrivateLayout {...commonProps} />;
+      case 'sustainability-forum': return <SustainabilityForumLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }
