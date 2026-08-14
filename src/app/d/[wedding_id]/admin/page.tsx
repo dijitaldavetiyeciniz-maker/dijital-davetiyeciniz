@@ -1865,119 +1865,139 @@ export default function CoupleAdminPage({
                           return <div className="col-span-full py-8 text-center text-xs text-slate-400">Bu kategoride şablon bulunmamaktadır.</div>;
                         }
 
-                        return filteredThemes.map(theme => {
-                          const isActive = templateId === theme.id || templateId === theme.template_id;
-                          const compTag = theme.designSignature?.composition || theme.layoutStyle || 'Ortalanmış';
-                          const isPhotoHero = theme.designSignature?.heroElement === 'photo';
+                        const displayedThemes = filteredThemes.slice(0, visibleCount);
 
-                          return (
-                            <div
-                              key={theme.id}
-                              className={`flex flex-col justify-between p-4 rounded-2xl border text-left transition-all bg-white relative shadow-sm hover:shadow-md ${
-                                isActive 
-                                  ? 'border-rose-500 ring-2 ring-rose-300/40 bg-rose-50/10' 
-                                  : 'border-slate-200 hover:border-slate-300'
-                              }`}
-                            >
-                              {/* Top Banner with Thumbnail & Tags */}
-                              <div className="relative w-full h-36 rounded-xl border overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 mb-3 flex items-center justify-center border-slate-200 text-white">
-                                {/* Fallback Text always rendered behind */}
-                                <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center p-4 z-0">
-                                  <span className="text-3xl mb-2">
-                                    {theme.layoutStyle === 'cinematic-poster' ? '🎬' : theme.layoutStyle === 'royal-letter' ? '📜' : theme.layoutStyle === 'polaroid-story' ? '📸' : theme.layoutStyle === 'constellation-night' ? '🌌' : '👑'}
-                                  </span>
-                                  <span className="text-xs font-bold tracking-widest uppercase text-center">{theme.name}</span>
-                                </div>
+                        return (
+                          <>
+                            <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {displayedThemes.map(theme => {
+                                const isActive = templateId === theme.id || templateId === theme.template_id;
+                                const compTag = theme.designSignature?.composition || theme.layoutStyle || 'Ortalanmış';
+                                const isPhotoHero = theme.designSignature?.heroElement === 'photo';
 
-                                {/* Image rendered on top, hidden if error */}
-                                {theme.thumbnail && (
-                                  /* eslint-disable-next-line @next/next/no-img-element */
-                                  <img 
-                                    src={theme.thumbnail} 
-                                    alt={theme.name} 
-                                    className="w-full h-full object-cover relative z-10" 
-                                    loading="lazy"
-                                    onError={(e) => {
-                                      (e.target as any).style.display = 'none';
-                                    }}
-                                  />
-                                )}
+                                return (
+                                  <div
+                                    key={theme.id}
+                                    className={`flex flex-col justify-between p-4 rounded-2xl border text-left transition-all bg-white relative shadow-sm hover:shadow-md ${
+                                      isActive 
+                                        ? 'border-rose-500 ring-2 ring-rose-300/40 bg-rose-50/10' 
+                                        : 'border-slate-200 hover:border-slate-300'
+                                    }`}
+                                  >
+                                    {/* Top Banner with Thumbnail & Tags */}
+                                    <div className="relative w-full h-36 rounded-xl border overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 mb-3 flex items-center justify-center border-slate-200 text-white">
+                                      {/* Fallback Text always rendered behind */}
+                                      <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center p-4 z-0">
+                                        <span className="text-3xl mb-2">
+                                          {theme.layoutStyle === 'cinematic-poster' ? '🎬' : theme.layoutStyle === 'royal-letter' ? '📜' : theme.layoutStyle === 'polaroid-story' ? '📸' : theme.layoutStyle === 'constellation-night' ? '🌌' : '👑'}
+                                        </span>
+                                        <span className="text-xs font-bold tracking-widest uppercase text-center">{theme.name}</span>
+                                      </div>
 
-                                {/* Floating Composition Tag */}
-                                <div className="absolute top-2 left-2 flex flex-wrap gap-1">
-                                  <span className="py-0.5 px-2 rounded-md bg-black/60 backdrop-blur-xs text-[9px] font-mono font-bold text-white uppercase tracking-wider">
-                                    {compTag}
-                                  </span>
-                                  <span className="py-0.5 px-2 rounded-md bg-rose-600/90 text-[9px] font-mono font-bold text-white uppercase">
-                                    {isPhotoHero ? '📷 Fotoğraflı' : '🎨 Tasarım'}
-                                  </span>
-                                </div>
-
-                                {isActive && (
-                                  <span className="absolute top-2 right-2 py-1 px-2.5 rounded-full bg-rose-500 text-white text-[10px] font-bold shadow-md flex items-center gap-1">
-                                    ✓ Aktif Şablon
-                                  </span>
-                                )}
-                              </div>
-
-                              {/* Details Info */}
-                              <div className="mb-3">
-                                <div className="flex items-center justify-between mb-1">
-                                  <strong className="text-slate-900 text-sm font-bold truncate">{theme.name}</strong>
-                                  <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 font-mono">{theme.category}</span>
-                                </div>
-
-                                {theme.visualContract?.desktopComposition && (
-                                  <p className="text-[10px] text-slate-500 line-clamp-2 leading-relaxed font-light">
-                                    {theme.visualContract.desktopComposition}
-                                  </p>
-                                )}
-                              </div>
-
-                              {/* Color Variants Chips (If Available) */}
-                              {theme.colorVariants && theme.colorVariants.length > 0 && (
-                                <div className="mb-3 pt-2 border-t border-slate-100">
-                                  <span className="text-[9px] font-bold tracking-widest uppercase text-slate-400 block mb-1.5">RENK VARYANTLARI</span>
-                                  <div className="flex flex-wrap gap-1.5">
-                                    {theme.colorVariants.map((variant: any) => (
-                                      <button
-                                        key={variant.id}
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          applyPreset(theme, variant);
-                                        }}
-                                        className="py-1 px-2 rounded-lg border text-[9px] font-bold transition-colors flex items-center gap-1.5 bg-slate-50 hover:bg-white border-slate-200"
-                                      >
-                                        <span 
-                                          className="w-2.5 h-2.5 rounded-full border border-black/10 inline-block" 
-                                          style={{ backgroundColor: variant.colorPalette?.accent || variant.colorPalette?.background }} 
+                                      {/* Image rendered on top, hidden if error */}
+                                      {theme.thumbnail && (
+                                        /* eslint-disable-next-line @next/next/no-img-element */
+                                        <img 
+                                          src={theme.thumbnail} 
+                                          alt={theme.name} 
+                                          className="w-full h-full object-cover relative z-10" 
+                                          loading="lazy"
+                                          onError={(e) => {
+                                            (e.target as any).style.display = 'none';
+                                          }}
                                         />
-                                        <span>{variant.name}</span>
-                                      </button>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
+                                      )}
 
-                              {/* Action Buttons */}
-                              <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                                      {/* Floating Composition Tag */}
+                                      <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+                                        <span className="py-0.5 px-2 rounded-md bg-black/60 backdrop-blur-xs text-[9px] font-mono font-bold text-white uppercase tracking-wider">
+                                          {compTag}
+                                        </span>
+                                        <span className="py-0.5 px-2 rounded-md bg-rose-600/90 text-[9px] font-mono font-bold text-white uppercase">
+                                          {isPhotoHero ? '📷 Fotoğraflı' : '🎨 Tasarım'}
+                                        </span>
+                                      </div>
+
+                                      {isActive && (
+                                        <span className="absolute top-2 right-2 py-1 px-2.5 rounded-full bg-rose-500 text-white text-[10px] font-bold shadow-md flex items-center gap-1">
+                                          ✓ Aktif Şablon
+                                        </span>
+                                      )}
+                                    </div>
+
+                                    {/* Details Info */}
+                                    <div className="mb-3">
+                                      <div className="flex items-center justify-between mb-1">
+                                        <strong className="text-slate-900 text-sm font-bold truncate">{theme.name}</strong>
+                                        <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400 font-mono">{theme.category}</span>
+                                      </div>
+
+                                      {theme.visualContract?.desktopComposition && (
+                                        <p className="text-[10px] text-slate-500 line-clamp-2 leading-relaxed font-light">
+                                          {theme.visualContract.desktopComposition}
+                                        </p>
+                                      )}
+                                    </div>
+
+                                    {/* Color Variants Chips (If Available) */}
+                                    {theme.colorVariants && theme.colorVariants.length > 0 && (
+                                      <div className="mb-3 pt-2 border-t border-slate-100">
+                                        <span className="text-[9px] font-bold tracking-widest uppercase text-slate-400 block mb-1.5">RENK VARYANTLARI</span>
+                                        <div className="flex flex-wrap gap-1.5">
+                                          {theme.colorVariants.map((variant: any) => (
+                                            <button
+                                              key={variant.id}
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                applyPreset(theme, variant);
+                                              }}
+                                              className="py-1 px-2 rounded-lg border text-[9px] font-bold transition-colors flex items-center gap-1.5 bg-slate-50 hover:bg-white border-slate-200"
+                                            >
+                                              <span 
+                                                className="w-2.5 h-2.5 rounded-full border border-black/10 inline-block" 
+                                                style={{ backgroundColor: variant.colorPalette?.accent || variant.colorPalette?.background }} 
+                                              />
+                                              <span>{variant.name}</span>
+                                            </button>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Action Buttons */}
+                                    <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                                      <button
+                                        type="button"
+                                        data-testid={`template-${theme.id}`}
+                                        onClick={() => applyPreset(theme)}
+                                        className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs ${
+                                          isActive
+                                            ? 'bg-rose-500 text-white hover:bg-rose-600'
+                                            : 'bg-slate-900 text-white hover:bg-slate-800'
+                                        }`}
+                                      >
+                                        <span>{isActive ? '✓ Uygulandı' : 'Bu Tasarımı Kullan'}</span>
+                                      </button>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+
+                            {filteredThemes.length > visibleCount && (
+                              <div className="col-span-full flex justify-center pt-4">
                                 <button
                                   type="button"
-                                  data-testid={`template-${theme.id}`}
-                                  onClick={() => applyPreset(theme)}
-                                  className={`flex-1 py-2 px-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-2xs ${
-                                    isActive
-                                      ? 'bg-rose-500 text-white hover:bg-rose-600'
-                                      : 'bg-slate-900 text-white hover:bg-slate-800'
-                                  }`}
+                                  onClick={() => setVisibleCount(prev => prev + 12)}
+                                  className="px-6 py-2.5 border border-slate-250 bg-white hover:bg-slate-50 text-slate-900 text-xs font-bold rounded-xl transition-all shadow-xs hover:shadow-sm"
                                 >
-                                  <span>{isActive ? '✓ Uygulandı' : 'Bu Tasarımı Kullan'}</span>
+                                  <span>Daha Fazla Göster (+12)</span>
                                 </button>
                               </div>
-                            </div>
-                          );
-                        });
+                            )}
+                          </>
+                        );
                       })()}
                     </div>
                   </div>
