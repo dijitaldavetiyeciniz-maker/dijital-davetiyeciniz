@@ -83,6 +83,11 @@ import ApolloSunTempleLayout from './layouts/ApolloSunTempleLayout';
 import ArtemisMoonGardenLayout from './layouts/ArtemisMoonGardenLayout';
 import PhoenixPalaceLayout from './layouts/PhoenixPalaceLayout';
 import OracleDelphiLayout from './layouts/OracleDelphiLayout';
+import DinosaurExpeditionLayout from './layouts/DinosaurExpeditionLayout';
+import PirateTreasureMapLayout from './layouts/PirateTreasureMapLayout';
+import RobotLaboratoryLayout from './layouts/RobotLaboratoryLayout';
+import ToyTrainJourneyLayout from './layouts/ToyTrainJourneyLayout';
+import UnderwaterKidsKingdomLayout from './layouts/UnderwaterKidsKingdomLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1318,6 +1323,11 @@ case 'asymmetric':
       case 'artemis-moon-garden': return <ArtemisMoonGardenLayout {...commonProps} />;
       case 'phoenix-palace': return <PhoenixPalaceLayout {...commonProps} />;
       case 'oracle-of-delphi': return <OracleDelphiLayout {...commonProps} />;
+      case 'dinosaur-expedition': return <DinosaurExpeditionLayout {...commonProps} />;
+      case 'pirate-treasure-map': return <PirateTreasureMapLayout {...commonProps} />;
+      case 'robot-laboratory': return <RobotLaboratoryLayout {...commonProps} />;
+      case 'toy-train-journey': return <ToyTrainJourneyLayout {...commonProps} />;
+      case 'underwater-kids-kingdom': return <UnderwaterKidsKingdomLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }
