@@ -9643,8 +9643,8 @@ export const predefinedThemes: TemplatePreset[] = [
     "use_envelope": true,
     "envelope_color": "#faf6eb",
     "seal_type": "wax-gold",
-    "recommendedOpeningType": "envelope",
-    "compatibleOpeningAnimations": ["envelope", "minimalFade"],
+    "recommendedOpeningType": "botanicalWatercolor",
+    "compatibleOpeningAnimations": ["botanicalWatercolor", "envelope", "minimalFade"],
     "recommendedOpeningStyle": "parchment-paper",
     "recommendedBackgroundDesign": "parchment-paper",
     "recommendedBackgroundAnimation": "leafFall",
@@ -9664,7 +9664,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "venuePresentation": "cards",
       "heroElement": "photo",
       "photoUsage": "background",
-      "openingAnimation": "envelope"
+      "openingAnimation": "botanicalWatercolor"
     },
     "colorVariants": [],
     "mediaSupport": "background",
@@ -9685,8 +9685,8 @@ export const predefinedThemes: TemplatePreset[] = [
     "use_envelope": true,
     "envelope_color": "#faf6f0",
     "seal_type": "wax-gold",
-    "recommendedOpeningType": "envelope",
-    "compatibleOpeningAnimations": ["envelope", "minimalFade"],
+    "recommendedOpeningType": "mediterraneanCeramic",
+    "compatibleOpeningAnimations": ["mediterraneanCeramic", "envelope", "minimalFade"],
     "recommendedOpeningStyle": "parchment-paper",
     "recommendedBackgroundDesign": "parchment-paper",
     "recommendedBackgroundAnimation": "leafFall",
@@ -9706,7 +9706,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "venuePresentation": "cards",
       "heroElement": "photo",
       "photoUsage": "background",
-      "openingAnimation": "envelope"
+      "openingAnimation": "mediterraneanCeramic"
     },
     "colorVariants": [],
     "mediaSupport": "background",
@@ -9769,8 +9769,8 @@ export const predefinedThemes: TemplatePreset[] = [
     "use_envelope": true,
     "envelope_color": "#0b0f19",
     "seal_type": "wax-gold",
-    "recommendedOpeningType": "envelope",
-    "compatibleOpeningAnimations": ["envelope", "minimalFade"],
+    "recommendedOpeningType": "starryNight",
+    "compatibleOpeningAnimations": ["starryNight", "envelope", "minimalFade"],
     "recommendedOpeningStyle": "parchment-paper",
     "recommendedBackgroundDesign": "parchment-paper",
     "recommendedBackgroundAnimation": "pearlLight",
@@ -9790,7 +9790,7 @@ export const predefinedThemes: TemplatePreset[] = [
       "venuePresentation": "cards",
       "heroElement": "photo",
       "photoUsage": "background",
-      "openingAnimation": "envelope"
+      "openingAnimation": "starryNight"
     },
     "colorVariants": [],
     "mediaSupport": "background",
