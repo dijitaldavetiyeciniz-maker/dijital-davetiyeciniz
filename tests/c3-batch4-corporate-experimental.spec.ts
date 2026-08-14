@@ -22,13 +22,18 @@ test.describe("C3-B4 - Corporate & Experimental Templates E2E", () => {
   const SLUG = `test-c3-b4-${runId}`;
   let weddingId: string;
 
-  // C3-B4A Corporate templates list
+  // C3-B4 Corporate & Experimental templates list
   const corporateThemes = [
     { id: "medical-congress-editorial", testId: "layout-medical-congress", signatureSelector: "#medical-rsvp" },
     { id: "ai-future-summit", testId: "layout-ai-future-summit", signatureSelector: "#ai-rsvp" },
     { id: "architecture-forum-blueprint", testId: "layout-architecture-forum", signatureSelector: "#architecture-rsvp" },
     { id: "investor-night-private", testId: "layout-investor-night", signatureSelector: "#investor-rsvp" },
-    { id: "sustainability-forum", testId: "layout-sustainability-forum", signatureSelector: "#sustainability-rsvp" }
+    { id: "sustainability-forum", testId: "layout-sustainability-forum", signatureSelector: "#sustainability-rsvp" },
+    { id: "memory-museum", testId: "layout-memory-museum", signatureSelector: "#museum-rsvp" },
+    { id: "midnight-radio", testId: "layout-midnight-radio", signatureSelector: "#radio-rsvp" },
+    { id: "analog-television", testId: "layout-analog-television", signatureSelector: "#tv-rsvp" },
+    { id: "secret-agent-invitation", testId: "layout-secret-agent", signatureSelector: "#agent-rsvp" },
+    { id: "vinyl-love-story", testId: "layout-vinyl-love-story", signatureSelector: "#vinyl-rsvp" }
   ];
 
   test.beforeAll(async () => {

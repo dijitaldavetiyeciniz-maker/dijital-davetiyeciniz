@@ -98,6 +98,11 @@ import AIFutureSummitLayout from './layouts/AIFutureSummitLayout';
 import ArchitectureForumBlueprintLayout from './layouts/ArchitectureForumBlueprintLayout';
 import InvestorNightPrivateLayout from './layouts/InvestorNightPrivateLayout';
 import SustainabilityForumLayout from './layouts/SustainabilityForumLayout';
+import MemoryMuseumLayout from './layouts/MemoryMuseumLayout';
+import MidnightRadioLayout from './layouts/MidnightRadioLayout';
+import AnalogTelevisionLayout from './layouts/AnalogTelevisionLayout';
+import SecretAgentInvitationLayout from './layouts/SecretAgentInvitationLayout';
+import VinylLoveStoryLayout from './layouts/VinylLoveStoryLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1348,6 +1353,11 @@ case 'asymmetric':
       case 'architecture-forum-blueprint': return <ArchitectureForumBlueprintLayout {...commonProps} />;
       case 'investor-night-private': return <InvestorNightPrivateLayout {...commonProps} />;
       case 'sustainability-forum': return <SustainabilityForumLayout {...commonProps} />;
+      case 'memory-museum': return <MemoryMuseumLayout {...commonProps} />;
+      case 'midnight-radio': return <MidnightRadioLayout {...commonProps} />;
+      case 'analog-television': return <AnalogTelevisionLayout {...commonProps} />;
+      case 'secret-agent-invitation': return <SecretAgentInvitationLayout {...commonProps} />;
+      case 'vinyl-love-story': return <VinylLoveStoryLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }
