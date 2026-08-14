@@ -12,6 +12,7 @@ test.describe('PART 3 — Batch C1 New Unique Templates E2E Validation', () => {
       'ai-summit-corporate',
       'planetarium-romance',
       'atlantis-ceremony',
+      'underwater-journey',
       'experimental-infinite-gallery',
       'experimental-midnight-radio',
     ];

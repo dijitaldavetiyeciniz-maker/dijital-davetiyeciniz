@@ -805,7 +805,7 @@
         "motionLanguage"
       ],
       "differenceScore": 7,
-      "status": "LOCKED"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "artemis-moon-garden",
@@ -837,7 +837,7 @@
         "motionLanguage"
       ],
       "differenceScore": 7,
-      "status": "LOCKED"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "atlantis-ceremony",
@@ -903,7 +903,7 @@
         "culturalIdentity"
       ],
       "differenceScore": 10,
-      "status": "STRETCH"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "pegasus-sky",
@@ -996,7 +996,7 @@
         "motionLanguage"
       ],
       "differenceScore": 6,
-      "status": "STRETCH"
+      "status": "IMPLEMENTED"
     },
     {
       "id": "surreal-cloud-palace",

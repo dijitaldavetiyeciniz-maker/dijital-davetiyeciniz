@@ -36,8 +36,8 @@ This document defines the visual contracts and design fingerprints for the templ
 | `olympus-celebration` | Lüks | Mythological | `Museum Exhibition` | `royalPalace` | scroll-marble-pedestal-rise | **10/10** | `LOCKED` |
 | `poseidon-palace` | Karanlık | Mythological | `Underwater Journey` | `curtain` | scroll-underwater-submerge | **10/10** | `LOCKED` |
 | `aphrodite-garden` | Doğal | Mythological | `Museum Exhibition` | `botanicalBlossom` | scroll-seafoam-roses-reveal | **7/10** | `LOCKED` |
-| `apollo-sun-temple` | Lüks | Mythological | `Museum Exhibition` | `spotlight` | scroll-sunbeams-illuminate-details | **7/10** | `LOCKED` |
-| `artemis-moon-garden` | Karanlık | Mythological | `Celestial Map` | `moonlitGarden` | scroll-silver-arrow-trajectory | **7/10** | `LOCKED` |
+| `apollo-sun-temple` | Lüks | Mythological | `Museum Exhibition` | `spotlight` | scroll-sunbeams-illuminate-details | **7/10** | `IMPLEMENTED` |
+| `artemis-moon-garden` | Karanlık | Mythological | `Celestial Map` | `moonlitGarden` | scroll-silver-arrow-trajectory | **7/10** | `IMPLEMENTED` |
 | `atlantis-ceremony` | Karanlık | Mythological | `Underwater Journey` | `underwaterDive` | scroll-dive-atlantis-ruins | **6/10** | `IMPLEMENTED` |
 | `surreal-cloud-palace` | Modern | Surreal / Artistic | `Vertical Spatial Journey` | `cloudBaloon` | scroll-floating-palace-rise | **10/10** | `LOCKED` |
 | `infinite-staircase` | Modern | Surreal / Artistic | `Vertical Spatial Journey` | `elevator` | scroll-infinite-staircase-traverse | **10/10** | `LOCKED` |
@@ -120,10 +120,10 @@ This document defines the visual contracts and design fingerprints for the templ
 | `rose-castle` | Doğal | Fairy Tale | `Pop-up Book` | `flowerBloom` | scroll-unroll-rose-briar | **7/10** | `STRETCH` |
 | `magic-mirror-ball` | Lüks | Fairy Tale | `Cinematic Scroll` | `mirror` | scroll-mirror-shimmer-clear | **10/10** | `STRETCH` |
 | `whispering-forest` | Doğal | Fairy Tale | `Pop-up Book` | `castleGates` | scroll-leaves-blow-across | **7/10** | `STRETCH` |
-| `phoenix-palace` | Karanlık | Mythological | `Cinematic Scroll` | `curtain` | scroll-ash-rises-gold-wings | **10/10** | `STRETCH` |
+| `phoenix-palace` | Karanlık | Mythological | `Cinematic Scroll` | `curtain` | scroll-ash-rises-gold-wings | **10/10** | `IMPLEMENTED` |
 | `pegasus-sky` | Doğal | Mythological | `Celestial Map` | `starryNight` | scroll-pegasus-flight-parallax | **6/10** | `STRETCH` |
 | `medusa-marble` | Karanlık | Mythological | `Museum Exhibition` | `royalPalace` | scroll-snake-coils-slither | **6/10** | `STRETCH` |
-| `oracle-of-delphi` | Karanlık | Mythological | `Observatory` | `spotlight` | scroll-smoke-clears-reveal-text | **6/10** | `STRETCH` |
+| `oracle-of-delphi` | Karanlık | Mythological | `Observatory` | `spotlight` | scroll-smoke-clears-reveal-text | **6/10** | `IMPLEMENTED` |
 | `watercolor-dream` | Doğal | Surreal / Artistic | `Paper Cut Diorama` | `botanicalWatercolor` | scroll-ink-bleeds-in | **7/10** | `STRETCH` |
 | `origami-world` | Minimalist | Surreal / Artistic | `Paper Cut Diorama` | `origamiUnfold` | scroll-origami-crane-flaps | **9/10** | `STRETCH` |
 | `glass-garden` | Modern | Surreal / Artistic | `Vertical Spatial Journey` | `glassReveal` | scroll-clear-foggy-glass | **7/10** | `STRETCH` |

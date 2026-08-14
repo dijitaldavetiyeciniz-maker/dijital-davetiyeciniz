@@ -78,6 +78,11 @@ import MoonPalaceLayout from './layouts/MoonPalaceLayout';
 import EclipseCeremonyLayout from './layouts/EclipseCeremonyLayout';
 import CosmicGardenLayout from './layouts/CosmicGardenLayout';
 import AstralCathedralLayout from './layouts/AstralCathedralLayout';
+import AtlantisLayout from './layouts/AtlantisLayout';
+import ApolloSunTempleLayout from './layouts/ApolloSunTempleLayout';
+import ArtemisMoonGardenLayout from './layouts/ArtemisMoonGardenLayout';
+import PhoenixPalaceLayout from './layouts/PhoenixPalaceLayout';
+import OracleDelphiLayout from './layouts/OracleDelphiLayout';
 import MinimalCeremonyLayout from './layouts/MinimalCeremonyLayout';
 import GoldFrameGalleryLayout from './layouts/GoldFrameGalleryLayout';
 import FloralFamilyLayout from './layouts/FloralFamilyLayout';
@@ -1308,6 +1313,11 @@ case 'asymmetric':
       case 'eclipse-ceremony': return <EclipseCeremonyLayout {...commonProps} />;
       case 'cosmic-garden': return <CosmicGardenLayout {...commonProps} />;
       case 'astral-cathedral': return <AstralCathedralLayout {...commonProps} />;
+      case 'atlantis-ceremony': return <AtlantisLayout {...commonProps} />;
+      case 'apollo-sun-temple': return <ApolloSunTempleLayout {...commonProps} />;
+      case 'artemis-moon-garden': return <ArtemisMoonGardenLayout {...commonProps} />;
+      case 'phoenix-palace': return <PhoenixPalaceLayout {...commonProps} />;
+      case 'oracle-of-delphi': return <OracleDelphiLayout {...commonProps} />;
       default:
         return <SplitScreenLayout {...commonProps} />;
     }

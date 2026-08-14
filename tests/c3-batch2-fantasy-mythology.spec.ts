@@ -22,12 +22,17 @@ test.describe("C3-B2 - Fantasy & Mythological Templates E2E", () => {
   const SLUG = `test-c3-b2-${runId}`;
   let weddingId: string;
 
-  // C3-B2A Fantasy templates list
+  // C3-B2 Fantasy and Mythological templates list
   const fantasyThemes = [
     { id: "moon-palace", testId: "layout-moon-palace", signatureSelector: "#lunar-palace-rsvp" },
     { id: "eclipse-ceremony", testId: "layout-eclipse", signatureSelector: "#eclipse-rsvp" },
     { id: "cosmic-garden", testId: "layout-cosmic-garden", signatureSelector: "#cosmic-rsvp" },
-    { id: "astral-cathedral", testId: "layout-astral-cathedral", signatureSelector: "#cathedral-rsvp" }
+    { id: "astral-cathedral", testId: "layout-astral-cathedral", signatureSelector: "#cathedral-rsvp" },
+    { id: "atlantis-ceremony", testId: "layout-atlantis", signatureSelector: "#atlantis-rsvp" },
+    { id: "apollo-sun-temple", testId: "layout-apollo-sun-temple", signatureSelector: "#apollo-sun-rsvp" },
+    { id: "artemis-moon-garden", testId: "layout-artemis-moon-garden", signatureSelector: "#artemis-rsvp" },
+    { id: "phoenix-palace", testId: "layout-phoenix-palace", signatureSelector: "#phoenix-rsvp" },
+    { id: "oracle-of-delphi", testId: "layout-oracle", signatureSelector: "#oracle-rsvp" }
   ];
 
   test.beforeAll(async () => {
