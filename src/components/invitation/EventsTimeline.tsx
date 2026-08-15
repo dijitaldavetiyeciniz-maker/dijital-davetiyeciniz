@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { Calendar, MapPin, Clock, ExternalLink } from 'lucide-react';
 

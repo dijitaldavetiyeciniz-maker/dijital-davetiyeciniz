@@ -42,7 +42,7 @@ plannedThemes.forEach(theme => {
     'id', 'name', 'category', 'collection', 'layoutFamily', 'heroComposition',
     'visualLanguage', 'typographyFamily', 'backgroundType', 'photoTreatment',
     'decorativeLanguage', 'contentFlow', 'openingAnimation', 'openingFamily',
-    'motionLanguage', 'signatureMoment', 'priority', 'similarTemplate', 'differences'
+    'motionLanguage', 'signatureMoment', 'priority', 'similarTemplate', 'differences', 'status'
   ];
   
   const missing = requiredFields.filter(f => !theme[f]);
@@ -62,6 +62,15 @@ plannedThemes.forEach(theme => {
   let isCompleted = false;
   if (existingIds.includes(theme.id)) {
     isCompleted = true;
+    if (theme.status !== 'IMPLEMENTED' && theme.status !== 'EXISTING' && theme.status !== 'MERGED') {
+      console.error(`❌ [REJECT] Theme "${theme.id}" is implemented in themes.ts but status in matrix is "${theme.status}" (IMPLEMENTED_TEMPLATE_REPLANNED).`);
+      hasErrors = true;
+    }
+  } else {
+    if (theme.status === 'IMPLEMENTED' || theme.status === 'EXISTING') {
+      console.error(`❌ [REJECT] Theme "${theme.id}" has status "${theme.status}" but is NOT found in themes.ts.`);
+      hasErrors = true;
+    }
   }
 
   // Check 4: Difference Score
@@ -85,7 +94,7 @@ plannedThemes.forEach(theme => {
   }
 
   if (isCompleted) {
-    console.log(`✅ [COMPLETED] Theme "${theme.id}" has been implemented in themes.ts.`);
+    console.log(`✅ [COMPLETED] Theme "${theme.id}" is correctly implemented in themes.ts.`);
   }
 
   // Stats aggregation

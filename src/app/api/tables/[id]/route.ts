@@ -7,9 +7,9 @@ const tableSchema = z.object({
   capacity: z.number().min(1).optional()
 });
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const tableId = params.id;
+    const { id: tableId } = await context.params;
     const body = await request.json();
     const validatedData = tableSchema.parse(body);
 
@@ -73,9 +73,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const tableId = params.id;
+    const { id: tableId } = await context.params;
     const serviceRoleClient = createServerServiceRoleClient();
     
     const { data: table, error: fetchError } = await serviceRoleClient

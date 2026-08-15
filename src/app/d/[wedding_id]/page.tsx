@@ -1,7 +1,53 @@
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ wedding_id: string }>;
+}): Promise<Metadata> {
+  const { wedding_id } = await params;
+  
+  const { data: wedding } = await supabase
+    .from('weddings')
+    .select('bride_name, groom_name, venue_name, event_type, updated_at')
+    .eq('slug', wedding_id)
+    .single();
+
+  if (!wedding) return {};
+
+  const title = `${wedding.bride_name} & ${wedding.groom_name} Davetiyesi`;
+  const description = `${wedding.venue_name} salonundaki ${wedding.event_type === 'wedding' ? 'düğün' : 'etkinlik'} davetiyemize bekliyoruz.`;
+  const cacheBust = wedding.updated_at ? new Date(wedding.updated_at).getTime() : Date.now();
+  const ogImageUrl = `/api/og?wedding_id=${wedding_id}&v=${cacheBust}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+  };
+}
 import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
 import Envelope from '@/components/Envelope';
 import BubblesEffect from '@/components/effects/BubblesEffect';
@@ -85,6 +131,33 @@ export default async function WeddingPage({
     if (sParams.effect_type) wedding.effect_type = sParams.effect_type;
     if (sParams.font_family) wedding.font_family = sParams.font_family;
     if (sParams.names_font_family) wedding.names_font_family = sParams.names_font_family;
+    
+    if (!wedding.invitation_events || wedding.invitation_events.length === 0) {
+      wedding.invitation_events = [
+        {
+          id: 'mock-event-1',
+          wedding_id: wedding.id,
+          type: 'nikah',
+          title: 'Kıyım Töreni',
+          start_time: '2027-09-20T18:00:00.000Z',
+          timezone: 'Europe/Istanbul',
+          venue_name: 'Yalı Rıhtımı',
+          venue_address: 'Yalı Sokak No 12, Tarabya',
+          is_primary: true
+        },
+        {
+          id: 'mock-event-2',
+          wedding_id: wedding.id,
+          type: 'cocktail',
+          title: 'Kokteyl ve Resepsiyon',
+          start_time: '2027-09-20T19:30:00.000Z',
+          timezone: 'Europe/Istanbul',
+          venue_name: 'Yalı Bahçesi',
+          venue_address: 'Yalı Sokak No 12, Tarabya',
+          is_primary: false
+        }
+      ];
+    }
   }
 
   // PAYWALL (Ödeme Duvarı) Kontrolü (Bypass if in preview mode)
@@ -105,6 +178,7 @@ export default async function WeddingPage({
     );
   }
 
+  console.log("DEBUG EVENT INJECTION: slug =", wedding.slug, "events =", JSON.stringify(wedding.invitation_events));
   const cleanWedding = sanitizePublicWedding(wedding);
 
   // Veritabanından gelen template_id değerine göre uygun şablonu render et.

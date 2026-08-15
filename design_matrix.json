@@ -32,7 +32,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "moon-palace",
@@ -65,7 +66,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "starlight-covenant",
@@ -95,7 +97,8 @@
         "motionLanguage",
         "opening"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "eclipse-ceremony",
@@ -128,7 +131,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "aurora-dreamscape",
@@ -159,7 +163,8 @@
         "motionLanguage",
         "contentFlow"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "LOCKED"
     },
     {
       "id": "cosmic-garden",
@@ -190,7 +195,8 @@
         "motionLanguage",
         "contentFlow"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "galaxy-ballroom",
@@ -221,7 +227,8 @@
         "motionLanguage",
         "decorativeLanguage"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "STRETCH"
     },
     {
       "id": "astral-cathedral",
@@ -255,7 +262,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "planetarium-romance",
@@ -288,7 +296,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "starlight-canyon",
@@ -321,7 +330,8 @@
         "contentFlow",
         "decorativeLanguage"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "STRETCH"
     },
     {
       "id": "enchanted-forest",
@@ -355,7 +365,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "crystal-castle",
@@ -388,7 +399,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "secret-fairy-garden",
@@ -419,7 +431,8 @@
         "motionLanguage",
         "opening"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "LOCKED"
     },
     {
       "id": "storybook-kingdom",
@@ -453,7 +466,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "midnight-carriage",
@@ -487,7 +501,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "rose-castle",
@@ -518,7 +533,8 @@
         "opening",
         "motionLanguage"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "STRETCH"
     },
     {
       "id": "floating-lantern-kingdom",
@@ -552,7 +568,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "enchanted-library",
@@ -586,7 +603,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "magic-mirror-ball",
@@ -620,7 +638,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "STRETCH"
     },
     {
       "id": "whispering-forest",
@@ -651,7 +670,8 @@
         "motionLanguage",
         "opening"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "STRETCH"
     },
     {
       "id": "olympus-celebration",
@@ -685,7 +705,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "poseidon-palace",
@@ -719,7 +740,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "aphrodite-garden",
@@ -750,7 +772,8 @@
         "opening",
         "motionLanguage"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "LOCKED"
     },
     {
       "id": "apollo-sun-temple",
@@ -781,7 +804,8 @@
         "opening",
         "motionLanguage"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "artemis-moon-garden",
@@ -812,7 +836,8 @@
         "opening",
         "motionLanguage"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "atlantis-ceremony",
@@ -842,7 +867,8 @@
         "opening",
         "motionLanguage"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "phoenix-palace",
@@ -876,7 +902,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "pegasus-sky",
@@ -906,7 +933,8 @@
         "decorativeLanguage",
         "motionLanguage"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "STRETCH"
     },
     {
       "id": "medusa-marble",
@@ -936,7 +964,8 @@
         "decorativeLanguage",
         "motionLanguage"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "STRETCH"
     },
     {
       "id": "oracle-of-delphi",
@@ -966,7 +995,8 @@
         "decorativeLanguage",
         "motionLanguage"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "surreal-cloud-palace",
@@ -1000,7 +1030,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "infinite-staircase",
@@ -1034,7 +1065,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "dream-door",
@@ -1068,7 +1100,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "mirror-world",
@@ -1102,7 +1135,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "melting-gold",
@@ -1136,7 +1170,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "paper-moon",
@@ -1170,7 +1205,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "watercolor-dream",
@@ -1201,7 +1237,8 @@
         "motionLanguage",
         "contentFlow"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "STRETCH"
     },
     {
       "id": "ink-and-gold",
@@ -1235,7 +1272,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "origami-world",
@@ -1268,7 +1306,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "STRETCH"
     },
     {
       "id": "glass-garden",
@@ -1299,7 +1338,8 @@
         "decorativeLanguage",
         "motionLanguage"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "STRETCH"
     },
     {
       "id": "seljuk-geometry",
@@ -1333,7 +1373,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "moroccan-riad",
@@ -1367,7 +1408,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "persian-garden",
@@ -1401,7 +1443,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "japanese-zen-garden",
@@ -1435,7 +1478,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "turkish-tile-garden",
@@ -1465,7 +1509,8 @@
         "motionLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "cappadocia-sunset-balloon",
@@ -1499,7 +1544,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "bosphorus-mansion",
@@ -1533,7 +1579,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "moroccan-riad-henna-night",
@@ -1565,7 +1612,8 @@
         "contentFlow",
         "opening"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "persian-miniature-concept",
@@ -1599,7 +1647,8 @@
         "typography",
         "photoTreatment"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "japanese-folding-screen-sakura",
@@ -1633,7 +1682,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "korean-hanok-traditional",
@@ -1665,7 +1715,8 @@
         "contentFlow",
         "opening"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "andalusian-palace-alhambra",
@@ -1698,7 +1749,8 @@
         "opening",
         "typography"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "mughal-garden-taj",
@@ -1730,7 +1782,8 @@
         "contentFlow",
         "opening"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "scandinavian-forest-nordic",
@@ -1764,7 +1817,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "STRETCH"
     },
     {
       "id": "alpine-lodge-woodlands",
@@ -1798,7 +1852,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "STRETCH"
     },
     {
       "id": "santorini-sunset-terrace",
@@ -1832,7 +1887,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "amalfi-coast-lemons",
@@ -1862,7 +1918,8 @@
         "opening",
         "culturalIdentity"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "tuscany-vineyard-manor",
@@ -1896,7 +1953,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "provence-lavender-estate",
@@ -1927,7 +1985,8 @@
         "culturalIdentity",
         "opening"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "LOCKED"
     },
     {
       "id": "cotswolds-garden-estate",
@@ -1960,7 +2019,8 @@
         "contentFlow",
         "opening"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "LOCKED"
     },
     {
       "id": "swiss-alps-chalet",
@@ -1994,7 +2054,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "lake-como-grand-hotel",
@@ -2028,7 +2089,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "venice-canal-palazzo",
@@ -2062,7 +2124,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "paris-eiffel-editorial",
@@ -2096,7 +2159,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "cote-d-azur-yacht-club",
@@ -2129,7 +2193,8 @@
         "contentFlow",
         "opening"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "LOCKED"
     },
     {
       "id": "bali-temple-garden",
@@ -2160,7 +2225,8 @@
         "culturalIdentity",
         "opening"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "LOCKED"
     },
     {
       "id": "maldives-overwater-sunset",
@@ -2192,7 +2258,8 @@
         "opening",
         "contentFlow"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "STRETCH"
     },
     {
       "id": "safari-adventure-jungle",
@@ -2225,7 +2292,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "LOCKED"
     },
     {
       "id": "underwater-kingdom-marine",
@@ -2258,7 +2326,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "LOCKED"
     },
     {
       "id": "dinosaur-expedition-park",
@@ -2291,7 +2360,8 @@
         "contentFlow",
         "opening"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "LOCKED"
     },
     {
       "id": "space-explorer-orbit",
@@ -2324,7 +2394,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "LOCKED"
     },
     {
       "id": "woodland-fairy-wonderland",
@@ -2356,7 +2427,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "LOCKED"
     },
     {
       "id": "candy-kingdom-sweet",
@@ -2388,7 +2460,8 @@
         "typography",
         "contentFlow"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "LOCKED"
     },
     {
       "id": "circus-carnival-tent",
@@ -2421,7 +2494,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "pirate-treasure-island",
@@ -2452,7 +2526,8 @@
         "motionLanguage",
         "decorativeLanguage"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "LOCKED"
     },
     {
       "id": "princess-garden-castle",
@@ -2483,7 +2558,8 @@
         "typography",
         "contentFlow"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "LOCKED"
     },
     {
       "id": "little-prince-asteroid",
@@ -2515,7 +2591,8 @@
         "motionLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "LOCKED"
     },
     {
       "id": "toy-train-railway",
@@ -2548,7 +2625,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "STRETCH"
     },
     {
       "id": "farm-adventure-animals",
@@ -2579,7 +2657,8 @@
         "motionLanguage",
         "contentFlow"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "STRETCH"
     },
     {
       "id": "circumcision-ottoman-prince",
@@ -2611,7 +2690,8 @@
         "decorativeLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "LOCKED"
     },
     {
       "id": "circumcision-modern-prince",
@@ -2644,7 +2724,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "LOCKED"
     },
     {
       "id": "circumcision-sailor-captain",
@@ -2678,7 +2759,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "circumcision-astronaut-boy",
@@ -2709,7 +2791,8 @@
         "decorativeLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "LOCKED"
     },
     {
       "id": "circumcision-football-star",
@@ -2743,7 +2826,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "circumcision-race-car-champion",
@@ -2773,7 +2857,8 @@
         "motionLanguage",
         "decorativeLanguage"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "circumcision-aviation-pilot",
@@ -2803,7 +2888,8 @@
         "decorativeLanguage",
         "motionLanguage"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "STRETCH"
     },
     {
       "id": "circumcision-bosphorus-prince",
@@ -2835,7 +2921,8 @@
         "decorativeLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "STRETCH"
     },
     {
       "id": "circumcision-seljuk-prince",
@@ -2867,7 +2954,8 @@
         "decorativeLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "STRETCH"
     },
     {
       "id": "circumcision-adventure-map",
@@ -2900,7 +2988,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "STRETCH"
     },
     {
       "id": "rooftop-celebration",
@@ -2933,7 +3022,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "champagne-editorial",
@@ -2966,7 +3056,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "LOCKED"
     },
     {
       "id": "paris-apartment-chic",
@@ -2996,7 +3087,8 @@
         "opening",
         "culturalIdentity"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "cherry-blossom-engagement",
@@ -3030,7 +3122,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "mediterranean-terrace-engagement",
@@ -3060,7 +3153,8 @@
         "opening",
         "culturalIdentity"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "bohemian-henna-night",
@@ -3094,7 +3188,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "anatolian-henna-night",
@@ -3128,7 +3223,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "candle-courtyard-henna",
@@ -3162,7 +3258,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "STRETCH"
     },
     {
       "id": "moonlit-henna-garden-celebration",
@@ -3194,7 +3291,8 @@
         "motionLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "STRETCH"
     },
     {
       "id": "ai-summit-corporate",
@@ -3226,7 +3324,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "medical-congress-clinical",
@@ -3260,7 +3359,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "startup-demo-day-pitch",
@@ -3290,7 +3390,8 @@
         "motionLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "product-launch-automotive",
@@ -3324,7 +3425,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "luxury-brand-launch",
@@ -3358,7 +3460,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "architecture-conference-blueprint",
@@ -3392,7 +3495,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "investor-night-financial",
@@ -3426,7 +3530,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "sustainability-summit-eco",
@@ -3456,7 +3561,8 @@
         "motionLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "creative-festival-experimental",
@@ -3489,7 +3595,8 @@
         "decorativeLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 9
+      "differenceScore": 9,
+      "status": "STRETCH"
     },
     {
       "id": "biotech-congress-microscopic",
@@ -3520,7 +3627,8 @@
         "decorativeLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "STRETCH"
     },
     {
       "id": "versailles-gold-lux",
@@ -3554,7 +3662,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "gatsby-art-deco-lux",
@@ -3588,7 +3697,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "venetian-masquerade-lux",
@@ -3618,7 +3728,8 @@
         "opening",
         "culturalIdentity"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "manhattan-black-tie-lux",
@@ -3650,7 +3761,8 @@
         "motionLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "LOCKED"
     },
     {
       "id": "luxury-perfume-launch-style",
@@ -3684,7 +3796,8 @@
         "contentFlow",
         "opening"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "regal-dynasty-lux",
@@ -3715,7 +3828,8 @@
         "contentFlow",
         "opening"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "STRETCH"
     },
     {
       "id": "vanderbilt-estate-lux",
@@ -3746,7 +3860,8 @@
         "decorativeLanguage",
         "culturalIdentity"
       ],
-      "differenceScore": 7
+      "differenceScore": 7,
+      "status": "STRETCH"
     },
     {
       "id": "experimental-time-capsule",
@@ -3776,7 +3891,8 @@
         "motionLanguage",
         "decorativeLanguage"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "experimental-parallel-universe",
@@ -3809,7 +3925,8 @@
         "decorativeLanguage",
         "contentFlow"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "LOCKED"
     },
     {
       "id": "experimental-infinite-gallery",
@@ -3843,7 +3960,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "experimental-dream-elevator",
@@ -3873,7 +3991,8 @@
         "motionLanguage",
         "decorativeLanguage"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "experimental-memory-museum",
@@ -3903,7 +4022,8 @@
         "motionLanguage",
         "decorativeLanguage"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "experimental-love-constellation",
@@ -3933,7 +4053,8 @@
         "photoTreatment",
         "decorativeLanguage"
       ],
-      "differenceScore": 6
+      "differenceScore": 6,
+      "status": "LOCKED"
     },
     {
       "id": "experimental-midnight-radio",
@@ -3967,7 +4088,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "IMPLEMENTED"
     },
     {
       "id": "experimental-analog-television",
@@ -3999,7 +4121,8 @@
         "culturalIdentity",
         "opening"
       ],
-      "differenceScore": 8
+      "differenceScore": 8,
+      "status": "STRETCH"
     },
     {
       "id": "experimental-secret-agent",
@@ -4033,7 +4156,8 @@
         "contentFlow",
         "culturalIdentity"
       ],
-      "differenceScore": 10
+      "differenceScore": 10,
+      "status": "STRETCH"
     }
   ],
   "rejectedThemes": [

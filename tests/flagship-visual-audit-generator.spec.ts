@@ -155,6 +155,21 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       // Click the 'Şablon & Tema' tab to reveal the gallery
       await page.click('button:has-text("Şablon & Tema")');
       
+      // Load more templates dynamically if the target template is paginated out of view
+      let isVisible = false;
+      for (let attempt = 0; attempt < 25; attempt++) {
+        isVisible = await page.locator(`[data-testid="template-${tplId}"]`).isVisible();
+        if (isVisible) break;
+        
+        const loadMore = page.locator('button:has-text("Daha Fazla Göster")');
+        if (await loadMore.isVisible()) {
+          await loadMore.click();
+          await page.waitForTimeout(200);
+        } else {
+          break;
+        }
+      }
+      
       try {
         await page.waitForSelector(`[data-testid="template-${tplId}"]`, { state: 'visible', timeout: 5000 });
       } catch (e) {
