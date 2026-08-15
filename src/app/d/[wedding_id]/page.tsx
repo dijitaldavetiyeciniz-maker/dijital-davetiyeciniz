@@ -1,7 +1,53 @@
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ wedding_id: string }>;
+}): Promise<Metadata> {
+  const { wedding_id } = await params;
+  
+  const { data: wedding } = await supabase
+    .from('weddings')
+    .select('bride_name, groom_name, venue_name, event_type, updated_at')
+    .eq('slug', wedding_id)
+    .single();
+
+  if (!wedding) return {};
+
+  const title = `${wedding.bride_name} & ${wedding.groom_name} Davetiyesi`;
+  const description = `${wedding.venue_name} salonundaki ${wedding.event_type === 'wedding' ? 'düğün' : 'etkinlik'} davetiyemize bekliyoruz.`;
+  const cacheBust = wedding.updated_at ? new Date(wedding.updated_at).getTime() : Date.now();
+  const ogImageUrl = `/api/og?wedding_id=${wedding_id}&v=${cacheBust}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+  };
+}
 import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
 import Envelope from '@/components/Envelope';
 import BubblesEffect from '@/components/effects/BubblesEffect';
