@@ -117,7 +117,6 @@ export default function DashboardPage() {
 
     // Clean user sub-data first
     await supabase.from('rsvps').delete().eq('wedding_id', permanentDeleteTarget.id);
-    await supabase.from('guestbook_entries').delete().eq('wedding_id', permanentDeleteTarget.id);
     await supabase.from('wedding_integrations').delete().eq('wedding_id', permanentDeleteTarget.id);
 
     // Delete wedding record
