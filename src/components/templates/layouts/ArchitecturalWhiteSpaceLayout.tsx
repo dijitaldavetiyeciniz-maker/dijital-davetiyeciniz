@@ -99,7 +99,7 @@ export default function ArchitecturalWhiteSpaceLayout({
               
               <h1 className="text-4xl sm:text-5xl font-light uppercase tracking-[0.2em] text-stone-900 leading-tight" style={{ fontFamily: `"${headingFont}", sans-serif` }}>
                 {wedding.bride_name} <br/>
-                <span className="text-xs opacity-50 font-mono tracking-widest block my-2">// AND</span>
+                <span className="text-xs opacity-50 font-mono tracking-widest block my-2">{"// AND"}</span>
                 {wedding.groom_name}
               </h1>
 

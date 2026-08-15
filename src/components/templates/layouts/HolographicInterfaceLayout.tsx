@@ -84,7 +84,7 @@ export default function HolographicInterfaceLayout(props: LayoutProps) {
 
         {/* Console Log Quote */}
         <section className="w-full bg-[#0a0f24]/90 border border-cyan-500/20 rounded-2xl p-6 font-mono text-sm leading-relaxed text-indigo-300">
-          <div className="text-[10px] text-cyan-400/60 mb-2">// LOG MESSAGE INITIALIZATION:</div>
+          <div className="text-[10px] text-cyan-400/60 mb-2">{"// LOG MESSAGE INITIALIZATION:"}</div>
           <span className="text-white">&gt; </span>{props.renderQuote()}
         </section>
 
