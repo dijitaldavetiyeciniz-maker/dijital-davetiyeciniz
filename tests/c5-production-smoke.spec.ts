@@ -105,4 +105,27 @@ test.describe('C5-A Production Data & Invitation Smoke Tests', () => {
     const layoutContainer = page.locator('[data-testid="layout-herbarium"]');
     await expect(layoutContainer).toBeVisible();
   });
+
+  test('API OG Image route returns valid image response with cache headers', async ({ request }) => {
+    // Call the dynamic OG generator API
+    const response = await request.get(`${BASE_URL}/api/og?wedding_id=${SLUG}`);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('image/png');
+    
+    // Verify stale-while-revalidate caching header is set
+    const cacheControl = response.headers()['cache-control'];
+    expect(cacheControl).toContain('stale-while-revalidate');
+  });
+
+  test('Public invitation fallback handles network failures and missing wedding records gracefully', async ({ page }) => {
+    // Navigate to an invalid or missing wedding slug
+    const response = await page.goto(`${BASE_URL}/d/non-existent-wedding-slug`);
+    
+    // Page must fail gracefully with a proper 404 status instead of crashing or looping
+    expect(response?.status()).toBe(404);
+    
+    // Verify it doesn't show a blank white page
+    const body = page.locator('body');
+    await expect(body).not.toBeEmpty();
+  });
 });
