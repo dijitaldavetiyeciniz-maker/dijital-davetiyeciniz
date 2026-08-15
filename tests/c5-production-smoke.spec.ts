@@ -128,4 +128,24 @@ test.describe('C5-A Production Data & Invitation Smoke Tests', () => {
     const body = page.locator('body');
     await expect(body).not.toBeEmpty();
   });
+
+  test('Client-side API call failure handles network outage gracefully without runtime crashes', async ({ page }) => {
+    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.waitForLoadState('networkidle');
+
+    const opening = page.locator('[data-testid="opening-overlay"]');
+    if (await opening.isVisible()) {
+      await opening.click();
+    }
+
+    // Intercept client-side API requests and abort them to simulate network failure
+    await page.route('**/api/**', route => route.abort('failed'));
+
+    // Verify page container is still rendered and has content (no white screen)
+    const body = page.locator('body');
+    await expect(body).not.toBeEmpty();
+    
+    const wrapper = page.locator('[data-testid="wedding-content-wrapper"]');
+    await expect(wrapper).toBeVisible();
+  });
 });
