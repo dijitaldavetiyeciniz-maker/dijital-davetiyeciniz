@@ -230,7 +230,7 @@ export interface TemplatePreset {
   genderVariant?: 'girl' | 'boy' | 'neutral';
   layoutStyle: string;
   layoutMode?: "full-bleed" | "legacy-card";
-  category: 'Modern' | 'Klasik' | 'Karanlık' | 'Minimalist' | 'Lüks' | 'Doğal' | 'Çocuk' | 'Kültürel' | 'Kurumsal' | 'Minimal';
+  category: 'Modern' | 'Klasik' | 'Karanlık' | 'Minimalist' | 'Lüks' | 'Doğal' | 'Çocuk' | 'Kültürel' | 'Kurumsal' | 'Minimal' | 'Destination' | 'Sünnet' | 'Kına Gecesi' | 'Nişan';
   
   background_image_url: string | null;
   primary_color: string;

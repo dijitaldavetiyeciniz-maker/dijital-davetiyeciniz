@@ -15,9 +15,9 @@ const eventSchema = z.object({
   is_primary: z.boolean().optional()
 });
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const eventId = params.id;
+    const { id: eventId } = await context.params;
     const body = await request.json();
     const validatedData = eventSchema.parse(body);
 
@@ -83,9 +83,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const eventId = params.id;
+    const { id: eventId } = await context.params;
     const serviceRoleClient = createServerServiceRoleClient();
     
     const { data: event, error: fetchError } = await serviceRoleClient
