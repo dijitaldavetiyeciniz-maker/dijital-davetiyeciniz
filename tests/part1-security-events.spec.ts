@@ -31,7 +31,7 @@ test.describe('PART 1 — Security, Dashboard Soft Delete & Event Type Architect
   });
 
   test('Baby Shower event type must prioritize Baby Name and have 0 Gelin Adı / Doğum Günü language', async ({ page }) => {
-    await page.goto('/d/demo1/admin');
+    await page.goto('/demo1/admin');
 
     const select = page.locator('select').first();
     if (await select.isVisible()) {
@@ -48,7 +48,7 @@ test.describe('PART 1 — Security, Dashboard Soft Delete & Event Type Architect
   });
 
   test('Sünnet event type must have 0 Gelin or Damat language', async ({ page }) => {
-    await page.goto('/d/demo1/admin');
+    await page.goto('/demo1/admin');
 
     const select = page.locator('select').first();
     if (await select.isVisible()) {
@@ -68,7 +68,7 @@ test.describe('PART 1 — Security, Dashboard Soft Delete & Event Type Architect
   });
 
   test('Soft delete screen blocks admin route if wedding is inactive or trashed', async ({ page }) => {
-    await page.goto('/d/demo1/admin');
+    await page.goto('/demo1/admin');
     const body = page.locator('body');
     await expect(body).toBeVisible();
   });

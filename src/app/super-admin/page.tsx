@@ -419,7 +419,7 @@ export default function SuperAdminPage() {
                       </div>
 
                       <div className="flex flex-wrap gap-3">
-                        <a href={`/d/${w.slug}`} target="_blank" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-medium px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                        <a href={`/${w.slug}`} target="_blank" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-medium px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
                           Siteye Git <ExternalLink className="w-4 h-4" />
                         </a>
                         <button 
@@ -428,7 +428,7 @@ export default function SuperAdminPage() {
                         >
                           {w.is_paid ? 'Ödemeyi İptal Et' : 'Yayına Al (Onayla)'}
                         </button>
-                        <a href={`/d/${w.slug}/admin`} target="_blank" className="bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+                        <a href={`/${w.slug}/admin`} target="_blank" className="bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 text-sm font-medium px-4 py-2 rounded-lg transition-colors">
                           Müşteri Paneli
                         </a>
                       </div>

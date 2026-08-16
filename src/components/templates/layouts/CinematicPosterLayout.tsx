@@ -83,7 +83,7 @@ export default function CinematicPosterLayout({ wedding,
           <Film className="w-4 h-4 animate-pulse" />
           <span>DIRECTOR'S CUT PREMIERE</span>
         </div>
-        <span>{dateObj.getFullYear()}</span>
+        <span suppressHydrationWarning>{dateObj.getFullYear()}</span>
       </div>
 
       {/* SOL TARAF: DEV SİNEMA AFİŞİ (HERO GÖRSELİ) */}
@@ -154,7 +154,7 @@ export default function CinematicPosterLayout({ wedding,
         </div>
 
         {/* Etkinlik Türü & Vizyon Tarihi */}
-        <div className="inline-flex self-start mt-8 py-2 px-6 rounded-none bg-red-950/40 border-l-4 border-red-500 text-[10px] sm:text-xs font-mono tracking-[0.2em] uppercase text-red-100 backdrop-blur-sm">
+        <div className="inline-flex self-start mt-8 py-2 px-6 rounded-none bg-red-950/40 border-l-4 border-red-500 text-[10px] sm:text-xs font-mono tracking-[0.2em] uppercase text-red-100 backdrop-blur-sm" suppressHydrationWarning>
           {eventTitle} <span className="mx-3 opacity-50">|</span> RELEASE DATE: {dateStr}
         </div>
 
@@ -181,8 +181,8 @@ export default function CinematicPosterLayout({ wedding,
               <Calendar className="w-5 h-5" />
               <span className="tracking-wider">GÖSTERİM ZAMANI</span>
             </div>
-            <span className="text-white text-lg">{dateStr}</span>
-            <span className="text-slate-400">{timeStr}</span>
+            <span className="text-white text-lg" suppressHydrationWarning>{dateStr}</span>
+            <span className="text-slate-400" suppressHydrationWarning>{timeStr}</span>
           </div>
 
           <div className="flex flex-col gap-2 p-5 rounded-lg border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">

@@ -9,7 +9,7 @@ test.describe('Integration: Template Persistence', () => {
     
     await test.step('Open Test Wedding Admin', async () => {
       // Navigate to a real admin page
-      await page.goto(`/d/${weddingId}/admin`);
+      await page.goto(`/${weddingId}/admin`);
       // We assume user is either logged in or we bypass login in the test harness
       await expect(page.locator('text=Tasarım')).toBeVisible();
     });
@@ -41,7 +41,7 @@ test.describe('Integration: Template Persistence', () => {
       const publicContext = await browser.newContext();
       const publicPage = await publicContext.newPage();
       
-      await publicPage.goto(`/d/${weddingId}`);
+      await publicPage.goto(`/${weddingId}`);
       await publicPage.waitForLoadState('networkidle');
       
       const publicLayout = publicPage.getByTestId('layout-royal-letter');

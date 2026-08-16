@@ -22,7 +22,7 @@ test.describe('PART 5A - Guest Management E2E', () => {
 
   test('Guest Management E2E Flow', async ({ page }) => {
     // Admin sayfasına git
-    await page.goto(`/d/${fixture.testSlug}/admin`);
+    await page.goto(`/${fixture.testSlug}/admin`);
 
     // Şifre ile giriş yap
     await page.fill('input[placeholder="Şifre"]', 'test');

@@ -4,7 +4,7 @@ test.describe('Faz 3: Çoklu Etkinlik ve Oturma Planı', () => {
 
   test('Public erişimde misafir tokensız masa bilgisi sızdırılmaz', async ({ request }) => {
     // API veya sayfa seviyesinde data çekilir
-    const res = await request.get('/d/test-wedding');
+    const res = await request.get('/test-wedding');
     const html = await res.text();
     // Sayfada "Masa:" veya masa datası bulunmamalı
     expect(html).not.toContain('Masa: Aile Masası');

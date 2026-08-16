@@ -295,7 +295,7 @@ export default function DashboardPage() {
                           {wedding.is_paid ? 'Yayında' : 'Ödeme Bekliyor'}
                         </span>
                         <span className="text-[11px] text-slate-400 font-mono bg-white/5 px-2.5 py-1 rounded-lg">
-                          /d/{wedding.slug}
+                          /{wedding.slug}
                         </span>
                       </div>
 
@@ -328,13 +328,13 @@ export default function DashboardPage() {
                     <div className="space-y-2 pt-2 border-t border-white/5">
                       <div className="grid grid-cols-2 gap-2">
                         <Link
-                          href={`/d/${wedding.slug}/admin`}
+                          href={`/${wedding.slug}/admin`}
                           className="bg-white/10 text-white py-2.5 rounded-xl font-bold text-xs text-center hover:bg-white/20 transition-colors flex items-center justify-center gap-1.5"
                         >
                           <Settings className="w-3.5 h-3.5" /> Düzenle
                         </Link>
                         <a
-                          href={`/d/${wedding.slug}`}
+                          href={`/${wedding.slug}`}
                           target="_blank"
                           className="bg-gradient-to-r from-rose-500 to-pink-600 text-white py-2.5 rounded-xl font-bold text-xs text-center hover:from-rose-600 hover:to-pink-700 transition-colors flex items-center justify-center gap-1.5 shadow-md shadow-rose-500/20"
                         >
@@ -386,7 +386,7 @@ export default function DashboardPage() {
                     <span className="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[11px] font-bold px-3 py-1 rounded-full">
                       Çöp Kutusunda
                     </span>
-                    <span className="text-[11px] text-slate-500 font-mono">/d/{wedding.slug}</span>
+                    <span className="text-[11px] text-slate-500 font-mono">/{wedding.slug}</span>
                   </div>
 
                   <h3 className="text-lg font-bold text-white mb-1 font-serif">
@@ -482,12 +482,12 @@ export default function DashboardPage() {
             </button>
             <h3 className="text-xl font-bold text-white mb-4 font-serif">Davetiye Bağlantısını Paylaş</h3>
             <div className="bg-black/30 p-3 rounded-xl border border-white/10 text-xs font-mono text-slate-300 break-all mb-4">
-              {typeof window !== 'undefined' ? `${window.location.origin}/d/${shareTarget.slug}` : `/d/${shareTarget.slug}`}
+              {typeof window !== 'undefined' ? `${window.location.origin}/${shareTarget.slug}` : `/${shareTarget.slug}`}
             </div>
             <div className="flex gap-3">
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(`${window.location.origin}/d/${shareTarget.slug}`);
+                  navigator.clipboard.writeText(`${window.location.origin}/${shareTarget.slug}`);
                   showToast("Bağlantı panoya kopyalandı!");
                   setShareTarget(null);
                 }}

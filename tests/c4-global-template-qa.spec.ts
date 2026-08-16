@@ -73,7 +73,7 @@ test.describe('C4-D Global QA & Production Hardening', () => {
       await page.setViewportSize({ width: 1280, height: 800 });
 
       // View preview mode with the test ID
-      await page.goto(`${BASE_URL}/d/${SLUG}?preview=true&template_id=${templateId}`);
+      await page.goto(`${BASE_URL}/${SLUG}?preview=true&template_id=${templateId}`);
       await page.waitForLoadState('networkidle');
 
       // Dismiss the opening sequence if active

@@ -62,7 +62,7 @@ test.describe("Visual Regression Sets - Part 4/5", () => {
       }).eq("slug", SLUG);
 
       await page.setViewportSize({ width: 1280, height: 800 });
-      await page.goto(`${BASE_URL}/d/${SLUG}`);
+      await page.goto(`${BASE_URL}/${SLUG}`);
       
       const overlay = page.locator("[data-testid=\"opening-overlay\"]");
       await expect(overlay).toBeVisible();

@@ -57,7 +57,7 @@ test.describe('C5-A Production Data & Invitation Smoke Tests', () => {
 
   test('Public route direct load and refresh sanity', async ({ page }) => {
     // 1. Load public invitation page directly (preview=false)
-    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.goto(`${BASE_URL}/${SLUG}`);
     await page.waitForLoadState('networkidle');
 
     // Verify presence of opening overlay
@@ -93,7 +93,7 @@ test.describe('C5-A Production Data & Invitation Smoke Tests', () => {
     }
 
     // 2. Navigate to public page and verify it correctly loaded the new botanical-herbarium layout style
-    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.goto(`${BASE_URL}/${SLUG}`);
     await page.waitForLoadState('networkidle');
 
     const opening = page.locator('[data-testid="opening-overlay"]');
@@ -119,7 +119,7 @@ test.describe('C5-A Production Data & Invitation Smoke Tests', () => {
 
   test('Public invitation fallback handles network failures and missing wedding records gracefully', async ({ page }) => {
     // Navigate to an invalid or missing wedding slug
-    const response = await page.goto(`${BASE_URL}/d/non-existent-wedding-slug`);
+    const response = await page.goto(`${BASE_URL}/non-existent-wedding-slug`);
     
     // Page must fail gracefully with a proper 404 status instead of crashing or looping
     expect(response?.status()).toBe(404);
@@ -130,7 +130,7 @@ test.describe('C5-A Production Data & Invitation Smoke Tests', () => {
   });
 
   test('Client-side API call failure handles network outage gracefully without runtime crashes', async ({ page }) => {
-    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.goto(`${BASE_URL}/${SLUG}`);
     await page.waitForLoadState('networkidle');
 
     const opening = page.locator('[data-testid="opening-overlay"]');

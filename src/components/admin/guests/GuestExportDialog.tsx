@@ -40,7 +40,7 @@ export default function GuestExportDialog({
       'Çocuk Sayısı': g.children_count,
       'LCV Durumu': g.rsvp_status || 'Bekliyor',
       'Özel Not': sanitizeCell(g.notes || ''),
-      ...(includeTokens ? { 'Özel Link': g.token_revoked_at ? 'İptal Edildi' : (g.tokenUrl ? `${window.location.origin}/d/${window.location.pathname.split('/')[2]}?guest=${g.tokenUrl}` : '') } : {})
+      ...(includeTokens ? { 'Özel Link': g.token_revoked_at ? 'İptal Edildi' : (g.tokenUrl ? `${window.location.origin}/${window.location.pathname.split('/')[1]}?guest=${g.tokenUrl}` : '') } : {})
     }));
 
     if (format === 'csv') {

@@ -128,8 +128,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
         }
       });
 
-      // Step 2: /d/[wedding_id]/admin rotasını aç
-      await page.goto(`/d/${TEST_SLUG}/admin`);
+      // Step 2: /[wedding_id]/admin rotasını aç
+      await page.goto(`/${TEST_SLUG}/admin`);
       await page.waitForLoadState('networkidle');
 
       // Login or Dashboard step
@@ -220,8 +220,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       const publicContext = await browser.newContext();
       const publicPage = await publicContext.newPage();
       
-      // Step 13: /d/[slug] public rotasını aç
-      await publicPage.goto(`/d/${TEST_SLUG}`);
+      // Step 13: /[slug] public rotasını aç
+      await publicPage.goto(`/${TEST_SLUG}`);
       await publicPage.waitForLoadState('networkidle');
       
       // Hydration check
@@ -325,7 +325,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
         throw new Error('Unexpected dialog: ' + msg);
       }
     });
-    await page.goto(`/d/${TEST_SLUG}/admin`);
+    await page.goto(`/${TEST_SLUG}/admin`);
     await page.waitForLoadState('networkidle');
 
     const pwdInput = page.locator('input[type="password"]');
@@ -379,7 +379,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
     const publicContext = await browser.newContext();
     const publicPage = await publicContext.newPage();
-    await publicPage.goto(`/d/${TEST_SLUG}`);
+    await publicPage.goto(`/${TEST_SLUG}`);
     await publicPage.waitForLoadState('networkidle');
     
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
@@ -418,7 +418,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
         throw new Error('Unexpected dialog: ' + msg);
       }
     });
-    await page.goto(`/d/${TEST_SLUG}/admin`);
+    await page.goto(`/${TEST_SLUG}/admin`);
     await page.waitForLoadState('networkidle');
 
     const pwdInput = page.locator('input[type="password"]');
@@ -477,7 +477,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
     const publicContext = await browser.newContext();
     const publicPage = await publicContext.newPage();
-    await publicPage.goto(`/d/${TEST_SLUG}`);
+    await publicPage.goto(`/${TEST_SLUG}`);
     await publicPage.waitForLoadState('networkidle');
     
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
@@ -524,7 +524,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     // 2. Open Public Page
     const publicContext = await browser.newContext();
     const publicPage = await publicContext.newPage();
-    await publicPage.goto(`/d/${BABY_SLUG}`);
+    await publicPage.goto(`/${BABY_SLUG}`);
     await publicPage.waitForLoadState('networkidle');
 
     // 3. Clear Overlay
@@ -583,7 +583,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     // 2. Open Public Page
     const publicContext = await browser.newContext();
     const publicPage = await publicContext.newPage();
-    await publicPage.goto(`/d/${BDAY_SLUG}`);
+    await publicPage.goto(`/${BDAY_SLUG}`);
     await publicPage.waitForLoadState('networkidle');
 
     // 3. Clear Overlay

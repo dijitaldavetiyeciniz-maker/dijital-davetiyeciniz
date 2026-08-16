@@ -26,5 +26,5 @@ export async function GET(request: Request) {
     .eq('id', payment.wedding_id)
     .maybeSingle();
 
-  return NextResponse.redirect(new URL(`/d/${wedding?.slug || ''}?payment=success`, request.url));
+  return NextResponse.redirect(new URL(`/${wedding?.slug || ''}?payment=success`, request.url));
 }

@@ -38,7 +38,7 @@ test.describe('PART 5A - Token Security E2E', () => {
     const { token } = await genRes.json();
     expect(token).toBeTruthy();
 
-    const tokenLink = `${baseUrl}/d/${fixture.testSlug}?guest=${token}`;
+    const tokenLink = `${baseUrl}/${fixture.testSlug}?guest=${token}`;
 
     // Yeni browser context’te aç
     const publicPage = await context.newPage();
@@ -64,7 +64,7 @@ test.describe('PART 5A - Token Security E2E', () => {
     await expect(publicPage.locator('text="Kişisel davet bağlantısı doğrulanamadı. Genel davetiyeyi görüntülüyorsunuz."')).toBeVisible();
 
     // Tampered token reddedilir
-    await publicPage.goto(`${baseUrl}/d/${fixture.testSlug}?guest=${token}_tampered`);
+    await publicPage.goto(`${baseUrl}/${fixture.testSlug}?guest=${token}_tampered`);
     await expect(publicPage.locator('text="Kişisel davet bağlantısı doğrulanamadı. Genel davetiyeyi görüntülüyorsunuz."')).toBeVisible();
   });
 });

@@ -85,7 +85,7 @@ export async function POST(request: Request) {
               </table>
               <p style="margin:0;font-size:13px;color:#94a3b8;text-align:center;">
                 Tüm misafir yanıtlarını görmek için 
-                <a href="https://dijital-davetiyeciniz.vercel.app/d/${wedding.slug}/admin" style="color:#f43f5e;text-decoration:none;font-weight:600;">yönetim paneline</a> göz atabilirsiniz.
+                <a href="https://dijital-davetiyeciniz.vercel.app/${wedding.slug}/admin" style="color:#f43f5e;text-decoration:none;font-weight:600;">yönetim paneline</a> göz atabilirsiniz.
               </p>
             </td>
           </tr>

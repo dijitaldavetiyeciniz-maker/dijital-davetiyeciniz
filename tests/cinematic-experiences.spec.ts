@@ -71,7 +71,7 @@ test.describe("C2.6 - Cinematic Experience Prototypes Integration Checks", () =>
       await page.setViewportSize({ width: 1280, height: 800 });
       
       // Navigate to invitation page with theme preview overrides
-      await page.goto(`${BASE_URL}/d/${SLUG}?preview=true&template_id=${theme.id}`);
+      await page.goto(`${BASE_URL}/${SLUG}?preview=true&template_id=${theme.id}`);
       await page.waitForLoadState("networkidle");
 
       // 1. Verify opening overlay is present and visible
@@ -96,7 +96,7 @@ test.describe("C2.6 - Cinematic Experience Prototypes Integration Checks", () =>
 
     test(`Verify mobile rendering for: ${theme.id}`, async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(`${BASE_URL}/d/${SLUG}?preview=true&template_id=${theme.id}`);
+      await page.goto(`${BASE_URL}/${SLUG}?preview=true&template_id=${theme.id}`);
       await page.waitForLoadState("networkidle");
 
       // Verify opening & click-through works on mobile viewports
@@ -116,7 +116,7 @@ test.describe("C2.6 - Cinematic Experience Prototypes Integration Checks", () =>
     await page.setViewportSize({ width: 1280, height: 800 });
 
     const targetTheme = cinematicThemes[0];
-    await page.goto(`${BASE_URL}/d/${SLUG}?preview=true&template_id=${targetTheme.id}`);
+    await page.goto(`${BASE_URL}/${SLUG}?preview=true&template_id=${targetTheme.id}`);
     await page.waitForLoadState("networkidle");
 
     const openingOverlay = page.locator("[data-testid=\"opening-overlay\"]");

@@ -3518,12 +3518,12 @@ export default function CoupleAdminPage({
                     <input 
                       readOnly 
                       type="text" 
-                      value={`https://dijital-davetiyeciniz.vercel.app/d/${wedding.slug}`} 
+                      value={`https://dijital-davetiyeciniz.vercel.app/${wedding.slug}`} 
                       className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-700 font-bold" 
                     />
                     <button 
                       onClick={() => {
-                        navigator.clipboard.writeText(`https://dijital-davetiyeciniz.vercel.app/d/${wedding.slug}`);
+                        navigator.clipboard.writeText(`https://dijital-davetiyeciniz.vercel.app/${wedding.slug}`);
                         setIsCopied(true);
                         setTimeout(() => setIsCopied(false), 2000);
                       }}
@@ -3535,7 +3535,7 @@ export default function CoupleAdminPage({
                 </div>
 
                 <a 
-                  href={`/d/${wedding.slug}`} 
+                  href={`/${wedding.slug}`} 
                   target="_blank" 
                   className="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-100 text-sm"
                 >
@@ -3558,12 +3558,12 @@ export default function CoupleAdminPage({
                     <input 
                       readOnly 
                       type="text" 
-                      value={`https://dijital-davetiyeciniz.vercel.app/d/${wedding.slug}`} 
+                      value={`https://dijital-davetiyeciniz.vercel.app/${wedding.slug}`} 
                       className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono text-slate-500" 
                     />
                     <button 
                       onClick={() => {
-                        navigator.clipboard.writeText(`https://dijital-davetiyeciniz.vercel.app/d/${wedding.slug}`);
+                        navigator.clipboard.writeText(`https://dijital-davetiyeciniz.vercel.app/${wedding.slug}`);
                         setIsCopied(true);
                         setTimeout(() => setIsCopied(false), 2000);
                       }}
@@ -3687,7 +3687,7 @@ export default function CoupleAdminPage({
 
           {/* Mobil için önizleme uyarısı */}
           <div className="lg:hidden bg-blue-50 text-blue-600 p-4 rounded-xl text-sm font-medium">
-            📱 Canlı önizleme ekranı telefonlarda performans sebebiyle gizlenmiştir. Değişikliklerinizi kaydettikten sonra <a href={`/d/${wedding.slug}?preview=true`} target="_blank" className="underline font-bold">buraya tıklayarak</a> sitenize bakabilirsiniz.
+            📱 Canlı önizleme ekranı telefonlarda performans sebebiyle gizlenmiştir. Değişikliklerinizi kaydettikten sonra <a href={`/${wedding.slug}?preview=true`} target="_blank" className="underline font-bold">buraya tıklayarak</a> sitenize bakabilirsiniz.
           </div>
         </div>
       </div>

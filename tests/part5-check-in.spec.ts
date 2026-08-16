@@ -41,7 +41,7 @@ test.describe('PART 5B - Check-in Flow', () => {
   test('Yetkili check-in: başarılı, mükerrer engelleme, revoke edilmiş misafir yine de girebilir', async ({ page }) => {
     // Gerçek, kanıtlanmış admin giriş akışı (part5-guest-management.spec.ts
     // ile aynı desen)
-    await page.goto(`/d/${fixture.testSlug}/admin`);
+    await page.goto(`/${fixture.testSlug}/admin`);
     await page.fill('input[placeholder="Şifre"]', 'test');
     await page.click('button:has-text("Giriş Yap")');
     await page.waitForLoadState('networkidle');
@@ -105,7 +105,7 @@ test.describe('PART 5B - Check-in Flow', () => {
     expect(renewRes.status()).toBe(200);
 
     // Admin girişi (check-in endpoint'i yetki gerektiriyor)
-    await page.goto(`/d/${fixture.testSlug}/admin`);
+    await page.goto(`/${fixture.testSlug}/admin`);
     await page.fill('input[placeholder="Şifre"]', 'test');
     await page.click('button:has-text("Giriş Yap")');
     await page.waitForLoadState('networkidle');
@@ -120,7 +120,7 @@ test.describe('PART 5B - Check-in Flow', () => {
   });
 
   test('Hızlı Ekle akışı: yeni misafir oluşturur ve anında check-in yapar', async ({ page }) => {
-    await page.goto(`/d/${fixture.testSlug}/admin`);
+    await page.goto(`/${fixture.testSlug}/admin`);
     await page.fill('input[placeholder="Şifre"]', 'test');
     await page.click('button:has-text("Giriş Yap")');
     await page.waitForLoadState('networkidle');

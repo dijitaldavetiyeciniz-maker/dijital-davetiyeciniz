@@ -73,7 +73,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
 
   test("1. No Auto Open & 5s idle & Final State persistence", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.goto(`${BASE_URL}/${SLUG}`);
     
     const overlay = page.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlay).toBeVisible();
@@ -99,7 +99,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
 
   test("2. Single Tap Direct Open", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.goto(`${BASE_URL}/${SLUG}`);
     
     const overlay = page.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlay).toBeVisible();
@@ -121,7 +121,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
   });
 
   test("3. Enter Key to open", async ({ page }) => {
-    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.goto(`${BASE_URL}/${SLUG}`);
     const overlay = page.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlay).toBeVisible();
     
@@ -136,7 +136,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
   test("4. Space Key to open with preventDefault check", async ({ page }) => {
     // Add enough content to ensure page is scrollable, or just test scrollY
     await page.setViewportSize({ width: 1280, height: 600 });
-    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.goto(`${BASE_URL}/${SLUG}`);
     const overlay = page.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlay).toBeVisible();
     
@@ -155,7 +155,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
   });
 
   test("5. Double Tap Check (Idempotency)", async ({ page }) => {
-    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.goto(`${BASE_URL}/${SLUG}`);
     const overlay = page.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlay).toBeVisible();
     
@@ -172,7 +172,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
 
   test("6. Reduced Motion Check", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.goto(`${BASE_URL}/${SLUG}`);
     const overlay = page.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlay).toBeVisible();
 
@@ -189,14 +189,14 @@ test.describe("Opening Animations - Detailed Checks", () => {
 
   test("7. Preview vs Public Comparison", async ({ page, context }) => {
     // Check Public
-    await page.goto(`${BASE_URL}/d/${SLUG}`);
+    await page.goto(`${BASE_URL}/${SLUG}`);
     const overlayPublic = page.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlayPublic).toBeVisible();
     const publicContent = await page.locator("h1").first().innerText(); // Assuming primaryName is in first h1
 
     // Check Preview
     const previewPage = await context.newPage();
-    await previewPage.goto(`${BASE_URL}/d/${SLUG}?preview=true`);
+    await previewPage.goto(`${BASE_URL}/${SLUG}?preview=true`);
     const overlayPreview = previewPage.locator("[data-testid=\"opening-overlay\"]");
     await expect(overlayPreview).toBeVisible();
     const previewContent = await previewPage.locator("h1").first().innerText();

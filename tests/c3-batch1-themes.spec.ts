@@ -72,7 +72,7 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
       await page.setViewportSize({ width: 1280, height: 800 });
       
       // Navigate to the preview page
-      await page.goto(`${BASE_URL}/d/${SLUG}?preview=true&template_id=${theme.id}`);
+      await page.goto(`${BASE_URL}/${SLUG}?preview=true&template_id=${theme.id}`);
       await page.waitForLoadState("networkidle");
 
       // Verify opening overlay exists and dismisses
@@ -105,7 +105,7 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
 
     test(`Verify mobile flow for theme: ${theme.id}`, async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(`${BASE_URL}/d/${SLUG}?preview=true&template_id=${theme.id}`);
+      await page.goto(`${BASE_URL}/${SLUG}?preview=true&template_id=${theme.id}`);
       await page.waitForLoadState("networkidle");
 
       const opening = page.locator("[data-testid=\"opening-overlay\"]");
@@ -125,7 +125,7 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
     await page.setViewportSize({ width: 1280, height: 800 });
 
     const targetTheme = batch1Themes[0];
-    await page.goto(`${BASE_URL}/d/${SLUG}?preview=true&template_id=${targetTheme.id}`);
+    await page.goto(`${BASE_URL}/${SLUG}?preview=true&template_id=${targetTheme.id}`);
     await page.waitForLoadState("networkidle");
 
     const opening = page.locator("[data-testid=\"opening-overlay\"]");

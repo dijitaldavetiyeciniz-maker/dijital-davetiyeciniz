@@ -15,7 +15,7 @@ export default function SssPage() {
     },
     {
       q: "Kağıt davetiye ile birlikte kullanabilir miyim?",
-      a: "Kesinlikle. Satın alımdan sonra size özel verilen URL'nizi (örneğin: site.com/d/ayse-mehmet) QR koda dönüştürüp kağıt davetiyenizin üzerine bastırabilirsiniz."
+      a: "Kesinlikle. Satın alımdan sonra size özel verilen URL'nizi (örneğin: site.com/ayse-mehmet) QR koda dönüştürüp kağıt davetiyenizin üzerine bastırabilirsiniz."
     },
     {
       q: "Fotoğraflarım veya verilerim silinir mi?",

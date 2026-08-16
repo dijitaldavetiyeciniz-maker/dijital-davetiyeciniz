@@ -124,7 +124,7 @@ test.describe('ModernEventLayout Variant Tests', () => {
 
   test('Tech Launch - Desktop Screenshot & Assertions', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto(`${BASE_URL}/d/${SLUGS.tech}`);
+    await page.goto(`${BASE_URL}/${SLUGS.tech}`);
     await handleOverlay(page);
     try {
       await page.waitForSelector('[data-testid="modern-event-tech-launch"]', { timeout: 15000 });
@@ -146,7 +146,7 @@ test.describe('ModernEventLayout Variant Tests', () => {
 
   test('Tech Launch - Mobile Screenshot', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto(`${BASE_URL}/d/${SLUGS.tech}`);
+    await page.goto(`${BASE_URL}/${SLUGS.tech}`);
     await handleOverlay(page);
     
     await page.waitForSelector('[data-testid="modern-event-tech-launch"]', { timeout: 15000 });
@@ -156,7 +156,7 @@ test.describe('ModernEventLayout Variant Tests', () => {
 
   test('Gala - Desktop Screenshot', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto(`${BASE_URL}/d/${SLUGS.gala}`);
+    await page.goto(`${BASE_URL}/${SLUGS.gala}`);
     await handleOverlay(page);
     
     await page.waitForSelector('[data-testid="modern-event-gala"]', { timeout: 15000 });
@@ -166,7 +166,7 @@ test.describe('ModernEventLayout Variant Tests', () => {
 
   test('Graduation - Desktop Screenshot', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto(`${BASE_URL}/d/${SLUGS.graduation}`);
+    await page.goto(`${BASE_URL}/${SLUGS.graduation}`);
     await handleOverlay(page);
     
     await page.waitForSelector('[data-testid="modern-event-graduation"]', { timeout: 15000 });
@@ -176,7 +176,7 @@ test.describe('ModernEventLayout Variant Tests', () => {
 
   test('Neon Party - Desktop Screenshot', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto(`${BASE_URL}/d/${SLUGS.neon}`);
+    await page.goto(`${BASE_URL}/${SLUGS.neon}`);
     await handleOverlay(page);
     
     await page.waitForSelector('[data-testid="modern-event-neon-party"]', { timeout: 15000 });

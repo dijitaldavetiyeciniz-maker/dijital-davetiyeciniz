@@ -5,7 +5,14 @@ import { supabase } from '@/lib/supabase';
 import { getSmartAutoMatch } from '@/lib/autoMatch';
 import { getEventTypeConfig } from '@/data/eventTypeConfig';
 import Link from 'next/link';
-import { Sparkles, Link as LinkIcon, KeyRound, Eye, EyeOff, Check, AlertCircle } from 'lucide-react';
+const RESERVED_SLUGS = [
+  'admin', 'api', 'dashboard', 'giris-yap', 'kayit-ol', 'olustur',
+  'fiyatlandirma', 'sss', 'nasil-calisir', 'kvkk', 'gizlilik-politikasi',
+  'super-admin', 'cerez-politikasi', 'iptal-ve-iade', 'acik-riza',
+  'hesap-silme', 'mesafeli-satis', 'kullanim-kosullari', 'ozellikler',
+  'sablonlar', 'demo', 'public', 'tests', 'docs', 'assets', 'images',
+  'd', 'wedding_id', 'resolve', 'auth', 'telegram', 'email', 'payments'
+];
 
 function CreateForm() {
   const router = useRouter();
@@ -63,6 +70,11 @@ function CreateForm() {
       return;
     }
 
+    if (RESERVED_SLUGS.includes(cleanVal)) {
+      setIsSlugAvailable(false);
+      return;
+    }
+
     setIsCheckingSlug(true);
     try {
       const { data, error } = await supabase
@@ -108,6 +120,13 @@ function CreateForm() {
     }
 
     // 2. Slug Check Validation
+    if (RESERVED_SLUGS.includes(cleanSlug)) {
+      setErrorMsg('Bu link sistem tarafından rezerve edilmiştir. Lütfen farklı bir link deneyin.');
+      setIsSlugAvailable(false);
+      setIsSubmitting(false);
+      return;
+    }
+
     const { data: existingData } = await supabase
       .from('weddings')
       .select('id')
@@ -160,7 +179,7 @@ function CreateForm() {
     setIsSubmitting(false);
 
     if (!error) {
-      router.push(`/d/${cleanSlug}/admin`);
+      router.push(`/${cleanSlug}/admin`);
     } else {
       setErrorMsg('Kayıt oluşturulurken bir hata oluştu: ' + error.message);
     }
@@ -230,7 +249,7 @@ function CreateForm() {
           <div className="relative">
             <div className="flex rounded-xl shadow-sm border border-slate-200 overflow-hidden bg-white focus-within:ring-2 focus-within:ring-rose-500 focus-within:border-transparent transition-all">
               <span className="bg-slate-100 px-4 py-3 text-slate-500 font-mono text-sm border-r border-slate-200 select-none flex items-center">
-                https://dijital-davetiyeciniz.vercel.app/d/
+                https://dijital-davetiyeciniz.vercel.app/
               </span>
               <input
                 required

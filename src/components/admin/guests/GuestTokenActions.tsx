@@ -23,7 +23,7 @@ export default function GuestTokenActions({
 
   const handleCopy = () => {
     if (guest.tokenUrl) {
-      const url = `${window.location.origin}/d/${window.location.pathname.split('/')[2]}?guest=${guest.tokenUrl}`;
+      const url = `${window.location.origin}/${window.location.pathname.split('/')[1]}?guest=${guest.tokenUrl}`;
       navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

@@ -312,7 +312,7 @@ export default function Home() {
                   {/* Double CTA Buttons */}
                   <div className="grid grid-cols-2 gap-3 mt-auto">
                     <Link 
-                      href={`/d/${tpl.slug}?preview=true&entrance_animation=${tpl.animation}&background_design=${tpl.bgDesign}`}
+                      href={`/${tpl.slug}?preview=true&entrance_animation=${tpl.animation}&background_design=${tpl.bgDesign}`}
                       className="py-3 rounded-xl font-bold text-xs text-center border-2 border-slate-100 text-slate-600 bg-white hover:border-slate-300 hover:text-slate-800 transition-all flex items-center justify-center gap-1.5"
                     >
                       Önizle <ExternalLink className="w-3.5 h-3.5" />

@@ -62,7 +62,7 @@ export default function NasilCalisirPage() {
                   <Share2 className="w-5 h-5 text-rose-500" /> Ödeyin & Yayına Alın
                 </h3>
                 <p className="text-slate-600 leading-relaxed">
-                  Tasarımınızı tamamen ücretsiz şekilde hazırlayıp test ettikten sonra, tek seferlik sabit ücreti ödeyerek davetiyenizi kalıcı olarak yayına alın. Size özel verilen `/d/davetiye-linkiniz` adresini WhatsApp, SMS veya sosyal medyadan tüm sevdiklerinizle paylaşın.
+                  Tasarımınızı tamamen ücretsiz şekilde hazırlayıp test ettikten sonra, tek seferlik sabit ücreti ödeyerek davetiyenizi kalıcı olarak yayına alın. Size özel verilen `/davetiye-linkiniz` adresini WhatsApp, SMS veya sosyal medyadan tüm sevdiklerinizle paylaşın.
                 </p>
               </div>
             </div>
