@@ -92,9 +92,16 @@ export default function EventsTimeline({ events, primaryColor = '#f43f5e', textC
           const startDate = new Date(event.start_time);
           const isLeft = index % 2 === 0;
           
-          const formattedDateTime = mounted 
-            ? `${startDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })} - ${startDate.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`
-            : getDeterministicDateTimeStr(startDate);
+          // Deterministic formatting using fixed locale and event-specified timezone to avoid SSR/hydration mismatch
+          const formatter = new Intl.DateTimeFormat('tr-TR', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: event.timezone || 'Europe/Istanbul'
+          });
+          const formattedDateTime = formatter.format(startDate);
           
           return (
             <div key={event.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
