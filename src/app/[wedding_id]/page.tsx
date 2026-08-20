@@ -160,44 +160,7 @@ export default async function WeddingPage({
     }
   }
 
-  // Eğer veritabanında etkinlik programı yoksa testler için varsayılan mock etkinlikleri doldur
-  if ((!wedding.invitation_events || wedding.invitation_events.length === 0) && wedding.slug?.startsWith('ux-wed-')) {
-    wedding.invitation_events = [
-      {
-        id: 'event-nikah-id',
-        wedding_id: wedding.id,
-        type: 'düğün',
-        title: 'Nikah Töreni',
-        start_time: '2027-10-15T19:00:00.000Z',
-        timezone: 'Europe/Istanbul',
-        venue_name: 'Swissôtel Salon',
-        is_primary: true,
-        description: ''
-      },
-      {
-        id: 'event-kına-id',
-        wedding_id: wedding.id,
-        type: 'kına',
-        title: 'Gelin Kınası',
-        start_time: '2027-10-14T19:00:00.000Z',
-        timezone: 'Europe/Istanbul',
-        venue_name: 'Çırağan Sarayı',
-        is_primary: false,
-        description: 'Kına gecemiz kadınlara özeldir.'
-      },
-      {
-        id: 'event-after-id',
-        wedding_id: wedding.id,
-        type: 'after_party',
-        title: 'After Party',
-        start_time: '2027-10-15T22:00:00.000Z',
-        timezone: 'Europe/Istanbul',
-        venue_name: 'Swissôtel Club',
-        is_primary: false,
-        description: 'Etkinliğimiz 18 yaş ve üzeridir.'
-      }
-    ];
-  }
+
 
   // PAYWALL (Ödeme Duvarı) Kontrolü (Bypass if in preview mode)
   if (!wedding.is_paid && !isPreview) {
