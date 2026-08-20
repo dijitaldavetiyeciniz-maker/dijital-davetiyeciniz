@@ -12,6 +12,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
   },
   projects: [
     {
@@ -20,7 +21,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `${npmCommand} run start`,
+    command: process.platform === 'win32' ? 'cmd /c npm run start' : `${npmCommand} run start`,
     url: 'http://localhost:3000',
     reuseExistingServer: true,
     timeout: 120 * 1000,
