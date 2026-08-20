@@ -152,6 +152,11 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [guestMessages, setGuestMessages] = useState<any[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     async function fetchGuestMessages() {
@@ -179,8 +184,31 @@ export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'p
     const d = new Date(wedding.wedding_date);
     return isNaN(d.getTime()) ? new Date() : d;
   })();
-  const dateStr = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
-  const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+
+  const getDeterministicDate = (d: Date) => {
+    const day = d.getUTCDate();
+    const months = [
+      "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+      "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+    const month = months[d.getUTCMonth()];
+    const year = d.getUTCFullYear();
+    return `${day} ${month} ${year}`;
+  };
+
+  const getDeterministicTime = (d: Date) => {
+    const hours = String(d.getUTCHours()).padStart(2, '0');
+    const minutes = String(d.getUTCMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+  const dateStr = mounted 
+    ? dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+    : getDeterministicDate(dateObj);
+
+  const timeStr = mounted
+    ? dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+    : getDeterministicTime(dateObj);
   const eventTitle = (() => {
     const rawType = (wedding.event_type || '').toLowerCase();
     const eventTypeLabels: Record<string, string> = {

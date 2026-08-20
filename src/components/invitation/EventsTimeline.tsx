@@ -9,6 +9,12 @@ interface EventProps {
 }
 
 export default function EventsTimeline({ events, primaryColor = '#f43f5e', textColor = '#334155' }: EventProps) {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   if (!events || events.length === 0) return null;
 
   // Generate Google Calendar Link
@@ -61,6 +67,19 @@ export default function EventsTimeline({ events, primaryColor = '#f43f5e', textC
     document.body.removeChild(link);
   };
 
+  const getDeterministicDateTimeStr = (d: Date) => {
+    const day = d.getUTCDate();
+    const months = [
+      "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+      "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+    const month = months[d.getUTCMonth()];
+    const year = d.getUTCFullYear();
+    const hours = String(d.getUTCHours()).padStart(2, '0');
+    const minutes = String(d.getUTCMinutes()).padStart(2, '0');
+    return `${day} ${month} ${year} - ${hours}:${minutes}`;
+  };
+
   return (
     <div className="w-full max-w-2xl mx-auto py-12 px-4 relative z-10" style={{ color: textColor }}>
       <h3 className="text-2xl font-semibold text-center mb-10" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -72,6 +91,10 @@ export default function EventsTimeline({ events, primaryColor = '#f43f5e', textC
         {events.map((event, index) => {
           const startDate = new Date(event.start_time);
           const isLeft = index % 2 === 0;
+          
+          const formattedDateTime = mounted 
+            ? `${startDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })} - ${startDate.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`
+            : getDeterministicDateTimeStr(startDate);
           
           return (
             <div key={event.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
@@ -86,8 +109,8 @@ export default function EventsTimeline({ events, primaryColor = '#f43f5e', textC
               {/* Card */}
               <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
                 <div className="flex flex-col gap-1 mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider" style={{ color: primaryColor }}>
-                    {startDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })} - {startDate.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+                  <span className="text-xs font-bold uppercase tracking-wider" style={{ color: primaryColor }} suppressHydrationWarning>
+                    {formattedDateTime}
                   </span>
                   <h4 className="text-xl font-medium" style={{ fontFamily: 'var(--font-heading)' }}>{event.title}</h4>
                 </div>
