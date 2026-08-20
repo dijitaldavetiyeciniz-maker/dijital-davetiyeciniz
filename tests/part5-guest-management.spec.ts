@@ -3,6 +3,14 @@ import { setupPart5Fixture } from './helpers/part5Fixtures';
 
 test.describe('PART 5A - Guest Management E2E', () => {
   const isCI = process.env.CI === "true";
+  const hasServiceKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!hasServiceKey) {
+    test('Skipping Part 5 Guest Management E2E locally due to missing database credentials', () => {
+      console.log("LOCAL RUN: Skipping Part 5 Guest Management E2E tests since SUPABASE_SERVICE_ROLE_KEY is not defined.");
+    });
+    return;
+  }
 
   let fixture: any;
 
@@ -20,72 +28,83 @@ test.describe('PART 5A - Guest Management E2E', () => {
     }
   });
 
-  test('Guest Management E2E Flow', async ({ page }) => {
-    // Admin sayfasına git
+  test('C6 - Guest Management Removed From Admin Navigation', async ({ page }) => {
+    // 1. Visit admin dashboard and login
     await page.goto(`/${fixture.testSlug}/admin`);
-
-    // Şifre ile giriş yap
     await page.fill('input[placeholder="Şifre"]', 'test');
     await page.click('button:has-text("Giriş Yap")');
 
-    // Sayfa yükleninceye kadar bekle
-    await expect(page.locator('text="Misafir Yönetimi"')).toBeVisible();
+    // 2. Wait for page load
+    await expect(page.locator('text=Davetiye Hazırlama Stüdyosu')).toBeVisible();
 
-    await page.click('text="Misafir Yönetimi"');
+    // 3. Assert Guest/RSVP/Seating entries are completely absent in admin navigation
+    await expect(page.locator('text="Misafir Yönetimi"')).not.toBeVisible();
+    await expect(page.locator('text="Misafir Listesi"')).not.toBeVisible();
+    await expect(page.locator('text="RSVP Yönetimi"')).not.toBeVisible();
+    await expect(page.locator('text="Oturma Planı"')).not.toBeVisible();
 
-    // Misafir eklenir
-    await page.screenshot({
-      path: "test-results/guest-management-before-add-button.png",
-      fullPage: true
+    // 4. Verify C6 guided step navigation is present with correct terminology
+    await expect(page.locator('nav button:has-text("Bilgiler")')).toBeVisible();
+    await expect(page.locator('nav button:has-text("Etkinlikler")')).toBeVisible();
+    await expect(page.locator('nav button:has-text("Tasarım")')).toBeVisible();
+    await expect(page.locator('nav button:has-text("İçerik")')).toBeVisible();
+    await expect(page.locator('nav button:has-text("Özel İçerikler")')).toBeVisible();
+    await expect(page.locator('nav button:has-text("Önizleme")')).toBeVisible();
+    await expect(page.locator('nav button:has-text("Paylaş")')).toBeVisible();
+  });
+
+  test('PART 5A - Guest Backend Preservation', async ({ page }) => {
+    // 1. Authenticate session by logging in
+    await page.goto(`/${fixture.testSlug}/admin`);
+    await page.fill('input[placeholder="Şifre"]', 'test');
+    await page.click('button:has-text("Giriş Yap")');
+    await expect(page.locator('text=Davetiye Hazırlama Stüdyosu')).toBeVisible();
+
+    // 2. Add Guest (POST /api/guests) using shared page cookies
+    const addRes = await page.request.post('/api/guests', {
+      data: {
+        wedding_id: fixture.weddingId,
+        first_name: 'Ahmet',
+        last_name: 'Yılmaz',
+        phone: '+905554443322',
+        email: 'ahmet@example.com'
+      }
     });
+    expect(addRes.status()).toBe(200);
+    const addedGuest = await addRes.json();
+    expect(addedGuest.first_name).toBe('Ahmet');
+    expect(addedGuest.last_name).toBe('Yılmaz');
+    const guestId = addedGuest.id;
 
-    try {
-      await page.getByRole('button', { name: '+ Yeni Misafir' }).click({ timeout: 5000 });
-    } catch (error) {
-      const html = await page.locator("body").evaluate(el => el.innerHTML);
-      console.log(html);
-      throw error;
-    }
-    const dialog = page.locator('.fixed.inset-0').filter({
-      has: page.getByRole('button', { name: 'Ekle', exact: true }),
+    // 3. Query Guest List (GET /api/guests)
+    const getRes = await page.request.get(`/api/guests?wedding_id=${fixture.weddingId}`);
+    expect(getRes.status()).toBe(200);
+    const guestsList = await getRes.json();
+    expect(Array.isArray(guestsList)).toBe(true);
+    const found = guestsList.find((g: any) => g.id === guestId);
+    expect(found).toBeDefined();
+
+    // 4. Update Guest Info (PUT /api/guests/[id])
+    const updateRes = await page.request.put(`/api/guests/${guestId}`, {
+      data: {
+        first_name: 'Ahmet',
+        last_name: 'Yılmaz Güncellendi',
+        phone: '+905554443322',
+        email: 'ahmet@example.com'
+      }
     });
+    expect(updateRes.status()).toBe(200);
+    const updated = await updateRes.json();
+    expect(updated.last_name).toBe('Yılmaz Güncellendi');
 
-    await dialog.locator('input').nth(0).fill('Ahmet');
-    await dialog.locator('input').nth(1).fill('Yılmaz');
-    await dialog.getByRole('button', { name: 'Ekle', exact: true }).click();
-    await expect(page.locator('table')).toContainText('Ahmet Yılmaz');
+    // 5. Delete Guest (DELETE /api/guests/[id])
+    const deleteRes = await page.request.delete(`/api/guests/${guestId}`);
+    expect(deleteRes.status()).toBe(200);
 
-    // Ara
-    await page.fill('input[placeholder="İsim veya soyisim ile ara..."]', 'Ahmet');
-    await expect(page.locator('table')).toContainText('Ahmet Yılmaz');
-    await page.fill('input[placeholder="İsim veya soyisim ile ara..."]', '');
-
-    // Dışa aktar: CSV
-    await page.click('text="Dışa Aktar"');
-    const exportDialog = page.locator('.fixed.inset-0').filter({
-      has: page.getByRole('button', { name: 'İndir', exact: true }),
-    });
-    await exportDialog.locator('select').selectOption('csv');
-    const [csvDownload] = await Promise.all([
-      page.waitForEvent('download'),
-      exportDialog.getByRole('button', { name: 'İndir', exact: true }).click()
-    ]);
-    expect(csvDownload.suggestedFilename()).toContain('.csv');
-
-    // Dışa aktar: XLSX (varsayılan format)
-    await page.click('text="Dışa Aktar"');
-    const exportDialogXlsx = page.locator('.fixed.inset-0').filter({
-      has: page.getByRole('button', { name: 'İndir', exact: true }),
-    });
-    const [xlsxDownload] = await Promise.all([
-      page.waitForEvent('download'),
-      exportDialogXlsx.getByRole('button', { name: 'İndir', exact: true }).click()
-    ]);
-    expect(xlsxDownload.suggestedFilename()).toContain('.xlsx');
-
-    // Mobil overflow kontrol et
-    await page.setViewportSize({ width: 375, height: 812 });
-    const hasHorizontalScroll = await page.evaluate(() => document.body.scrollWidth > window.innerWidth);
-    expect(hasHorizontalScroll).toBe(false);
+    // Verify deletion
+    const verifyRes = await page.request.get(`/api/guests?wedding_id=${fixture.weddingId}`);
+    const verifyList = await verifyRes.json();
+    const stillExists = verifyList.some((g: any) => g.id === guestId);
+    expect(stillExists).toBe(false);
   });
 });
