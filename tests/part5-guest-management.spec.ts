@@ -43,14 +43,20 @@ test.describe('PART 5A - Guest Management E2E', () => {
     await expect(page.locator('text="RSVP Yönetimi"')).not.toBeVisible();
     await expect(page.locator('text="Oturma Planı"')).not.toBeVisible();
 
-    // 4. Verify C6 guided step navigation is present with correct terminology
-    await expect(page.locator('nav button:has-text("Bilgiler")')).toBeVisible();
-    await expect(page.locator('nav button:has-text("Etkinlik")')).toBeVisible();
-    await expect(page.locator('nav button:has-text("Tasarım")')).toBeVisible();
-    await expect(page.locator('nav button:has-text("İçerik")')).toBeVisible();
-    await expect(page.locator('nav button:has-text("Özel İçerikler")')).toBeVisible();
-    await expect(page.locator('nav button:has-text("Önizleme")')).toBeVisible();
-    await expect(page.locator('nav button:has-text("Paylaşım")')).toBeVisible();
+    // 4. Verify C6 guided step navigation is present with correct terminology and exact match patterns
+    const steps = [
+      { key: 'info', pattern: /^(?:\d+|✓)\s*Bilgiler$/ },
+      { key: 'events', pattern: /^(?:\d+|✓)\s*Etkinlik$/ },
+      { key: 'design', pattern: /^(?:\d+|✓)\s*Tasarım$/ },
+      { key: 'content', pattern: /^(?:\d+|✓)\s*İçerik$/ },
+      { key: 'special', pattern: /^(?:\d+|✓)\s*Özel İçerikler$/ },
+      { key: 'preview', pattern: /^(?:\d+|✓)\s*Önizleme$/ },
+      { key: 'share', pattern: /^(?:\d+|✓)\s*Paylaşım$/ }
+    ];
+
+    for (const step of steps) {
+      await expect(page.locator('nav button').filter({ hasText: step.pattern })).toBeVisible();
+    }
   });
 
   test('PART 5A - Guest Backend Preservation', async ({ page }) => {
