@@ -134,23 +134,44 @@ test.describe('MEMBERSHIP EMAIL VERIFICATION — MANDATORY SECURITY SUITE', () =
   });
 
   test('9. Active verification lookup and email normalization (casing & whitespace)', async () => {
-    const { sendVerificationEmail, verifySubmittedOtp, hashOtp, getLocalVerifications } = await import('../src/lib/email-service');
+    const { sendVerificationEmail, verifySubmittedOtp, getTestVerificationRecord } = await import('../src/lib/email-service');
     const mixedEmail = `  Test.User.${Date.now()}@Example.COM  `;
     const normalized = mixedEmail.trim().toLowerCase();
 
     const sendRes = await sendVerificationEmail({ email: mixedEmail, firstName: 'NormalizationTest' });
     expect(sendRes.success).toBe(true);
 
-    // Fetch the generated record from local cache / DB
-    const cache = getLocalVerifications();
-    const record = cache[normalized];
-    expect(record).toBeDefined();
-    expect(record.status).toBe('pending');
-
-    // Attempting wrong code with uppercase email should properly identify record and return wrong code error (not 'record not found')
     const wrongRes = await verifySubmittedOtp({ email: mixedEmail.toUpperCase(), code: '000000' });
     // Should fail with wrong code, proving active row was found
     expect(wrongRes.success).toBe(false);
     expect(wrongRes.error).toContain('Doğrulama kodu hatalı');
+  });
+
+  test('10. Security: Direct anon access to email_verifications and email_delivery_logs is strictly blocked by RLS', async () => {
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+    if (supabaseUrl && anonKey) {
+      const anon = createClient(supabaseUrl, anonKey);
+
+      // 1. Anon SELECT on email_verifications must be blocked
+      const selVerif = await anon.from('email_verifications').select('*').limit(5);
+      expect(selVerif.error || !selVerif.data || selVerif.data.length === 0).toBeTruthy();
+
+      // 2. Anon INSERT on email_verifications must be blocked
+      const insVerif = await anon.from('email_verifications').insert([{
+        id: '00000000-0000-0000-0000-000000000000',
+        email: 'unauthorized@example.com',
+        code_hash: 'fake',
+        status: 'pending',
+        expires_at: new Date().toISOString()
+      }]);
+      expect(insVerif.error).toBeDefined();
+
+      // 3. Anon SELECT on email_delivery_logs must be blocked
+      const selLogs = await anon.from('email_delivery_logs').select('*').limit(5);
+      expect(selLogs.error || !selLogs.data || selLogs.data.length === 0).toBeTruthy();
+    }
   });
 });

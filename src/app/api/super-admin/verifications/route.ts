@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { isSuperAdminAuthorized } from '@/lib/superadmin-auth';
-import { supabase } from '@/lib/supabase';
-import { sendVerificationEmail, getLocalVerifications } from '@/lib/email-service';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { sendVerificationEmail, normalizeEmail } from '@/lib/email-service';
 
 export async function GET(req: Request) {
   const authorized = await isSuperAdminAuthorized();
@@ -11,8 +11,9 @@ export async function GET(req: Request) {
 
   try {
     const { searchParams } = new URL(req.url);
-    const search = (searchParams.get('search') || '').trim().toLowerCase();
+    const search = normalizeEmail(searchParams.get('search') || '');
     const status = searchParams.get('status') || 'all';
+    const supabase = getSupabaseAdmin();
 
     let verifications: any[] = [];
     try {
@@ -26,36 +27,16 @@ export async function GET(req: Request) {
       }
     } catch {}
 
-    // Merge with local fallback cache to ensure completeness
-    const localCache = getLocalVerifications();
-    const localEntries = Object.values(localCache).map((item: any) => ({
-      id: item.id || item.email,
-      user_id: item.user_id || null,
-      email: item.email,
-      status: item.status || 'pending',
-      attempt_count: item.attempt_count || 0,
-      resend_count: item.resend_count || 0,
-      expires_at: item.expires_at,
-      verified_at: item.verified_at || null,
-      last_sent_at: item.last_sent_at || item.created_at,
-      created_at: item.created_at
-    }));
-
     const map = new Map<string, any>();
     verifications.forEach((v: any) => {
       const { code, raw_otp, otp, code_hash, ...safeV } = v;
-      map.set(safeV.email.toLowerCase(), safeV);
-    });
-    localEntries.forEach((item: any) => {
-      if (!map.has(item.email.toLowerCase())) {
-        map.set(item.email.toLowerCase(), item);
-      }
+      map.set(normalizeEmail(safeV.email), safeV);
     });
 
     let list = Array.from(map.values());
 
     if (search) {
-      list = list.filter(v => v.email?.toLowerCase().includes(search));
+      list = list.filter(v => normalizeEmail(v.email).includes(search));
     }
 
     if (status !== 'all') {
@@ -85,14 +66,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
+    const supabase = getSupabaseAdmin();
     // Record audit log
-    await supabase.from('super_admin_audit_logs').insert([
-      {
-        action: 'verification_code_resent_by_admin',
-        actor_email: 'Super Admin',
-        details: { email }
-      }
-    ]);
+    try {
+      await supabase.from('super_admin_audit_logs').insert([
+        {
+          action: 'verification_code_resent_by_admin',
+          actor_email: 'Super Admin',
+          details: { email: normalizeEmail(email) }
+        }
+      ]);
+    } catch {}
 
     return NextResponse.json({
       success: true,

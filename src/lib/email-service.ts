@@ -1,12 +1,8 @@
 import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
 import nodemailer from 'nodemailer';
-import { supabase } from './supabase';
+import { getSupabaseAdmin } from './supabase-admin';
 
 const OTP_SECRET = process.env.OTP_SECRET || process.env.SUPERADMIN_SECRET || 'dijital-davetiye-secure-otp-hash-secret-2026';
-
-const CACHE_FILE = path.join(process.cwd(), '.otp_verifications_cache.json');
 
 /**
  * Centralized email normalization helper
@@ -51,23 +47,6 @@ export async function verifyEmailTransport(): Promise<{ success: boolean; error?
   }
 }
 
-export function getLocalVerifications(): Record<string, any> {
-  try {
-    if (fs.existsSync(CACHE_FILE)) {
-      return JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
-    }
-  } catch {}
-  return {};
-}
-
-export function saveLocalVerification(email: string, record: any) {
-  try {
-    const cache = getLocalVerifications();
-    cache[normalizeEmail(email)] = record;
-    fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2), 'utf8');
-  } catch {}
-}
-
 /**
  * Computes a secure HMAC-SHA256 hash of the 6-digit OTP
  * RAW OTP is NEVER stored in database or logs!
@@ -85,7 +64,20 @@ export function generateOtp(): string {
 }
 
 /**
- * Sends verification email and records delivery status
+ * In-memory test store used ONLY during local automated testing when DB is mocked
+ */
+const _testMemoryStore: Record<string, any> = {};
+
+export function getTestVerificationRecord(email: string): any {
+  return _testMemoryStore[normalizeEmail(email)];
+}
+
+export function setTestVerificationRecord(email: string, record: any): void {
+  _testMemoryStore[normalizeEmail(email)] = record;
+}
+
+/**
+ * Sends verification email and records delivery status via server-only service role
  */
 export async function sendVerificationEmail({
   email,
@@ -97,12 +89,12 @@ export async function sendVerificationEmail({
   userId?: string;
 }): Promise<{ success: boolean; error?: string; retryAfter?: number }> {
   const normalizedEmail = normalizeEmail(email);
+  const supabase = getSupabaseAdmin();
 
   try {
-    // 1. Check Resend Cooldown (60 seconds)
+    // 1. Check Resend Cooldown (60 seconds) from server DB
     let existingPending: any = null;
 
-    // Check DB first for cooldown
     try {
       const { data } = await supabase
         .from('email_verifications')
@@ -116,10 +108,9 @@ export async function sendVerificationEmail({
       if (data) existingPending = data;
     } catch {}
 
-    // Check local cache fallback
-    if (!existingPending) {
-      const localCache = getLocalVerifications();
-      existingPending = localCache[normalizedEmail];
+    // Test environment fallback
+    if (!existingPending && (process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST)) {
+      existingPending = getTestVerificationRecord(normalizedEmail);
     }
 
     if (existingPending && existingPending.status === 'pending') {
@@ -134,7 +125,7 @@ export async function sendVerificationEmail({
       }
     }
 
-    // 2. Generate secure 6-digit code and hash
+    // 2. Generate secure 6-digit code and HMAC-SHA256 hash
     const rawOtp = generateOtp();
     const codeHash = hashOtp(normalizedEmail, rawOtp);
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes expiry
@@ -163,9 +154,12 @@ export async function sendVerificationEmail({
       created_at: new Date().toISOString()
     };
 
-    saveLocalVerification(normalizedEmail, record);
+    // Save to test store if test environment
+    if (process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST) {
+      setTestVerificationRecord(normalizedEmail, record);
+    }
 
-    // Insert new pending record to Supabase
+    // Insert new pending record to Supabase via service role
     try {
       await supabase.from('email_verifications').insert([record]);
     } catch (insertErr) {
@@ -246,7 +240,7 @@ export async function sendVerificationEmail({
         console.error('[EMAIL DELIVERY ERROR]', err.code || err.name, errorMessage);
       }
     } else {
-      if (process.env.NODE_ENV === 'test' || process.env.NEXT_PUBLIC_SITE_URL?.includes('localhost')) {
+      if (process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST || process.env.NEXT_PUBLIC_SITE_URL?.includes('localhost')) {
         deliveryStatus = 'mock_sent';
       } else {
         deliveryStatus = 'failed';
@@ -264,9 +258,7 @@ export async function sendVerificationEmail({
           error_message: errorMessage ? errorMessage.slice(0, 500) : null
         }
       ]);
-    } catch {
-      // safe fallback
-    }
+    } catch {}
 
     // 6. Log Security Event
     try {
@@ -277,9 +269,7 @@ export async function sendVerificationEmail({
           details: { resend_count: resendCount, delivery_status: deliveryStatus }
         }
       ]);
-    } catch {
-      // safe fallback
-    }
+    } catch {}
 
     const isTestEnv = process.env.NODE_ENV === 'test' || !!process.env.PLAYWRIGHT_TEST || process.env.NEXT_PUBLIC_SITE_URL?.includes('localhost');
 
@@ -297,7 +287,7 @@ export async function sendVerificationEmail({
 }
 
 /**
- * Validates the user-submitted 6-digit OTP code against the stored hash
+ * Validates the user-submitted 6-digit OTP code against the stored hash via service role
  */
 export async function verifySubmittedOtp({
   email,
@@ -308,6 +298,7 @@ export async function verifySubmittedOtp({
 }): Promise<{ success: boolean; error?: string }> {
   const normalizedEmail = normalizeEmail(email);
   const trimmedCode = (code || '').trim();
+  const supabase = getSupabaseAdmin();
 
   if (!trimmedCode || trimmedCode.length !== 6) {
     return { success: false, error: 'Lütfen 6 haneli doğrulama kodunu eksiksiz girin.' };
@@ -316,9 +307,9 @@ export async function verifySubmittedOtp({
   try {
     let record: any = null;
 
-    // 1. Fetch latest pending verification record from Supabase
+    // 1. Fetch latest pending verification record from Supabase via service role
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('email_verifications')
         .select('*')
         .eq('email', normalizedEmail)
@@ -334,10 +325,9 @@ export async function verifySubmittedOtp({
       console.warn('DB verification lookup warning:', dbErr);
     }
 
-    // 2. Fallback to local memory/disk cache if DB had no record
-    if (!record) {
-      const localCache = getLocalVerifications();
-      const localRec = localCache[normalizedEmail];
+    // 2. Fallback to test memory store in test environment
+    if (!record && (process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST)) {
+      const localRec = getTestVerificationRecord(normalizedEmail);
       if (localRec && localRec.status === 'pending') {
         record = localRec;
       }
@@ -350,7 +340,6 @@ export async function verifySubmittedOtp({
     // Check expiration
     if (new Date(record.expires_at).getTime() < Date.now()) {
       record.status = 'expired';
-      saveLocalVerification(normalizedEmail, record);
       try {
         await supabase
           .from('email_verifications')
@@ -365,7 +354,6 @@ export async function verifySubmittedOtp({
     if (currentAttempts > 5) {
       record.status = 'too_many_attempts';
       record.attempt_count = currentAttempts;
-      saveLocalVerification(normalizedEmail, record);
       try {
         await supabase
           .from('email_verifications')
@@ -385,7 +373,6 @@ export async function verifySubmittedOtp({
 
     if (!isMatch) {
       record.attempt_count = currentAttempts;
-      saveLocalVerification(normalizedEmail, record);
       try {
         await supabase
           .from('email_verifications')
@@ -398,7 +385,6 @@ export async function verifySubmittedOtp({
     // Verification Success!
     record.status = 'verified';
     record.verified_at = new Date().toISOString();
-    saveLocalVerification(normalizedEmail, record);
 
     try {
       await supabase
@@ -433,4 +419,3 @@ export async function verifySubmittedOtp({
     return { success: false, error: 'Doğrulama işlemi sırasında bir hata oluştu.' };
   }
 }
-
