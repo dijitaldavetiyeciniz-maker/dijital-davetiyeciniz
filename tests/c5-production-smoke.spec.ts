@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { buildPublishedWeddingRecord, buildPublishedWeddingUpdate } from './helpers/publishTestHelpers';
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' });
 
@@ -26,8 +27,8 @@ test.describe('C5-A Production Data & Invitation Smoke Tests', () => {
     supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     weddingId = crypto.randomUUID();
 
-    // Insert a realistic wedding record
-    const { error } = await supabase.from('weddings').insert({
+    // Insert a realistic published wedding record
+    const rawRecord = {
       id: weddingId,
       slug: SLUG,
       bride_name: "Ayşe",
@@ -42,7 +43,9 @@ test.describe('C5-A Production Data & Invitation Smoke Tests', () => {
       template_id: "royal-letter",
       names_font_family: "Playfair Display",
       font_family: "Lora"
-    });
+    };
+
+    const { error } = await supabase.from('weddings').insert(buildPublishedWeddingRecord(rawRecord));
 
     if (error) {
       throw new Error(`Staging insert failed: ${error.message}`);
@@ -82,11 +85,15 @@ test.describe('C5-A Production Data & Invitation Smoke Tests', () => {
 
   test('Admin changes immediately reflect in the public invitation view', async ({ page }) => {
     // 1. Update the template preset and font configurations inside Supabase direct
-    const { error: updateError } = await supabase.from('weddings').update({
+    const updatePayload = buildPublishedWeddingUpdate({
+      bride_name: "Ayşe",
+      groom_name: "Fatma",
       template_id: "botanical-herbarium",
       names_font_family: "Space Grotesk",
       font_family: "Inter"
-    }).eq('id', weddingId);
+    });
+
+    const { error: updateError } = await supabase.from('weddings').update(updatePayload).eq('id', weddingId);
 
     if (updateError) {
       throw new Error(`Admin update mock failed: ${updateError.message}`);

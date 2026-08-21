@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
+import { insertPublishedWedding, updatePublishedWedding } from "./helpers/publishTestHelpers";
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
@@ -28,7 +29,7 @@ test.describe("Visual Regression Sets - Part 4/5", () => {
 
   test.beforeAll(async () => {
     supabase = createClient(SUPABASE_URL!, SUPABASE_KEY!);
-    const record = {
+    const rawRecord = {
       id: crypto.randomUUID(),
       slug: SLUG,
       event_type: "wedding",
@@ -42,7 +43,7 @@ test.describe("Visual Regression Sets - Part 4/5", () => {
       entrance_animation: "sealOnly"
     };
 
-    const { error } = await supabase.from("weddings").insert([record]);
+    const { error } = await insertPublishedWedding(supabase, rawRecord);
     if (error) throw new Error(`Insert failed: ${error.message}`);
   });
 
@@ -54,12 +55,16 @@ test.describe("Visual Regression Sets - Part 4/5", () => {
 
   for (const flagship of FLAGSHIPS) {
     test(`Visual Regression: ${flagship.id}`, async ({ page }) => {
-      // Update the record to the target flagship
-      await supabase.from("weddings").update({
+      // Update the record to the target flagship with C8 published snapshot
+      await updatePublishedWedding(supabase, {
         template_id: flagship.id,
         entrance_animation: flagship.animation,
-        event_type: flagship.eventType || "wedding"
-      }).eq("slug", SLUG);
+        event_type: flagship.eventType || "wedding",
+        bride_name: "Visual Test",
+        groom_name: "Regression",
+        wedding_date: "2027-06-15T17:00:00.000Z",
+        venue_name: "Test Venue"
+      }, { column: "slug", value: SLUG });
 
       await page.setViewportSize({ width: 1280, height: 800 });
       await page.goto(`${BASE_URL}/${SLUG}`);

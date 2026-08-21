@@ -62,10 +62,24 @@ function VerificationForm() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setSuccessMsg('E-posta adresiniz başarıyla doğrulandı! Dashboard’a yönlendiriliyorsunuz...');
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 1200);
+        setSuccessMsg('E-posta adresiniz başarıyla doğrulandı! Yönlendiriliyorsunuz...');
+        setTimeout(async () => {
+          try {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('onboarding_completed')
+              .eq('email', email.trim())
+              .maybeSingle();
+
+            if (profile && profile.onboarding_completed === true) {
+              router.push('/dashboard');
+            } else {
+              router.push('/onboarding');
+            }
+          } catch {
+            router.push('/onboarding');
+          }
+        }, 1000);
       } else {
         setErrorMsg(data.error || 'Doğrulama kodu geçersiz veya süresi dolmuş.');
       }

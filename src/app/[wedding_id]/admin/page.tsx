@@ -6,7 +6,7 @@ import { mapEnumToDbEventType } from '@/lib/themes';
 import { getEventTypeConfig } from '@/data/eventTypeConfig';
 import PremiumTemplateRenderer from '@/components/templates/PremiumTemplateRenderer';
 import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
-import { Heart, Upload, Link as LinkIcon, Download, Smartphone, Share2, Sparkles, MapPin, Search, Grid, Eye, CheckCircle2, Navigation, Wand2, Calendar, Clock, Lock, ShieldAlert, Monitor, Type, Palette, ArrowRight, Save, Shield, Settings, Info, Music, StopCircle, RefreshCw, X, Users, MessageSquare, Paintbrush, CreditCard, Copy, ExternalLink, Tablet, Trash2, Check, Volume2, VolumeX, QrCode } from 'lucide-react';
+import { Heart, Upload, Link as LinkIcon, Download, Smartphone, Share2, Sparkles, MapPin, Search, Grid, Eye, CheckCircle2, Navigation, Wand2, Calendar, Clock, Lock, ShieldAlert, Monitor, Type, Palette, ArrowRight, Save, Shield, Settings, Info, Music, StopCircle, RefreshCw, X, Users, MessageSquare, Paintbrush, CreditCard, Copy, ExternalLink, Tablet, Trash2, Check, Volume2, VolumeX, QrCode, RotateCcw } from 'lucide-react';
 import SafeImage from '@/components/ui/SafeImage';
 import { getRandomQuote } from '@/lib/aiQuotes';
 import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingAnimations';
@@ -242,6 +242,20 @@ export default function CoupleAdminPage({
   const [activeTab, setActiveTab] = useState<'info' | 'events' | 'design' | 'content' | 'special' | 'preview' | 'share' | 'settings' | 'rsvps' | 'guests'>('info');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [subEvents, setSubEvents] = useState<any[]>([]);
+
+  // C8 Safe Publishing & Version History States
+  const [isPublished, setIsPublished] = useState(false);
+  const [hasUnpublishedChanges, setHasUnpublishedChanges] = useState(false);
+  const [lastSavedTime, setLastSavedTime] = useState<string | null>(null);
+  const [showPublishModal, setShowPublishModal] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [showPublishSuccessModal, setShowPublishSuccessModal] = useState(false);
+  const [showVersionDrawer, setShowVersionDrawer] = useState(false);
+  const [versionsList, setVersionsList] = useState<any[]>([]);
+  const [loadingVersions, setLoadingVersions] = useState(false);
+  const [previewVersionData, setPreviewVersionData] = useState<any | null>(null);
+  const [restoringVersionId, setRestoringVersionId] = useState<string | null>(null);
+  const autosaveTimerRef = useRef<any>(null);
 
   // Event-specific dynamic states
   const [isWomenOnly, setIsWomenOnly] = useState<'yes' | 'no'>('no');
@@ -511,18 +525,29 @@ export default function CoupleAdminPage({
         setIsAuthenticated(false);
       }
       
-      if (weddingData.template_id) setTemplateId(weddingData.template_id);
-      if (weddingData.primary_color) setPrimaryColor(weddingData.primary_color);
-      if (weddingData.text_color) setTextColor(weddingData.text_color);
-      if (weddingData.envelope_color) setEnvelopeColor(weddingData.envelope_color);
-      const bgDesign = weddingData.background_design || weddingData.envelope_bg_color;
+      // Hydrate C8 Draft & Published state
+      if (weddingData.is_published !== undefined) {
+        setIsPublished(weddingData.is_published === true || (weddingData.is_paid && weddingData.is_published !== false));
+      }
+      if (weddingData.has_unpublished_changes !== undefined) {
+        setHasUnpublishedChanges(weddingData.has_unpublished_changes === true);
+      }
+
+      // If draft_data exists, use working draft for editor inputs
+      const activeWorkingData = weddingData.draft_data ? { ...weddingData, ...weddingData.draft_data } : weddingData;
+      
+      if (activeWorkingData.template_id) setTemplateId(activeWorkingData.template_id);
+      if (activeWorkingData.primary_color) setPrimaryColor(activeWorkingData.primary_color);
+      if (activeWorkingData.text_color) setTextColor(activeWorkingData.text_color);
+      if (activeWorkingData.envelope_color) setEnvelopeColor(activeWorkingData.envelope_color);
+      const bgDesign = activeWorkingData.background_design || activeWorkingData.envelope_bg_color;
       if (bgDesign) setEnvelopeBgColor(bgDesign);
-      if (weddingData.envelope_flap_type) setEnvelopeFlapType(weddingData.envelope_flap_type);
-      if (weddingData.seal_type) setSealType(weddingData.seal_type);
-      if (weddingData.seal_color) setSealColor(weddingData.seal_color);
-      else if (weddingData.primary_color) setSealColor(weddingData.primary_color);
-      if (weddingData.entrance_type) setEntranceType(weddingData.entrance_type);
-      if (weddingData.effect_type) setEffectType(weddingData.effect_type);
+      if (activeWorkingData.envelope_flap_type) setEnvelopeFlapType(activeWorkingData.envelope_flap_type);
+      if (activeWorkingData.seal_type) setSealType(activeWorkingData.seal_type);
+      if (activeWorkingData.seal_color) setSealColor(activeWorkingData.seal_color);
+      else if (activeWorkingData.primary_color) setSealColor(activeWorkingData.primary_color);
+      if (activeWorkingData.entrance_type) setEntranceType(activeWorkingData.entrance_type);
+      if (activeWorkingData.effect_type) setEffectType(activeWorkingData.effect_type);
       if (weddingData.font_family) setFontFamily(weddingData.font_family);
       if (weddingData.names_font_family) setNamesFontFamily(weddingData.names_font_family);
       if (weddingData.background_image_url) setBgImageUrl(weddingData.background_image_url);
@@ -946,6 +971,7 @@ export default function CoupleAdminPage({
       };
 
       return {
+        ...(prev || {}),
         content: preservedContent,
         design: {
           layoutStyle: theme.layoutStyle,
@@ -1416,7 +1442,10 @@ export default function CoupleAdminPage({
 
       if (!silent) {
         setSaveStatus('saved');
-        setToastMessage('✅ Değişiklikler kaydedildi!');
+        setHasUnpublishedChanges(true);
+        const now = new Date();
+        setLastSavedTime(now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }));
+        setToastMessage('✅ Taslak kaydedildi!');
         setTimeout(() => setToastMessage(''), 2500);
       }
       setPreviewKey(Date.now());
@@ -1430,7 +1459,93 @@ export default function CoupleAdminPage({
     }
   }
 
+  // C8: Fetch Version History
+  const fetchVersionHistory = async () => {
+    setLoadingVersions(true);
+    try {
+      const res = await fetch(`/api/invitations/${wedding.id}/versions`);
+      const data = await res.json();
+      if (data.success) {
+        setVersionsList(data.versions || []);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingVersions(false);
+    }
+  };
 
+  // C8: Restore Version into Current Working Draft (never auto-publishes)
+  const handleRestoreVersion = async (versionId: string) => {
+    if (!confirm('Bu sürümü mevcut taslağınıza geri yüklemek istediğinize emin misiniz?\n\n(Not: Canlı davetiyeniz siz açıkça "Yayınla" diyene kadar değişmeyecektir).')) return;
+
+    setRestoringVersionId(versionId);
+    try {
+      const res = await fetch(`/api/invitations/${wedding.id}/versions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'restore', version_id: versionId })
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.restored_data) {
+        const d = data.restored_data;
+        if (d.template_id) setTemplateId(d.template_id);
+        if (d.primary_color) setPrimaryColor(d.primary_color);
+        if (d.text_color) setTextColor(d.text_color);
+        if (d.envelope_color) setEnvelopeColor(d.envelope_color);
+        if (d.bride_name) setBrideName(d.bride_name);
+        if (d.groom_name) setGroomName(d.groom_name);
+        if (d.wedding_date) setWeddingDate(d.wedding_date);
+        if (d.venue_name) setVenueName(d.venue_name);
+        if (d.venue_address) setVenueAddress(d.venue_address);
+        if (d.custom_overrides) setCustomOverrides(d.custom_overrides);
+
+        setHasUnpublishedChanges(true);
+        setShowVersionDrawer(false);
+        setToastMessage('✅ Eski sürüm taslağa yüklendi. Yayına almak için Yayınla butonuna basın.');
+        setTimeout(() => setToastMessage(''), 4000);
+        setPreviewKey(Date.now());
+      } else {
+        alert(data.error || 'Geri yükleme başarısız.');
+      }
+    } catch (err) {
+      alert('Geri yükleme sırasında hata oluştu.');
+    } finally {
+      setRestoringVersionId(null);
+    }
+  };
+
+  // C8: Execute atomic publish
+  const handleExecutePublish = async () => {
+    setIsPublishing(true);
+    try {
+      // First ensure draft is saved
+      await handleSave(undefined, true);
+
+      const res = await fetch(`/api/invitations/${wedding.id}/publish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ summary: `${eventType} Yayını` })
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setIsPublished(true);
+        setHasUnpublishedChanges(false);
+        setShowPublishModal(false);
+        setShowPublishSuccessModal(true);
+        setSaveStatus('saved');
+        setToastMessage('🎉 Davetiyeniz başarıyla yayınlandı!');
+        setTimeout(() => setToastMessage(''), 3000);
+      } else {
+        alert(data.error || 'Yayınlama başarısız oldu.');
+      }
+    } catch (err: any) {
+      alert('Yayınlama servisine bağlanırken bir hata oluştu.');
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   const stepLabels: Record<string, string> = {
     info: 'Bilgiler',
@@ -1447,17 +1562,29 @@ export default function CoupleAdminPage({
     <div className="min-w-0 min-h-screen bg-slate-50 p-4 md:p-8 text-slate-800">
       
       {toastMessage && (
-        <div className="fixed top-4 right-4 z-[250] bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-2 text-xs font-bold">
+        <div className="fixed top-4 right-4 z-[250] bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-2 text-xs font-bold animate-in fade-in">
           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      <div className="fixed bottom-4 right-4 z-[100] hidden md:flex items-center gap-2 bg-white px-4 py-2.5 rounded-full shadow-lg border text-xs font-semibold">
+      {/* C8 Autosave Status Indicator */}
+      <div className="fixed bottom-4 right-4 z-[100] hidden md:flex items-center gap-2.5 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-full shadow-lg border border-slate-200 text-xs font-semibold">
         {saveStatus === 'saving' ? (
-          <span className="text-rose-500">Kaydediliyor...</span>
+          <div className="flex items-center gap-2 text-rose-500">
+            <div className="w-3.5 h-3.5 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+            <span>Kaydediliyor...</span>
+          </div>
         ) : saveStatus === 'saved' ? (
-          <span className="text-emerald-600">Değişiklikler Kaydedildi</span>
+          <div className="flex items-center gap-1.5 text-emerald-600">
+            <CheckCircle2 className="w-4 h-4" />
+            <span>Taslak Kaydedildi {lastSavedTime ? `(${lastSavedTime})` : ''}</span>
+          </div>
+        ) : saveStatus === 'error' ? (
+          <button onClick={() => handleSave()} className="flex items-center gap-1.5 text-rose-600 hover:underline cursor-pointer">
+            <ShieldAlert className="w-4 h-4" />
+            <span>Kaydedilemedi — Tekrar Dene</span>
+          </button>
         ) : (
           <span className="text-slate-500">Otomatik Kaydedilir</span>
         )}
@@ -1468,7 +1595,19 @@ export default function CoupleAdminPage({
         {/* SOL: Navigation Stepper (Desktop Sidebar) */}
         <div className="hidden lg:block lg:col-span-3 flex flex-col gap-4">
           <div className="bg-white p-5 rounded-2xl border shadow-xs space-y-6 sticky top-8 text-left">
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Davetiyem (%{completionStatus.percent})</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Davetiyem (%{completionStatus.percent})</h2>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                isPublished && !hasUnpublishedChanges
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  : isPublished && hasUnpublishedChanges
+                  ? 'bg-amber-50 text-amber-700 border-amber-300'
+                  : 'bg-slate-100 text-slate-600 border-slate-200'
+              }`}>
+                {isPublished ? (hasUnpublishedChanges ? 'Yayınlanmamış Değişiklikler' : 'Yayında') : 'Taslak'}
+              </span>
+            </div>
+
             <nav className="flex flex-col gap-1">
               {['info', 'events', 'design', 'content', 'special', 'preview', 'share'].map((step, idx) => {
                 const isActive = activeTab === step;
@@ -1488,7 +1627,19 @@ export default function CoupleAdminPage({
                 );
               })}
             </nav>
-            <div className="border-t pt-4">
+
+            <div className="border-t pt-4 space-y-1">
+              <button 
+                onClick={() => {
+                  fetchVersionHistory();
+                  setShowVersionDrawer(true);
+                }} 
+                className="flex items-center gap-2 p-2.5 rounded-xl text-xs font-semibold text-slate-700 w-full hover:bg-slate-50 cursor-pointer"
+              >
+                <Clock className="w-4 h-4 text-indigo-500" />
+                <span>Versiyon Geçmişi</span>
+              </button>
+
               <button onClick={() => setActiveTab('settings')} className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-semibold text-slate-600 w-full hover:bg-slate-50 cursor-pointer ${activeTab === 'settings' ? 'bg-slate-100' : ''}`}>
                 <Settings className="w-4 h-4" />
                 <span>Genel Ayarlar</span>
@@ -1500,22 +1651,62 @@ export default function CoupleAdminPage({
         {/* ORTA: Form ve İçerik Panel */}
         <div className="lg:col-span-5 flex flex-col gap-6 text-left">
           
-          <header className="bg-white p-6 rounded-2xl border shadow-xs flex justify-between items-center">
+          <header className="bg-white p-5 sm:p-6 rounded-2xl border shadow-xs flex flex-wrap gap-4 justify-between items-center">
             <div>
-              <h1 className="text-xl font-bold text-slate-800 truncate max-w-[200px]">
-                {brideName || 'Etkinlik'} {groomName ? `& ${groomName}` : ''}
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-bold text-slate-800 truncate max-w-[180px] sm:max-w-[240px]">
+                  {brideName || 'Etkinlik'} {groomName ? `& ${groomName}` : ''}
+                </h1>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                  isPublished && !hasUnpublishedChanges
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    : isPublished && hasUnpublishedChanges
+                    ? 'bg-amber-50 text-amber-700 border-amber-300'
+                    : 'bg-slate-100 text-slate-600 border-slate-200'
+                }`}>
+                  {isPublished ? (hasUnpublishedChanges ? 'Yayınlanmamış Değişiklikler' : 'Yayında') : 'Taslak'}
+                </span>
+              </div>
               <p className="text-slate-400 text-[10px] mt-0.5">Davetiye Hazırlama Stüdyosu</p>
             </div>
+
             <div className="flex items-center gap-2">
-              <button 
-                onClick={() => handleSave()} 
-                className="text-xs font-bold px-3 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 cursor-pointer"
+              {/* Canlı Davetiyeyi Gör Button */}
+              {isPublished && (
+                <a
+                  href={`/${wedding.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+                  <span className="hidden sm:inline">Canlıyı Gör</span>
+                </a>
+              )}
+
+              {/* Version History Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  fetchVersionHistory();
+                  setShowVersionDrawer(true);
+                }}
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                title="Versiyon Geçmişi"
               >
-                Kaydet
+                <Clock className="w-3.5 h-3.5 text-indigo-500" />
+                <span className="hidden sm:inline">Geçmiş</span>
               </button>
-              <button onClick={() => setIsAuthenticated(false)} className="text-xs font-semibold px-3 py-1.5 bg-slate-100 rounded-lg hover:bg-slate-200 cursor-pointer">
-                Çıkış
+
+              {/* Publish Button */}
+              <button
+                type="button"
+                onClick={() => setShowPublishModal(true)}
+                data-testid="admin-publish-btn"
+                className="px-4 py-2 bg-gradient-to-r from-rose-500 via-pink-600 to-indigo-600 hover:opacity-95 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-rose-500/20 transition-all cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{isPublished ? (hasUnpublishedChanges ? 'Yeniden Yayınla' : 'Yayında') : 'Yayınla'}</span>
               </button>
             </div>
           </header>
@@ -1794,7 +1985,7 @@ export default function CoupleAdminPage({
                       <button
                         key={theme.id}
                         data-testid={`template-${theme.id}`}
-                        onClick={() => { setTemplateId(theme.id); latestTemplateIdRef.current = theme.id; }}
+                        onClick={() => applyPreset(theme)}
                         className={`p-3 bg-white border rounded-xl text-left text-xs font-bold cursor-pointer transition ${isActive ? 'border-rose-500 shadow-sm ring-1 ring-rose-300' : 'border-slate-200'}`}
                       >
                         <div className="truncate">{theme.name}</div>
@@ -2064,6 +2255,285 @@ export default function CoupleAdminPage({
             <div className="flex gap-3 justify-center">
               <button onClick={() => setRsvpToDelete(null)} className="flex-1 py-2 border rounded-xl text-xs font-semibold hover:bg-slate-50 cursor-pointer">Vazgeç</button>
               <button onClick={() => handleDeleteRsvp(rsvpToDelete)} className="flex-1 py-2 bg-rose-500 text-white text-xs font-semibold rounded-xl hover:bg-rose-600 cursor-pointer">Sil</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* C8: VERSION HISTORY DRAWER / PANEL */}
+      {/* ========================================================================= */}
+      {showVersionDrawer && (
+        <div className="fixed inset-0 z-[220] flex justify-end bg-black/60 backdrop-blur-xs animate-in fade-in">
+          <div className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col justify-between border-l border-slate-200 animate-in slide-in-from-right duration-300 text-left">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-indigo-600" />
+                <div>
+                  <h3 className="text-base font-bold text-slate-800">Versiyon Geçmişi</h3>
+                  <p className="text-xs text-slate-400">Kaydedilen ve yayınlanan sürümler</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setShowVersionDrawer(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="p-3.5 bg-indigo-50/70 border border-indigo-100 rounded-2xl text-xs text-indigo-900 leading-relaxed">
+                ℹ️ <strong>Güvenli Geri Yükleme:</strong> Eski bir sürümü geri yüklediğinizde, bu sürüm mevcut <strong>çalışma taslağınıza</strong> aktarılır. Canlı davetiyeniz siz açıkça &quot;Yayınla&quot; demeden değişmez.
+              </div>
+
+              {loadingVersions ? (
+                <div className="py-12 flex justify-center items-center text-slate-400 text-xs">
+                  <div className="w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mr-2" />
+                  Sürümler yükleniyor...
+                </div>
+              ) : versionsList.length > 0 ? (
+                <div className="space-y-3">
+                  {versionsList.map((ver: any, idx: number) => {
+                    const isLive = ver.is_published && idx === 0;
+                    return (
+                      <div 
+                        key={ver.id}
+                        className={`p-4 rounded-2xl border transition-all ${
+                          isLive 
+                            ? 'bg-emerald-50/40 border-emerald-300 ring-1 ring-emerald-400/30' 
+                            : 'bg-slate-50 border-slate-200 hover:border-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-lg bg-slate-200 text-slate-800">
+                              v{ver.version_number}
+                            </span>
+                            <span className="text-xs font-semibold text-slate-800">{ver.summary || 'Kayıt'}</span>
+                          </div>
+                          {isLive ? (
+                            <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded-full border border-emerald-300">
+                              Şu Anda Yayında
+                            </span>
+                          ) : ver.is_published ? (
+                            <span className="px-2 py-0.5 bg-slate-200 text-slate-700 font-medium text-[10px] rounded-full">
+                              Eski Yayın
+                            </span>
+                          ) : (
+                            <span className="px-2 py-0.5 bg-amber-100 text-amber-800 font-medium text-[10px] rounded-full">
+                              Taslak
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="text-[11px] text-slate-400 mb-3">
+                          {new Date(ver.created_at).toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'short' })}
+                        </div>
+
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleRestoreVersion(ver.id)}
+                            disabled={restoringVersionId === ver.id}
+                            className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
+                          >
+                            {restoringVersionId === ver.id ? (
+                              <span>Yükleniyor...</span>
+                            ) : (
+                              <>
+                                <RotateCcw className="w-3.5 h-3.5" />
+                                <span>Taslağa Yükle</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="py-12 text-center text-slate-400 text-xs">
+                  Henüz kaydedilmiş versiyon geçmişi bulunmuyor. Yayın yaptıkça otomatik kaydedilecektir.
+                </div>
+              )}
+            </div>
+
+            <div className="p-4 border-t border-slate-100 bg-slate-50 text-center">
+              <button
+                onClick={() => setShowVersionDrawer(false)}
+                className="w-full py-2.5 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl text-xs font-bold text-slate-700 cursor-pointer"
+              >
+                Kapat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* C8: PUBLISH READINESS AUDIT & CONFIRMATION MODAL */}
+      {/* ========================================================================= */}
+      {showPublishModal && (
+        <div className="fixed inset-0 z-[230] flex items-center justify-center bg-black/65 p-4 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 text-left animate-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-600 flex items-center justify-center font-bold">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-800 font-serif">Davetiyeyi Yayınla</h3>
+                  <p className="text-xs text-slate-400">Yayın Öncesi Kalite & Hazırlık Kontrolü</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setShowPublishModal(false)}
+                className="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-4 my-6">
+              {/* Mandatory Checks */}
+              <div className="space-y-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Zorunlu Alanlar</span>
+                
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border text-xs">
+                  <span className="font-semibold text-slate-700">Etkinlik Başlığı / İsimler</span>
+                  {brideName || groomName ? (
+                    <span className="text-emerald-600 font-bold flex items-center gap-1">✓ Tamam</span>
+                  ) : (
+                    <span className="text-rose-600 font-bold flex items-center gap-1">✗ Eksik</span>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border text-xs">
+                  <span className="font-semibold text-slate-700">Etkinlik Tarihi & Saati</span>
+                  {weddingDate ? (
+                    <span className="text-emerald-600 font-bold flex items-center gap-1">✓ Tamam</span>
+                  ) : (
+                    <span className="text-rose-600 font-bold flex items-center gap-1">✗ Eksik</span>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border text-xs">
+                  <span className="font-semibold text-slate-700">Mekan / Konum Adı</span>
+                  {venueName ? (
+                    <span className="text-emerald-600 font-bold flex items-center gap-1">✓ Tamam</span>
+                  ) : (
+                    <span className="text-rose-600 font-bold flex items-center gap-1">✗ Eksik</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Recommended Checks */}
+              <div className="space-y-2 pt-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Önerilen İyileştirmeler</span>
+
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/50 border text-xs text-slate-600">
+                  <span>Google Harita Bağlantısı</span>
+                  <span className={googleMapsUrl ? 'text-emerald-600 font-medium' : 'text-slate-400'}>
+                    {googleMapsUrl ? '✓ Eklendi' : 'İsteğe Bağlı'}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/50 border text-xs text-slate-600">
+                  <span>Arka Plan Müziği</span>
+                  <span className={musicUrl ? 'text-emerald-600 font-medium' : 'text-slate-400'}>
+                    {musicUrl ? '✓ Eklendi' : 'İsteğe Bağlı'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3.5 bg-rose-50/80 border border-rose-100 rounded-2xl text-xs text-rose-900 leading-relaxed">
+                Davetiyenizdeki tüm son taslak değişiklikleri kalıcı ve değiştirilemez bir sürüm olarak canlıya alınacak ve misafirleriniz tarafından anında görüntülenebilecektir.
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowPublishModal(false)}
+                disabled={isPublishing}
+                className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer disabled:opacity-50"
+              >
+                Vazgeç
+              </button>
+
+              <button
+                type="button"
+                onClick={handleExecutePublish}
+                disabled={isPublishing || (!brideName && !groomName && eventType !== 'corporate')}
+                data-testid="confirm-publish-btn"
+                className="flex-1 py-3 bg-gradient-to-r from-rose-500 via-pink-600 to-indigo-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow-lg shadow-rose-500/25 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {isPublishing ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Yayınlanıyor...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4" />
+                    <span>Şimdi Yayınla</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* C8: PUBLISH SUCCESS MODAL */}
+      {/* ========================================================================= */}
+      {showPublishSuccessModal && (
+        <div className="fixed inset-0 z-[240] flex items-center justify-center bg-black/65 p-4 backdrop-blur-xs animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 text-center animate-in zoom-in-95">
+            <div className="w-16 h-16 bg-emerald-500/10 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-500/20">
+              <CheckCircle2 className="w-8 h-8" />
+            </div>
+
+            <h3 className="text-xl font-bold text-slate-800 font-serif mb-2">Değişiklikler Yayında! 🎉</h3>
+            <p className="text-xs text-slate-500 leading-relaxed mb-6">
+              Davetiyeniz başarıyla yayınlandı. Misafirleriniz aşağıdaki linkten en güncel haline ulaşabilir.
+            </p>
+
+            <div className="p-3 bg-slate-50 border rounded-2xl mb-6 flex items-center justify-between gap-2 text-xs font-mono text-slate-700">
+              <span className="truncate">{BASE_URL}/{wedding.slug}</span>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(`${BASE_URL}/${wedding.slug}`);
+                  alert('Davetiye linki kopyalandı!');
+                }}
+                className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 rounded-xl text-xs font-bold shrink-0 flex items-center gap-1 cursor-pointer"
+              >
+                <Copy className="w-3.5 h-3.5" />
+                <span>Kopyala</span>
+              </button>
+            </div>
+
+            <div className="flex gap-3">
+              <a
+                href={`/${wedding.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-3 bg-gradient-to-r from-rose-500 to-pink-600 text-white rounded-xl text-xs font-bold shadow-md shadow-rose-500/20 flex items-center justify-center gap-2"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>Canlı Davetiyeyi Aç</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => setShowPublishSuccessModal(false)}
+                className="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold cursor-pointer"
+              >
+                Kapat
+              </button>
             </div>
           </div>
         </div>
