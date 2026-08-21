@@ -258,7 +258,7 @@ export default function CoupleAdminPage({
   const [showResumeBanner, setShowResumeBanner] = useState(true);
   const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
   
-  // Tasarım Stüdyosu State
+  // Tasarım Adımı State
   const [templateId, setTemplateId] = useState('template1');
   const latestTemplateIdRef = useRef<string | null>(null);
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
