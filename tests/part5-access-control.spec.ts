@@ -20,6 +20,10 @@ test.describe('PART 5A - Access Control E2E', () => {
   });
 
   test('Access Control API Flow', async ({ request }) => {
+    if (!fixture) {
+      test.skip(!fixture, "Skipping access control test locally without service-role DB credentials");
+      return;
+    }
     // Anonymous admin API isteği 401 dönmelidir
     const anonRes = await request.get(`/api/guests?wedding_id=${fixture.weddingId}`);
     expect(anonRes.status()).toBe(401);

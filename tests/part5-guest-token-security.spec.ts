@@ -20,6 +20,10 @@ test.describe('PART 5A - Token Security E2E', () => {
   });
 
   test('Token Security Flow', async ({ request, context }) => {
+    if (!fixture) {
+      test.skip(!fixture, "Skipping token security test locally without service-role DB credentials");
+      return;
+    }
     const apiUrl = 'http://127.0.0.1:3000/api/test/guest-tokens';
     const baseUrl = 'http://127.0.0.1:3000';
 
@@ -40,12 +44,47 @@ test.describe('PART 5A - Token Security E2E', () => {
 
     const tokenLink = `${baseUrl}/${fixture.testSlug}?guest=${token}`;
 
-    // Yeni browser context’te aç
     const publicPage = await context.newPage();
+
+    // 1. C8 ISOLATION CHECK: When invitation is in draft (unpublished), guest token does NOT bypass publication gate
+    await fixture.supabase
+      .from('weddings')
+      .update({ is_published: false, published_snapshot: null })
+      .eq('id', fixture.weddingId);
+
+    await publicPage.goto(tokenLink);
+    const draftContent = await publicPage.content();
+    expect(draftContent).toContain('Taslak Aşamasında');
+    expect(draftContent).toContain('Bu Davetiye Henüz Yayında Değil');
+    expect(draftContent).not.toContain('Sayın Fixture Guest, davetimize hoş geldiniz.');
+
+    // 2. C8 PUBLISHED ACCESS: Once explicitly published, guest token renders personalized greeting
+    const snapshot = {
+      template_id: "template1",
+      event_type: "wedding",
+      bride_name: "Test Bride",
+      groom_name: "Test Groom",
+      wedding_date: "2027-10-15T19:00:00.000Z",
+      venue_name: "Çırağan Sarayı",
+      venue_address: "İstanbul",
+      primary_color: "#be123c",
+      text_color: "#1e293b",
+      published_at: new Date().toISOString()
+    };
+
+    await fixture.supabase
+      .from('weddings')
+      .update({
+        is_published: true,
+        published_version_number: 1,
+        published_snapshot: snapshot,
+        custom_overrides: { published_snapshot: snapshot, is_published: true }
+      })
+      .eq('id', fixture.weddingId);
+
     await publicPage.goto(tokenLink);
 
-    // Doğru karşılama mesajını doğrula (spesifik banner metniyle - genel 'div' seçici
-    // gerçek sayfada onlarca div olduğu için Playwright strict-mode hatası veriyordu)
+    // Doğru karşılama mesajını doğrula
     const content = await publicPage.content();
     expect(content).toContain('Sayın Fixture Guest, davetimize hoş geldiniz.');
 
