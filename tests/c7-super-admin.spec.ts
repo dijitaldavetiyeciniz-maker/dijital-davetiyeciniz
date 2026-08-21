@@ -118,10 +118,10 @@ test.describe('C7 — Super Admin Command Center & Operations Suite', () => {
 
     // Navigate to Members Tab
     await page.click('button:has-text("Üyeler")');
-    await expect(page.locator('input[placeholder*="Üye adı"]')).toBeVisible();
+    await expect(page.locator('input[placeholder="Üye adı, e-posta, tel ara..."]')).toBeVisible();
 
     // Verify search and table
-    await page.fill('input[placeholder*="Üye adı"]', 'Ahmet');
+    await page.fill('input[placeholder="Üye adı, e-posta, tel ara..."]', 'Ahmet');
     await page.waitForTimeout(600);
 
     // Click on detail button if any user row exists

@@ -12,7 +12,7 @@ export async function GET() {
     // 1. Fetch all weddings for aggregate metrics
     const { data: weddings, error: wError } = await supabase
       .from('weddings')
-      .select('id, user_id, user_email, is_paid, is_active, deleted_at, event_type, template_id, created_at')
+      .select('id, user_id, user_email, bride_name, groom_name, is_paid, is_active, deleted_at, event_type, template_id, created_at')
       .order('created_at', { ascending: false });
 
     if (wError) throw wError;
@@ -41,7 +41,7 @@ export async function GET() {
       profilesList = profiles;
     }
 
-    // Combine distinct users from profiles + weddings user_ids/emails
+    // Combine distinct users
     const distinctUserIds = new Set<string>();
     profilesList.forEach(p => distinctUserIds.add(p.id));
     activeWeddings.forEach(w => {
@@ -50,7 +50,6 @@ export async function GET() {
     });
 
     const totalMembersCount = Math.max(distinctUserIds.size, profilesList.length);
-
     const todayUsersCount = profilesList.filter(p => new Date(p.created_at).getTime() >= startOfToday).length;
     const last7DaysUsersCount = profilesList.filter(p => new Date(p.created_at).getTime() >= sevenDaysAgo).length;
     const last30DaysUsersCount = profilesList.filter(p => new Date(p.created_at).getTime() >= thirtyDaysAgo).length;
@@ -79,14 +78,42 @@ export async function GET() {
     let totalMessagesCount = 0;
     const { data: messages } = await supabase
       .from('contact_messages')
-      .select('id, status');
+      .select('id, name, email, subject, status, created_at')
+      .order('created_at', { ascending: false });
 
     if (messages) {
       totalMessagesCount = messages.length;
       unreadMessagesCount = messages.filter(m => m.status === 'new').length;
     }
 
-    // 6. Platform Settings
+    // 6. Email Verifications & Delivery Stats
+    let totalVerifications = 0;
+    let pendingVerifications = 0;
+    let verifiedCount = 0;
+    const { data: verifications } = await supabase
+      .from('email_verifications')
+      .select('id, email, status, created_at');
+
+    if (verifications) {
+      totalVerifications = verifications.length;
+      pendingVerifications = verifications.filter(v => v.status === 'pending').length;
+      verifiedCount = verifications.filter(v => v.status === 'verified').length;
+    }
+
+    let emailDeliveryTotal = 0;
+    let emailDeliverySuccess = 0;
+    let emailDeliveryFailed = 0;
+    const { data: deliveryLogs } = await supabase
+      .from('email_delivery_logs')
+      .select('id, status');
+
+    if (deliveryLogs) {
+      emailDeliveryTotal = deliveryLogs.length;
+      emailDeliverySuccess = deliveryLogs.filter(d => d.status === 'sent').length;
+      emailDeliveryFailed = deliveryLogs.filter(d => d.status === 'failed').length;
+    }
+
+    // 7. Platform Settings
     let platformSettings = {
       maintenance_enabled: false,
       maintenance_scope: 'platform',
@@ -95,6 +122,10 @@ export async function GET() {
       announcement_message: '',
       contact_email: 'dijitaldavetiyeciniz@gmail.com',
       contact_phone: '+90 555 000 0000',
+      contact_address: 'Levent, Büyükdere Cad. No: 199, Şişli / İstanbul',
+      allow_signup: true,
+      allow_invitation_creation: true,
+      contact_form_enabled: true
     };
 
     const { data: settings } = await supabase
@@ -104,8 +135,46 @@ export async function GET() {
       .maybeSingle();
 
     if (settings) {
-      platformSettings = settings;
+      platformSettings = { ...platformSettings, ...settings };
     }
+
+    // 8. Unified Real Recent Activity Feed
+    const recentActivities: any[] = [];
+
+    (profilesList || []).slice(0, 6).forEach(p => {
+      recentActivities.push({
+        id: `user-${p.id}`,
+        type: 'user_registered',
+        title: 'Yeni Üye Kaydı',
+        description: `${p.first_name || ''} ${p.last_name || ''} (${p.email}) sisteme kaydoldu.`.trim(),
+        timestamp: p.created_at,
+        category: 'members'
+      });
+    });
+
+    (activeWeddings || []).slice(0, 6).forEach(w => {
+      recentActivities.push({
+        id: `wed-${w.id}`,
+        type: w.is_paid ? 'invitation_published' : 'invitation_created',
+        title: w.is_paid ? 'Davetiye Yayınlandı' : 'Yeni Davetiye Oluşturuldu',
+        description: `${w.bride_name && w.groom_name ? `${w.bride_name} & ${w.groom_name}` : 'Davetiye'} (${w.event_type || 'Düğün'})`,
+        timestamp: w.created_at,
+        category: 'invitations'
+      });
+    });
+
+    (messages || []).slice(0, 6).forEach(m => {
+      recentActivities.push({
+        id: `msg-${m.id}`,
+        type: 'contact_message',
+        title: 'Yeni İletişim Mesajı',
+        description: `${m.name}: ${m.subject || 'Konu belirtilmedi'}`,
+        timestamp: m.created_at,
+        category: 'contacts'
+      });
+    });
+
+    recentActivities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     return NextResponse.json({
       success: true,
@@ -114,6 +183,7 @@ export async function GET() {
         todayMembers: todayUsersCount,
         last7DaysMembers: last7DaysUsersCount,
         last30DaysMembers: last30DaysUsersCount,
+        verifiedMembers: verifiedCount,
         totalInvitations: activeWeddings.length,
         publishedInvitations: publishedWeddings.length,
         draftInvitations: draftWeddings.length,
@@ -121,9 +191,21 @@ export async function GET() {
         last30DaysInvitations,
         unreadMessages: unreadMessagesCount,
         totalMessages: totalMessagesCount,
+        totalVerifications,
+        pendingVerifications,
+        emailDeliveryTotal,
+        emailDeliverySuccess,
+        emailDeliveryFailed,
         eventTypeDistribution: eventTypeCounts,
         topTemplates,
-        platformSettings
+        platformSettings,
+        platformHealth: {
+          database: 'operational',
+          email: emailDeliveryFailed > 5 ? 'degraded' : 'operational',
+          maintenance: platformSettings.maintenance_enabled ? 'maintenance' : 'live',
+          publicSite: 'operational'
+        },
+        recentActivities: recentActivities.slice(0, 15)
       }
     });
   } catch (err: any) {

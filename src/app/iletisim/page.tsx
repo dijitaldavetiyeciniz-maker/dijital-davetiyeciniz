@@ -1,9 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { Mail, Phone, MapPin, Send, MessageSquare, CheckCircle2, Clock, Sparkles } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, MessageSquare, CheckCircle2, Clock, Sparkles, AlertCircle } from 'lucide-react';
 
 export default function IletisimPage() {
   const [formData, setFormData] = useState({
@@ -15,6 +15,32 @@ export default function IletisimPage() {
   });
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [contactFormEnabled, setContactFormEnabled] = useState(true);
+  const [contactInfo, setContactInfo] = useState({
+    email: 'dijitaldavetiyeciniz@gmail.com',
+    phone: '+90 (555) 000 00 00',
+    address: 'Levent, Büyükdere Cad. No: 199, Şişli / İstanbul'
+  });
+
+  useEffect(() => {
+    fetch('/api/super-admin/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.settings) {
+          if (data.settings.contact_form_enabled === false) {
+            setContactFormEnabled(false);
+          }
+          if (data.settings.contact_email) {
+            setContactInfo({
+              email: data.settings.contact_email,
+              phone: data.settings.contact_phone || '+90 (555) 000 00 00',
+              address: data.settings.contact_address || 'Levent, Büyükdere Cad. No: 199, Şişli / İstanbul'
+            });
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,8 +98,8 @@ export default function IletisimPage() {
               </div>
               <h3 className="font-bold text-slate-900 text-lg mb-1 font-serif">E-posta Destek</h3>
               <p className="text-xs text-slate-500 mb-3">Tüm sorularınızı ortalama 1 saat içinde yanıtlıyoruz.</p>
-              <a href="mailto:dijitaldavetiyeciniz@gmail.com" className="text-rose-600 font-semibold hover:underline text-sm break-all">
-                dijitaldavetiyeciniz@gmail.com
+              <a href={`mailto:${contactInfo.email}`} className="text-rose-600 font-semibold hover:underline text-sm break-all">
+                {contactInfo.email}
               </a>
             </div>
 
@@ -83,8 +109,8 @@ export default function IletisimPage() {
               </div>
               <h3 className="font-bold text-slate-900 text-lg mb-1 font-serif">Telefon & WhatsApp</h3>
               <p className="text-xs text-slate-500 mb-3">Hafta içi ve hafta sonu kesintisiz destek hattı.</p>
-              <a href="https://wa.me/905550000000" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline text-sm">
-                +90 (555) 000 00 00
+              <a href={`https://wa.me/${contactInfo.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline text-sm">
+                {contactInfo.phone}
               </a>
             </div>
 
@@ -95,26 +121,38 @@ export default function IletisimPage() {
               <h3 className="font-bold text-slate-900 text-lg mb-1 font-serif">Ofis Adresimiz</h3>
               <p className="text-xs text-slate-500 mb-2">Merkez Operasyon Stüdyosu</p>
               <p className="text-slate-700 text-sm font-medium leading-relaxed">
-                Levent, Büyükdere Cad. No: 199, Şişli / İstanbul
+                {contactInfo.address}
               </p>
             </div>
           </div>
 
           {/* Sağ Kolon: Mesaj Formu */}
           <div className="lg:col-span-2 bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-xl">
-            <h2 className="text-2xl font-bold text-slate-900 mb-2 font-serif">Bize Mesaj Gönderin</h2>
-            <p className="text-slate-500 text-sm mb-8">
-              Formu doldurun, uzman ekibimiz en kısa sürede sizinle iletişime geçsin.
-            </p>
-
-            {status && (
-              <div className={`mb-6 p-4 rounded-2xl text-sm flex items-center gap-3 ${
-                status.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
-              }`}>
-                {status.type === 'success' && <CheckCircle2 className="w-5 h-5 shrink-0" />}
-                <span>{status.text}</span>
+            {!contactFormEnabled ? (
+              <div className="text-center py-10 space-y-4">
+                <div className="w-14 h-14 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-2">
+                  <AlertCircle className="w-7 h-7" />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-900 font-serif">İletişim Formumuz Geçici Olarak Kapalıdır</h2>
+                <p className="text-slate-500 text-sm max-w-md mx-auto leading-relaxed">
+                  Sorularınız ve acil destek talepleriniz için doğrudan <strong className="text-slate-700">{contactInfo.email}</strong> e-posta adresimizden bize ulaşabilirsiniz.
+                </p>
               </div>
-            )}
+            ) : (
+              <>
+                <h2 className="text-2xl font-bold text-slate-900 mb-2 font-serif">Bize Mesaj Gönderin</h2>
+                <p className="text-slate-500 text-sm mb-8">
+                  Formu doldurun, uzman ekibimiz en kısa sürede sizinle iletişime geçsin.
+                </p>
+
+                {status && (
+                  <div className={`mb-6 p-4 rounded-2xl text-sm flex items-center gap-3 ${
+                    status.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
+                  }`}>
+                    {status.type === 'success' && <CheckCircle2 className="w-5 h-5 shrink-0" />}
+                    <span>{status.text}</span>
+                  </div>
+                )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -203,6 +241,8 @@ export default function IletisimPage() {
                 )}
               </button>
             </form>
+            </>
+            )}
           </div>
         </div>
       </main>

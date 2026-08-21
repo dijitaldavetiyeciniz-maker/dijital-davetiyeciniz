@@ -38,6 +38,7 @@ function CreateForm() {
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
 
   const [optionalEmail, setOptionalEmail] = useState('');
+  const [allowCreation, setAllowCreation] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -46,6 +47,15 @@ function CreateForm() {
         if (session.user.email) setOptionalEmail(session.user.email);
       }
     });
+
+    fetch('/api/super-admin/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.settings && data.settings.allow_invitation_creation === false) {
+          setAllowCreation(false);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   // Turkish char normalizer & Slug generator helper
@@ -206,6 +216,25 @@ function CreateForm() {
     } else {
       setErrorMsg('Kayıt oluşturulurken bir hata oluştu: ' + error.message);
     }
+  }
+
+  if (!allowCreation) {
+    return (
+      <div className="max-w-2xl mx-auto bg-white rounded-3xl p-10 border border-slate-100 shadow-2xl text-center space-y-4">
+        <div className="w-16 h-16 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-2">
+          <AlertCircle className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-900 font-serif">Yeni Davetiye Oluşturma Geçici Olarak Durduruldu</h2>
+        <p className="text-slate-500 text-sm max-w-md mx-auto leading-relaxed">
+          Sistemlerimizde devam eden iyileştirme çalışmaları sebebiyle yeni davetiye oluşturma geçici olarak durdurulmuştur. Mevcut yayınlanmış davetiyeleriniz çalışmaya devam etmektedir.
+        </p>
+        <div className="pt-2">
+          <Link href="/" className="inline-block px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all">
+            Ana Sayfaya Dön
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
