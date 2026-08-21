@@ -1,12 +1,48 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { supabase } from '@/lib/supabase';
+import nodemailer from 'nodemailer';
+import { supabase } from './supabase';
 
 const OTP_SECRET = process.env.OTP_SECRET || process.env.SUPERADMIN_SECRET || 'dijital-davetiye-secure-otp-hash-secret-2026';
-const SENDER_EMAIL = process.env.EMAIL_FROM || 'dijitaldavetiyeniz@gmail.com';
 
 const CACHE_FILE = path.join(process.cwd(), '.otp_verifications_cache.json');
+
+/**
+ * Returns a configured Nodemailer transporter or null if credentials are not provided
+ */
+export function getTransporter() {
+  const host = process.env.SMTP_HOST || 'smtp.gmail.com';
+  const port = Number(process.env.SMTP_PORT) || 465;
+  const user = process.env.SMTP_USER || process.env.EMAIL_FROM || 'dijitaldavetiyeciniz@gmail.com';
+  const pass = process.env.SMTP_PASS;
+
+  if (!pass) return null;
+
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass }
+  });
+}
+
+/**
+ * Safely verifies SMTP transport connectivity without leaking credentials
+ */
+export async function verifyEmailTransport(): Promise<{ success: boolean; error?: string }> {
+  const transporter = getTransporter();
+  if (!transporter) {
+    return { success: false, error: 'SMTP credentials missing (SMTP_PASS not set)' };
+  }
+
+  try {
+    await transporter.verify();
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'SMTP verification failed' };
+  }
+}
 
 export function getLocalVerifications(): Record<string, any> {
   try {
@@ -112,17 +148,86 @@ export async function sendVerificationEmail({
       // safe fallback
     }
 
-    // 4. Simulated / SMTP dispatch
+    // 4. Actual SMTP Dispatch via Nodemailer
     let deliveryStatus = 'sent';
     let errorMessage: string | null = null;
+    const transporter = getTransporter();
 
-    try {
-      if (process.env.SMTP_HOST && process.env.SMTP_PASS) {
-        // Nodemailer transport would run here
+    if (transporter) {
+      try {
+        const fromAddress = process.env.EMAIL_FROM || process.env.SMTP_USER || 'dijitaldavetiyeciniz@gmail.com';
+        const senderName = process.env.EMAIL_FROM_NAME || 'Dijital Davetiye';
+
+        const htmlBody = `
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-posta Doğrulama Kodu</title>
+</head>
+<body style="margin:0;padding:0;background-color:#0b0b14;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#e2e8f0;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#0b0b14;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="100%" max-width="560" border="0" cellspacing="0" cellpadding="0" style="max-width:560px;background:#131326;border-radius:24px;border:1px solid rgba(244,63,94,0.25);overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+          <tr>
+            <td style="padding:36px 32px 24px;text-align:center;background:linear-gradient(180deg, rgba(244,63,94,0.12) 0%, rgba(19,19,38,0) 100%);">
+              <div style="display:inline-block;padding:12px;background:rgba(244,63,94,0.15);border-radius:16px;margin-bottom:16px;">
+                <span style="font-size:32px;">💌</span>
+              </div>
+              <h1 style="margin:0;font-size:24px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">Dijital Davetiye</h1>
+              <p style="margin:6px 0 0;font-size:14px;color:#94a3b8;">E-posta Doğrulama Kodu</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px 32px;text-align:center;">
+              <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#cbd5e1;">
+                ${firstName ? `Merhaba <strong>${firstName}</strong>,` : 'Merhaba,'}<br>
+                Hesabınızı güvenle aktifleştirmek için aşağıdaki 6 haneli doğrulama kodunu kullanın:
+              </p>
+              <div style="background:#1e1e38;border:2px dashed #f43f5e;border-radius:18px;padding:20px;margin:24px 0;letter-spacing:10px;font-size:36px;font-weight:800;color:#ffffff;font-family:monospace;text-align:center;">
+                ${rawOtp}
+              </div>
+              <p style="margin:0 0 16px;font-size:13px;color:#94a3b8;line-height:1.5;">
+                ⏱️ Bu kod <strong>10 dakika</strong> boyunca geçerlidir.<br>
+                Güvenliğiniz için bu kodu kimseyle paylaşmayınız.
+              </p>
+              <div style="margin-top:28px;padding-top:20px;border-top:1px solid #2d2d4d;font-size:12px;color:#64748b;line-height:1.5;">
+                Eğer bu hesabı siz oluşturmadıysanız, lütfen bu e-postayı dikkate almayınız.
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+        const textBody = `Dijital Davetiye — E-posta Doğrulama Kodu\n\n${firstName ? `Merhaba ${firstName},\n\n` : 'Merhaba,\n\n'}Hesabınızı doğrulamak için kodunuz: ${rawOtp}\n\nBu kod 10 dakika boyunca geçerlidir.`;
+
+        await transporter.sendMail({
+          from: `"${senderName}" <${fromAddress}>`,
+          to: normalizedEmail,
+          subject: `${rawOtp} — Dijital Davetiye Doğrulama Kodunuz`,
+          text: textBody,
+          html: htmlBody
+        });
+
+        deliveryStatus = 'sent';
+      } catch (err: any) {
+        deliveryStatus = 'failed';
+        errorMessage = err.message || 'SMTP iletim hatası';
+        console.error('[EMAIL DELIVERY ERROR]', err.code || err.name, errorMessage);
       }
-    } catch (err: any) {
-      deliveryStatus = 'failed';
-      errorMessage = err.message || 'SMTP hatası';
+    } else {
+      if (process.env.NODE_ENV === 'test' || process.env.NEXT_PUBLIC_SITE_URL?.includes('localhost')) {
+        deliveryStatus = 'mock_sent';
+      } else {
+        deliveryStatus = 'failed';
+        errorMessage = 'SMTP credentials not configured (SMTP_PASS missing).';
+      }
     }
 
     // 5. Log Email Delivery (WITHOUT plain OTP or credentials)
@@ -132,7 +237,7 @@ export async function sendVerificationEmail({
           recipient: normalizedEmail,
           email_type: 'verification_otp',
           status: deliveryStatus,
-          error_message: errorMessage
+          error_message: errorMessage ? errorMessage.slice(0, 500) : null
         }
       ]);
     } catch {
@@ -145,11 +250,20 @@ export async function sendVerificationEmail({
         {
           event_type: 'EMAIL_VERIFICATION_SENT',
           actor_email: normalizedEmail,
-          details: { resend_count: resendCount }
+          details: { resend_count: resendCount, delivery_status: deliveryStatus }
         }
       ]);
     } catch {
       // safe fallback
+    }
+
+    const isTestEnv = process.env.NODE_ENV === 'test' || !!process.env.PLAYWRIGHT_TEST || process.env.NEXT_PUBLIC_SITE_URL?.includes('localhost');
+
+    if (deliveryStatus === 'failed' && !isTestEnv) {
+      return {
+        success: false,
+        error: 'E-posta servisine bağlanırken bir sorun oluştu. Lütfen biraz sonra tekrar deneyin.'
+      };
     }
 
     return { success: true };

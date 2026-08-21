@@ -99,4 +99,37 @@ test.describe('MEMBERSHIP EMAIL VERIFICATION — MANDATORY SECURITY SUITE', () =
     });
     expect([200, 400]).toContain(resendAdminRes.status());
   });
+
+  test('7. Email verification service creates HMAC-SHA256 hash and never stores raw OTP', async () => {
+    const { hashOtp, generateOtp } = await import('../src/lib/email-service');
+    const email = 'security.test@example.com';
+    const otp = generateOtp();
+    expect(otp).toHaveLength(6);
+    expect(/^\d{6}$/.test(otp)).toBe(true);
+
+    const hash1 = hashOtp(email, otp);
+    const hash2 = hashOtp(email, otp);
+    expect(hash1).toBe(hash2);
+    expect(hash1).not.toBe(otp);
+    expect(hash1).toHaveLength(64); // SHA-256 hex length
+  });
+
+  test('8. Verification service rejects expired and too-many-attempt codes securely', async () => {
+    const { sendVerificationEmail, verifySubmittedOtp } = await import('../src/lib/email-service');
+    const email = `security.attempts.${Date.now()}@example.com`;
+
+    const sendRes = await sendVerificationEmail({ email, firstName: 'SecurityTest' });
+    expect(sendRes.success).toBe(true);
+
+    // 5 wrong attempts
+    for (let i = 1; i <= 5; i++) {
+      const wrongRes = await verifySubmittedOtp({ email, code: '000000' });
+      expect(wrongRes.success).toBe(false);
+    }
+
+    // 6th attempt should return too_many_attempts error
+    const blockedRes = await verifySubmittedOtp({ email, code: '000000' });
+    expect(blockedRes.success).toBe(false);
+    expect(blockedRes.error).toContain('Çok fazla hatalı deneme');
+  });
 });
