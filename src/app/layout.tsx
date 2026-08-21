@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Great_Vibes, Montserrat, Outfit, Lora, Cinzel, Playfair_Display, Inter, Caveat } from "next/font/google";
 import "./globals.css";
 import StickyWhatsAppCTA from "@/components/StickyWhatsAppCTA";
+import PlatformAnnouncementBanner from "@/components/PlatformAnnouncementBanner";
+import MaintenanceGate from "@/components/MaintenanceGate";
 
 const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-cormorant", display: "swap" });
 const greatVibes = Great_Vibes({ weight: "400", subsets: ["latin"], variable: "--font-great-vibes", display: "swap" });
@@ -161,7 +163,10 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col relative">
-        {children}
+        <PlatformAnnouncementBanner />
+        <MaintenanceGate>
+          {children}
+        </MaintenanceGate>
         <StickyWhatsAppCTA />
       </body>
     </html>
