@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { getSmartAutoMatch } from '@/lib/autoMatch';
 import { getEventTypeConfig } from '@/data/eventTypeConfig';
 import Link from 'next/link';
+import { Sparkles, AlertCircle, Link as LinkIcon, Check, KeyRound, EyeOff, Eye } from 'lucide-react';
 const RESERVED_SLUGS = [
   'admin', 'api', 'dashboard', 'giris-yap', 'kayit-ol', 'olustur',
   'fiyatlandirma', 'sss', 'nasil-calisir', 'kvkk', 'gizlilik-politikasi',
