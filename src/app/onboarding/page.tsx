@@ -200,7 +200,7 @@ export default function OnboardingPage() {
               version_type: 'initial_draft',
               is_published: false,
               summary: 'İlk Taslak Kurulumu',
-              snapshot: draftPayload,
+              snapshot: baseDraft,
               created_by: user.id
             }
           ]);
