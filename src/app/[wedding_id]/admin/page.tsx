@@ -470,6 +470,21 @@ export default function CoupleAdminPage({
       
       // 2. Mevcut kullanıcının (Auth) oturumunu kontrol et
       const { data: { session } } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('is_email_verified')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+          if (profile && profile.is_email_verified === false && !session.user.email_confirmed_at) {
+            window.location.href = `/dogrula?email=${encodeURIComponent(session.user.email || '')}`;
+            return;
+          }
+        } catch {}
+      }
       
       let isAuth = false;
       if (session?.user?.id && session.user.id === weddingData.user_id) {

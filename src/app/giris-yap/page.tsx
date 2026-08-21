@@ -38,7 +38,20 @@ export default function LoginPage() {
 
     if (error) {
       setErrorMsg('E-posta veya şifre hatalı.');
-    } else {
+    } else if (data?.user) {
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_email_verified')
+          .eq('id', data.user.id)
+          .maybeSingle();
+
+        if (profile && profile.is_email_verified === false && !data.user.email_confirmed_at) {
+          router.push(`/dogrula?email=${encodeURIComponent(data.user.email || email)}`);
+          return;
+        }
+      } catch {}
+
       router.push('/dashboard');
     }
   };

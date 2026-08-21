@@ -53,6 +53,23 @@ export default function DashboardPage() {
         router.push('/giris-yap');
         return;
       }
+
+      // Verification Guard: Block unverified users
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('is_email_verified')
+          .eq('id', session.user.id)
+          .maybeSingle();
+
+        if (profile && profile.is_email_verified === false && !session.user.email_confirmed_at) {
+          router.push(`/dogrula?email=${encodeURIComponent(session.user.email || '')}`);
+          return;
+        }
+      } catch (err) {
+        // Continue safely if profile check fails
+      }
+
       setUser(session.user);
       await fetchDashboardData(session.user.id);
       setLoading(false);

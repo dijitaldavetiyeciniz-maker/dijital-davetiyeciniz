@@ -41,10 +41,23 @@ function CreateForm() {
   const [allowCreation, setAllowCreation] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user) {
         setUser(session.user);
         if (session.user.email) setOptionalEmail(session.user.email);
+
+        // Verification Guard
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('is_email_verified')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+          if (profile && profile.is_email_verified === false && !session.user.email_confirmed_at) {
+            router.push(`/dogrula?email=${encodeURIComponent(session.user.email || '')}`);
+          }
+        } catch {}
       }
     });
 

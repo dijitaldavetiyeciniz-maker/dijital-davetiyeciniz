@@ -8,7 +8,7 @@ const SENDER_EMAIL = process.env.EMAIL_FROM || 'dijitaldavetiyeniz@gmail.com';
 
 const CACHE_FILE = path.join(process.cwd(), '.otp_verifications_cache.json');
 
-function getLocalVerifications(): Record<string, any> {
+export function getLocalVerifications(): Record<string, any> {
   try {
     if (fs.existsSync(CACHE_FILE)) {
       return JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
@@ -17,7 +17,7 @@ function getLocalVerifications(): Record<string, any> {
   return {};
 }
 
-function saveLocalVerification(email: string, record: any) {
+export function saveLocalVerification(email: string, record: any) {
   try {
     const cache = getLocalVerifications();
     cache[email.toLowerCase()] = record;
@@ -76,6 +76,17 @@ export async function sendVerificationEmail({
     const rawOtp = generateOtp();
     const codeHash = hashOtp(normalizedEmail, rawOtp);
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes expiry
+
+    // If previous pending code existed, mark it superseded
+    if (existing && existing.status === 'pending') {
+      try {
+        await supabase
+          .from('email_verifications')
+          .update({ status: 'superseded' })
+          .eq('email', normalizedEmail)
+          .eq('status', 'pending');
+      } catch {}
+    }
 
     const resendCount = existing ? (existing.resend_count || 0) + 1 : 0;
 
@@ -209,10 +220,9 @@ export async function verifySubmittedOtp({
     const submittedHash = hashOtp(normalizedEmail, trimmedCode);
 
     // Constant-time comparison
-    const isMatch = crypto.timingSafeEqual(
-      Buffer.from(submittedHash),
-      Buffer.from(record.code_hash)
-    );
+    const subBuf = Buffer.from(submittedHash);
+    const recBuf = Buffer.from(record.code_hash || '');
+    const isMatch = subBuf.length === recBuf.length && crypto.timingSafeEqual(subBuf, recBuf);
 
     if (!isMatch) {
       record.attempt_count = currentAttempts;
@@ -233,6 +243,16 @@ export async function verifySubmittedOtp({
     } catch {
       // safe fallback
     }
+
+    try {
+      await supabase.from('security_events').insert([
+        {
+          event_type: 'EMAIL_VERIFIED',
+          actor_email: normalizedEmail,
+          details: { verified_at: record.verified_at, attempts: currentAttempts }
+        }
+      ]);
+    } catch {}
 
     return { success: true };
   } catch (err: any) {
