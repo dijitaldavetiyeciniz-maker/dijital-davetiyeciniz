@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { insertPublishedWedding } from './helpers/publishTestHelpers';
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' });
 
@@ -96,7 +97,7 @@ test.describe('ModernEventLayout Variant Tests', () => {
       }
     ];
 
-    const { error } = await supabase.from('weddings').insert(records);
+    const { error } = await insertPublishedWedding(supabase, records);
     if (error) console.error("INSERT ERROR:", error);
   });
 

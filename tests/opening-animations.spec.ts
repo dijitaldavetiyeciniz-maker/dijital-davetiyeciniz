@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import crypto from "crypto";
 import { createClient } from "@supabase/supabase-js";
+import { insertPublishedWedding } from "./helpers/publishTestHelpers";
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
@@ -23,26 +24,24 @@ test.describe("Opening Animations - Detailed Checks", () => {
 
   test.beforeAll(async () => {
     supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-    const records = [
-      {
-        id: crypto.randomUUID(),
-        slug: SLUG,
-        event_type: "corporate",
-        template_id: "future-summit",
-        is_paid: true,
-        bride_name: "Long Corporate Name Co",
-        groom_name: "",
-        wedding_date: "2027-06-15T17:00:00.000Z",
-        venue_name: "Convention Center",
-        admin_password: "test",
-        entrance_animation: "parisianBlackTie",
-        custom_overrides: {
-          event_variant: "tech-launch"
-        }
+    const rawRecord = {
+      id: crypto.randomUUID(),
+      slug: SLUG,
+      event_type: "corporate",
+      template_id: "future-summit",
+      is_paid: true,
+      bride_name: "Long Corporate Name Co",
+      groom_name: "",
+      wedding_date: "2027-06-15T17:00:00.000Z",
+      venue_name: "Convention Center",
+      admin_password: "test",
+      entrance_animation: "parisianBlackTie",
+      custom_overrides: {
+        event_variant: "tech-launch"
       }
-    ];
+    };
 
-    const { error } = await supabase.from("weddings").insert(records);
+    const { error } = await insertPublishedWedding(supabase, rawRecord);
     if (error) throw new Error(`Test record insert failed: ${error.message}`);
   });
 

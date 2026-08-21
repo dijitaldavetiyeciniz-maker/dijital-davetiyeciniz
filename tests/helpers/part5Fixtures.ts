@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { expect } from "@playwright/test";
+import { insertPublishedWedding, makePublishedSnapshot } from "./publishTestHelpers";
 import crypto from "crypto";
 
 // Not: .env.local yukleme cagrisi (@dotenvx/dotenvx) kaldirildi - bu paket
@@ -25,25 +26,13 @@ export async function setupPart5Fixture(testSlugPrefix: string = 'part5-fixture'
 
   const testSlug = `${testSlugPrefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-  const snapshot = {
-    template_id: "template1",
-    event_type: "wedding",
-    bride_name: "Test Bride",
-    groom_name: "Test Groom",
-    wedding_date: "2027-10-15T19:00:00.000Z",
-    venue_name: "Çırağan Sarayı",
-    venue_address: "İstanbul",
-    primary_color: "#be123c",
-    text_color: "#1e293b",
-    published_at: new Date().toISOString()
-  };
-
   const isPublished = options.published !== false;
 
   // 1. Create Wedding Fixture (respects C8 safe publishing & draft/published isolation)
-  const weddingInsert = await supabase
-    .from("weddings")
-    .insert({
+  let weddingInsert: any;
+
+  if (isPublished) {
+    weddingInsert = await insertPublishedWedding(supabase, {
       slug: testSlug,
       bride_name: "Test Bride",
       groom_name: "Test Groom",
@@ -51,13 +40,28 @@ export async function setupPart5Fixture(testSlugPrefix: string = 'part5-fixture'
       event_type: "wedding",
       is_active: true,
       is_paid: true,
-      is_published: isPublished,
-      published_version_number: isPublished ? 1 : 0,
-      published_snapshot: isPublished ? snapshot : null,
-      custom_overrides: isPublished ? { published_snapshot: snapshot, is_published: true } : {}
-    })
-    .select("id, slug")
-    .single();
+      venue_name: "Çırağan Sarayı",
+      venue_address: "İstanbul",
+      primary_color: "#be123c",
+      text_color: "#1e293b"
+    });
+  } else {
+    weddingInsert = await supabase
+      .from("weddings")
+      .insert({
+        slug: testSlug,
+        bride_name: "Test Bride",
+        groom_name: "Test Groom",
+        admin_password: "test",
+        event_type: "wedding",
+        is_active: true,
+        is_paid: false,
+        custom_overrides: {
+          is_published: false,
+          has_unpublished_changes: false
+        }
+      });
+  }
 
   if (weddingInsert.error) {
     if (process.env.CI !== "true" && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -66,11 +70,22 @@ export async function setupPart5Fixture(testSlugPrefix: string = 'part5-fixture'
     }
   }
 
-  expect(weddingInsert.error, `Wedding fixture insert failed: ${JSON.stringify(weddingInsert.error)}`).toBeNull();
-  expect(weddingInsert.data).not.toBeNull();
-  expect(weddingInsert.data!.slug).toBe(testSlug);
+  // Fetch created wedding id & slug
+  const { data: createdWedding, error: fetchErr } = await supabase
+    .from("weddings")
+    .select("id, slug")
+    .eq("slug", testSlug)
+    .single();
 
-  const weddingId = weddingInsert.data!.id;
+  if (fetchErr || !createdWedding) {
+    if (process.env.CI !== "true" && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.warn("LOCAL RUN: Skipping fixture setup due to missing service-role credentials.");
+      return null;
+    }
+    throw new Error(`Failed to fetch created wedding fixture: ${fetchErr?.message}`);
+  }
+
+  const weddingId = createdWedding.id;
 
   // 2. Create Default Guest
   const guestInsert = await supabase

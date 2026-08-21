@@ -52,6 +52,13 @@ test.describe('C8 — SAFE PUBLISHING & DRAFT ISOLATION SUITE', () => {
 
     const unpubTitle = page.locator('h1:has-text("Bu Davetiye Henüz Yayında Değil")');
     await expect(unpubTitle).toBeVisible({ timeout: 15000 });
+
+    // Overlay and template layout must NOT render on unpublished invitation
+    const overlay = page.locator('[data-testid="opening-overlay"]');
+    await expect(overlay).not.toBeVisible();
+
+    const templateRoot = page.locator('[data-testid^="template-"], [data-template-id]');
+    await expect(templateRoot).not.toBeVisible();
   });
 
   test('2. Atomic publish endpoint creates published snapshot and version 1', async ({ request }) => {

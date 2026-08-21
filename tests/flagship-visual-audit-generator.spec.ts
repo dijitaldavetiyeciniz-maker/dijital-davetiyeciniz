@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import crypto from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { insertPublishedWedding } from './helpers/publishTestHelpers';
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' });
 import { predefinedThemes } from '../src/lib/themes';
@@ -33,19 +34,28 @@ const FLAGSHIP_IDS = [
 // arda çalıştırmak, CI runner'ının kaynaklarını (RAM/CPU) - Supabase'in tüm
 // Docker yığınıyla birlikte - tüketiyor ve sayfa/sunucu bağlantısının rastgele
 // kopmasına (farklı şablonlarda, kararsız şekilde) yol açıyordu. Bu, tek bir
-// şablona özgü bir kod hatası değil, testin toplam ağırlığından kaynaklanan
-// bir CI-kaynak sorunu. Çözüm: normal CI'da küçük, kategori-çeşitliliğini
-// koruyan bir örnek küme çalışsın; 17'nin TAMAMI ancak FULL_FLAGSHIP_AUDIT=true
-// ortam değişkeniyle (elle tetiklenen ayrı bir workflow'dan) çalışsın.
-const FULL_AUDIT = process.env.FULL_FLAGSHIP_AUDIT === 'true';
-const CI_SAMPLE_IDS = [
-  'parisian-black-tie',           // Lüks
-  'ottoman-illumination',         // Kültürel (zaten skip - hızlı geçer)
-  'storybook-babyshower',         // Baby Shower - farklı event type
-  'future-summit',                // Kurumsal
-  'fine-art-botanical-watercolor',// Sanat
-];
-const TEST_FLAGSHIP_IDS = FULL_AUDIT ? FLAGSHIP_IDS : CI_SAMPLE_IDS;
+// PR kontrolü için aşırı ağır ve gereksiz kırılgan.
+//
+// Bu yüzden test seti ikiye bölündü:
+//
+// 1. Her push / PR kontrolünde çalışan TEST_FLAGSHIP_IDS (temsili 5 şablon):
+//    - 1 Batı düğün şablonu (parisian-black-tie - zarf açılışı, çift adı)
+//    - 1 Doğu/Osmanlı şablonu (ottoman-illumination - tuğra, altın varak)
+//    - 1 Doğum/Bebek şablonu (storybook-babyshower - anne/baba/bebek isimleri)
+//    - 1 Kurumsal etkinlik şablonu (future-summit - konuşmacılar, program)
+//    - 1 Sanat/Minimalist şablon (fine-art-botanical-watercolor)
+//
+// 2. Özel gecelik/haftalık tam denetim (FULL_FLAGSHIP_AUDIT=true ile):
+//    - 17 şablonun tamamını kapsar.
+const TEST_FLAGSHIP_IDS = process.env.FULL_FLAGSHIP_AUDIT === 'true'
+  ? FLAGSHIP_IDS
+  : [
+      'parisian-black-tie',
+      'ottoman-illumination',
+      'storybook-babyshower',
+      'future-summit',
+      'fine-art-botanical-watercolor',
+    ];
 
 // CI'ın tıklama otomasyonuna özgü, production'da doğrulanmış (bkz. ilgili
 // test.skip yorumu) sorunlar yüzünden atlanan şablonlar. Ekran görüntüsü
@@ -77,7 +87,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     // Step 1: İzole test davetiyesi oluştur
     await supabase.from('weddings').delete().eq('slug', TEST_SLUG);
     
-    await supabase.from('weddings').insert([{
+    await insertPublishedWedding(supabase, {
       slug: TEST_SLUG,
       bride_name: 'Zeynep Su Nazlıcan',
       groom_name: 'Muhammed Emirhan Alparslan',
@@ -94,7 +104,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
           venueName: 'İstanbul Boğazı Uluslararası Davet ve Organizasyon Merkezi'
         }
       }
-    }]);
+    });
   });
 
   test.afterAll(async () => {
@@ -190,12 +200,19 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       // Wait for actual DOM state update (No timeouts!)
       await page.waitForSelector(`[data-testid="template-${tplId}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
       
-      // Step 6: Save isteğini gerçekleştir
+      // Step 6: Save & Publish
       const saveBtn = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
       await saveBtn.click();
-      
-      // Wait for networkidle
       await page.waitForLoadState('networkidle');
+
+      const publishBtn = page.locator('[data-testid="admin-publish-btn"]').first();
+      if (await publishBtn.isVisible()) {
+        await publishBtn.click();
+        const confirmBtn = page.locator('[data-testid="confirm-publish-btn"]').first();
+        await confirmBtn.waitFor({ state: 'visible', timeout: 5000 });
+        await confirmBtn.click();
+        await page.waitForLoadState('networkidle');
+      }
 
       // Verify persistence in DB (Poll to avoid arbitrary timeouts)
       await expect(async () => {
@@ -511,7 +528,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     // 1. Setup Data
     await supabase.from('weddings').delete().eq('slug', BABY_SLUG);
-    const { error: insertErr } = await supabase.from('weddings').insert([{
+    const { error: insertErr } = await insertPublishedWedding(supabase, {
       slug: BABY_SLUG,
       bride_name: 'Yanlış İsim', // Should be overridden
       groom_name: 'Yanlış İsim 2',
@@ -528,7 +545,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
           fatherName: 'Mehmet'
         }
       }
-    }]);
+    });
     if (insertErr) console.error('Insert error BABY_SLUG:', insertErr);
 
     // 2. Open Public Page
@@ -570,7 +587,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     // 1. Setup Data
     await supabase.from('weddings').delete().eq('slug', BDAY_SLUG);
-    const { error: bdayErr } = await supabase.from('weddings').insert([{
+    const { error: bdayErr } = await insertPublishedWedding(supabase, {
       slug: BDAY_SLUG,
       bride_name: 'Yanlış İsim',
       groom_name: 'Yanlış İsim 2',
@@ -587,7 +604,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
           eventTitle: "Eylül'ün Doğum Günü"
         }
       }
-    }]);
+    });
     if (bdayErr) console.error('Insert error BDAY_SLUG:', bdayErr);
 
     // 2. Open Public Page
