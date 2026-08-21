@@ -37,15 +37,16 @@ function CreateForm() {
   const [isCheckingSlug, setIsCheckingSlug] = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
 
+  const [optionalEmail, setOptionalEmail] = useState('');
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        router.push('/kayit-ol');
-      } else {
+      if (session?.user) {
         setUser(session.user);
+        if (session.user.email) setOptionalEmail(session.user.email);
       }
     });
-  }, [router]);
+  }, []);
 
   // Turkish char normalizer & Slug generator helper
   const convertTurkishToEnglishSlug = (text: string) => {
@@ -144,42 +145,63 @@ function CreateForm() {
     const eventConfig = getEventTypeConfig(eventType);
     const match = getSmartAutoMatch(eventType);
 
-    const { error } = await supabase.from('weddings').insert([
-      {
-        user_id: user?.id,
-        user_email: user?.email,
-        bride_name: eventConfig.previewPlaceholders.primaryName,
-        groom_name: eventConfig.previewPlaceholders.secondaryName || '',
-        bride_parents: '',
-        groom_parents: '',
-        slug: cleanSlug,
-        template_id: match.template_id,
-        primary_color: match.primary_color,
-        text_color: match.text_color,
-        envelope_bg_color: match.envelope_bg_color,
-        envelope_color: match.envelope_color,
-        seal_style: match.seal_style,
-        font_family: match.font_family,
-        names_font_family: match.names_font_family,
-        background_animation: match.background_animation,
-        custom_overrides: match.custom_overrides,
-        admin_password: password,
-        event_type: eventType,
-        venue_name: '',
-        wedding_date: null,
-        venue_address: '',
-        google_maps_url: '',
-        custom_message: '',
-        is_paid: false,
-        entrance_animation: eventConfig.recommendedAnimations?.[0] || 'envelope',
-        envelope_style: 'classic',
-        show_program: false
-      }
-    ]);
+    const insertPayload: any = {
+      user_id: user?.id || null,
+      user_email: user?.email || optionalEmail.trim() || null,
+      bride_name: eventConfig.previewPlaceholders?.primaryName || 'Çift',
+      groom_name: eventConfig.previewPlaceholders?.secondaryName || '',
+      bride_parents: '',
+      groom_parents: '',
+      slug: cleanSlug,
+      template_id: defaultTemplateId && defaultTemplateId !== 'template1' ? defaultTemplateId : match.template_id,
+      primary_color: match.primary_color,
+      text_color: match.text_color,
+      envelope_bg_color: match.envelope_bg_color,
+      envelope_color: match.envelope_color,
+      seal_type: match.seal_style || 'heart',
+      seal_style: match.seal_style || 'heart',
+      font_family: match.font_family,
+      names_font_family: match.names_font_family,
+      background_animation: match.background_animation,
+      effect_type: match.background_animation || 'none',
+      custom_overrides: match.custom_overrides || {},
+      admin_password: password,
+      event_type: eventType,
+      venue_name: 'Modern Sanatlar Merkezi',
+      wedding_date: null,
+      venue_address: 'İstanbul',
+      google_maps_url: '',
+      custom_message: '',
+      is_paid: false,
+      is_active: true,
+      entrance_type: eventConfig.recommendedAnimations?.[0] || 'envelope',
+      entrance_animation: eventConfig.recommendedAnimations?.[0] || 'envelope',
+      envelope_flap_type: 'classic',
+      envelope_style: 'classic',
+      show_program: false
+    };
+
+    const { data: createdWedding, error } = await supabase
+      .from('weddings')
+      .insert([insertPayload])
+      .select('id, slug')
+      .single();
 
     setIsSubmitting(false);
 
-    if (!error) {
+    if (!error && createdWedding) {
+      // Otomatik giriş cookie'si oluştur
+      try {
+        await fetch('/api/admin/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ wedding_id: createdWedding.id, password })
+        });
+      } catch (authErr) {
+        console.error('Auto auth error:', authErr);
+      }
+      router.push(`/${cleanSlug}/admin`);
+    } else if (!error) {
       router.push(`/${cleanSlug}/admin`);
     } else {
       setErrorMsg('Kayıt oluşturulurken bir hata oluştu: ' + error.message);
@@ -286,8 +308,22 @@ function CreateForm() {
           </div>
         </div>
 
-        {/* STEP C: MANAGEMENT PASSWORD */}
+        {/* STEP C: CONTACT / MANAGEMENT */}
         <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100/80">
+          {!user && (
+            <div className="mb-5 pb-5 border-b border-slate-200/60">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">E-posta Adresiniz (İsteğe Bağlı)</label>
+              <input
+                type="email"
+                value={optionalEmail}
+                onChange={e => setOptionalEmail(e.target.value)}
+                placeholder="ornek@gmail.com (LCV bildirimleri için)"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none bg-white transition-all"
+              />
+              <p className="text-[11px] text-slate-400 mt-1">Davetiyenizi e-postanıza bağlamak ve bildirim almak için girebilirsiniz.</p>
+            </div>
+          )}
+
           <label className="block text-base font-bold text-slate-800 mb-1.5 flex items-center gap-2">
             <KeyRound className="w-5 h-5 text-slate-400" /> C. Yönetim paneli şifrenizi belirleyin
           </label>

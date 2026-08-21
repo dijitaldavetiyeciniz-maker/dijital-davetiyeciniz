@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import CaseStudiesSection from '@/components/CaseStudiesSection';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import FAQSection from '@/components/FAQSection';
 import { 
   Sparkles, ArrowRight, CheckCircle2, Paintbrush, 
   Palette, Crown, Leaf, Heart, Baby, ExternalLink,
@@ -154,12 +157,12 @@ export default function Home() {
               transition={{ delay: 0.6, duration: 0.5 }}
               className="flex flex-col sm:flex-row justify-center gap-5 items-center"
             >
-              <Link href="/kayit-ol" className="group relative bg-gradient-to-r from-rose-500 to-orange-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:-translate-y-1 transition-all shadow-[0_8px_30px_-4px_rgba(225,29,72,0.4)] flex items-center justify-center gap-2 w-full sm:w-auto overflow-hidden">
+              <Link href="/olustur" className="group relative bg-gradient-to-r from-rose-500 to-orange-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:-translate-y-1 transition-all shadow-[0_8px_30px_-4px_rgba(225,29,72,0.4)] flex items-center justify-center gap-2 w-full sm:w-auto overflow-hidden">
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
                 <span className="relative z-10 flex items-center gap-2">Davetiyeni Oluştur <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></span>
               </Link>
-              <Link href="/demo/elif-kerem" className="bg-white/80 backdrop-blur-md text-slate-800 border border-slate-200 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:border-slate-300 hover:-translate-y-1 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 w-full sm:w-auto">
-                <ExternalLink className="w-5 h-5 text-slate-400" /> Demo Siteyi İncele
+              <Link href="/sablonlar" className="bg-white/80 backdrop-blur-md text-slate-800 border border-slate-200 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:border-slate-300 hover:-translate-y-1 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 w-full sm:w-auto">
+                <ExternalLink className="w-5 h-5 text-slate-400" /> Şablonları Keşfet
               </Link>
             </motion.div>
             <motion.div 
@@ -330,6 +333,9 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Vaka Çalışmaları / Gerçek Örnekler */}
+        <CaseStudiesSection />
+
         {/* Canlı Test Section */}
         <section className="py-24 px-6 relative overflow-hidden">
           <div className="absolute inset-0 bg-slate-900 -z-10"></div>
@@ -382,6 +388,9 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Müşteri Yorumları */}
+        <TestimonialsSection />
+
         {/* Fiyat Özeti */}
         <section className="py-24 px-6 bg-white relative">
           <div className="max-w-4xl mx-auto relative z-10">
@@ -431,7 +440,7 @@ export default function Home() {
 
             <div className="text-center mt-16">
               <Link 
-                href="/kayit-ol" 
+                href="/olustur" 
                 className="inline-flex items-center gap-2 bg-slate-900 hover:bg-rose-500 text-white font-extrabold px-12 py-5 rounded-2xl shadow-xl shadow-slate-900/20 text-base hover:-translate-y-1 transition-all duration-300"
               >
                 Hemen Davetiyeni Oluştur <ArrowRight className="w-5 h-5" />
@@ -439,6 +448,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* 5 Adet SSS Accordion */}
+        <FAQSection />
 
         <Footer />
       </div>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { 
   Sparkles, Palette, Crown, Leaf, Moon, Star, Filter, Check, Wand2, 
   X, Camera, Heart, Shield, Music, Layers, ArrowRight, Eye
@@ -250,6 +251,8 @@ export default function TemplatesGallery() {
       <Navbar />
 
       <main className="pt-28 pb-20 px-6 max-w-7xl mx-auto relative z-10">
+        <Breadcrumbs items={[{ name: 'Şablon Kataloğu', url: '/sablonlar' }]} />
+
         {/* Hero Banner */}
         <div className="text-center mb-14">
           <div className="inline-flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
