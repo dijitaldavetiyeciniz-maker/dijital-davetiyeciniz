@@ -1507,9 +1507,17 @@ export default function CoupleAdminPage({
               </h1>
               <p className="text-slate-400 text-[10px] mt-0.5">Davetiye Hazırlama Stüdyosu</p>
             </div>
-            <button onClick={() => setIsAuthenticated(false)} className="text-xs font-semibold px-3 py-1.5 bg-slate-100 rounded-lg hover:bg-slate-200 cursor-pointer">
-              Çıkış
-            </button>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => handleSave()} 
+                className="text-xs font-bold px-3 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 cursor-pointer"
+              >
+                Kaydet
+              </button>
+              <button onClick={() => setIsAuthenticated(false)} className="text-xs font-semibold px-3 py-1.5 bg-slate-100 rounded-lg hover:bg-slate-200 cursor-pointer">
+                Çıkış
+              </button>
+            </div>
           </header>
 
           {showResumeBanner && completionStatus.steps.info && activeTab === 'info' && (
@@ -1786,7 +1794,7 @@ export default function CoupleAdminPage({
                       <button
                         key={theme.id}
                         data-testid={`template-${theme.id}`}
-                        onClick={() => applyPreset(theme)}
+                        onClick={() => { setTemplateId(theme.id); latestTemplateIdRef.current = theme.id; }}
                         className={`p-3 bg-white border rounded-xl text-left text-xs font-bold cursor-pointer transition ${isActive ? 'border-rose-500 shadow-sm ring-1 ring-rose-300' : 'border-slate-200'}`}
                       >
                         <div className="truncate">{theme.name}</div>
