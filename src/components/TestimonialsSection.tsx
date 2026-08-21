@@ -101,7 +101,7 @@ export default function TestimonialsSection() {
                 <div>
                   <h4 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
                     {t.name}
-                    <CheckCircle className="w-3.5 h-3.5 text-emerald-500 inline" title="Doğrulanmış Kullanıcı" />
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-500 inline" aria-label="Doğrulanmış Kullanıcı" />
                   </h4>
                   <p className="text-xs text-slate-500">{t.event} • {t.location}</p>
                 </div>

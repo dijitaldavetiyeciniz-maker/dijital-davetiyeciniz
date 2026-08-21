@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     // 1. Fetch all weddings to aggregate user invitation counts
     const { data: weddings } = await supabase
       .from('weddings')
-      .select('id, user_id, user_email, slug, bride_name, groom_name, event_type, template_id, is_paid, is_active, deleted_at, created_at')
+      .select('id, user_id, user_email, slug, bride_name, groom_name, event_type, template_id, is_paid, is_active, deleted_at, created_at, venue_address')
       .order('created_at', { ascending: false });
 
     const activeWeddings = (weddings || []).filter(w => !w.deleted_at);
