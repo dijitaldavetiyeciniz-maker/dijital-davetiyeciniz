@@ -971,6 +971,7 @@ export default function CoupleAdminPage({
       };
 
       return {
+        ...(prev || {}),
         content: preservedContent,
         design: {
           layoutStyle: theme.layoutStyle,

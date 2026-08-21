@@ -211,7 +211,9 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
         const confirmBtn = page.locator('[data-testid="confirm-publish-btn"]').first();
         await confirmBtn.waitFor({ state: 'visible', timeout: 5000 });
         await confirmBtn.click();
-        await page.waitForLoadState('networkidle');
+        await expect(page.getByText('Değişiklikler Yayında')).toBeVisible({ timeout: 10000 });
+        const closeSuccess = page.locator('button:has-text("Kapat")').first();
+        if (await closeSuccess.isVisible()) await closeSuccess.click();
       }
 
       // Verify persistence in DB (Poll to avoid arbitrary timeouts)
@@ -334,6 +336,15 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
   test('Şablon kaydetme race condition (Hızlı Seçim C)', async ({ page, browser }) => {
     test.setTimeout(60000);
+
+    // STEP A: Fetch initial published template
+    const { data: initialData } = await supabase
+      .from('weddings')
+      .select('published_snapshot, custom_overrides, template_id')
+      .eq('slug', TEST_SLUG)
+      .single();
+    const initialPublishedTemplate = initialData?.published_snapshot?.template_id || initialData?.custom_overrides?.published_snapshot?.template_id || 'fine-art-botanical-watercolor';
+
     page.on('dialog', async dialog => {
       const msg = dialog.message();
       if (msg.includes('Bu şablonu uygulamak istediğinize emin misiniz')) {
@@ -373,17 +384,17 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await page.waitForSelector(`[data-testid="template-${templateA}"]`, { state: 'visible' });
     
-    // A seç
+    // STEP B: Rapid selection A -> B -> C
     await page.click(`[data-testid="template-${templateA}"]`);
     await page.waitForSelector(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
-    // B seç
+    
     await page.click(`[data-testid="template-${templateB}"]`);
     await page.waitForSelector(`[data-testid="template-${templateB}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
-    // C seç
+    
     await page.click(`[data-testid="template-${templateC}"]`);
     await page.waitForSelector(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
     
-    // Beklemeden kaydet
+    // STEP C: Save draft (Older async saves for A or B must not overwrite C)
     const saveBtn1 = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
     await saveBtn1.click();
     await page.waitForLoadState('networkidle');
@@ -402,25 +413,61 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const selectedTemplate = page.locator(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`);
     await expect(selectedTemplate).toBeVisible();
 
-    const publicContext = await browser.newContext();
-    const publicPage = await publicContext.newPage();
-    await publicPage.goto(`/${TEST_SLUG}`);
-    await publicPage.waitForLoadState('networkidle');
+    // STEP D: Public invitation BEFORE publish must serve initial published snapshot (C8 draft isolation)
+    const publicContextBefore = await browser.newContext();
+    const publicPageBefore = await publicContextBefore.newPage();
+    await publicPageBefore.goto(`/${TEST_SLUG}`);
+    await publicPageBefore.waitForLoadState('networkidle');
     
-    const overlay = publicPage.locator('[data-testid="opening-overlay"]');
-    await overlay.waitFor({ state: 'attached', timeout: 15000 });
+    const overlayBefore = publicPageBefore.locator('[data-testid="opening-overlay"]');
+    await overlayBefore.waitFor({ state: 'attached', timeout: 15000 });
     
     await expect(async () => {
-      if (await overlay.isVisible()) {
-        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
+      if (await overlayBefore.isVisible()) {
+        await overlayBefore.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
       }
-      await expect(overlay).toBeHidden({ timeout: 3000 });
+      await expect(overlayBefore).toBeHidden({ timeout: 3000 });
     }).toPass({ timeout: 30000 });
 
-    const root = publicPage.locator('[data-template-id]').first();
-    await root.waitFor({ state: 'attached', timeout: 5000 });
-    expect(await root.getAttribute('data-template-id')).toBe(templateC);
-    await publicContext.close();
+    const rootBefore = publicPageBefore.locator('[data-template-id]').first();
+    await rootBefore.waitFor({ state: 'attached', timeout: 5000 });
+    const renderedBefore = await rootBefore.getAttribute('data-template-id');
+    expect(renderedBefore).toBe(initialPublishedTemplate);
+    expect(renderedBefore).not.toBe(templateC);
+    await publicContextBefore.close();
+
+    // STEP E: Explicit Publish Action
+    const publishBtn = page.locator('[data-testid="admin-publish-btn"]').first();
+    if (await publishBtn.isVisible()) {
+      await publishBtn.click();
+      const confirmBtn = page.locator('[data-testid="confirm-publish-btn"]').first();
+      await confirmBtn.waitFor({ state: 'visible', timeout: 5000 });
+      await confirmBtn.click();
+      await expect(page.getByText('Değişiklikler Yayında')).toBeVisible({ timeout: 10000 });
+      const closeSuccess = page.locator('button:has-text("Kapat")').first();
+      if (await closeSuccess.isVisible()) await closeSuccess.click();
+    }
+
+    // STEP F & G: Public invitation AFTER publish must now serve template C
+    const publicContextAfter = await browser.newContext();
+    const publicPageAfter = await publicContextAfter.newPage();
+    await publicPageAfter.goto(`/${TEST_SLUG}`);
+    await publicPageAfter.waitForLoadState('networkidle');
+    
+    const overlayAfter = publicPageAfter.locator('[data-testid="opening-overlay"]');
+    await overlayAfter.waitFor({ state: 'attached', timeout: 15000 });
+    
+    await expect(async () => {
+      if (await overlayAfter.isVisible()) {
+        await overlayAfter.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
+      }
+      await expect(overlayAfter).toBeHidden({ timeout: 3000 });
+    }).toPass({ timeout: 30000 });
+
+    const rootAfter = publicPageAfter.locator('[data-template-id]').first();
+    await rootAfter.waitFor({ state: 'attached', timeout: 5000 });
+    expect(await rootAfter.getAttribute('data-template-id')).toBe(templateC);
+    await publicContextAfter.close();
   });
 
   test('Şablon kaydetme race condition (İptal Senaryosu)', async ({ page, browser }) => {
