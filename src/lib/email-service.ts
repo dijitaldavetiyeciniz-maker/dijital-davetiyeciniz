@@ -9,6 +9,13 @@ const OTP_SECRET = process.env.OTP_SECRET || process.env.SUPERADMIN_SECRET || 'd
 const CACHE_FILE = path.join(process.cwd(), '.otp_verifications_cache.json');
 
 /**
+ * Centralized email normalization helper
+ */
+export function normalizeEmail(email: string): string {
+  return (email || '').trim().toLowerCase();
+}
+
+/**
  * Returns a configured Nodemailer transporter or null if credentials are not provided
  */
 export function getTransporter() {
@@ -56,7 +63,7 @@ export function getLocalVerifications(): Record<string, any> {
 export function saveLocalVerification(email: string, record: any) {
   try {
     const cache = getLocalVerifications();
-    cache[email.toLowerCase()] = record;
+    cache[normalizeEmail(email)] = record;
     fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2), 'utf8');
   } catch {}
 }
@@ -66,7 +73,7 @@ export function saveLocalVerification(email: string, record: any) {
  * RAW OTP is NEVER stored in database or logs!
  */
 export function hashOtp(email: string, otp: string): string {
-  const payload = `${email.trim().toLowerCase()}:${otp.trim()}`;
+  const payload = `${normalizeEmail(email)}:${otp.trim()}`;
   return crypto.createHmac('sha256', OTP_SECRET).update(payload).digest('hex');
 }
 
@@ -89,15 +96,34 @@ export async function sendVerificationEmail({
   firstName?: string;
   userId?: string;
 }): Promise<{ success: boolean; error?: string; retryAfter?: number }> {
-  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedEmail = normalizeEmail(email);
 
   try {
     // 1. Check Resend Cooldown (60 seconds)
-    const localCache = getLocalVerifications();
-    const existing = localCache[normalizedEmail];
+    let existingPending: any = null;
 
-    if (existing && existing.status === 'pending') {
-      const lastSent = new Date(existing.last_sent_at || existing.created_at).getTime();
+    // Check DB first for cooldown
+    try {
+      const { data } = await supabase
+        .from('email_verifications')
+        .select('*')
+        .eq('email', normalizedEmail)
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (data) existingPending = data;
+    } catch {}
+
+    // Check local cache fallback
+    if (!existingPending) {
+      const localCache = getLocalVerifications();
+      existingPending = localCache[normalizedEmail];
+    }
+
+    if (existingPending && existingPending.status === 'pending') {
+      const lastSent = new Date(existingPending.last_sent_at || existingPending.created_at).getTime();
       const elapsedSeconds = Math.floor((Date.now() - lastSent) / 1000);
       if (elapsedSeconds < 60) {
         return {
@@ -113,18 +139,16 @@ export async function sendVerificationEmail({
     const codeHash = hashOtp(normalizedEmail, rawOtp);
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes expiry
 
-    // If previous pending code existed, mark it superseded
-    if (existing && existing.status === 'pending') {
-      try {
-        await supabase
-          .from('email_verifications')
-          .update({ status: 'superseded' })
-          .eq('email', normalizedEmail)
-          .eq('status', 'pending');
-      } catch {}
-    }
+    // 3. Mark previous pending codes superseded
+    try {
+      await supabase
+        .from('email_verifications')
+        .update({ status: 'superseded' })
+        .eq('email', normalizedEmail)
+        .eq('status', 'pending');
+    } catch {}
 
-    const resendCount = existing ? (existing.resend_count || 0) + 1 : 0;
+    const resendCount = existingPending ? (existingPending.resend_count || 0) + 1 : 0;
 
     const record = {
       id: crypto.randomUUID(),
@@ -141,11 +165,11 @@ export async function sendVerificationEmail({
 
     saveLocalVerification(normalizedEmail, record);
 
-    // Also attempt Supabase insert safely
+    // Insert new pending record to Supabase
     try {
       await supabase.from('email_verifications').insert([record]);
-    } catch {
-      // safe fallback
+    } catch (insertErr) {
+      console.warn('DB verification insert warning:', insertErr);
     }
 
     // 4. Actual SMTP Dispatch via Nodemailer
@@ -282,31 +306,40 @@ export async function verifySubmittedOtp({
   email: string;
   code: string;
 }): Promise<{ success: boolean; error?: string }> {
-  const normalizedEmail = email.trim().toLowerCase();
-  const trimmedCode = code.trim();
+  const normalizedEmail = normalizeEmail(email);
+  const trimmedCode = (code || '').trim();
 
   if (!trimmedCode || trimmedCode.length !== 6) {
     return { success: false, error: 'Lütfen 6 haneli doğrulama kodunu eksiksiz girin.' };
   }
 
   try {
-    const localCache = getLocalVerifications();
-    let record = localCache[normalizedEmail];
+    let record: any = null;
 
-    if (!record || record.status !== 'pending') {
-      try {
-        const { data } = await supabase
-          .from('email_verifications')
-          .select('*')
-          .eq('email', normalizedEmail)
-          .eq('status', 'pending')
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
+    // 1. Fetch latest pending verification record from Supabase
+    try {
+      const { data, error } = await supabase
+        .from('email_verifications')
+        .select('*')
+        .eq('email', normalizedEmail)
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
-        if (data) record = data;
-      } catch {
-        // fallback
+      if (data) {
+        record = data;
+      }
+    } catch (dbErr) {
+      console.warn('DB verification lookup warning:', dbErr);
+    }
+
+    // 2. Fallback to local memory/disk cache if DB had no record
+    if (!record) {
+      const localCache = getLocalVerifications();
+      const localRec = localCache[normalizedEmail];
+      if (localRec && localRec.status === 'pending') {
+        record = localRec;
       }
     }
 
@@ -318,6 +351,12 @@ export async function verifySubmittedOtp({
     if (new Date(record.expires_at).getTime() < Date.now()) {
       record.status = 'expired';
       saveLocalVerification(normalizedEmail, record);
+      try {
+        await supabase
+          .from('email_verifications')
+          .update({ status: 'expired' })
+          .eq('id', record.id);
+      } catch {}
       return { success: false, error: 'Bu doğrulama kodunun süresi dolmuş. Lütfen tekrar kod isteyin.' };
     }
 
@@ -327,6 +366,12 @@ export async function verifySubmittedOtp({
       record.status = 'too_many_attempts';
       record.attempt_count = currentAttempts;
       saveLocalVerification(normalizedEmail, record);
+      try {
+        await supabase
+          .from('email_verifications')
+          .update({ status: 'too_many_attempts', attempt_count: currentAttempts })
+          .eq('id', record.id);
+      } catch {}
       return { success: false, error: 'Çok fazla hatalı deneme yapıldı. Güvenliğiniz için lütfen yeni bir kod talep edin.' };
     }
 
@@ -341,6 +386,12 @@ export async function verifySubmittedOtp({
     if (!isMatch) {
       record.attempt_count = currentAttempts;
       saveLocalVerification(normalizedEmail, record);
+      try {
+        await supabase
+          .from('email_verifications')
+          .update({ attempt_count: currentAttempts })
+          .eq('id', record.id);
+      } catch {}
       return { success: false, error: `Doğrulama kodu hatalı. (Kalan deneme hakkı: ${5 - currentAttempts})` };
     }
 
@@ -351,12 +402,21 @@ export async function verifySubmittedOtp({
 
     try {
       await supabase
+        .from('email_verifications')
+        .update({
+          status: 'verified',
+          verified_at: record.verified_at,
+          attempt_count: currentAttempts
+        })
+        .eq('id', record.id);
+    } catch {}
+
+    try {
+      await supabase
         .from('profiles')
         .update({ is_email_verified: true, email_verified_at: new Date().toISOString() })
         .eq('email', normalizedEmail);
-    } catch {
-      // safe fallback
-    }
+    } catch {}
 
     try {
       await supabase.from('security_events').insert([
@@ -373,3 +433,4 @@ export async function verifySubmittedOtp({
     return { success: false, error: 'Doğrulama işlemi sırasında bir hata oluştu.' };
   }
 }
+

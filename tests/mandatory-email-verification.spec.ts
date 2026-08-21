@@ -132,4 +132,25 @@ test.describe('MEMBERSHIP EMAIL VERIFICATION — MANDATORY SECURITY SUITE', () =
     expect(blockedRes.success).toBe(false);
     expect(blockedRes.error).toContain('Çok fazla hatalı deneme');
   });
+
+  test('9. Active verification lookup and email normalization (casing & whitespace)', async () => {
+    const { sendVerificationEmail, verifySubmittedOtp, hashOtp, getLocalVerifications } = await import('../src/lib/email-service');
+    const mixedEmail = `  Test.User.${Date.now()}@Example.COM  `;
+    const normalized = mixedEmail.trim().toLowerCase();
+
+    const sendRes = await sendVerificationEmail({ email: mixedEmail, firstName: 'NormalizationTest' });
+    expect(sendRes.success).toBe(true);
+
+    // Fetch the generated record from local cache / DB
+    const cache = getLocalVerifications();
+    const record = cache[normalized];
+    expect(record).toBeDefined();
+    expect(record.status).toBe('pending');
+
+    // Attempting wrong code with uppercase email should properly identify record and return wrong code error (not 'record not found')
+    const wrongRes = await verifySubmittedOtp({ email: mixedEmail.toUpperCase(), code: '000000' });
+    // Should fail with wrong code, proving active row was found
+    expect(wrongRes.success).toBe(false);
+    expect(wrongRes.error).toContain('Doğrulama kodu hatalı');
+  });
 });
