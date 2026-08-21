@@ -13,10 +13,7 @@ import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingA
 import { envelopeStyles } from '@/data/envelopeStyles';
 import { sealStyles } from '@/data/sealStyles';
 import { getInitials } from '@/utils/getInitials';
-import GuestManagementTab from '@/components/admin/guests/GuestManagementTab';
-import CheckInTab from '@/components/admin/checkin/CheckInTab';
 import EventsTab from '@/components/admin/events/EventsTab';
-import SeatingTab from '@/components/admin/seating/SeatingTab';
 import EventsTimeline from '@/components/invitation/EventsTimeline';
 import { getEventJourneyConfig } from '@/data/eventJourneyConfig';
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dijital-davetiyeciniz.vercel.app';
@@ -256,16 +253,12 @@ export default function CoupleAdminPage({
   const [hasAgeLimit, setHasAgeLimit] = useState<'yes' | 'no'>('no');
   const [ageLimitNote, setAgeLimitNote] = useState('');
   const [hasAfterParty, setHasAfterParty] = useState<'yes' | 'no'>('no');
-  const [showResumeBanner, setShowResumeBanner] = useState(true);
-  // Misafir Yönetimi sekmesi çok genişlediği için Program/Oturma Planı/QR
-  // Check-in artık ayrı üst sekmeler değil, "Misafir Yönetimi" altında
-  // alt sekmeler.
-  const [guestSubTab, setGuestSubTab] = useState<'list' | 'events' | 'seating' | 'checkin'>('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'attending' | 'not-attending'>('all');
+  const [showResumeBanner, setShowResumeBanner] = useState(true);
   const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
   
-  // Tasarım Stüdyosu State
+  // Tasarım Adımı State
   const [templateId, setTemplateId] = useState('template1');
   const latestTemplateIdRef = useRef<string | null>(null);
   const [primaryColor, setPrimaryColor] = useState('#f43f5e');
@@ -477,6 +470,21 @@ export default function CoupleAdminPage({
       
       // 2. Mevcut kullanıcının (Auth) oturumunu kontrol et
       const { data: { session } } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('is_email_verified')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+          if (profile && profile.is_email_verified === false && !session.user.email_confirmed_at) {
+            window.location.href = `/dogrula?email=${encodeURIComponent(session.user.email || '')}`;
+            return;
+          }
+        } catch {}
+      }
       
       let isAuth = false;
       if (session?.user?.id && session.user.id === weddingData.user_id) {
@@ -1432,9 +1440,7 @@ export default function CoupleAdminPage({
     special: 'Özel İçerikler',
     preview: 'Önizleme',
     share: 'Paylaşım',
-    settings: 'Ayarlar',
-    rsvps: 'Gelen Yanıtlar (LCV)',
-    guests: 'Misafir Yönetimi'
+    settings: 'Ayarlar'
   };
 
   return (
@@ -1470,6 +1476,7 @@ export default function CoupleAdminPage({
                 return (
                   <button
                     key={step}
+                    data-testid={`admin-nav-${step}`}
                     onClick={() => setActiveTab(step as any)}
                     className={`flex items-center gap-3 p-3 rounded-xl border text-xs font-bold cursor-pointer w-full ${isActive ? 'bg-rose-50/50 border-rose-200 text-rose-600' : 'bg-transparent border-transparent hover:bg-slate-50 text-slate-600'}`}
                   >
@@ -1500,9 +1507,17 @@ export default function CoupleAdminPage({
               </h1>
               <p className="text-slate-400 text-[10px] mt-0.5">Davetiye Hazırlama Stüdyosu</p>
             </div>
-            <button onClick={() => setIsAuthenticated(false)} className="text-xs font-semibold px-3 py-1.5 bg-slate-100 rounded-lg hover:bg-slate-200 cursor-pointer">
-              Çıkış
-            </button>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={() => handleSave()} 
+                className="text-xs font-bold px-3 py-1.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 cursor-pointer"
+              >
+                Kaydet
+              </button>
+              <button onClick={() => setIsAuthenticated(false)} className="text-xs font-semibold px-3 py-1.5 bg-slate-100 rounded-lg hover:bg-slate-200 cursor-pointer">
+                Çıkış
+              </button>
+            </div>
           </header>
 
           {showResumeBanner && completionStatus.steps.info && activeTab === 'info' && (
@@ -1778,11 +1793,13 @@ export default function CoupleAdminPage({
                     return (
                       <button
                         key={theme.id}
+                        data-testid={`template-${theme.id}`}
                         onClick={() => { setTemplateId(theme.id); latestTemplateIdRef.current = theme.id; }}
                         className={`p-3 bg-white border rounded-xl text-left text-xs font-bold cursor-pointer transition ${isActive ? 'border-rose-500 shadow-sm ring-1 ring-rose-300' : 'border-slate-200'}`}
                       >
                         <div className="truncate">{theme.name}</div>
                         <div className="text-[9px] text-slate-400 font-medium capitalize mt-0.5">{theme.category || 'Premium'}</div>
+                        {isActive && <span className="text-[10px] text-rose-600 block mt-1 font-semibold">Uygulandı</span>}
                       </button>
                     );
                   })}
@@ -1806,6 +1823,7 @@ export default function CoupleAdminPage({
 
               <div className="flex justify-end gap-3 pt-4 border-t">
                 <button onClick={() => setActiveTab('events')} className="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold hover:bg-slate-200 cursor-pointer">Geri</button>
+                <button onClick={() => handleSave()} className="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold hover:bg-slate-200 cursor-pointer">Kaydet</button>
                 <button onClick={async () => { await handleSave(undefined, true); setActiveTab('content'); }} className="px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-bold hover:bg-rose-700 flex items-center gap-1 shadow-xs cursor-pointer">
                   <span>Devam</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -1994,17 +2012,6 @@ export default function CoupleAdminPage({
                   ))}
                 </tbody>
               </table>
-            </div>
-          )}
-
-          {activeTab === 'guests' && (
-            <div className="bg-white p-6 rounded-2xl border text-left">
-              <div className="flex border-b mb-3 gap-2">
-                <button onClick={() => setGuestSubTab('list')} className={`pb-2 text-xs font-bold ${guestSubTab === 'list' ? 'border-b-2 border-rose-500' : ''}`}>Davetliler</button>
-                <button onClick={() => setGuestSubTab('events')} className={`pb-2 text-xs font-bold ${guestSubTab === 'events' ? 'border-b-2 border-rose-500' : ''}`}>Program</button>
-              </div>
-              {guestSubTab === 'list' && <GuestManagementTab weddingId={wedding.id} />}
-              {guestSubTab === 'events' && <EventsTab weddingId={wedding.id} />}
             </div>
           )}
 

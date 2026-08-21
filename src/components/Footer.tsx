@@ -1,60 +1,85 @@
 import Link from 'next/link';
-import { Sparkles, Globe, MessageCircle } from 'lucide-react';
+import { Sparkles, Globe, MessageCircle, Mail, MapPin, Phone } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <>
-      <footer className="text-center py-8 text-slate-500 text-sm border-t border-slate-100 mt-16 bg-white w-full">
-        Sorun veya öneriniz için: <a href="mailto:dijitaldavetiyeciniz@gmail.com" className="text-rose-500 font-medium hover:underline">dijitaldavetiyeciniz@gmail.com</a>
-      </footer>
-      <footer className="bg-slate-950 text-slate-400 py-16 px-6 border-t border-slate-900 w-full">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 mb-12">
-          
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2 text-2xl font-bold font-serif text-white mb-6">
-              <Sparkles className="w-6 h-6 text-rose-500" />
-              Dijital <span className="text-rose-500">Davetiyeciniz</span>
+    <footer className="bg-slate-950 text-slate-400 pt-16 pb-12 px-6 border-t border-slate-900 w-full font-sans mt-auto">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+        
+        {/* Brand Column */}
+        <div className="lg:col-span-2">
+          <Link href="/" className="flex items-center gap-2.5 text-2xl font-bold font-serif text-white mb-5 hover:opacity-90 transition-opacity">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-500 to-pink-600 text-white flex items-center justify-center shadow-md shadow-rose-500/20">
+              <Sparkles className="w-5 h-5" />
             </div>
-            <p className="max-w-md leading-relaxed mb-8">
-              En özel gününüzü geleceğin teknolojisiyle birleştirin. Doğayı koruyan, 
-              şık ve yönetilebilir dijital davetiyelerle sevdiklerinize unutulmaz bir başlangıç yapın.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all">
-                <Globe className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all">
-                <MessageCircle className="w-5 h-5" />
+            <span>Dijital <span className="text-rose-500">Davetiyeciniz</span></span>
+          </Link>
+          <p className="text-sm leading-relaxed mb-6 max-w-sm text-slate-400">
+            En özel gününüzü geleceğin teknolojisiyle buluşturun. Doğa dostu, zarf animasyonlu, müzikli ve anlık LCV takipli 120+ şık davetiye tasarımı.
+          </p>
+          <div className="space-y-2 text-xs text-slate-400">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-3.5 h-3.5 text-rose-500" />
+              <span>Levent, Büyükdere Cad. No: 199, Şişli / İstanbul</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Mail className="w-3.5 h-3.5 text-rose-500" />
+              <a href="mailto:dijitaldavetiyeciniz@gmail.com" className="hover:text-white transition-colors">
+                dijitaldavetiyeciniz@gmail.com
               </a>
             </div>
+            <div className="flex items-center gap-2">
+              <Phone className="w-3.5 h-3.5 text-rose-500" />
+              <span>+90 555 000 0000 (Haftanın 7 Günü Destek)</span>
+            </div>
           </div>
-
-          <div>
-            <h4 className="text-white font-bold mb-6">Hızlı Menü</h4>
-            <ul className="space-y-3">
-              <li><Link href="/nasil-calisir" className="hover:text-white transition-colors">Nasıl Çalışır?</Link></li>
-              <li><Link href="/ozellikler" className="hover:text-white transition-colors">Özellikler</Link></li>
-              <li><Link href="/fiyatlandirma" className="hover:text-white transition-colors">Fiyatlandırma</Link></li>
-              <li><Link href="/sss" className="hover:text-white transition-colors">Sıkça Sorulan Sorular</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-white font-bold mb-6">Yasal</h4>
-            <ul className="space-y-3">
-              <li><a href="#" className="hover:text-white transition-colors">Mesafeli Satış Sözleşmesi</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Gizlilik Politikası</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">İptal ve İade Şartları</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">İletişim</a></li>
-            </ul>
-          </div>
-
         </div>
-        <div className="max-w-7xl mx-auto pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
-          <p>© {new Date().getFullYear()} Dijital Davetiyeciniz. Tüm hakları saklıdır.</p>
-          <p>Sevgiyle geliştirildi ❤️</p>
+
+        {/* Keşfet (İç Linkleme) */}
+        <div>
+          <h4 className="text-white text-sm font-bold uppercase tracking-wider mb-5">Keşfet</h4>
+          <ul className="space-y-3 text-sm">
+            <li><Link href="/sablonlar" className="hover:text-rose-400 transition-colors">120+ Şablon Kataloğu</Link></li>
+            <li><Link href="/olustur" className="hover:text-rose-400 transition-colors">Davetiye Oluştur</Link></li>
+            <li><Link href="/ozellikler" className="hover:text-rose-400 transition-colors">Platform Özellikleri</Link></li>
+            <li><Link href="/nasil-calisir" className="hover:text-rose-400 transition-colors">Nasıl Çalışır?</Link></li>
+            <li><Link href="/fiyatlandirma" className="hover:text-rose-400 transition-colors">Fiyatlandırma Paketleri</Link></li>
+          </ul>
         </div>
-      </footer>
-    </>
+
+        {/* Etkinlik Türleri */}
+        <div>
+          <h4 className="text-white text-sm font-bold uppercase tracking-wider mb-5">Etkinlikler</h4>
+          <ul className="space-y-3 text-sm">
+            <li><Link href="/sablonlar?category=wedding" className="hover:text-rose-400 transition-colors">Düğün Davetiyeleri</Link></li>
+            <li><Link href="/sablonlar?category=engagement" className="hover:text-rose-400 transition-colors">Nişan & Söz Davetiyesi</Link></li>
+            <li><Link href="/sablonlar?category=henna" className="hover:text-rose-400 transition-colors">Kına Gecesi Temaları</Link></li>
+            <li><Link href="/sablonlar?category=babyshower" className="hover:text-rose-400 transition-colors">Baby Shower & Doğum Günü</Link></li>
+            <li><Link href="/sablonlar?category=corporate" className="hover:text-rose-400 transition-colors">Kurumsal Davetler & Gala</Link></li>
+          </ul>
+        </div>
+
+        {/* Yasal & Sözleşmeler */}
+        <div>
+          <h4 className="text-white text-sm font-bold uppercase tracking-wider mb-5">Yasal</h4>
+          <ul className="space-y-3 text-sm">
+            <li><Link href="/gizlilik-politikasi" className="hover:text-rose-400 transition-colors">Gizlilik Politikası</Link></li>
+            <li><Link href="/kvkk" className="hover:text-rose-400 transition-colors">KVKK Aydınlatma Metni</Link></li>
+            <li><Link href="/cerez-politikasi" className="hover:text-rose-400 transition-colors">Çerez Politikası</Link></li>
+            <li><Link href="/mesafeli-satis" className="hover:text-rose-400 transition-colors">Mesafeli Satış Sözleşmesi</Link></li>
+            <li><Link href="/iptal-ve-iade" className="hover:text-rose-400 transition-colors">İptal ve İade Koşulları</Link></li>
+            <li><Link href="/kullanim-kosullari" className="hover:text-rose-400 transition-colors">Kullanım Koşulları</Link></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div className="max-w-7xl mx-auto pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <p>© {new Date().getFullYear()} Dijital Davetiyeciniz. Tüm hakları saklıdır.</p>
+        <p className="flex items-center gap-1">
+          <span>Doğa dostu, kağıtsız dijital gelecek</span>
+        </p>
+      </div>
+    </footer>
   );
 }

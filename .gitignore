@@ -48,3 +48,4 @@ backup_*.sql
 *.js.backup
 playwright-report/
 test-results/
+.otp_verifications_cache.json

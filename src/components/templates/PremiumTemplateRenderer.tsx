@@ -1557,6 +1557,7 @@ case 'asymmetric':
         brideName={wedding.bride_name}
         groomName={wedding.groom_name}
         mode={mode}
+        events={wedding.invitation_events || []}
       />
 
       {/* Travel directions Yandex/Google Maps Dialog */}

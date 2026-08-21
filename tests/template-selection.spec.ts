@@ -4,7 +4,7 @@ test.describe('Template Selection and Styling', () => {
   test('should load admin template design tab and allow switching options', async ({ page }) => {
     await page.goto('/demo1/admin');
 
-    const studioButton = page.locator('button', { hasText: 'Tasarım Stüdyosu' }).first();
+    const studioButton = page.getByRole('button', { name: 'Tasarım', exact: true }).first();
     if (await studioButton.isVisible()) {
       await studioButton.click();
     }

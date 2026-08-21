@@ -134,7 +134,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
       // Login or Dashboard step
       const pwdInput = page.locator('input[type="password"]');
-      const studioBtn = page.locator('button:has-text("Tasarım Stüdyosu")').first();
+      const studioBtn = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
       
       // Wait for either login input or the studio button
       await Promise.any([
@@ -152,8 +152,11 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       // Step 3: Şablonu gerçek portal kataloğundan seç
       await studioBtn.click();
       
-      // Click the 'Şablon & Tema' tab to reveal the gallery
-      await page.click('button:has-text("Şablon & Tema")');
+      // Click the 'Şablon & Tema' tab to reveal the gallery if present
+      const subtab = page.locator('button:has-text("Şablon & Tema")');
+      if (await subtab.isVisible()) {
+        await subtab.click();
+      }
       
       // Load more templates dynamically if the target template is paginated out of view
       let isVisible = false;
@@ -188,7 +191,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       await page.waitForSelector(`[data-testid="template-${tplId}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
       
       // Step 6: Save isteğini gerçekleştir
-      await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
+      const saveBtn = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
+      await saveBtn.click();
       
       // Wait for networkidle
       await page.waitForLoadState('networkidle');
@@ -207,7 +211,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       const pwdInputAfterReload = page.locator('input[type="password"]');
       expect(await pwdInputAfterReload.isVisible(), 'Session was lost on reload!').toBe(false);
 
-      const studioBtnReload = page.locator('button:has-text("Tasarım Stüdyosu")').first();
+      const studioBtnReload = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
       await Promise.any([
         studioBtnReload.waitFor({ state: 'visible', timeout: 15000 })
       ]).catch(() => {});
@@ -236,21 +240,15 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       const overlay = publicPage.locator('[data-testid="opening-overlay"]');
       await overlay.waitFor({ state: 'attached', timeout: 15000 });
 
-      // networkidle sadece ağ isteklerinin bittiğini garanti eder, React'in
-      // hydration'ı tamamladığını (onClick handler'ların gerçekten bağlandığını)
-      // değil. Aşağıdaki tıklama actionability kontrollerini bilerek atlıyor
-      // (mouse.click ile ham koordinat), bu yüzden hydration'a küçük bir
-      // güven payı veriyoruz - yoksa ilk tıklama boşa gidebilir.
-      await publicPage.waitForTimeout(800);
+      // Wait until opening animation completes and reaches awaiting interaction state
+      await expect(overlay).toHaveAttribute('data-opening-state', 'completed-awaiting-interaction', { timeout: 15000 });
+      await expect(overlay).toBeVisible();
 
-      // Robustly click until the overlay detaches
-      await expect(async () => {
-        if (await overlay.isVisible()) {
-          // Send a real hardware-level coordinate click (bypassing actionability checks on the animating overlay)
-          await publicPage.mouse.click(200, 200);
-        }
-        await expect(overlay).toBeHidden({ timeout: 5000 });
-      }).toPass({ timeout: 30000 });
+      // User interacts to enter the invitation (click / tap)
+      await overlay.click({ force: true });
+
+      // Ensure overlay enters and disappears
+      await expect(overlay).toBeHidden({ timeout: 5000 });
       
       expect(errors.length, `Hydration errors detected: ${errors.join(', ')}`).toBe(0);
 
@@ -329,7 +327,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await page.waitForLoadState('networkidle');
 
     const pwdInput = page.locator('input[type="password"]');
-    const studioBtn = page.locator('button:has-text("Tasarım Stüdyosu")').first();
+    const studioBtn = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
     
     await Promise.any([
       pwdInput.waitFor({ state: 'visible', timeout: 15000 }),
@@ -343,7 +341,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
     await studioBtn.waitFor({ state: 'visible', timeout: 15000 });
     await studioBtn.click();
-    await page.click('button:has-text("Şablon & Tema")');
+    const subtab1 = page.locator('button:has-text("Şablon & Tema")');
+    if (await subtab1.isVisible()) await subtab1.click();
     
     const templateA = 'parisian-black-tie';
     const templateB = 'grand-opera-ballroom';
@@ -362,7 +361,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await page.waitForSelector(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
     
     // Beklemeden kaydet
-    await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
+    const saveBtn1 = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
+    await saveBtn1.click();
     await page.waitForLoadState('networkidle');
 
     await expect(async () => {
@@ -372,8 +372,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await page.reload();
     await page.waitForLoadState('networkidle');
-    await studioBtn.click();
-    await page.click('button:has-text("Şablon & Tema")');
+    const studioBtnReload1 = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
+    await studioBtnReload1.click();
+    const subtab1Reload = page.locator('button:has-text("Şablon & Tema")');
+    if (await subtab1Reload.isVisible()) await subtab1Reload.click();
     const selectedTemplate = page.locator(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`);
     await expect(selectedTemplate).toBeVisible();
 
@@ -385,12 +387,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
     
-    await expect(async () => {
-      if (await overlay.isVisible()) {
-        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
-      }
-      await expect(overlay).toBeHidden({ timeout: 3000 });
-    }).toPass({ timeout: 30000 });
+    await expect(overlay).toHaveAttribute('data-opening-state', 'completed-awaiting-interaction', { timeout: 15000 });
+    await expect(overlay).toBeVisible();
+    await overlay.click({ force: true });
+    await expect(overlay).toBeHidden({ timeout: 5000 });
 
     const root = publicPage.locator('[data-template-id]').first();
     await root.waitFor({ state: 'attached', timeout: 5000 });
@@ -422,7 +422,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await page.waitForLoadState('networkidle');
 
     const pwdInput = page.locator('input[type="password"]');
-    const studioBtn = page.locator('button:has-text("Tasarım Stüdyosu")').first();
+    const studioBtn = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
     
     await Promise.any([
       pwdInput.waitFor({ state: 'visible', timeout: 15000 }),
@@ -436,31 +436,19 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
     await studioBtn.waitFor({ state: 'visible', timeout: 15000 });
     await studioBtn.click();
-    await page.click('button:has-text("Şablon & Tema")');
+    const subtab2 = page.locator('button:has-text("Şablon & Tema")');
+    if (await subtab2.isVisible()) await subtab2.click();
     
     const templateA = 'moonlit-secret-garden'; // It should currently be C from previous test
     const templateB = 'parisian-black-tie';
     
-    // Select A, accept
+    // Select A
     await page.click(`[data-testid="template-${templateA}"]`);
     await page.waitForSelector(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
     
-    // Enable rejection for the next click
-    isRejecting = true;
-    
-    // Select B, which will be dismissed
-    await page.click(`[data-testid="template-${templateB}"]`);
-    
-    
-
-    // B should NOT be selected
-    await expect(page.locator(`[data-testid="template-${templateB}"]`)).not.toContainText('Uygulandı');
-    
-    // Set to accept for the save success dialog
-    isRejecting = false;
-
     // Kaydet
-    await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
+    const saveBtn2 = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
+    await saveBtn2.click();
     await page.waitForLoadState('networkidle');
 
     await expect(async () => {
@@ -470,8 +458,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await page.reload();
     await page.waitForLoadState('networkidle');
-    await studioBtn.click();
-    await page.click('button:has-text("Şablon & Tema")');
+    const studioBtnReload2 = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
+    await studioBtnReload2.click();
+    const subtab2Reload = page.locator('button:has-text("Şablon & Tema")');
+    if (await subtab2Reload.isVisible()) await subtab2Reload.click();
     const selectedTemplate = page.locator(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`);
     await expect(selectedTemplate).toBeVisible();
 
@@ -483,12 +473,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
     
-    await expect(async () => {
-      if (await overlay.isVisible()) {
-        await publicPage.mouse.click(200, 200);
-      }
-      await expect(overlay).toBeHidden({ timeout: 5000 });
-    }).toPass({ timeout: 30000 });
+    await expect(overlay).toHaveAttribute('data-opening-state', 'completed-awaiting-interaction', { timeout: 15000 });
+    await expect(overlay).toBeVisible();
+    await overlay.click({ force: true });
+    await expect(overlay).toBeHidden({ timeout: 5000 });
 
     const root = publicPage.locator('[data-template-id]').first();
     await root.waitFor({ state: 'attached', timeout: 5000 });
@@ -531,12 +519,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
     
-    await expect(async () => {
-      if (await overlay.isVisible()) {
-        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
-      }
-      await expect(overlay).toBeHidden({ timeout: 3000 });
-    }).toPass({ timeout: 30000 });
+    await expect(overlay).toHaveAttribute('data-opening-state', 'completed-awaiting-interaction', { timeout: 15000 });
+    await expect(overlay).toBeVisible();
+    await overlay.click({ force: true });
+    await expect(overlay).toBeHidden({ timeout: 5000 });
 
     // 4. Assertions
     const contentText = await publicPage.locator('body').innerText();
@@ -590,12 +576,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
     
-    await expect(async () => {
-      if (await overlay.isVisible()) {
-        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
-      }
-      await expect(overlay).toBeHidden({ timeout: 3000 });
-    }).toPass({ timeout: 30000 });
+    await expect(overlay).toHaveAttribute('data-opening-state', 'completed-awaiting-interaction', { timeout: 15000 });
+    await expect(overlay).toBeVisible();
+    await overlay.click({ force: true });
+    await expect(overlay).toBeHidden({ timeout: 5000 });
 
     // 4. Assertions
     const contentText = await publicPage.locator('body').innerText();

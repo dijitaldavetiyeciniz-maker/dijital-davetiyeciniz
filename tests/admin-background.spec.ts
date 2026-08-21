@@ -4,7 +4,7 @@ test.describe('Admin Panel Background Selection', () => {
   test('should apply selected background to the outer scene root and update decorations', async ({ page }) => {
     await page.goto('/demo1/admin');
 
-    const studioTab = page.locator('button', { hasText: 'Tasarım Stüdyosu' }).first();
+    const studioTab = page.getByRole('button', { name: 'Tasarım', exact: true }).first();
     if (await studioTab.isVisible()) {
       await studioTab.click();
     }

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { 
   Sparkles, Palette, Crown, Leaf, Moon, Star, Filter, Check, Wand2, 
   X, Camera, Heart, Shield, Music, Layers, ArrowRight, Eye
@@ -24,6 +25,32 @@ export interface CatalogTemplate {
 }
 
 export const FLAGSHIP_TEMPLATES: CatalogTemplate[] = [
+  {
+    id: 'navy-silver-starlight',
+    name: 'Yıldızlı Gece & Gümüş Zarafet',
+    category: 'Lüks',
+    eventType: 'wedding',
+    description: 'Lacivert kadife gece gökyüzü, 48 ışıltılı yıldız, gümüş mühür ve 3D zarf açılışı.',
+    colors: ['bg-slate-950', 'bg-[#d8dce0]', 'bg-[#1e293b]'],
+    gradient: 'from-slate-950 via-slate-900 to-indigo-950',
+    isFlagship: true,
+    popular: true,
+    isNew: true,
+    thumbnailBadge: 'Gece Koleksiyonu',
+  },
+  {
+    id: 'burgundy-amber-night',
+    name: 'Kına Gecesi Lüks Bordo & Amber',
+    category: 'Kültürel',
+    eventType: 'henna',
+    description: 'Koyu bordo gece fonu, parlayan amber mühür, süslü gravür çiçek motifi ve çoklu etkinlik uyumu.',
+    colors: ['bg-rose-950', 'bg-[#c98a3e]', 'bg-[#2b0f0b]'],
+    gradient: 'from-rose-950 via-[#2b0f0b] to-amber-950',
+    isFlagship: true,
+    popular: true,
+    isNew: true,
+    thumbnailBadge: 'Kına & Çoklu Paket',
+  },
   {
     id: 'parisian-black-tie',
     name: 'Parisian Black Tie',
@@ -250,6 +277,8 @@ export default function TemplatesGallery() {
       <Navbar />
 
       <main className="pt-28 pb-20 px-6 max-w-7xl mx-auto relative z-10">
+        <Breadcrumbs items={[{ name: 'Şablon Kataloğu', url: '/sablonlar' }]} />
+
         {/* Hero Banner */}
         <div className="text-center mb-14">
           <div className="inline-flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
@@ -259,7 +288,7 @@ export default function TemplatesGallery() {
             Şablon Stüdyosu & Katalog
           </h1>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-            Her biri benzersiz editoryal kompozisyona, özel tipografiye ve dinamik modül yapısına sahip 16 lüks Flagship şablonumuzu inceleyin.
+            Her biri benzersiz editoryal kompozisyona, özel tipografiye ve dinamik modül yapısına sahip lüks Flagship ve Gece Koleksiyonu şablonlarımızı inceleyin.
           </p>
 
           {/* Smart Wizard Trigger Button */}
@@ -278,7 +307,7 @@ export default function TemplatesGallery() {
         {/* Filter Navigation Bar */}
         <div className="flex overflow-x-auto gap-2 mb-10 pb-2 hide-scrollbar justify-start md:justify-center border-b border-white/10">
           {[
-            { id: 'all', label: 'Tüm Şablonlar (16)' },
+            { id: 'all', label: `Tüm Şablonlar (${FLAGSHIP_TEMPLATES.length})` },
             { id: 'wedding', label: '💍 Düğün & Nişan' },
             { id: 'henna', label: '💃 Kına Gecesi' },
             { id: 'circumcision', label: '👑 Sünnet Töreni' },

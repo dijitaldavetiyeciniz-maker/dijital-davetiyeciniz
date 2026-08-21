@@ -47,6 +47,7 @@ import { HennaPalaceOpening } from "./openings/HennaPalaceOpening";
 import { PrinceCeremonyOpening } from "./openings/PrinceCeremonyOpening";
 import { StorybookOpening } from "./openings/StorybookOpening";
 import { FutureSummitOpening } from "./openings/FutureSummitOpening";
+import { WaxSealStarfieldOpening } from "./openings/WaxSealStarfieldOpening";
 
 type EntranceAnimationProps = {
   animationType: string; // matches id in entranceAnimationTypes
@@ -467,6 +468,9 @@ function EntranceAnimation({
       case "princeCeremony": return <PrinceCeremonyOpening {...commonProps} />;
       case "storybook": return <StorybookOpening {...commonProps} />;
       case "futureSummit": return <FutureSummitOpening {...commonProps} />;
+      case "wax-seal-starfield":
+      case "waxSealStarfield":
+        return <WaxSealStarfieldOpening {...commonProps} />;
       case "minimalFade":
       default:
         return <MinimalFadeOpening {...commonProps} />;

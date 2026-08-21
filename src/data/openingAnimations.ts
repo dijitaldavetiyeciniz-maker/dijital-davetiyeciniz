@@ -21,6 +21,12 @@ export interface EntranceAnimationStyle {
 
 export const entranceAnimationTypes: EntranceAnimationType[] = [
   {
+    id: "wax-seal-starfield",
+    name: "✨ Yıldızlı Gece & Wax Mühür",
+    description: "Karanlık yıldızlı gökyüzü, metalik organik wax mühür ve 3D flap açılışı.",
+    icon: "stars",
+  },
+  {
     id: "envelope",
     name: "Zarf Açılışı",
     description: "Mühürlü zarf açılır, davetiye kartı zarifçe ortaya çıkar.",

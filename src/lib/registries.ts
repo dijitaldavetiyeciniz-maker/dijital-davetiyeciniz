@@ -133,6 +133,22 @@ export const backgroundDesignRegistry: Record<string, BackgroundDesign> = {
     size: 'auto',
     position: 'center',
     repeat: 'repeat'
+  },
+  'navy-silver-starlight': {
+    image: '/backgrounds/black-thread.png',
+    fallbackColor: '#0d1626',
+    overlay: 'linear-gradient(135deg, #0d1626 0%, #16233b 50%, #1f3a5f 100%)',
+    size: 'cover',
+    position: 'center',
+    repeat: 'no-repeat'
+  },
+  'burgundy-amber-night': {
+    image: '/backgrounds/linen.png',
+    fallbackColor: '#2b0f0b',
+    overlay: 'linear-gradient(135deg, #2b0f0b 0%, #4c1d15 60%, #38120b 100%)',
+    size: 'cover',
+    position: 'center',
+    repeat: 'no-repeat'
   }
 };
 
@@ -241,6 +257,16 @@ export const animationPresetRegistry: Record<string, AnimationPreset> = {
     sizeRange: [2, 5],
     reducedMotionFallback: false
   },
+  'starfield': {
+    id: 'starfield',
+    name: '✨ Gece Yıldızları & Parıltı',
+    particleCount: 55,
+    mobileParticleCount: 22,
+    speed: 0.8,
+    opacity: 0.95,
+    sizeRange: [2, 4],
+    reducedMotionFallback: false
+  },
   'snowFall': {
     id: 'snowFall',
     name: '❄️ Kar Taneleri',
@@ -270,6 +296,18 @@ export const sealPresetRegistry: Record<string, SealPreset> = {
     name: 'Altın Baş Harfli Mühür',
     defaultColor: '#dfb76c',
     styleClass: 'seal-gold-monogram'
+  },
+  'silver-monogram': {
+    id: 'silver-monogram',
+    name: 'Gümüş Metalik Baş Harfli Mühür',
+    defaultColor: '#d8dce0',
+    styleClass: 'seal-silver-monogram'
+  },
+  'amber-monogram': {
+    id: 'amber-monogram',
+    name: 'Sıcak Amber & Varak Mühür',
+    defaultColor: '#c98a3e',
+    styleClass: 'seal-amber-monogram'
   },
   'rose-gold': {
     id: 'rose-gold',
