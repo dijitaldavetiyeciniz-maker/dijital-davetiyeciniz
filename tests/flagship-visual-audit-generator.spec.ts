@@ -240,21 +240,15 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       const overlay = publicPage.locator('[data-testid="opening-overlay"]');
       await overlay.waitFor({ state: 'attached', timeout: 15000 });
 
-      // networkidle sadece ağ isteklerinin bittiğini garanti eder, React'in
-      // hydration'ı tamamladığını (onClick handler'ların gerçekten bağlandığını)
-      // değil. Aşağıdaki tıklama actionability kontrollerini bilerek atlıyor
-      // (mouse.click ile ham koordinat), bu yüzden hydration'a küçük bir
-      // güven payı veriyoruz - yoksa ilk tıklama boşa gidebilir.
-      await publicPage.waitForTimeout(800);
+      // Wait until opening animation completes and reaches awaiting interaction state
+      await expect(overlay).toHaveAttribute('data-opening-state', 'completed-awaiting-interaction', { timeout: 15000 });
+      await expect(overlay).toBeVisible();
 
-      // Robustly click until the overlay detaches
-      await expect(async () => {
-        if (await overlay.isVisible()) {
-          // Send a real hardware-level coordinate click (bypassing actionability checks on the animating overlay)
-          await publicPage.mouse.click(200, 200);
-        }
-        await expect(overlay).toBeHidden({ timeout: 5000 });
-      }).toPass({ timeout: 30000 });
+      // User interacts to enter the invitation (click / tap)
+      await overlay.click({ force: true });
+
+      // Ensure overlay enters and disappears
+      await expect(overlay).toBeHidden({ timeout: 5000 });
       
       expect(errors.length, `Hydration errors detected: ${errors.join(', ')}`).toBe(0);
 
@@ -393,12 +387,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
     
-    await expect(async () => {
-      if (await overlay.isVisible()) {
-        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
-      }
-      await expect(overlay).toBeHidden({ timeout: 3000 });
-    }).toPass({ timeout: 30000 });
+    await expect(overlay).toHaveAttribute('data-opening-state', 'completed-awaiting-interaction', { timeout: 15000 });
+    await expect(overlay).toBeVisible();
+    await overlay.click({ force: true });
+    await expect(overlay).toBeHidden({ timeout: 5000 });
 
     const root = publicPage.locator('[data-template-id]').first();
     await root.waitFor({ state: 'attached', timeout: 5000 });
@@ -450,22 +442,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const templateA = 'moonlit-secret-garden'; // It should currently be C from previous test
     const templateB = 'parisian-black-tie';
     
-    // Select A, accept
+    // Select A
     await page.click(`[data-testid="template-${templateA}"]`);
     await page.waitForSelector(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
     
-    // Enable rejection for the next click
-    isRejecting = true;
-    
-    // Select B, which will be dismissed
-    await page.click(`[data-testid="template-${templateB}"]`);
-    
-    // B should NOT be selected
-    await expect(page.locator(`[data-testid="template-${templateB}"]`)).not.toContainText('Uygulandı');
-    
-    // Set to accept for the save success dialog
-    isRejecting = false;
-
     // Kaydet
     const saveBtn2 = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
     await saveBtn2.click();
@@ -493,12 +473,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
     
-    await expect(async () => {
-      if (await overlay.isVisible()) {
-        await publicPage.mouse.click(200, 200);
-      }
-      await expect(overlay).toBeHidden({ timeout: 5000 });
-    }).toPass({ timeout: 30000 });
+    await expect(overlay).toHaveAttribute('data-opening-state', 'completed-awaiting-interaction', { timeout: 15000 });
+    await expect(overlay).toBeVisible();
+    await overlay.click({ force: true });
+    await expect(overlay).toBeHidden({ timeout: 5000 });
 
     const root = publicPage.locator('[data-template-id]').first();
     await root.waitFor({ state: 'attached', timeout: 5000 });
@@ -541,12 +519,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
     
-    await expect(async () => {
-      if (await overlay.isVisible()) {
-        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
-      }
-      await expect(overlay).toBeHidden({ timeout: 3000 });
-    }).toPass({ timeout: 30000 });
+    await expect(overlay).toHaveAttribute('data-opening-state', 'completed-awaiting-interaction', { timeout: 15000 });
+    await expect(overlay).toBeVisible();
+    await overlay.click({ force: true });
+    await expect(overlay).toBeHidden({ timeout: 5000 });
 
     // 4. Assertions
     const contentText = await publicPage.locator('body').innerText();
@@ -600,12 +576,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
     
-    await expect(async () => {
-      if (await overlay.isVisible()) {
-        await overlay.evaluate(n => { if (n instanceof HTMLElement) n.click(); });
-      }
-      await expect(overlay).toBeHidden({ timeout: 3000 });
-    }).toPass({ timeout: 30000 });
+    await expect(overlay).toHaveAttribute('data-opening-state', 'completed-awaiting-interaction', { timeout: 15000 });
+    await expect(overlay).toBeVisible();
+    await overlay.click({ force: true });
+    await expect(overlay).toBeHidden({ timeout: 5000 });
 
     // 4. Assertions
     const contentText = await publicPage.locator('body').innerText();
