@@ -182,10 +182,10 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setOtpSuccess('E-posta adresiniz başarıyla doğrulandı! Yönlendiriliyorsunuz...');
+        setOtpSuccess('E-posta adresiniz başarıyla doğrulandı! Kuruluma yönlendiriliyorsunuz...');
         setTimeout(() => {
-          router.push('/dashboard');
-        }, 1200);
+          router.push('/onboarding');
+        }, 1000);
       } else {
         setOtpError(data.error || 'Doğrulama kodu hatalı.');
       }
