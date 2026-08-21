@@ -154,16 +154,18 @@ export default function DashboardPage() {
   const handleDuplicate = async (wedding: any) => {
     if (!user) return;
     const newSlug = `${wedding.slug}-kopya-${generateRandomSuffix()}`;
-    const { id, created_at, updated_at, deleted_at, deleted_by, ...copyData } = wedding;
+    const { id, created_at, updated_at, deleted_at, deleted_by, title, ...copyData } = wedding;
 
     const newRecord = {
       ...copyData,
       user_id: user.id,
       slug: newSlug,
-      title: `${wedding.title || wedding.bride_name || 'Davetiye'} (Kopya)`,
       is_paid: false,
+      is_published: false,
+      published_snapshot: null,
+      has_unpublished_changes: false,
+      draft_revision: 1,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
     };
 
     const { error } = await supabase.from('weddings').insert(newRecord);

@@ -136,7 +136,6 @@ export default function OnboardingPage() {
       const baseDraft = {
         user_id: user.id,
         slug,
-        title: primaryName && secondaryName ? `${primaryName} & ${secondaryName}` : primaryName || 'Davetiyemiz',
         event_type: selectedEventType,
         bride_name: primaryName.trim(),
         groom_name: secondaryName.trim(),
@@ -144,6 +143,7 @@ export default function OnboardingPage() {
         venue_name: venueName.trim() || 'Belirtilmedi',
         venue_address: venueAddress.trim(),
         template_id: selectedTemplate,
+        admin_password: Math.random().toString(36).slice(-8) + 'Aa1!',
         is_paid: true, // Allow initial draft editing
         is_active: true,
         custom_overrides: {
@@ -151,34 +151,33 @@ export default function OnboardingPage() {
           has_unpublished_changes: false,
           draft_revision: 1
         },
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        draft_data: {
+          bride_name: primaryName.trim(),
+          groom_name: secondaryName.trim(),
+          wedding_date: combinedDateTime,
+          venue_name: venueName.trim() || 'Belirtilmedi',
+          venue_address: venueAddress.trim(),
+          template_id: selectedTemplate,
+          event_type: selectedEventType
+        },
+        is_published: false,
+        published_snapshot: null,
+        has_unpublished_changes: false,
+        draft_revision: 1,
+        created_at: new Date().toISOString()
       };
 
       let newWedding: any = null;
       const { data: fullData, error: fullError } = await supabase
         .from('weddings')
-        .insert([{
-          ...baseDraft,
-          is_published: false,
-          published_snapshot: null,
-          has_unpublished_changes: false,
-          draft_revision: 1
-        }])
+        .insert([baseDraft])
         .select()
         .single();
 
       if (fullError) {
-        const { data: fbData, error: fbError } = await supabase
-          .from('weddings')
-          .insert([baseDraft])
-          .select()
-          .single();
-        if (fbError) throw fbError;
-        newWedding = fbData;
-      } else {
-        newWedding = fullData;
+        throw fullError;
       }
+      newWedding = fullData;
 
       // 2. Mark onboarding completed in profile
       try {

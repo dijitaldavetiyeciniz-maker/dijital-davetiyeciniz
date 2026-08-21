@@ -75,4 +75,61 @@ test.describe('C8 — SECURE MEMBERSHIP & ONBOARDING SUITE', () => {
       await expect(finishBtn).toBeVisible();
     }
   });
+
+  test('5. Wedding draft creation adheres to canonical schema without nonexistent columns', async () => {
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+    if (supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      // Verify that canonical onboarding payload inserts without schema errors
+      const testSlug = `test-draft-${Date.now()}`;
+      const canonicalDraft = {
+        slug: testSlug,
+        event_type: 'wedding',
+        bride_name: 'Ayşe',
+        groom_name: 'Barış',
+        wedding_date: new Date().toISOString(),
+        venue_name: 'Test Salonu',
+        venue_address: 'İstanbul',
+        template_id: 'template1',
+        admin_password: 'TestPassword123!',
+        is_paid: true,
+        is_active: true,
+        custom_overrides: { is_published: false, has_unpublished_changes: false, draft_revision: 1 },
+        draft_data: { bride_name: 'Ayşe', groom_name: 'Barış', event_type: 'wedding' },
+        is_published: false,
+        published_snapshot: null,
+        has_unpublished_changes: false,
+        draft_revision: 1,
+        created_at: new Date().toISOString()
+      };
+
+      // Assert that inserting with 'title' column fails schema validation
+      const invalidPayload = { ...canonicalDraft, slug: `${testSlug}-bad`, title: 'Ayşe & Barış' };
+      const { error: invalidError } = await supabase.from('weddings').insert([invalidPayload]);
+      expect(invalidError).toBeDefined();
+      expect(invalidError?.message).toContain("'title' column");
+
+      // Assert that inserting canonical payload succeeds without schema errors
+      const { data, error: validError } = await supabase
+        .from('weddings')
+        .insert([canonicalDraft])
+        .select('id, slug, is_published, published_snapshot, draft_revision')
+        .single();
+
+      expect(validError).toBeNull();
+      expect(data).toBeDefined();
+      expect(data?.is_published).toBe(false);
+      expect(data?.published_snapshot).toBeNull();
+      expect(data?.draft_revision).toBe(1);
+
+      // Clean up test row
+      if (data?.id) {
+        await supabase.from('weddings').delete().eq('id', data.id);
+      }
+    }
+  });
 });

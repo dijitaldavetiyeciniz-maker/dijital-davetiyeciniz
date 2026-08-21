@@ -66,7 +66,10 @@ export async function GET(req: Request) {
 
     const totalCount = list.length;
     const startIndex = (page - 1) * limit;
-    const paginated = list.slice(startIndex, startIndex + limit);
+    const paginated = list.slice(startIndex, startIndex + limit).map(w => ({
+      ...w,
+      title: w.bride_name && w.groom_name ? `${w.bride_name} & ${w.groom_name}` : (w.bride_name || w.slug || 'Davetiye')
+    }));
 
     return NextResponse.json({
       success: true,
