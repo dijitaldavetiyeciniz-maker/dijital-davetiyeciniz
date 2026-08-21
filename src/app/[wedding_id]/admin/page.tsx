@@ -1470,6 +1470,7 @@ export default function CoupleAdminPage({
                 return (
                   <button
                     key={step}
+                    data-testid={`admin-nav-${step}`}
                     onClick={() => setActiveTab(step as any)}
                     className={`flex items-center gap-3 p-3 rounded-xl border text-xs font-bold cursor-pointer w-full ${isActive ? 'bg-rose-50/50 border-rose-200 text-rose-600' : 'bg-transparent border-transparent hover:bg-slate-50 text-slate-600'}`}
                   >

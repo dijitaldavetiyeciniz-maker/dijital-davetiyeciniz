@@ -134,7 +134,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
       // Login or Dashboard step
       const pwdInput = page.locator('input[type="password"]');
-      const studioBtn = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
+      const studioBtn = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
       
       // Wait for either login input or the studio button
       await Promise.any([
@@ -211,7 +211,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       const pwdInputAfterReload = page.locator('input[type="password"]');
       expect(await pwdInputAfterReload.isVisible(), 'Session was lost on reload!').toBe(false);
 
-      const studioBtnReload = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
+      const studioBtnReload = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
       await Promise.any([
         studioBtnReload.waitFor({ state: 'visible', timeout: 15000 })
       ]).catch(() => {});
@@ -333,7 +333,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await page.waitForLoadState('networkidle');
 
     const pwdInput = page.locator('input[type="password"]');
-    const studioBtn = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
+    const studioBtn = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
     
     await Promise.any([
       pwdInput.waitFor({ state: 'visible', timeout: 15000 }),
@@ -378,7 +378,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await page.reload();
     await page.waitForLoadState('networkidle');
-    const studioBtnReload1 = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
+    const studioBtnReload1 = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
     await studioBtnReload1.click();
     const subtab1Reload = page.locator('button:has-text("Şablon & Tema")');
     if (await subtab1Reload.isVisible()) await subtab1Reload.click();
@@ -430,7 +430,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await page.waitForLoadState('networkidle');
 
     const pwdInput = page.locator('input[type="password"]');
-    const studioBtn = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
+    const studioBtn = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
     
     await Promise.any([
       pwdInput.waitFor({ state: 'visible', timeout: 15000 }),
@@ -478,7 +478,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await page.reload();
     await page.waitForLoadState('networkidle');
-    const studioBtnReload2 = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
+    const studioBtnReload2 = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
     await studioBtnReload2.click();
     const subtab2Reload = page.locator('button:has-text("Şablon & Tema")');
     if (await subtab2Reload.isVisible()) await subtab2Reload.click();
