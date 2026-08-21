@@ -13,10 +13,7 @@ import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingA
 import { envelopeStyles } from '@/data/envelopeStyles';
 import { sealStyles } from '@/data/sealStyles';
 import { getInitials } from '@/utils/getInitials';
-import GuestManagementTab from '@/components/admin/guests/GuestManagementTab';
-import CheckInTab from '@/components/admin/checkin/CheckInTab';
 import EventsTab from '@/components/admin/events/EventsTab';
-import SeatingTab from '@/components/admin/seating/SeatingTab';
 import EventsTimeline from '@/components/invitation/EventsTimeline';
 import { getEventJourneyConfig } from '@/data/eventJourneyConfig';
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dijital-davetiyeciniz.vercel.app';
@@ -256,13 +253,9 @@ export default function CoupleAdminPage({
   const [hasAgeLimit, setHasAgeLimit] = useState<'yes' | 'no'>('no');
   const [ageLimitNote, setAgeLimitNote] = useState('');
   const [hasAfterParty, setHasAfterParty] = useState<'yes' | 'no'>('no');
-  const [showResumeBanner, setShowResumeBanner] = useState(true);
-  // Misafir Yönetimi sekmesi çok genişlediği için Program/Oturma Planı/QR
-  // Check-in artık ayrı üst sekmeler değil, "Misafir Yönetimi" altında
-  // alt sekmeler.
-  const [guestSubTab, setGuestSubTab] = useState<'list' | 'events' | 'seating' | 'checkin'>('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'attending' | 'not-attending'>('all');
+  const [showResumeBanner, setShowResumeBanner] = useState(true);
   const [previewKey, setPreviewKey] = useState(Date.now()); // iframe yenilemek için
   
   // Tasarım Stüdyosu State
@@ -1432,9 +1425,7 @@ export default function CoupleAdminPage({
     special: 'Özel İçerikler',
     preview: 'Önizleme',
     share: 'Paylaşım',
-    settings: 'Ayarlar',
-    rsvps: 'Gelen Yanıtlar (LCV)',
-    guests: 'Misafir Yönetimi'
+    settings: 'Ayarlar'
   };
 
   return (
@@ -1998,17 +1989,6 @@ export default function CoupleAdminPage({
                   ))}
                 </tbody>
               </table>
-            </div>
-          )}
-
-          {activeTab === 'guests' && (
-            <div className="bg-white p-6 rounded-2xl border text-left">
-              <div className="flex border-b mb-3 gap-2">
-                <button onClick={() => setGuestSubTab('list')} className={`pb-2 text-xs font-bold ${guestSubTab === 'list' ? 'border-b-2 border-rose-500' : ''}`}>Davetliler</button>
-                <button onClick={() => setGuestSubTab('events')} className={`pb-2 text-xs font-bold ${guestSubTab === 'events' ? 'border-b-2 border-rose-500' : ''}`}>Program</button>
-              </div>
-              {guestSubTab === 'list' && <GuestManagementTab weddingId={wedding.id} />}
-              {guestSubTab === 'events' && <EventsTab weddingId={wedding.id} />}
             </div>
           )}
 
