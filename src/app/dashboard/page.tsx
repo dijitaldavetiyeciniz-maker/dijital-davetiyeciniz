@@ -292,9 +292,10 @@ export default function DashboardPage() {
                 <Sparkles className="w-10 h-10 text-rose-500" />
               </div>
               <h2 className="text-2xl font-bold text-white mb-3 font-serif">Henüz aktif davetiyeniz yok</h2>
-              <p className="text-slate-400 mb-8 max-w-md mx-auto text-sm">Hemen yeni bir tasarım seçerek davetiyenizi oluşturun.</p>
-              <Link href="/olustur" className="bg-white text-[#0a0a12] px-6 py-3 rounded-xl font-bold hover:bg-slate-200 transition-colors inline-block text-sm">
-                Yeni Davetiye Oluştur
+              <p className="text-slate-400 mb-8 max-w-md mx-auto text-sm">Hemen kurulum sihirbazını başlatarak ilk davetiyenizi oluşturun.</p>
+              <Link href="/onboarding" className="bg-gradient-to-r from-rose-500 via-pink-600 to-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold hover:opacity-95 transition-opacity inline-flex items-center gap-2 text-sm shadow-xl shadow-rose-500/25">
+                <Sparkles className="w-4 h-4" />
+                <span>İlk Davetiyeni Oluştur</span>
               </Link>
             </div>
           ) : (
@@ -302,14 +303,21 @@ export default function DashboardPage() {
               {weddings.map(wedding => {
                 const eventConfig = eventTypeConfigs[wedding.event_type] || eventTypeConfigs.wedding;
                 const displayName = wedding.bride_name || wedding.primary_subject_name || 'Davetiye';
+                const isPub = wedding.is_published === true || (wedding.is_paid && wedding.is_published !== false);
 
                 return (
                   <div key={wedding.id} className="bg-white/5 backdrop-blur-xl rounded-3xl p-6 border border-white/10 shadow-2xl hover:border-rose-500/40 transition-all flex flex-col justify-between group relative">
                     <div>
                       {/* Top Badges */}
                       <div className="flex justify-between items-center mb-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${wedding.is_paid ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
-                          {wedding.is_paid ? 'Yayında' : 'Ödeme Bekliyor'}
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                          isPub && !wedding.has_unpublished_changes 
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                            : isPub && wedding.has_unpublished_changes
+                            ? 'bg-amber-500/10 text-amber-300 border-amber-500/20'
+                            : 'bg-slate-500/10 text-slate-300 border-slate-500/20'
+                        }`}>
+                          {isPub ? (wedding.has_unpublished_changes ? 'Yayınlanmamış Değişiklikler' : 'Yayında') : 'Taslak'}
                         </span>
                         <span className="text-[11px] text-slate-400 font-mono bg-white/5 px-2.5 py-1 rounded-lg">
                           /{wedding.slug}
