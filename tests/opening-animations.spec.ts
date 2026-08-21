@@ -116,7 +116,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
     const audioCalls = await page.evaluate(() => (window as any).__audioPlayCalls);
     expect(audioCalls).toBeLessThanOrEqual(1); // 1 if music is enabled for this template, 0 if not
 
-    await expect(page.locator("text=Long Corporate Name Co")).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Long Corporate Name Co', exact: true })).toBeVisible();
     await page.screenshot({ path: "test-results/opening-parisian-opened.png" });
   });
 
