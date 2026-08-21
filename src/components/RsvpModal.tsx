@@ -12,6 +12,8 @@ interface RsvpModalProps {
   brideName?: string;
   groomName?: string;
   mode?: 'preview' | 'public';
+  events?: Array<{ id: string; title: string }>;
+  initialEventId?: string;
 }
 
 export default function RsvpModal({ 
@@ -21,7 +23,9 @@ export default function RsvpModal({
   primaryColor = '#f43f5e',
   brideName = 'Gelin',
   groomName = 'Damat',
-  mode = 'public'
+  mode = 'public',
+  events = [],
+  initialEventId
 }: RsvpModalProps) {
   const [guestName, setGuestName] = useState('');
   const [isAttending, setIsAttending] = useState<boolean | null>(null);
@@ -31,12 +35,40 @@ export default function RsvpModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  // Multi-event selections: eventId -> isSelected
+  const [selectedEvents, setSelectedEvents] = useState<Record<string, boolean>>(() => {
+    if (!events || events.length === 0) return {};
+    const initial: Record<string, boolean> = {};
+    events.forEach(ev => {
+      initial[ev.id || ev.title] = initialEventId ? (ev.id === initialEventId || ev.title === initialEventId) : true;
+    });
+    return initial;
+  });
+
+  // Multi-event guest counts: eventId -> count
+  const [eventGuestCounts, setEventGuestCounts] = useState<Record<string, number>>(() => {
+    if (!events || events.length === 0) return {};
+    const initial: Record<string, number> = {};
+    events.forEach(ev => {
+      initial[ev.id || ev.title] = 1;
+    });
+    return initial;
+  });
+
   if (!isOpen) return null;
+
+  const hasMultipleEvents = events && events.length > 1;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (isAttending === null) return alert("Lütfen katılım durumunuzu seçin.");
     
+    // Check if at least one event selected if multi-event and attending
+    if (isAttending && hasMultipleEvents) {
+      const anySelected = Object.values(selectedEvents).some(Boolean);
+      if (!anySelected) return alert("Lütfen katılacağınız en az bir etkinlik seçiniz.");
+    }
+
     if (mode === 'preview') {
       setIsSubmitting(true);
       setTimeout(() => {
@@ -51,14 +83,28 @@ export default function RsvpModal({
     }
     
     setIsSubmitting(true);
+
+    const chosenEvents = hasMultipleEvents
+      ? Object.entries(selectedEvents).filter(([_, sel]) => sel).map(([id]) => id)
+      : [];
+
+    const totalCount = hasMultipleEvents && isAttending
+      ? Math.max(...Object.values(eventGuestCounts), 1)
+      : (isAttending ? guestCount : 0);
+
     const { error } = await supabase.from('rsvps').insert([
       {
         wedding_id: weddingId,
         guest_name: guestName,
         is_attending: isAttending,
-        guest_count: isAttending ? guestCount : 0,
+        guest_count: totalCount,
         child_count: isAttending ? childCount : 0,
-        message: message
+        message: hasMultipleEvents && isAttending
+          ? `${message ? `${message}\n\n` : ''}Etkinlik Kırılımı: ${chosenEvents.map(eid => {
+              const evObj = events.find(e => (e.id || e.title) === eid);
+              return `${evObj?.title || eid} (${eventGuestCounts[eid] || 1} kişi)`;
+            }).join(', ')}`
+          : message
       }
     ]);
 
@@ -70,9 +116,11 @@ export default function RsvpModal({
         wedding_id: weddingId,
         guest_name: guestName,
         is_attending: isAttending,
-        guest_count: isAttending ? guestCount : 0,
+        guest_count: totalCount,
         child_count: isAttending ? childCount : 0,
-        message: message
+        message: message,
+        selected_events: chosenEvents,
+        event_counts: eventGuestCounts
       };
 
       // Telegram ve E-posta bildirimlerini paralel gönder (hata olsa bile sessiz devam)
@@ -158,36 +206,106 @@ export default function RsvpModal({
               </div>
 
               {isAttending === true && (
-                <div className="grid grid-cols-2 gap-4 animate-in slide-in-from-top-2 fade-in duration-200">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Yetişkin Sayısı</label>
-                    <select 
-                      value={guestCount} 
-                      onChange={e => setGuestCount(Number(e.target.value))}
-                      className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none"
-                    >
-                      <option value={1}>1 Yetişkin</option>
-                      <option value={2}>2 Yetişkin</option>
-                      <option value={3}>3 Yetişkin</option>
-                      <option value={4}>4 Yetişkin</option>
-                      <option value={5}>5 Yetişkin +</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Çocuk Sayısı</label>
-                    <select 
-                      value={childCount} 
-                      onChange={e => setChildCount(Number(e.target.value))}
-                      className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none"
-                    >
-                      <option value={0}>Çocuk Yok</option>
-                      <option value={1}>1 Çocuk</option>
-                      <option value={2}>2 Çocuk</option>
-                      <option value={3}>3 Çocuk</option>
-                      <option value={4}>4 Çocuk</option>
-                    </select>
-                  </div>
-                </div>
+                <>
+                  {hasMultipleEvents ? (
+                    <div className="space-y-4 animate-in slide-in-from-top-2 fade-in duration-200 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                      <div className="flex items-center justify-between">
+                        <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">
+                          Katılacağınız Etkinlikler
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const allSel: Record<string, boolean> = {};
+                            events.forEach(e => { allSel[e.id || e.title] = true; });
+                            setSelectedEvents(allSel);
+                          }}
+                          className="text-[11px] font-bold text-rose-600 hover:underline"
+                        >
+                          Tümünü Seç
+                        </button>
+                      </div>
+
+                      <div className="space-y-2">
+                        {events.map((ev, idx) => {
+                          const evKey = ev.id || ev.title;
+                          const isSel = !!selectedEvents[evKey];
+                          return (
+                            <div 
+                              key={evKey || idx}
+                              className={`p-3 rounded-xl border transition-all ${
+                                isSel ? 'bg-white border-rose-400 shadow-xs' : 'bg-slate-100/60 border-slate-200 opacity-60'
+                              }`}
+                            >
+                              <label className="flex items-center justify-between cursor-pointer">
+                                <span className="text-sm font-semibold text-slate-800">{ev.title}</span>
+                                <input
+                                  type="checkbox"
+                                  checked={isSel}
+                                  onChange={(e) => setSelectedEvents(prev => ({ ...prev, [evKey]: e.target.checked }))}
+                                  className="w-4 h-4 text-rose-600 rounded-md focus:ring-rose-500"
+                                />
+                              </label>
+
+                              {isSel && (
+                                <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
+                                  <span className="text-xs text-slate-500 font-medium">Kişi Sayısı:</span>
+                                  <div className="flex items-center gap-2">
+                                    {[1, 2, 3, 4, 5].map((cnt) => (
+                                      <button
+                                        key={cnt}
+                                        type="button"
+                                        onClick={() => setEventGuestCounts(prev => ({ ...prev, [evKey]: cnt }))}
+                                        className={`w-7 h-7 rounded-lg text-xs font-bold transition ${
+                                          (eventGuestCounts[evKey] || 1) === cnt
+                                            ? 'bg-rose-600 text-white shadow-xs'
+                                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                        }`}
+                                      >
+                                        {cnt}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-4 animate-in slide-in-from-top-2 fade-in duration-200">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Yetişkin Sayısı</label>
+                        <select 
+                          value={guestCount} 
+                          onChange={e => setGuestCount(Number(e.target.value))}
+                          className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none"
+                        >
+                          <option value={1}>1 Yetişkin</option>
+                          <option value={2}>2 Yetişkin</option>
+                          <option value={3}>3 Yetişkin</option>
+                          <option value={4}>4 Yetişkin</option>
+                          <option value={5}>5 Yetişkin +</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Çocuk Sayısı</label>
+                        <select 
+                          value={childCount} 
+                          onChange={e => setChildCount(Number(e.target.value))}
+                          className="w-full border border-slate-200 rounded-xl p-4 bg-slate-50 text-slate-900 focus:outline-none"
+                        >
+                          <option value={0}>Çocuk Yok</option>
+                          <option value={1}>1 Çocuk</option>
+                          <option value={2}>2 Çocuk</option>
+                          <option value={3}>3 Çocuk</option>
+                          <option value={4}>4 Çocuk</option>
+                        </select>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
 
               <div>

@@ -13,6 +13,18 @@ export interface EntranceDesignPreset {
 
 export const entranceAnimations: EntranceDesignPreset[] = [
   {
+    id: "wax-seal-starfield",
+    name: "Yıldızlı Gece & Wax Mühür Açılışı",
+    description: "Karanlık yıldızlı gökyüzü, metalik organik wax mühür, 3D kapak açılışı ve yükselen ışık parçacıkları.",
+    category: "Zarf",
+    premium: true,
+    animationType: "wax-seal-starfield",
+    envelopeStyle: "luxury-gold-border",
+    sealStyle: "silver",
+    backgroundAnimation: "stars",
+    sealInsignia: "monogram"
+  },
+  {
     id: "royal-gold-envelope",
     name: "Kraliyet Altın Zarfı",
     description: "Krem renkli kadife zarf, altın varaklı kraliyet mühürü ve altın parıltılı arka plan geçişi.",

@@ -77,11 +77,13 @@ export default function Envelope({
   const [isShattered, setIsShattered] = useState(false);
   // Royal Seal Premium phase states (0=waiting, 1=seal glow, 2=ribbon untie, 3=flap open, 4=card rise, 5=names appear)
   const [royalPhase, setRoyalPhase] = useState(0);
+  const [waxStarfieldPhase, setWaxStarfieldPhase] = useState(0);
 
   // 50 Farklı Giriş Animasyonu Preset Tanımları
   const getEntrancePreset = (type: string) => {
     switch (type) {
       // 1. KRALİYET & LÜKS (9 Çeşit)
+      case 'wax-seal-starfield': return { category: 'royal', seal: 'monogram', motion: 'wax-seal-starfield', bg: 'stars', paper: '#0d1626' };
       case 'royal-seal-premium': return { category: 'royal', seal: 'crown', motion: 'royal-cinematic', bg: 'gold-dust', paper: '#1a1208' };
       case 'embossed-envelope': return { category: 'royal', seal: 'monogram', motion: 'envelope-open', bg: 'none', paper: '#fcfbf7' };
       case 'gold-foil-pocket': return { category: 'royal', seal: 'royal-crest', motion: 'slide-up-pocket', bg: 'gold-dust', paper: '#111111' };
@@ -171,6 +173,15 @@ export default function Envelope({
     } else if (preset.motion === 'glass-break' || entranceType === 'glass-shatter') {
       setIsShattered(true);
       delay = 1000;
+    } else if (preset.motion === 'wax-seal-starfield' || entranceType === 'wax-seal-starfield') {
+      setWaxStarfieldPhase(1); // Seal crack & scale down
+      setTimeout(() => setWaxStarfieldPhase(2), 250); // 3D flap opens + card rises
+      setTimeout(() => setWaxStarfieldPhase(3), 500); // Glow & upward floating particles burst
+      setTimeout(() => {
+        setWaxStarfieldPhase(4);
+        setIsOpened(true);
+      }, 700);
+      delay = 750;
     } else if (preset.motion === 'royal-cinematic' || entranceType === 'royal-seal-premium') {
       setRoyalPhase(1);
       setTimeout(() => setRoyalPhase(2), 1500);
@@ -1339,6 +1350,288 @@ export default function Envelope({
     );
   };
 
+  const renderWaxSealStarfield = () => {
+    const isBurgundy = envelopeBgColor?.includes('burgundy') || sealType === 'burgundy' || sealType === 'amber-monogram' || sealType === 'amber';
+    const sceneBg = isBurgundy
+      ? 'radial-gradient(ellipse at center, #38120b 0%, #2b0f0b 60%, #170705 100%)'
+      : 'radial-gradient(ellipse at center, #16233b 0%, #0d1626 65%, #050a12 100%)';
+    const envBodyColor = isBurgundy ? '#240d09' : '#0e1728';
+    const envFlapBgColor = isBurgundy ? '#2e100c' : '#142036';
+    const envBorderColor = isBurgundy ? 'rgba(201,138,62,0.45)' : 'rgba(216,220,224,0.45)';
+    const cardBgColor = '#f7f3e8'; // Ivory high-contrast card
+    const cardBorderColor = isBurgundy ? '#c98a3e' : '#a9aeb4';
+
+    // 48 Twinkling Stars
+    const STAR_DATA = [
+      { x: 10, y: 12, s: 2, delay: 0.1, dur: 3.2 },
+      { x: 22, y: 8, s: 3, delay: 1.0, dur: 4.0 },
+      { x: 34, y: 18, s: 1.5, delay: 0.4, dur: 2.8 },
+      { x: 48, y: 10, s: 2.5, delay: 1.7, dur: 3.5 },
+      { x: 62, y: 15, s: 2, delay: 0.8, dur: 4.2 },
+      { x: 76, y: 7, s: 3, delay: 2.0, dur: 3.0 },
+      { x: 88, y: 20, s: 1.5, delay: 0.3, dur: 2.6 },
+      { x: 6, y: 32, s: 2.5, delay: 1.3, dur: 3.8 },
+      { x: 16, y: 45, s: 1.5, delay: 0.6, dur: 4.5 },
+      { x: 84, y: 38, s: 3, delay: 2.2, dur: 3.3 },
+      { x: 94, y: 50, s: 2, delay: 0.9, dur: 2.9 },
+      { x: 12, y: 65, s: 2.5, delay: 0.2, dur: 3.6 },
+      { x: 20, y: 78, s: 1.5, delay: 1.5, dur: 4.1 },
+      { x: 32, y: 88, s: 3, delay: 0.7, dur: 3.4 },
+      { x: 46, y: 82, s: 2, delay: 1.9, dur: 2.7 },
+      { x: 60, y: 86, s: 2.5, delay: 1.1, dur: 3.9 },
+      { x: 74, y: 75, s: 1.5, delay: 0.5, dur: 4.3 },
+      { x: 86, y: 84, s: 2.5, delay: 1.8, dur: 3.1 },
+      { x: 3, y: 16, s: 1.5, delay: 2.3, dur: 3.7 },
+      { x: 42, y: 5, s: 2, delay: 0.1, dur: 4.4 },
+      { x: 56, y: 25, s: 1.5, delay: 1.4, dur: 2.5 },
+      { x: 70, y: 35, s: 2.5, delay: 0.7, dur: 3.6 },
+      { x: 28, y: 56, s: 3, delay: 2.1, dur: 4.0 },
+      { x: 66, y: 58, s: 2, delay: 1.2, dur: 3.2 }
+    ];
+
+    // Light particles süzülen parçacıklar (phase 3+)
+    const PARTICLES = Array.from({ length: 16 }, (_, i) => ({
+      id: i,
+      x: (i * 13) % 80 - 40,
+      y: (i * 17) % 60 - 30,
+      delay: (i * 0.08).toFixed(2),
+      size: 2 + (i % 3)
+    }));
+
+    return (
+      <div 
+        className="fixed inset-0 w-full h-full flex items-center justify-center overflow-hidden z-50 select-none cursor-pointer"
+        style={{ background: sceneBg }}
+        onClick={handleOpen}
+        role="button"
+        tabIndex={0}
+        aria-label="Özel Gece Davetiyesini Açmak İçin Dokunun"
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleOpen(); } }}
+      >
+        {/* 1. Starfield background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {STAR_DATA.map((star, idx) => (
+            <div
+              key={idx}
+              className="absolute rounded-full"
+              style={{
+                left: `${star.x}%`,
+                top: `${star.y}%`,
+                width: `${star.s}px`,
+                height: `${star.s}px`,
+                backgroundColor: isBurgundy ? '#f5e6d8' : '#f2f4f6',
+                boxShadow: `0 0 ${star.s * 2}px ${isBurgundy ? 'rgba(245,230,216,0.9)' : 'rgba(242,244,246,0.9)'}`,
+                animation: `twinkle ${star.dur}s ease-in-out infinite`,
+                animationDelay: `${star.delay}s`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* 2. Main Envelope Structure with 3D Perspective */}
+        <motion.div
+          className="relative w-[320px] h-[220px] md:w-[460px] md:h-[310px] rounded-2xl shadow-2xl flex items-center justify-center"
+          style={{
+            perspective: 1200,
+            transformStyle: 'preserve-3d',
+            backgroundColor: envBodyColor,
+            border: `1px solid ${envBorderColor}`,
+            boxShadow: '0 30px 80px -15px rgba(0,0,0,0.85), 0 0 35px rgba(0,0,0,0.5)'
+          }}
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {/* Inner metallic perimeter border */}
+          <div 
+            className="absolute inset-2.5 rounded-xl border pointer-events-none z-10"
+            style={{ borderColor: envBorderColor, opacity: 0.55 }}
+          />
+
+          {/* 3. Rising Inside Invitation Card (Ivory) */}
+          <motion.div
+            className="absolute inset-4 rounded-xl flex flex-col items-center justify-between p-6 text-center z-15 shadow-md"
+            style={{
+              backgroundColor: cardBgColor,
+              border: `1px solid ${cardBorderColor}`,
+              color: '#1e293b'
+            }}
+            initial={{ y: 0, opacity: 0.8 }}
+            animate={waxStarfieldPhase >= 2 ? { y: -90, scale: 1.05, opacity: 1 } : { y: 0, opacity: 0.8 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="w-full flex justify-between items-center px-2 opacity-50">
+              <span className="text-[8px] tracking-[0.25em] font-serif uppercase">Özel Davetiye</span>
+              <span className="text-[8px] tracking-[0.25em] font-serif uppercase">★</span>
+            </div>
+
+            <div className="my-auto">
+              <div 
+                className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-slate-800 text-lg md:text-2xl font-serif"
+                style={{ fontFamily: '"Great Vibes", cursive, serif' }}
+              >
+                <span className="text-right truncate">{brideName || 'Gelin'}</span>
+                <span className="text-sm font-sans text-amber-700/60 px-1">&</span>
+                <span className="text-left truncate">{groomName || 'Damat'}</span>
+              </div>
+              <div className="w-16 h-px mx-auto my-2 opacity-30" style={{ backgroundColor: cardBorderColor }} />
+              <p className="text-[10px] tracking-widest text-slate-500 uppercase font-serif">
+                {displayTitle || 'Düğün Töreni'}
+              </p>
+            </div>
+
+            <div className="text-[8px] tracking-[0.2em] text-slate-400 uppercase">
+              Dijital Davetiye
+            </div>
+          </motion.div>
+
+          {/* 4. Left & Right Envelope Pockets */}
+          <div 
+            className="absolute inset-0 z-20 pointer-events-none rounded-2xl overflow-hidden"
+            style={{
+              clipPath: 'polygon(0 0, 50% 50%, 0 100%)',
+              backgroundColor: envBodyColor,
+              backgroundImage: 'linear-gradient(to right, rgba(0,0,0,0.3), rgba(255,255,255,0.03))'
+            }}
+          />
+          <div 
+            className="absolute inset-0 z-20 pointer-events-none rounded-2xl overflow-hidden"
+            style={{
+              clipPath: 'polygon(100% 0, 50% 50%, 100% 100%)',
+              backgroundColor: envBodyColor,
+              backgroundImage: 'linear-gradient(to left, rgba(0,0,0,0.3), rgba(255,255,255,0.03))'
+            }}
+          />
+
+          {/* 5. Bottom Envelope Fold */}
+          <div 
+            className="absolute inset-0 z-25 pointer-events-none rounded-2xl overflow-hidden"
+            style={{
+              clipPath: 'polygon(0 100%, 50% 50%, 100% 100%)',
+              backgroundColor: envBodyColor,
+              backgroundImage: 'linear-gradient(to top, rgba(0,0,0,0.4), rgba(255,255,255,0.05))',
+              boxShadow: '0 -4px 15px rgba(0,0,0,0.4)'
+            }}
+          />
+
+          {/* 6. Top Flap with 3D RotateX (180deg) */}
+          <motion.div
+            className="absolute top-0 left-0 right-0 h-1/2 z-30 origin-top rounded-t-2xl overflow-hidden pointer-events-none"
+            style={{
+              clipPath: 'polygon(0 0, 50% 100%, 100% 0)',
+              backgroundColor: envFlapBgColor,
+              backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.35) 100%)',
+              boxShadow: '0 8px 20px rgba(0,0,0,0.5)',
+              transformStyle: 'preserve-3d'
+            }}
+            animate={waxStarfieldPhase >= 2 ? { rotateX: 180, opacity: 0.1, zIndex: 10 } : { rotateX: 0, opacity: 1, zIndex: 30 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          />
+
+          {/* 7. Organic Wax Seal in Center */}
+          <AnimatePresence>
+            {waxStarfieldPhase === 0 && (
+              <motion.div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center cursor-pointer"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.6, opacity: 0, filter: 'blur(6px)' }}
+                transition={{ duration: 0.3 }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.94 }}
+              >
+                {/* Organic Multi-Point Wax Seal Container */}
+                <div 
+                  className="relative w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center shadow-2xl"
+                  style={{
+                    background: isBurgundy
+                      ? 'radial-gradient(circle at 35% 35%, #fce7c8 0%, #e5a958 35%, #c98a3e 70%, #78350f 100%)'
+                      : 'radial-gradient(circle at 35% 35%, #ffffff 0%, #d8dce0 35%, #a9aeb4 70%, #686c72 100%)',
+                    boxShadow: isBurgundy
+                      ? 'inset 0 0 12px rgba(255,255,255,0.7), 0 10px 30px rgba(0,0,0,0.8), 0 0 25px rgba(201,138,62,0.5)'
+                      : 'inset 0 0 12px rgba(255,255,255,0.8), 0 10px 30px rgba(0,0,0,0.8), 0 0 25px rgba(216,220,224,0.5)',
+                    border: '1.5px solid rgba(255,255,255,0.3)'
+                  }}
+                >
+                  {/* Rotating radial highlight */}
+                  <div 
+                    className="absolute inset-0 rounded-full opacity-60 pointer-events-none"
+                    style={{
+                      background: 'conic-gradient(from 0deg, transparent 0deg, rgba(255,255,255,0.8) 60deg, transparent 120deg)',
+                      animation: 'waxSealRotateGlow 6s linear infinite'
+                    }}
+                  />
+
+                  {/* Inner ring */}
+                  <div className="w-15 h-15 md:w-18 md:h-18 rounded-full border border-black/15 flex items-center justify-center">
+                    <span 
+                      className="font-serif font-bold text-sm md:text-base tracking-widest select-none"
+                      style={{
+                        color: isBurgundy ? '#3b140b' : '#1e293b',
+                        textShadow: isBurgundy 
+                          ? '0 1px 1px rgba(255,255,255,0.8), 0 -1px 1px rgba(0,0,0,0.5)' 
+                          : '0 1px 1px rgba(255,255,255,0.9), 0 -1px 1px rgba(0,0,0,0.6)'
+                      }}
+                    >
+                      {monogramText}
+                    </span>
+                  </div>
+
+                  {/* Outer organic irregular wax edge */}
+                  <div 
+                    className="absolute inset-0 -m-1 rounded-[45%_55%_48%_52%/_52%_46%_54%_48%] border-2 pointer-events-none opacity-70"
+                    style={{ borderColor: isBurgundy ? '#c98a3e' : '#d8dce0' }}
+                  />
+                </div>
+
+                <span 
+                  className="mt-3 text-[9px] font-bold tracking-[0.25em] uppercase"
+                  style={{ color: isBurgundy ? '#f5e6d8' : '#d8dce0' }}
+                >
+                  Açmak İçin Dokunun
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* 8. Light Particles Burst & Radial Glow (Phase 3+) */}
+          {waxStarfieldPhase >= 3 && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
+              <motion.div
+                className="absolute w-40 h-40 rounded-full"
+                style={{
+                  background: isBurgundy 
+                    ? 'radial-gradient(circle, rgba(201,138,62,0.9) 0%, rgba(201,138,62,0) 70%)'
+                    : 'radial-gradient(circle, rgba(216,220,224,0.9) 0%, rgba(216,220,224,0) 70%)'
+                }}
+                initial={{ scale: 0.4, opacity: 1 }}
+                animate={{ scale: 2.8, opacity: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+              />
+
+              {PARTICLES.map((p) => (
+                <div
+                  key={p.id}
+                  className="absolute rounded-full"
+                  style={{
+                    width: `${p.size}px`,
+                    height: `${p.size}px`,
+                    left: `calc(50% + ${p.x}px)`,
+                    top: `calc(50% + ${p.y}px)`,
+                    backgroundColor: isBurgundy ? '#fce7c8' : '#ffffff',
+                    boxShadow: `0 0 6px ${isBurgundy ? '#c98a3e' : '#d8dce0'}`,
+                    animation: 'floatingParticle 0.8s ease-out forwards',
+                    animationDelay: `${p.delay}s`
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </motion.div>
+      </div>
+    );
+  };
+
   const getSealIconForPreset = (seal: string) => {
     switch (seal) {
       case 'crown': return <Crown className="w-6 h-6 text-white/95 filter drop-shadow" />;
@@ -1632,6 +1925,9 @@ export default function Envelope({
       break;
     case 'glass-shatter':
       entranceComponent = renderGlassShatter();
+      break;
+    case 'wax-seal-starfield':
+      entranceComponent = renderWaxSealStarfield();
       break;
     case 'royal-seal-premium':
       entranceComponent = renderRoyalSealPremium();

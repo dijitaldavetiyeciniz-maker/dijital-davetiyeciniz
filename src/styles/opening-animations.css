@@ -594,6 +594,45 @@
   background: linear-gradient(135deg, #f6ead9 0%, #ead8bd 100%) !important;
   background-size: cover !important;
 }
+.bg-design-navy-silver-starlight {
+  background: linear-gradient(135deg, #0d1626 0%, #16233b 50%, #1f3a5f 100%) !important;
+  background-size: cover !important;
+}
+.bg-design-burgundy-amber-night {
+  background: linear-gradient(135deg, #2b0f0b 0%, #4c1d15 55%, #38120b 100%) !important;
+  background-size: cover !important;
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(0.75);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.3);
+  }
+}
+
+@keyframes waxSealRotateGlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes floatingParticle {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-130px) scale(1.4);
+    opacity: 0;
+  }
+}
 
 /* Gece Modu (Dark Mode) Global Ayarları */
 .invitation-page.dark-mode {
