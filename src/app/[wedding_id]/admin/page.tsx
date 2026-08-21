@@ -1778,11 +1778,13 @@ export default function CoupleAdminPage({
                     return (
                       <button
                         key={theme.id}
-                        onClick={() => { setTemplateId(theme.id); latestTemplateIdRef.current = theme.id; }}
+                        data-testid={`template-${theme.id}`}
+                        onClick={() => applyPreset(theme)}
                         className={`p-3 bg-white border rounded-xl text-left text-xs font-bold cursor-pointer transition ${isActive ? 'border-rose-500 shadow-sm ring-1 ring-rose-300' : 'border-slate-200'}`}
                       >
                         <div className="truncate">{theme.name}</div>
                         <div className="text-[9px] text-slate-400 font-medium capitalize mt-0.5">{theme.category || 'Premium'}</div>
+                        {isActive && <span className="text-[10px] text-rose-600 block mt-1 font-semibold">Uygulandı</span>}
                       </button>
                     );
                   })}
@@ -1806,6 +1808,7 @@ export default function CoupleAdminPage({
 
               <div className="flex justify-end gap-3 pt-4 border-t">
                 <button onClick={() => setActiveTab('events')} className="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold hover:bg-slate-200 cursor-pointer">Geri</button>
+                <button onClick={() => handleSave()} className="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold hover:bg-slate-200 cursor-pointer">Kaydet</button>
                 <button onClick={async () => { await handleSave(undefined, true); setActiveTab('content'); }} className="px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-bold hover:bg-rose-700 flex items-center gap-1 shadow-xs cursor-pointer">
                   <span>Devam</span>
                   <ArrowRight className="w-3.5 h-3.5" />

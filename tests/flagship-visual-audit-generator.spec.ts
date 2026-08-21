@@ -134,7 +134,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
       // Login or Dashboard step
       const pwdInput = page.locator('input[type="password"]');
-      const studioBtn = page.locator('button:has-text("Tasarım Stüdyosu")').first();
+      const studioBtn = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
       
       // Wait for either login input or the studio button
       await Promise.any([
@@ -152,8 +152,11 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       // Step 3: Şablonu gerçek portal kataloğundan seç
       await studioBtn.click();
       
-      // Click the 'Şablon & Tema' tab to reveal the gallery
-      await page.click('button:has-text("Şablon & Tema")');
+      // Click the 'Şablon & Tema' tab to reveal the gallery if present
+      const subtab = page.locator('button:has-text("Şablon & Tema")');
+      if (await subtab.isVisible()) {
+        await subtab.click();
+      }
       
       // Load more templates dynamically if the target template is paginated out of view
       let isVisible = false;
@@ -188,7 +191,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       await page.waitForSelector(`[data-testid="template-${tplId}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
       
       // Step 6: Save isteğini gerçekleştir
-      await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
+      const saveBtn = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
+      await saveBtn.click();
       
       // Wait for networkidle
       await page.waitForLoadState('networkidle');
@@ -207,7 +211,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       const pwdInputAfterReload = page.locator('input[type="password"]');
       expect(await pwdInputAfterReload.isVisible(), 'Session was lost on reload!').toBe(false);
 
-      const studioBtnReload = page.locator('button:has-text("Tasarım Stüdyosu")').first();
+      const studioBtnReload = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
       await Promise.any([
         studioBtnReload.waitFor({ state: 'visible', timeout: 15000 })
       ]).catch(() => {});
@@ -329,7 +333,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await page.waitForLoadState('networkidle');
 
     const pwdInput = page.locator('input[type="password"]');
-    const studioBtn = page.locator('button:has-text("Tasarım Stüdyosu")').first();
+    const studioBtn = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
     
     await Promise.any([
       pwdInput.waitFor({ state: 'visible', timeout: 15000 }),
@@ -343,7 +347,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
     await studioBtn.waitFor({ state: 'visible', timeout: 15000 });
     await studioBtn.click();
-    await page.click('button:has-text("Şablon & Tema")');
+    const subtab1 = page.locator('button:has-text("Şablon & Tema")');
+    if (await subtab1.isVisible()) await subtab1.click();
     
     const templateA = 'parisian-black-tie';
     const templateB = 'grand-opera-ballroom';
@@ -362,7 +367,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await page.waitForSelector(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
     
     // Beklemeden kaydet
-    await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
+    const saveBtn1 = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
+    await saveBtn1.click();
     await page.waitForLoadState('networkidle');
 
     await expect(async () => {
@@ -372,8 +378,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await page.reload();
     await page.waitForLoadState('networkidle');
-    await studioBtn.click();
-    await page.click('button:has-text("Şablon & Tema")');
+    const studioBtnReload1 = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
+    await studioBtnReload1.click();
+    const subtab1Reload = page.locator('button:has-text("Şablon & Tema")');
+    if (await subtab1Reload.isVisible()) await subtab1Reload.click();
     const selectedTemplate = page.locator(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`);
     await expect(selectedTemplate).toBeVisible();
 
@@ -422,7 +430,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await page.waitForLoadState('networkidle');
 
     const pwdInput = page.locator('input[type="password"]');
-    const studioBtn = page.locator('button:has-text("Tasarım Stüdyosu")').first();
+    const studioBtn = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
     
     await Promise.any([
       pwdInput.waitFor({ state: 'visible', timeout: 15000 }),
@@ -436,7 +444,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
     await studioBtn.waitFor({ state: 'visible', timeout: 15000 });
     await studioBtn.click();
-    await page.click('button:has-text("Şablon & Tema")');
+    const subtab2 = page.locator('button:has-text("Şablon & Tema")');
+    if (await subtab2.isVisible()) await subtab2.click();
     
     const templateA = 'moonlit-secret-garden'; // It should currently be C from previous test
     const templateB = 'parisian-black-tie';
@@ -451,8 +460,6 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     // Select B, which will be dismissed
     await page.click(`[data-testid="template-${templateB}"]`);
     
-    
-
     // B should NOT be selected
     await expect(page.locator(`[data-testid="template-${templateB}"]`)).not.toContainText('Uygulandı');
     
@@ -460,7 +467,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     isRejecting = false;
 
     // Kaydet
-    await page.click('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile")');
+    const saveBtn2 = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
+    await saveBtn2.click();
     await page.waitForLoadState('networkidle');
 
     await expect(async () => {
@@ -470,8 +478,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     await page.reload();
     await page.waitForLoadState('networkidle');
-    await studioBtn.click();
-    await page.click('button:has-text("Şablon & Tema")');
+    const studioBtnReload2 = page.locator('button:has-text("Tasarım"), button:has-text("Tasarım Stüdyosu")').first();
+    await studioBtnReload2.click();
+    const subtab2Reload = page.locator('button:has-text("Şablon & Tema")');
+    if (await subtab2Reload.isVisible()) await subtab2Reload.click();
     const selectedTemplate = page.locator(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`);
     await expect(selectedTemplate).toBeVisible();
 
