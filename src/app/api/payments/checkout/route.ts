@@ -67,18 +67,27 @@ export async function POST(request: Request) {
       targetUserId = '00000000-0000-0000-0000-000000000000';
     }
 
-    // 3. Resolve Price from Database Plans Table
-    let amount = TIER_PRICES_TRY[plan_tier] || TIER_PRICES_TRY.premium;
+    // 3. Resolve Price from Database Plans Table & Validate Active Plan
+    const validTiers = ['standard', 'premium', 'corporate'];
+    if (!plan_tier || !validTiers.includes(plan_tier)) {
+      return NextResponse.json({ error: 'Geçersiz veya aktif olmayan paket seçimi.' }, { status: 400 });
+    }
+
+    let amount = TIER_PRICES_TRY[plan_tier] ?? TIER_PRICES_TRY.premium;
     try {
       const { data: plan } = await supabase
         .from('plans')
-        .select('price')
+        .select('price, is_active')
         .eq('code', plan_tier)
-        .eq('is_active', true)
         .maybeSingle();
 
-      if (plan && plan.price !== undefined) {
-        amount = Number(plan.price);
+      if (plan) {
+        if (plan.is_active === false) {
+          return NextResponse.json({ error: 'Bu paket şu anda satışa kapalıdır.' }, { status: 400 });
+        }
+        if (plan.price !== undefined) {
+          amount = Number(plan.price);
+        }
       }
     } catch {}
 

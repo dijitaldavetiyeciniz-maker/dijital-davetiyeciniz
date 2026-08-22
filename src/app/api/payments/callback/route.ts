@@ -6,25 +6,25 @@ export async function GET(request: Request) {
   const payment_id = searchParams.get('payment_id');
 
   if (!payment_id) {
-    return NextResponse.redirect(new URL('/dashboard?error=missing_payment_id', request.url));
+    return NextResponse.redirect(new URL('/odeme/sonuc?status=failed&error=missing_payment_id', request.url));
   }
 
   // Server-to-server check of payment status (Never trust URL params)
   const { data: payment } = await supabase
     .from('payments')
-    .select('id, wedding_id, status')
+    .select('id, wedding_id, status, plans(name)')
     .eq('id', payment_id)
     .maybeSingle();
 
-  if (!payment || payment.status !== 'paid') {
-    return NextResponse.redirect(new URL(`/dashboard?status=pending_payment`, request.url));
+  const planName = (payment as any)?.plans?.name || 'Premium Paket';
+
+  if (!payment || payment.status === 'failed') {
+    return NextResponse.redirect(new URL(`/odeme/sonuc?payment_id=${payment_id}&status=failed`, request.url));
   }
 
-  const { data: wedding } = await supabase
-    .from('weddings')
-    .select('slug')
-    .eq('id', payment.wedding_id)
-    .maybeSingle();
+  if (payment.status === 'pending') {
+    return NextResponse.redirect(new URL(`/odeme/sonuc?payment_id=${payment_id}&status=pending&plan=${encodeURIComponent(planName)}`, request.url));
+  }
 
-  return NextResponse.redirect(new URL(`/${wedding?.slug || ''}?payment=success`, request.url));
+  return NextResponse.redirect(new URL(`/odeme/sonuc?payment_id=${payment_id}&status=paid&plan=${encodeURIComponent(planName)}`, request.url));
 }
