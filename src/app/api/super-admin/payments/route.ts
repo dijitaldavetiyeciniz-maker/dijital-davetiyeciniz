@@ -26,8 +26,43 @@ export async function GET(req: Request) {
     const { data: payments, error } = await query;
     if (error) throw error;
 
+    let totalRevenueTRY = 0;
+    let totalSandboxRevenueTRY = 0;
+    let paidCount = 0;
+    let refundedCount = 0;
+    let failedCount = 0;
+    const planDistribution: Record<string, number> = {};
+
+    (payments || []).forEach(p => {
+      const isTest = p.idempotency_key?.includes('test_') || p.provider === 'mock';
+      const amt = Number(p.amount) || 0;
+      const code = (p as any).plans?.code || 'unknown';
+
+      if (p.status === 'paid') {
+        paidCount++;
+        planDistribution[code] = (planDistribution[code] || 0) + 1;
+        if (isTest) {
+          totalSandboxRevenueTRY += amt;
+        } else {
+          totalRevenueTRY += amt;
+        }
+      } else if (p.status === 'refunded') {
+        refundedCount++;
+      } else if (p.status === 'failed') {
+        failedCount++;
+      }
+    });
+
     return NextResponse.json({
       success: true,
+      metrics: {
+        totalRevenueTRY,
+        totalSandboxRevenueTRY,
+        paidCount,
+        refundedCount,
+        failedCount,
+        planDistribution
+      },
       payments: payments || []
     });
   } catch (err: any) {
