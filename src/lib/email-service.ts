@@ -419,3 +419,205 @@ export async function verifySubmittedOtp({
     return { success: false, error: 'Doğrulama işlemi sırasında bir hata oluştu.' };
   }
 }
+
+/**
+ * Generic helper for sending transactional emails with audit logging
+ */
+export async function sendEmailWithAudit(params: {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+  eventType: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const { to, subject, html, text, eventType } = params;
+  const normalizedEmail = to.trim().toLowerCase();
+  const supabase = getSupabaseAdmin();
+  const transporter = getTransporter();
+
+  let deliveryStatus = 'sent';
+  let errorMessage: string | null = null;
+
+  if (transporter && process.env.NODE_ENV !== 'test' && !process.env.PLAYWRIGHT_TEST) {
+    try {
+      const fromAddress = process.env.EMAIL_FROM || process.env.SMTP_USER || 'dijitaldavetiyeciniz@gmail.com';
+      const senderName = process.env.EMAIL_FROM_NAME || 'Dijital Davetiye';
+
+      await transporter.sendMail({
+        from: `"${senderName}" <${fromAddress}>`,
+        to: normalizedEmail,
+        subject,
+        text,
+        html
+      });
+      deliveryStatus = 'sent';
+    } catch (err: any) {
+      deliveryStatus = 'failed';
+      errorMessage = err.message || 'SMTP iletim hatası';
+      console.error('[EMAIL AUDIT ERROR]', err.code || err.name, errorMessage);
+    }
+  } else {
+    deliveryStatus = 'mock_sent';
+  }
+
+  try {
+    await supabase.from('email_delivery_logs').insert([
+      {
+        recipient: normalizedEmail,
+        email_type: eventType,
+        status: deliveryStatus,
+        error_message: errorMessage ? errorMessage.slice(0, 500) : null
+      }
+    ]);
+  } catch {}
+
+  return { success: deliveryStatus === 'sent' || deliveryStatus === 'mock_sent', error: errorMessage || undefined };
+}
+
+/**
+ * Sends a welcome email after successful email verification
+ */
+export async function sendWelcomeEmail(params: { email: string; name?: string }): Promise<{ success: boolean; error?: string }> {
+  const { email, name = 'Değerli Kullanıcımız' } = params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dijital-davetiyeciniz.vercel.app';
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: #fdfaf7; color: #334155;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #e11d48; margin: 0; font-size: 24px;">Dijital Davetiyeciniz</h1>
+        <p style="color: #64748b; font-size: 14px; margin-top: 5px;">Aramıza Hoş Geldiniz!</p>
+      </div>
+      <div style="background-color: #ffffff; border-radius: 16px; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9;">
+        <p style="font-size: 16px; line-height: 24px; margin-top: 0;">Merhaba <strong>${name}</strong>,</p>
+        <p style="font-size: 15px; line-height: 24px; color: #475569;">
+          E-posta adresiniz başarıyla doğrulandı. Artık 120+ şablon, özel zarf animasyonları ve müzik seçenekleriyle hayalinizdeki davetiyeyi hemen hazırlamaya başlayabilirsiniz.
+        </p>
+        <div style="text-align: center; margin: 35px 0;">
+          <a href="${siteUrl}/onboarding" style="background: linear-gradient(to right, #f43f5e, #e11d48); color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: bold; font-size: 15px; display: inline-block;">
+            Davetiyeni Oluşturmaya Başla
+          </a>
+        </div>
+        <p style="font-size: 13px; color: #94a3b8; line-height: 20px; margin-bottom: 0;">
+          Sorularınız için dilediğiniz zaman bu e-postayı yanıtlayabilir veya destek ekibimizle iletişime geçebilirsiniz.
+        </p>
+      </div>
+    </div>
+  `;
+
+  const text = `Merhaba ${name},\n\nE-posta adresiniz başarıyla doğrulandı. Dijital Davetiyeciniz'e hoş geldiniz!\n\nDavetiyenizi oluşturmak için: ${siteUrl}/onboarding\n\nDijital Davetiyeciniz Ekibi`;
+
+  return sendEmailWithAudit({
+    to: email,
+    subject: 'Dijital Davetiyeciniz’e Hoş Geldiniz! 🎉',
+    html,
+    text,
+    eventType: 'welcome_email'
+  });
+}
+
+/**
+ * Sends a confirmation email when an invitation is published
+ */
+export async function sendPublishConfirmationEmail(params: {
+  email: string;
+  name?: string;
+  weddingTitle: string;
+  slug: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const { email, name = 'Değerli Kullanıcımız', weddingTitle, slug } = params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dijital-davetiyeciniz.vercel.app';
+  const invitationUrl = `${siteUrl}/${slug}`;
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: #fdfaf7; color: #334155;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #e11d48; margin: 0; font-size: 24px;">Dijital Davetiyeciniz</h1>
+        <p style="color: #64748b; font-size: 14px; margin-top: 5px;">Davetiyeniz Yayında! ✨</p>
+      </div>
+      <div style="background-color: #ffffff; border-radius: 16px; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9;">
+        <p style="font-size: 16px; line-height: 24px; margin-top: 0;">Tebrikler <strong>${name}</strong>,</p>
+        <p style="font-size: 15px; line-height: 24px; color: #475569;">
+          <strong>"${weddingTitle}"</strong> başlıklı davetiyeniz başarıyla yayına alındı. Misafirlerinizle bu kalıcı bağlantıyı paylaşabilirsiniz.
+        </p>
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; text-align: center; margin: 25px 0;">
+          <a href="${invitationUrl}" style="color: #e11d48; font-weight: bold; word-break: break-all; font-size: 14px; text-decoration: none;">
+            ${invitationUrl}
+          </a>
+        </div>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${siteUrl}/dashboard" style="background-color: #0f172a; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; display: inline-block;">
+            Yönetim Paneline Git
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const text = `Tebrikler ${name}!\n\n"${weddingTitle}" davetiyeniz yayında:\n${invitationUrl}\n\nDijital Davetiyeciniz`;
+
+  return sendEmailWithAudit({
+    to: email,
+    subject: `Davetiyeniz Yayında! ✨ — ${weddingTitle}`,
+    html,
+    text,
+    eventType: 'invitation_published'
+  });
+}
+
+/**
+ * Sends payment and plan activation receipt email
+ */
+export async function sendPaymentReceiptEmail(params: {
+  email: string;
+  name?: string;
+  planName: string;
+  amount: number;
+  currency?: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const { email, name = 'Değerli Kullanıcımız', planName, amount, currency = 'TL' } = params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://dijital-davetiyeciniz.vercel.app';
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: #fdfaf7; color: #334155;">
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #e11d48; margin: 0; font-size: 24px;">Dijital Davetiyeciniz</h1>
+        <p style="color: #64748b; font-size: 14px; margin-top: 5px;">Ödeme Makbuzu</p>
+      </div>
+      <div style="background-color: #ffffff; border-radius: 16px; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9;">
+        <p style="font-size: 16px; line-height: 24px; margin-top: 0;">Sayın <strong>${name}</strong>,</p>
+        <p style="font-size: 15px; line-height: 24px; color: #475569;">
+          Ödemeniz başarıyla alınmış ve <strong>${planName}</strong> üyeliğiniz aktif edilmiştir.
+        </p>
+        <table style="width: 100%; border-collapse: collapse; margin: 25px 0;">
+          <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 10px 0; color: #64748b; font-size: 14px;">Paket / Plan</td>
+            <td style="padding: 10px 0; text-align: right; font-weight: bold; color: #0f172a; font-size: 14px;">${planName}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 10px 0; color: #64748b; font-size: 14px;">Ödenen Tutar</td>
+            <td style="padding: 10px 0; text-align: right; font-weight: bold; color: #059669; font-size: 16px;">₺${amount.toLocaleString('tr-TR')} ${currency}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; color: #64748b; font-size: 14px;">Durum</td>
+            <td style="padding: 10px 0; text-align: right; font-weight: bold; color: #059669; font-size: 14px;">Onaylandı (Ödendi)</td>
+          </tr>
+        </table>
+        <div style="text-align: center; margin-top: 30px;">
+          <a href="${siteUrl}/dashboard" style="background-color: #0f172a; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 14px; display: inline-block;">
+            Paneli Görüntüle
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const text = `Sayın ${name},\n\n${planName} için ₺${amount} ${currency} tutarındaki ödemeniz onaylandı.\n\nDijital Davetiyeciniz`;
+
+  return sendEmailWithAudit({
+    to: email,
+    subject: `Ödemeniz Onaylandı — ${planName}`,
+    html,
+    text,
+    eventType: 'payment_receipt'
+  });
+}
