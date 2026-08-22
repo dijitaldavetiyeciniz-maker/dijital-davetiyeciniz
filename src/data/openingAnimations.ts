@@ -32,7 +32,7 @@ export interface EntranceAnimationStyle {
 }
 
 export const entranceAnimationTypes: EntranceAnimationType[] = [
-  // 1. ELEGANT & CLASSICAL
+  // 1. ELEGANT & CLASSICAL (6)
   {
     id: "wax-seal-starfield",
     name: "✨ Yıldızlı Gece & Wax Mühür",
@@ -76,8 +76,22 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     family: "ELEGANT_CLASSICAL",
     isPremium: true
   },
+  {
+    id: "book",
+    name: "Kitap Açılışı",
+    description: "Kitap kapağı açılır, davetiye sayfadan yükselir.",
+    icon: "book",
+    family: "ELEGANT_CLASSICAL"
+  },
+  {
+    id: "sealOnly",
+    name: "🎯 Sadece Mühür",
+    description: "Süzülen zarif bir mühür ile açılış başlatılır.",
+    icon: "seal",
+    family: "ELEGANT_CLASSICAL"
+  },
 
-  // 2. CINEMATIC
+  // 2. CINEMATIC (5)
   {
     id: "cinematicFilm",
     name: "🎬 Sinematik Film Perdesi",
@@ -115,8 +129,15 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     icon: "zoom",
     family: "CINEMATIC"
   },
+  {
+    id: "cinematicText",
+    name: "🎬 Sinematik İsimler",
+    description: "Karanlık zarif arkaplanda isimler, tıklayınca davetiyeye geçer.",
+    icon: "cinematic",
+    family: "CINEMATIC"
+  },
 
-  // 3. CULTURAL
+  // 3. CULTURAL (5)
   {
     id: "ottomanIllumination",
     name: "⚜️ Osmanlı Tezhip ve Mühür",
@@ -156,7 +177,7 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     family: "CULTURAL"
   },
 
-  // 4. DESTINATION & NATURE
+  // 4. DESTINATION & NATURE (5)
   {
     id: "coastalSunset",
     name: "🌅 Sahil Gün Batımı & Ufuk",
@@ -196,7 +217,7 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     isPremium: true
   },
 
-  // 5. FANTASY & CELESTIAL
+  // 5. FANTASY & CELESTIAL (3)
   {
     id: "moonlitGarden",
     name: "🌙 Ay Işıklı Gizli Bahçe",
@@ -221,7 +242,7 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     family: "FANTASY_MYTHOLOGICAL"
   },
 
-  // 6. EDITORIAL & FASHION
+  // 6. EDITORIAL & FASHION (4)
   {
     id: "parisianBlackTie",
     name: "🎩 Parisian Black-Tie Spot",
@@ -245,8 +266,15 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     icon: "minimal",
     family: "EDITORIAL_FASHION"
   },
+  {
+    id: "photoCover",
+    name: "📸 Fotoğraf Kapağı",
+    description: "Fotoğraflı kapak üzerinde isimler yer alır.",
+    icon: "photo",
+    family: "EDITORIAL_FASHION"
+  },
 
-  // 7. PLAYFUL & CELEBRATION
+  // 7. PLAYFUL & CELEBRATION (4)
   {
     id: "storybook",
     name: "📖 Masal Kitabı Açılışı",
@@ -277,7 +305,7 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     family: "PLAYFUL"
   },
 
-  // 8. CORPORATE & TECH
+  // 8. CORPORATE & TECH (4)
   {
     id: "futureSummit",
     name: "🌐 Gelecek Zirvesi & Dijital Sahne",
@@ -307,34 +335,6 @@ export const entranceAnimationTypes: EntranceAnimationType[] = [
     description: "Ayna yansıması netleşir ve davetiye ortaya çıkar.",
     icon: "mirror",
     family: "CORPORATE"
-  },
-  {
-    id: "book",
-    name: "Kitap Açılışı",
-    description: "Kitap kapağı açılır, davetiye sayfadan yükselir.",
-    icon: "book",
-    family: "ELEGANT_CLASSICAL"
-  },
-  {
-    id: "cinematicText",
-    name: "🎬 Sinematik İsimler",
-    description: "Karanlık zarif arkaplanda isimler, tıklayınca davetiyeye geçer.",
-    icon: "cinematic",
-    family: "CINEMATIC"
-  },
-  {
-    id: "photoCover",
-    name: "📸 Fotoğraf Kapağı",
-    description: "Fotoğraflı kapak üzerinde isimler yer alır.",
-    icon: "photo",
-    family: "EDITORIAL_FASHION"
-  },
-  {
-    id: "sealOnly",
-    name: "🎯 Sadece Mühür",
-    description: "Süzülen zarif bir mühür ile açılış başlatılır.",
-    icon: "seal",
-    family: "ELEGANT_CLASSICAL"
   }
 ];
 
@@ -471,67 +471,108 @@ export const entranceAnimationStyles: EntranceAnimationStyle[] = [
   }
 ];
 
+// Openings catalog per event category to guarantee rich diversity without generic default collapse
+const WEDDING_OPENING_POOL = [
+  'parisianBlackTie', 'grandOpera', 'moonlitGarden', 'vogueEditorial',
+  'mediterraneanCeramic', 'ottomanIllumination', 'coastalSunset', 'auroraGlass',
+  'botanicalWatercolor', 'filmPremiere', 'swissGallery', 'royalPalace',
+  'royalParchment', 'wax-seal-starfield', 'envelope', 'curtain',
+  'door', 'gardenGate', 'botanicalBlossom', 'starryNight',
+  'spotlight', 'cinematicFilm', 'minimalFade', 'photoCover', 'luxuryBox'
+];
+
+const HENNA_OPENING_POOL = [
+  'hennaPalace', 'hennaVelvetGate', 'curtain', 'ottomanIllumination', 'royalParchment', 'door'
+];
+
+const CIRCUMCISION_OPENING_POOL = [
+  'princeCeremony', 'nazarDome', 'royalPalace', 'royalParchment', 'door', 'sealOnly'
+];
+
+const BABY_KIDS_POOL = [
+  'storybook', 'cloudBalloon', 'teddyBear', 'luxuryBox', 'starryNight'
+];
+
+const CORPORATE_POOL = [
+  'futureSummit', 'swissGallery', 'spotlight', 'glass', 'mirror', 'cinematicZoom', 'cinematicText'
+];
+
 /**
- * Robust Template -> Opening Matching Engine
- * Guarantees that templates receive tailored, intentional openings without sharing a single generic default.
+ * Named and Flagship Template Recommendations
  */
 export const TEMPLATE_OPENING_RECOMMENDATIONS: Record<string, string> = {
-  // Flagship Luxury & Gala
+  // Flagship Luxury & Gala (0 - 18)
+  '0': 'starryNight',
+  '1': 'hennaVelvetGate',
+  '2': 'parisianBlackTie',
+  '3': 'grandOpera',
+  '4': 'moonlitGarden',
+  '5': 'vogueEditorial',
+  '6': 'mediterraneanCeramic',
+  '7': 'ottomanIllumination',
+  '8': 'coastalSunset',
+  '9': 'auroraGlass',
+  '10': 'botanicalWatercolor',
+  '11': 'filmPremiere',
+  '12': 'swissGallery',
+  '13': 'royalPalace',
+  '14': 'hennaPalace',
+  '15': 'princeCeremony',
+  '16': 'storybook',
+  '17': 'storybook',
+  '18': 'futureSummit',
+  '19': 'cinematicFilm',
+  '20': 'royalParchment',
+  '21': 'photoCover',
+  '22': 'starryNight',
+  '23': 'cloudBalloon',
+  '24': 'teddyBear',
+  '25': 'teddyBear',
+  '26': 'cloudBalloon',
+  '27': 'hennaVelvetGate',
+  '28': 'nazarDome',
+  '29': 'minimalFade',
+
+  // Named Slugs
   'parisian-black-tie': 'parisianBlackTie',
   'grand-opera': 'grandOpera',
   'royal-gold': 'royalPalace',
   'template1': 'royalParchment',
   'template2': 'wax-seal-starfield',
+  'template3': 'nazarDome',
+  'template4': 'gardenGate',
+  'template5': 'curtain',
+  'template6': 'auroraGlass',
+  'template7': 'botanicalBlossom',
+  'template8': 'door',
+  'template9': 'mediterraneanCeramic',
+  'template10': 'cinematicFilm',
+  'template11': 'minimalFade',
+  'template12': 'hennaVelvetGate',
+  'template13': 'princeCeremony',
+  'template14': 'luxuryBox',
+  'template15': 'futureSummit',
+  'template16': 'cloudBalloon',
 
-  // Botanical & Nature
   'moonlit-secret-garden': 'moonlitGarden',
   'fine-art-botanical-watercolor': 'botanicalWatercolor',
   'bohemian-terracotta': 'botanicalBlossom',
-  'template4': 'gardenGate',
-  'template21': 'gardenGate',
-
-  // Editorial & High Fashion
   'vogue-editorial': 'vogueEditorial',
   'swiss-international-gallery': 'swissGallery',
   'minimal-paper': 'minimalFade',
   'pure-minimalist': 'minimalFade',
-  'template11': 'minimalFade',
-
-  // Destination & Coastal
   'mediterranean-ceramic-tile': 'mediterraneanCeramic',
   'coastal-sunset-driftwood': 'coastalSunset',
-  'bosphorus-mansion': 'door',
-  'template5': 'curtain',
-
-  // Celestial & Glass
   'aurora-borealis-glassmorphism': 'auroraGlass',
-  'starry-celestial': 'starryNight',
-  'template6': 'auroraGlass',
-
-  // Cinema & Film
   'cinema-vintage-premiere': 'filmPremiere',
-  'hollywood-gala': 'cinematicFilm',
-  'template10': 'cinematicFilm',
-
-  // Cultural & Traditional
   'ottoman-palace-illumination': 'ottomanIllumination',
   'bordeaux-velvet-palace': 'hennaPalace',
   'traditional-henna': 'hennaVelvetGate',
-  'template12': 'hennaVelvetGate',
-  'template3': 'nazarDome',
-  'template13': 'princeCeremony',
-  'template23': 'nazarDome',
-
-  // Playful & Storybook
   'magical-storybook': 'storybook',
   'cloud-balloon': 'cloudBalloon',
   'teddy-bear-badge': 'teddyBear',
-  'template16': 'cloudBalloon',
-
-  // Corporate & Tech
   'tech-summit-grid': 'futureSummit',
-  'modern-corporate': 'swissGallery',
-  'template15': 'futureSummit',
+  'modern-corporate': 'swissGallery'
 };
 
 /**
@@ -542,11 +583,32 @@ export function getRecommendedOpeningForTemplate(templateId?: string, eventType?
     return TEMPLATE_OPENING_RECOMMENDATIONS[templateId];
   }
 
+  // Deterministic numeric index distribution across category pools
+  if (templateId && !isNaN(Number(templateId))) {
+    const idx = parseInt(templateId, 10);
+    const evt = (eventType || '').toLowerCase();
+
+    if (evt.includes('henna') || evt.includes('kına')) {
+      return HENNA_OPENING_POOL[idx % HENNA_OPENING_POOL.length];
+    }
+    if (evt.includes('circumcision') || evt.includes('sünnet')) {
+      return CIRCUMCISION_OPENING_POOL[idx % CIRCUMCISION_OPENING_POOL.length];
+    }
+    if (evt.includes('baby') || evt.includes('shower') || evt.includes('birthday') || evt.includes('doğum')) {
+      return BABY_KIDS_POOL[idx % BABY_KIDS_POOL.length];
+    }
+    if (evt.includes('corporate') || evt.includes('kurumsal') || evt.includes('seminar') || evt.includes('zirve')) {
+      return CORPORATE_POOL[idx % CORPORATE_POOL.length];
+    }
+
+    return WEDDING_OPENING_POOL[idx % WEDDING_OPENING_POOL.length];
+  }
+
   // Event category fallback
   const evt = (eventType || '').toLowerCase();
   if (evt.includes('henna') || evt.includes('kına')) return 'hennaVelvetGate';
-  if (evt.includes('circumcision') || evt.includes('sünnet')) return 'nazarDome';
-  if (evt.includes('baby') || evt.includes('bebek') || evt.includes('birthday') || evt.includes('doğum')) return 'cloudBalloon';
+  if (evt.includes('circumcision') || evt.includes('sünnet')) return 'princeCeremony';
+  if (evt.includes('baby') || evt.includes('bebek') || evt.includes('birthday') || evt.includes('doğum')) return 'storybook';
   if (evt.includes('corporate') || evt.includes('kurumsal') || evt.includes('seminar') || evt.includes('zirve')) return 'futureSummit';
 
   return 'wax-seal-starfield';
