@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { getUserEntitlements, canPublish } from '@/lib/entitlements';
 
 export async function POST(
   req: Request,
@@ -8,6 +9,7 @@ export async function POST(
   try {
     const { id: weddingId } = await params;
     const body = await req.json().catch(() => ({}));
+    const supabase = getSupabaseAdmin();
 
     // 1. Fetch current wedding record
     const { data: wedding, error: fetchError } = await supabase
@@ -69,9 +71,25 @@ export async function POST(
       published_at: new Date().toISOString()
     };
 
+    // 4. Server-Side Entitlement Check
+    const userEntitlements = await getUserEntitlements(wedding.user_id);
+    const publishCheck = canPublish(userEntitlements.planTier, {
+      is_paid: wedding.is_paid,
+      template_id: snapshot.template_id,
+      entrance_animation: snapshot.entrance_animation
+    });
+
+    if (!publishCheck.allowed) {
+      return NextResponse.json({
+        error: publishCheck.error,
+        upgrade_required: true,
+        current_plan: userEntitlements.planName
+      }, { status: 403 });
+    }
+
     const newVersionNumber = (wedding.published_version_number || 0) + 1;
 
-    // 4. Update wedding table with published snapshot & active status
+    // 5. Update wedding table with published snapshot & active status
     const overrides = {
       ...(wedding.custom_overrides || {}),
       published_snapshot: snapshot,
@@ -101,7 +119,6 @@ export async function POST(
       .eq('id', wedding.id);
 
     if (fullError) {
-      // Graceful fallback for environments before migration 013 is applied
       const { error: fallbackError } = await supabase
         .from('weddings')
         .update(basePayload)
@@ -113,7 +130,7 @@ export async function POST(
       return NextResponse.json({ error: 'Yayınlama işlemi gerçekleştirilemedi: ' + updateError.message }, { status: 500 });
     }
 
-    // 5. Create immutable version history record
+    // 6. Create immutable version history record
     try {
       await supabase.from('invitation_versions').insert([
         {
@@ -131,7 +148,7 @@ export async function POST(
       console.warn('Version recording warning:', verErr);
     }
 
-    // 6. Security & Audit log
+    // 7. Security & Audit log
     try {
       await supabase.from('security_events').insert([
         {
@@ -144,12 +161,12 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
-      message: 'Davetiyeniz başarıyla yayınlandı.',
+      message: 'Davetiye başarıyla yayına alındı.',
       version_number: newVersionNumber,
-      slug: wedding.slug,
-      public_url: `/${wedding.slug}`
+      published_at: overrides.published_at,
+      snapshot
     });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Sunucu hatası' }, { status: 500 });
+    return NextResponse.json({ error: 'Yayınlama hatası: ' + err.message }, { status: 500 });
   }
 }

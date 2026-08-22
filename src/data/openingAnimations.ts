@@ -1,8 +1,20 @@
+export type OpeningFamily =
+  | 'ELEGANT_CLASSICAL'
+  | 'CINEMATIC'
+  | 'CULTURAL'
+  | 'DESTINATION'
+  | 'FANTASY_MYTHOLOGICAL'
+  | 'PLAYFUL'
+  | 'CORPORATE'
+  | 'EDITORIAL_FASHION';
+
 export interface EntranceAnimationType {
   id: string;
   name: string;
   description: string;
   icon: string;
+  family: OpeningFamily;
+  isPremium?: boolean;
 }
 
 export interface EntranceAnimationStyle {
@@ -20,240 +32,309 @@ export interface EntranceAnimationStyle {
 }
 
 export const entranceAnimationTypes: EntranceAnimationType[] = [
+  // 1. ELEGANT & CLASSICAL
   {
     id: "wax-seal-starfield",
     name: "✨ Yıldızlı Gece & Wax Mühür",
     description: "Karanlık yıldızlı gökyüzü, metalik organik wax mühür ve 3D flap açılışı.",
     icon: "stars",
+    family: "ELEGANT_CLASSICAL"
   },
   {
     id: "envelope",
     name: "Zarf Açılışı",
     description: "Mühürlü zarf açılır, davetiye kartı zarifçe ortaya çıkar.",
     icon: "envelope",
+    family: "ELEGANT_CLASSICAL"
   },
   {
     id: "curtain",
     name: "Perde Açılışı",
     description: "Perde iki yana açılır, davetiye sahne ışığıyla görünür.",
     icon: "curtain",
+    family: "ELEGANT_CLASSICAL"
   },
   {
     id: "door",
     name: "Kapı Açılışı",
     description: "Karakteristik kapılar açılır, davetiye içeriden ışıkla belirir.",
     icon: "door",
-  },
-  {
-    id: "gardenGate",
-    name: "Bahçe Kapısı",
-    description: "Bahçe kapısı açılır, davetiye doğa atmosferinde görünür.",
-    icon: "garden",
-  },
-  {
-    id: "book",
-    name: "Kitap Açılışı",
-    description: "Kitap kapağı açılır, davetiye sayfadan yükselir.",
-    icon: "book",
-  },
-  {
-    id: "luxuryBox",
-    name: "Hediye Kutusu",
-    description: "Kutu kapağı açılır, davetiye içinden çıkar.",
-    icon: "box",
-  },
-  {
-    id: "glass",
-    name: "Cam Reveal",
-    description: "Cam yüzey netleşir, davetiye görünür.",
-    icon: "glass",
-  },
-  {
-    id: "mirror",
-    name: "Ayna Reveal",
-    description: "Ayna yansıması netleşir ve davetiye ortaya çıkar.",
-    icon: "mirror",
-  },
-  {
-    id: "cinematicZoom",
-    name: "Sinematik Zoom",
-    description: "Kamera davetiyeye yaklaşır ve görüntü netleşir.",
-    icon: "zoom",
-  },
-  {
-    id: "spotlight",
-    name: "Spotlight",
-    description: "Sahne ışığı davetiyeyi karanlıktan ortaya çıkarır.",
-    icon: "spotlight",
-  },
-  {
-    id: "starryNight",
-    name: "Yıldızlı Gece",
-    description: "Yıldızlar ve ay ışığıyla romantik açılış yapılır.",
-    icon: "stars",
-  },
-  {
-    id: "minimalFade",
-    name: "Minimal Fade",
-    description: "Sade ve hızlı premium geçiş efekti kullanılır.",
-    icon: "minimal",
-  },
-  {
-    id: "cinematicText",
-    name: "🎬 Sinematik İsimler",
-    description: "Karanlık zarif arkaplanda isimler, tıklayınca davetiyeye geçer.",
-    icon: "cinematic",
-  },
-  {
-    id: "photoCover",
-    name: "📸 Fotoğraf Kapağı",
-    description: "Fotoğraflı kapak üzerinde isimler yer alır.",
-    icon: "photo",
-  },
-  {
-    id: "sealOnly",
-    name: "🎯 Sadece Mühür",
-    description: "Süzülen zarif bir mühür ile açılış başlatılır.",
-    icon: "seal",
-  },
-  {
-    id: "cloudBalloon",
-    name: "☁️ Bulut ve Balon Açılışı",
-    description: "Bulutlar, uçan balonlar ve tatlı yıldızlarla sevimli çocuk açılışı.",
-    icon: "cloud",
-  },
-  {
-    id: "teddyBear",
-    name: "🧸 Sevimli Ayıcık Rozeti",
-    description: "Tatlı ayıcık rozeti ve yumuşak bulut parıltısı ile açılış.",
-    icon: "teddy",
-  },
-  {
-    id: "cinematicFilm",
-    name: "🎬 Sinematik Film Perdesi",
-    description: "Film perdesi, projektör ışığı ve afiş reveal ile görkemli açılış.",
-    icon: "cinema",
+    family: "ELEGANT_CLASSICAL"
   },
   {
     id: "royalParchment",
     name: "📜 Kraliyet Mektubu & Mühür",
     description: "Kraliyet parşömeni, altın mühür ve kurdele çözülmesi.",
     icon: "royal",
+    family: "ELEGANT_CLASSICAL"
+  },
+  {
+    id: "royalPalace",
+    name: "👑 Saray Kapısı",
+    description: "Arma, altın detay, saray kapısının açılması.",
+    icon: "door",
+    family: "ELEGANT_CLASSICAL",
+    isPremium: true
+  },
+
+  // 2. CINEMATIC
+  {
+    id: "cinematicFilm",
+    name: "🎬 Sinematik Film Perdesi",
+    description: "Film perdesi, projektör ışığı ve afiş reveal ile görkemli açılış.",
+    icon: "cinema",
+    family: "CINEMATIC"
+  },
+  {
+    id: "filmPremiere",
+    name: "📽️ Gala & Film Şeridi",
+    description: "Projektör ışığı, sinematik başlık, gala kartı.",
+    icon: "cinema",
+    family: "CINEMATIC",
+    isPremium: true
+  },
+  {
+    id: "grandOpera",
+    name: "🎭 Büyük Opera Sahnesi",
+    description: "Kadife perde, sahne ışığı, tiyatro derinliği.",
+    icon: "curtain",
+    family: "CINEMATIC",
+    isPremium: true
+  },
+  {
+    id: "spotlight",
+    name: "Spotlight",
+    description: "Sahne ışığı davetiyeyi karanlıktan ortaya çıkarır.",
+    icon: "spotlight",
+    family: "CINEMATIC"
+  },
+  {
+    id: "cinematicZoom",
+    name: "Sinematik Zoom",
+    description: "Kamera davetiyeye yaklaşır ve görüntü netleşir.",
+    icon: "zoom",
+    family: "CINEMATIC"
+  },
+
+  // 3. CULTURAL
+  {
+    id: "ottomanIllumination",
+    name: "⚜️ Osmanlı Tezhip ve Mühür",
+    description: "Altın motifler, mühür, hat sanatı açılışı.",
+    icon: "seal",
+    family: "CULTURAL",
+    isPremium: true
+  },
+  {
+    id: "hennaPalace",
+    name: "🍷 Saray Kına Feneri",
+    description: "Fenerler, kadife perde, kına tepsisi, altın bordo detaylar.",
+    icon: "henna",
+    family: "CULTURAL",
+    isPremium: true
+  },
+  {
+    id: "hennaVelvetGate",
+    name: "🌹 Bordo Kadife Perde & Gül",
+    description: "Bordo kadife perde, oryantal parıltı ve uçuşan gül yaprakları.",
+    icon: "henna",
+    family: "CULTURAL"
+  },
+  {
+    id: "princeCeremony",
+    name: "🤴 Şehzade Kubbesi",
+    description: "Kubbe, nazar detayı, çocuk isim arması.",
+    icon: "nazar",
+    family: "CULTURAL",
+    isPremium: true
+  },
+  {
+    id: "nazarDome",
+    name: "🧿 Nazar Boncuğu & Kubbe",
+    description: "Maşallah rozeti, nazar boncuğu ve şehzade kubbe açılışı.",
+    icon: "nazar",
+    family: "CULTURAL"
+  },
+
+  // 4. DESTINATION & NATURE
+  {
+    id: "coastalSunset",
+    name: "🌅 Sahil Gün Batımı & Ufuk",
+    description: "Sahil kompozisyonu, ufukta güneş geçişi, kontrollü dalgalar.",
+    icon: "glass",
+    family: "DESTINATION",
+    isPremium: true
+  },
+  {
+    id: "mediterraneanCeramic",
+    name: "🏛️ Akdeniz Seramik Kemeri",
+    description: "Akdeniz kemeri, kobalt vurgular, katmanlı tamamlanma.",
+    icon: "door",
+    family: "DESTINATION",
+    isPremium: true
+  },
+  {
+    id: "gardenGate",
+    name: "Bahçe Kapısı",
+    description: "Bahçe kapısı açılır, davetiye doğa atmosferinde görünür.",
+    icon: "garden",
+    family: "DESTINATION"
   },
   {
     id: "botanicalBlossom",
     name: "🌿 Çiçekli Bahçe Kapısı",
     description: "Açılan çiçek taçları ve botanik bahçe kapısı reveal.",
     icon: "flower",
-  },
-  {
-    id: "hennaVelvetGate",
-    name: "🍷 Bordo Kadife Perde & Gül",
-    description: "Bordo kadife perde, oryantal parıltı ve uçuşan gül yaprakları.",
-    icon: "henna",
-  },
-  {
-    id: "nazarDome",
-    name: "🧿 Nazar Boncuğu & Şehzade Kubbe",
-    description: "Maşallah rozeti, nazar boncuğu ve şehzade kubbe açılışı.",
-    icon: "nazar",
-  },
-  // FLAGSHIP SPECIFIC ANIMATIONS
-  {
-    id: "parisianBlackTie",
-    name: "Karanlık Spot Işığı",
-    description: "Kontrollü spot ışığı, ince altın çizgi reveal, monogram.",
-    icon: "spotlight",
-  },
-  {
-    id: "grandOpera",
-    name: "Tiyatro Sahnesi",
-    description: "Kadife perde, sahne ışığı, tiyatro derinliği.",
-    icon: "curtain",
-  },
-  {
-    id: "moonlitGarden",
-    name: "Gece Bahçesi",
-    description: "Ay ışığı, çiçek açılımı, katmanlı gece bahçesi.",
-    icon: "garden",
-  },
-  {
-    id: "vogueEditorial",
-    name: "Dergi Kapağı",
-    description: "Tipografik blokların kademeli yerleşimi, masthead.",
-    icon: "book",
-  },
-  {
-    id: "mediterraneanCeramic",
-    name: "Seramik Desen",
-    description: "Akdeniz kemeri, kobalt vurgular, katmanlı tamamlanma.",
-    icon: "door",
-  },
-  {
-    id: "ottomanIllumination",
-    name: "Tezhip ve Mühür",
-    description: "Altın motifler, mühür, hat sanatı açılışı.",
-    icon: "seal",
-  },
-  {
-    id: "coastalSunset",
-    name: "Ufuk Çizgisi",
-    description: "Sahil kompozisyonu, ufukta güneş geçişi, kontrollü dalgalar.",
-    icon: "glass",
-  },
-  {
-    id: "auroraGlass",
-    name: "Buzlu Cam Aurora",
-    description: "Buzlu cam yüzeyi, yüksek kontrast aurora ışık hareketi.",
-    icon: "glass",
+    family: "DESTINATION"
   },
   {
     id: "botanicalWatercolor",
-    name: "Suluboya Çiçek",
+    name: "🎨 Suluboya Çiçek",
     description: "Pigment yayılımı, organik çerçeve oluşumu.",
     icon: "flower",
+    family: "DESTINATION",
+    isPremium: true
+  },
+
+  // 5. FANTASY & CELESTIAL
+  {
+    id: "moonlitGarden",
+    name: "🌙 Ay Işıklı Gizli Bahçe",
+    description: "Ay ışığı, çiçek açılımı, katmanlı gece bahçesi.",
+    icon: "garden",
+    family: "FANTASY_MYTHOLOGICAL",
+    isPremium: true
   },
   {
-    id: "filmPremiere",
-    name: "Film Şeridi",
-    description: "Projektör ışığı, sinematik başlık, gala kartı.",
-    icon: "cinema",
+    id: "auroraGlass",
+    name: "🌌 Buzlu Cam Aurora",
+    description: "Buzlu cam yüzeyi, yüksek kontrast aurora ışık hareketi.",
+    icon: "glass",
+    family: "FANTASY_MYTHOLOGICAL",
+    isPremium: true
+  },
+  {
+    id: "starryNight",
+    name: "Yıldızlı Gece",
+    description: "Yıldızlar ve ay ışığıyla romantik açılış yapılır.",
+    icon: "stars",
+    family: "FANTASY_MYTHOLOGICAL"
+  },
+
+  // 6. EDITORIAL & FASHION
+  {
+    id: "parisianBlackTie",
+    name: "🎩 Parisian Black-Tie Spot",
+    description: "Kontrollü spot ışığı, ince altın çizgi reveal, monogram.",
+    icon: "spotlight",
+    family: "EDITORIAL_FASHION",
+    isPremium: true
+  },
+  {
+    id: "vogueEditorial",
+    name: "💎 Vogue Tipografik Dergi",
+    description: "Tipografik blokların kademeli yerleşimi, masthead.",
+    icon: "book",
+    family: "EDITORIAL_FASHION",
+    isPremium: true
+  },
+  {
+    id: "minimalFade",
+    name: "Minimal Fade",
+    description: "Sade ve hızlı premium geçiş efekti kullanılır.",
+    icon: "minimal",
+    family: "EDITORIAL_FASHION"
+  },
+
+  // 7. PLAYFUL & CELEBRATION
+  {
+    id: "storybook",
+    name: "📖 Masal Kitabı Açılışı",
+    description: "Açılan kitap, özgün karakterler, etkinlik türüne göre semantik içerik.",
+    icon: "book",
+    family: "PLAYFUL",
+    isPremium: true
+  },
+  {
+    id: "cloudBalloon",
+    name: "☁️ Bulut ve Balon Açılışı",
+    description: "Bulutlar, uçan balonlar ve tatlı yıldızlarla sevimli çocuk açılışı.",
+    icon: "cloud",
+    family: "PLAYFUL"
+  },
+  {
+    id: "teddyBear",
+    name: "🧸 Sevimli Ayıcık Rozeti",
+    description: "Tatlı ayıcık rozeti ve yumuşak bulut parıltısı ile açılış.",
+    icon: "teddy",
+    family: "PLAYFUL"
+  },
+  {
+    id: "luxuryBox",
+    name: "Hediye Kutusu",
+    description: "Kutu kapağı açılır, davetiye içinden çıkar.",
+    icon: "box",
+    family: "PLAYFUL"
+  },
+
+  // 8. CORPORATE & TECH
+  {
+    id: "futureSummit",
+    name: "🌐 Gelecek Zirvesi & Dijital Sahne",
+    description: "Grid çizgileri, logo reveal ve dijital konferans sahnesi.",
+    icon: "zoom",
+    family: "CORPORATE",
+    isPremium: true
   },
   {
     id: "swissGallery",
-    name: "Grid Çizgileri",
+    name: "📐 İsviçre Tipografi & Grid",
     description: "Tipografik hizalama, geometrik açılış, minimal hareket.",
     icon: "minimal",
+    family: "CORPORATE",
+    isPremium: true
   },
   {
-    id: "royalPalace",
-    name: "Saray Kapısı",
-    description: "Arma, altın detay, saray kapısının açılması.",
-    icon: "door",
+    id: "glass",
+    name: "Cam Reveal",
+    description: "Cam yüzey netleşir, davetiye görünür.",
+    icon: "glass",
+    family: "CORPORATE"
   },
   {
-    id: "hennaPalace",
-    name: "Fener ve Kına",
-    description: "Fenerler, kadife perde, kına tepsisi, altın bordo detaylar.",
-    icon: "henna",
+    id: "mirror",
+    name: "Ayna Reveal",
+    description: "Ayna yansıması netleşir ve davetiye ortaya çıkar.",
+    icon: "mirror",
+    family: "CORPORATE"
   },
   {
-    id: "princeCeremony",
-    name: "Kraliyet Kubbesi",
-    description: "Kubbe, nazar detayı, çocuk isim arması.",
-    icon: "nazar",
-  },
-  {
-    id: "storybook",
-    name: "Masal Kitabı",
-    description: "Açılan kitap, özgün karakterler, etkinlik türüne göre semantik içerik.",
+    id: "book",
+    name: "Kitap Açılışı",
+    description: "Kitap kapağı açılır, davetiye sayfadan yükselir.",
     icon: "book",
+    family: "ELEGANT_CLASSICAL"
   },
   {
-    id: "futureSummit",
-    name: "Dijital Sahne",
-    description: "Grid, logo reveal, program başlığı.",
-    icon: "zoom",
+    id: "cinematicText",
+    name: "🎬 Sinematik İsimler",
+    description: "Karanlık zarif arkaplanda isimler, tıklayınca davetiyeye geçer.",
+    icon: "cinematic",
+    family: "CINEMATIC"
+  },
+  {
+    id: "photoCover",
+    name: "📸 Fotoğraf Kapağı",
+    description: "Fotoğraflı kapak üzerinde isimler yer alır.",
+    icon: "photo",
+    family: "EDITORIAL_FASHION"
+  },
+  {
+    id: "sealOnly",
+    name: "🎯 Sadece Mühür",
+    description: "Süzülen zarif bir mühür ile açılış başlatılır.",
+    icon: "seal",
+    family: "ELEGANT_CLASSICAL"
   }
 ];
 
@@ -389,3 +470,84 @@ export const entranceAnimationStyles: EntranceAnimationStyle[] = [
     effects: ["goldDust", "softBloom", "pearlLight"]
   }
 ];
+
+/**
+ * Robust Template -> Opening Matching Engine
+ * Guarantees that templates receive tailored, intentional openings without sharing a single generic default.
+ */
+export const TEMPLATE_OPENING_RECOMMENDATIONS: Record<string, string> = {
+  // Flagship Luxury & Gala
+  'parisian-black-tie': 'parisianBlackTie',
+  'grand-opera': 'grandOpera',
+  'royal-gold': 'royalPalace',
+  'template1': 'royalParchment',
+  'template2': 'wax-seal-starfield',
+
+  // Botanical & Nature
+  'moonlit-secret-garden': 'moonlitGarden',
+  'fine-art-botanical-watercolor': 'botanicalWatercolor',
+  'bohemian-terracotta': 'botanicalBlossom',
+  'template4': 'gardenGate',
+  'template21': 'gardenGate',
+
+  // Editorial & High Fashion
+  'vogue-editorial': 'vogueEditorial',
+  'swiss-international-gallery': 'swissGallery',
+  'minimal-paper': 'minimalFade',
+  'pure-minimalist': 'minimalFade',
+  'template11': 'minimalFade',
+
+  // Destination & Coastal
+  'mediterranean-ceramic-tile': 'mediterraneanCeramic',
+  'coastal-sunset-driftwood': 'coastalSunset',
+  'bosphorus-mansion': 'door',
+  'template5': 'curtain',
+
+  // Celestial & Glass
+  'aurora-borealis-glassmorphism': 'auroraGlass',
+  'starry-celestial': 'starryNight',
+  'template6': 'auroraGlass',
+
+  // Cinema & Film
+  'cinema-vintage-premiere': 'filmPremiere',
+  'hollywood-gala': 'cinematicFilm',
+  'template10': 'cinematicFilm',
+
+  // Cultural & Traditional
+  'ottoman-palace-illumination': 'ottomanIllumination',
+  'bordeaux-velvet-palace': 'hennaPalace',
+  'traditional-henna': 'hennaVelvetGate',
+  'template12': 'hennaVelvetGate',
+  'template3': 'nazarDome',
+  'template13': 'princeCeremony',
+  'template23': 'nazarDome',
+
+  // Playful & Storybook
+  'magical-storybook': 'storybook',
+  'cloud-balloon': 'cloudBalloon',
+  'teddy-bear-badge': 'teddyBear',
+  'template16': 'cloudBalloon',
+
+  // Corporate & Tech
+  'tech-summit-grid': 'futureSummit',
+  'modern-corporate': 'swissGallery',
+  'template15': 'futureSummit',
+};
+
+/**
+ * Returns the recommended opening animation for a template ID with event-aware fallback
+ */
+export function getRecommendedOpeningForTemplate(templateId?: string, eventType?: string): string {
+  if (templateId && TEMPLATE_OPENING_RECOMMENDATIONS[templateId]) {
+    return TEMPLATE_OPENING_RECOMMENDATIONS[templateId];
+  }
+
+  // Event category fallback
+  const evt = (eventType || '').toLowerCase();
+  if (evt.includes('henna') || evt.includes('kına')) return 'hennaVelvetGate';
+  if (evt.includes('circumcision') || evt.includes('sünnet')) return 'nazarDome';
+  if (evt.includes('baby') || evt.includes('bebek') || evt.includes('birthday') || evt.includes('doğum')) return 'cloudBalloon';
+  if (evt.includes('corporate') || evt.includes('kurumsal') || evt.includes('seminar') || evt.includes('zirve')) return 'futureSummit';
+
+  return 'wax-seal-starfield';
+}
