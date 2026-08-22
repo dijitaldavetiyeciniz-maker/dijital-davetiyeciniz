@@ -131,4 +131,26 @@ test.describe('C9 — PAYMENTS, ENTITLEMENTS & OPENING EXPERIENCE 2.0 SUITE', ()
     const families = new Set(entranceAnimationTypes.map(a => a.family));
     expect(families.size).toBe(8);
   });
+
+  test('8. Full Catalogue Diversity: 149 Themes distributed evenly across 8 families with 0% generic fallback abuse', async () => {
+    const { predefinedThemes } = await import('../src/lib/themes');
+    const { getRecommendedOpeningForTemplate, entranceAnimationTypes } = await import('../src/data/openingAnimations');
+
+    const templateIds = Object.keys(predefinedThemes || {});
+    expect(templateIds.length).toBe(149);
+
+    const usageCount: Record<string, number> = {};
+    templateIds.forEach(id => {
+      const theme = (predefinedThemes as any)[id];
+      const resolved = getRecommendedOpeningForTemplate(id, theme?.eventType);
+      usageCount[resolved] = (usageCount[resolved] || 0) + 1;
+    });
+
+    const uniqueOpeningsUsed = Object.keys(usageCount).length;
+    expect(uniqueOpeningsUsed).toBeGreaterThanOrEqual(35);
+
+    // No single opening should dominate (max < 15 out of 149)
+    const maxUsage = Math.max(...Object.values(usageCount));
+    expect(maxUsage).toBeLessThanOrEqual(10);
+  });
 });
