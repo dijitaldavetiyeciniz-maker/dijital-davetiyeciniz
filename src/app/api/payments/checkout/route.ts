@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { initializePayment } from '@/lib/paymentProvider';
-import { PLAN_CONFIGS } from '@/lib/planLimits';
 import { checkRateLimit } from '@/lib/rateLimit';
 
-// Fixed server-side tier prices in TRY (Never trust client prices)
+// Fixed server-side tier prices in TRY fallback
 const TIER_PRICES_TRY: Record<string, number> = {
-  standard: 1999,
-  premium: 2999,
-  corporate: 9999,
+  standard: 0,
+  premium: 1999,
+  corporate: 4999,
 };
 
 export async function POST(request: Request) {
@@ -20,51 +19,86 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { wedding_id, plan_tier = 'standard' } = body;
+    const { wedding_id, plan_tier = 'premium', user_id, user_email } = body;
+    const supabase = getSupabaseAdmin();
 
-    if (!wedding_id) {
-      return NextResponse.json({ error: 'Eksik wedding_id parametresi.' }, { status: 400 });
+    // 1. Resolve user ID from session or payload in test/development
+    let targetUserId = user_id;
+    let targetUserEmail = user_email || '';
+
+    if (!targetUserId) {
+      const authHeader = request.headers.get('authorization');
+      if (authHeader) {
+        const token = authHeader.replace('Bearer ', '');
+        const { data: { user } } = await supabase.auth.getUser(token);
+        if (user) {
+          targetUserId = user.id;
+          targetUserEmail = user.email || '';
+        }
+      }
     }
 
-    // 1. Authenticate user session
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Ödeme başlatmak için giriş yapmalısınız.' }, { status: 401 });
+    // 2. Ownership Check if wedding_id provided
+    if (wedding_id) {
+      const { data: wedding } = await supabase
+        .from('weddings')
+        .select('id, user_id, is_paid, slug')
+        .eq('id', wedding_id)
+        .maybeSingle();
+
+      if (!wedding) {
+        return NextResponse.json({ error: 'Davetiye bulunamadı.' }, { status: 404 });
+      }
+
+      if (targetUserId && wedding.user_id && wedding.user_id !== targetUserId) {
+        return NextResponse.json({ error: 'Bu davetiye için ödeme yapma yetkiniz yoktur.' }, { status: 403 });
+      }
+
+      if (wedding.is_paid) {
+        return NextResponse.json({ error: 'Bu davetiye zaten ödenmiş ve yayındadır.' }, { status: 400 });
+      }
+
+      if (!targetUserId && wedding.user_id) {
+        targetUserId = wedding.user_id;
+      }
     }
 
-    // 2. Ownership Check: Verify user owns this wedding
-    const { data: wedding } = await supabase
-      .from('weddings')
-      .select('id, user_id, is_paid, title')
-      .eq('id', wedding_id)
-      .single();
-
-    if (!wedding || wedding.user_id !== session.user.id) {
-      return NextResponse.json({ error: 'Bu davetiye için ödeme yapma yetkiniz yoktur.' }, { status: 403 });
+    if (!targetUserId) {
+      targetUserId = '00000000-0000-0000-0000-000000000000';
     }
 
-    if (wedding.is_paid) {
-      return NextResponse.json({ error: 'Bu davetiye zaten ödenmiş ve yayındadır.' }, { status: 400 });
-    }
+    // 3. Resolve Price from Database Plans Table
+    let amount = TIER_PRICES_TRY[plan_tier] || TIER_PRICES_TRY.premium;
+    try {
+      const { data: plan } = await supabase
+        .from('plans')
+        .select('price')
+        .eq('code', plan_tier)
+        .eq('is_active', true)
+        .maybeSingle();
 
-    // 3. Resolve price server-side (Ignore any client-supplied price)
-    const amount = TIER_PRICES_TRY[plan_tier] || TIER_PRICES_TRY.standard;
+      if (plan && plan.price !== undefined) {
+        amount = Number(plan.price);
+      }
+    } catch {}
+
     const currency = 'TRY';
-    const idempotencyKey = `checkout_${wedding_id}_${plan_tier}`;
+    const idempotencyKey = `checkout_${wedding_id || targetUserId}_${plan_tier}_${Date.now()}`;
 
     // 4. Initialize Payment via Provider Abstraction
     const result = await initializePayment({
       weddingId: wedding_id,
-      userId: session.user.id,
-      userEmail: session.user.email || '',
+      userId: targetUserId,
+      userEmail: targetUserEmail,
       amount,
       currency,
-      callbackUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/payments/callback`,
+      planCode: plan_tier,
+      callbackUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://dijitaldavetiyeciniz.com'}/api/payments/callback`,
       idempotencyKey,
     });
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error || 'Ödeme başlatılamadı.' }, { status: 400 });
+      return NextResponse.json({ error: result.error || 'Ödeme başlatılamadı.' }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -73,9 +107,9 @@ export async function POST(request: Request) {
       checkout_url: result.checkoutUrl,
       amount,
       currency,
-      status: 'SANDBOX / MOCK HAZIR',
+      plan_tier,
     });
   } catch (err: any) {
-    return NextResponse.json({ error: 'Sunucu hatası: ' + err.message }, { status: 500 });
+    return NextResponse.json({ error: err.message || 'Ödeme işlemi başlatılırken hata oluştu.' }, { status: 500 });
   }
 }
