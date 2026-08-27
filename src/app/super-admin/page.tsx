@@ -98,12 +98,24 @@ export default function SuperAdminUltimateCommandCenter() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Initial Auth Check
-  useEffect(() => {
-    checkAuth();
-  }, []);
+  // Load All Data
+  async function loadAllData() {
+    setLoading(true);
+    await Promise.all([
+      fetchStats(),
+      fetchMembers(),
+      fetchInvitations(),
+      fetchContacts(),
+      fetchVerifications(),
+      fetchDeliveryLogs(),
+      fetchSecurityEvents(),
+      fetchAuditLogs(),
+      fetchSettings()
+    ]);
+    setLoading(false);
+  }
 
-  const checkAuth = async () => {
+  async function checkAuth() {
     try {
       const res = await fetch('/api/super-admin/auth');
       const data = await res.json();
@@ -116,7 +128,12 @@ export default function SuperAdminUltimateCommandCenter() {
     } catch {
       setIsAuthenticated(false);
     }
-  };
+  }
+
+  // Initial Auth Check
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,24 +166,9 @@ export default function SuperAdminUltimateCommandCenter() {
     setIsAuthenticated(false);
   };
 
-  // Load All Data
-  const loadAllData = async () => {
-    setLoading(true);
-    await Promise.all([
-      fetchStats(),
-      fetchMembers(),
-      fetchInvitations(),
-      fetchContacts(),
-      fetchVerifications(),
-      fetchDeliveryLogs(),
-      fetchSecurityEvents(),
-      fetchAuditLogs(),
-      fetchSettings()
-    ]);
-    setLoading(false);
-  };
 
-  const fetchStats = async () => {
+
+  async function fetchStats() {
     try {
       const res = await fetch('/api/super-admin/stats');
       const data = await res.json();
@@ -184,9 +186,9 @@ export default function SuperAdminUltimateCommandCenter() {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  const fetchMembers = async () => {
+  async function fetchMembers() {
     try {
       const res = await fetch(`/api/super-admin/users?filter=${memberFilter}&search=${encodeURIComponent(memberSearch)}`);
       const data = await res.json();
@@ -194,9 +196,9 @@ export default function SuperAdminUltimateCommandCenter() {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  const fetchInvitations = async () => {
+  async function fetchInvitations() {
     try {
       const res = await fetch(`/api/super-admin/invitations?filter=${invitationFilter}&search=${encodeURIComponent(invitationSearch)}`);
       const data = await res.json();
@@ -204,9 +206,9 @@ export default function SuperAdminUltimateCommandCenter() {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  const fetchContacts = async () => {
+  async function fetchContacts() {
     try {
       const res = await fetch(`/api/super-admin/contacts?filter=${contactFilter}`);
       const data = await res.json();
@@ -214,9 +216,9 @@ export default function SuperAdminUltimateCommandCenter() {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  const fetchVerifications = async () => {
+  async function fetchVerifications() {
     try {
       const res = await fetch(`/api/super-admin/verifications?status=${verificationStatusFilter}&search=${encodeURIComponent(verificationSearch)}`);
       const data = await res.json();
@@ -224,9 +226,9 @@ export default function SuperAdminUltimateCommandCenter() {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  const fetchDeliveryLogs = async () => {
+  async function fetchDeliveryLogs() {
     try {
       const res = await fetch('/api/super-admin/delivery-logs');
       const data = await res.json();
@@ -234,9 +236,9 @@ export default function SuperAdminUltimateCommandCenter() {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  const fetchSecurityEvents = async () => {
+  async function fetchSecurityEvents() {
     try {
       const res = await fetch('/api/super-admin/security-events');
       const data = await res.json();
@@ -244,9 +246,9 @@ export default function SuperAdminUltimateCommandCenter() {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  const fetchAuditLogs = async () => {
+  async function fetchAuditLogs() {
     try {
       const res = await fetch(`/api/super-admin/audit-logs?category=${auditFilter}`);
       const data = await res.json();
@@ -254,9 +256,9 @@ export default function SuperAdminUltimateCommandCenter() {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
-  const fetchSettings = async () => {
+  async function fetchSettings() {
     try {
       const res = await fetch('/api/super-admin/settings');
       const data = await res.json();
@@ -266,7 +268,7 @@ export default function SuperAdminUltimateCommandCenter() {
     } catch (e) {
       console.error(e);
     }
-  };
+  }
 
   // Global Search Handler
   const handleGlobalSearch = async (val: string) => {

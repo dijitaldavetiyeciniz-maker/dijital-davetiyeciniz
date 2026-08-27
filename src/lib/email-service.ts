@@ -171,7 +171,7 @@ export async function sendVerificationEmail({
     let errorMessage: string | null = null;
     const transporter = getTransporter();
 
-    if (transporter) {
+    if (transporter && process.env.NODE_ENV !== 'test' && !process.env.PLAYWRIGHT_TEST) {
       try {
         const fromAddress = process.env.EMAIL_FROM || process.env.SMTP_USER || 'dijitaldavetiyeciniz@gmail.com';
         const senderName = process.env.EMAIL_FROM_NAME || 'Dijital Davetiye';

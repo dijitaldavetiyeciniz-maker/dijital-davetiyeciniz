@@ -13,6 +13,7 @@ type EnvelopeOpeningProps = {
   styleConfig: EntranceAnimationStyle;
   customSealStyle?: string;
   customSealType?: string;
+  wedding?: any;
 };
 
 export function EnvelopeOpening({
@@ -24,7 +25,16 @@ export function EnvelopeOpening({
   styleConfig,
   customSealStyle,
   customSealType,
+  wedding,
 }: EnvelopeOpeningProps) {
+  // Extract custom parameters
+  const settings = wedding?.custom_overrides?.animation_settings?.['envelope'] || {};
+  const accentColor = settings.accentColor || '#d97706';
+  const openingText = settings.openingText || 'Davetiyeyi Görüntüle';
+  const envelopeColor = settings.envelopeColor || '#1e293b';
+  const waxColor = settings.waxColor || '#d97706';
+  const sealInitial = settings.sealInitial || initials || 'M&Z';
+
   // Determine envelope cover style based on selected theme style
   let envelopeStyle = "classic";
   if (styleConfig.id === "marble-gold") envelopeStyle = "marble-texture";
@@ -53,8 +63,16 @@ export function EnvelopeOpening({
   }
 
   return (
-    <div className={`envelope-opening-stage ${opened ? "is-opened" : ""}`}>
-      <EnvelopeCover style={envelopeStyle}>
+    <div 
+      data-testid="envelope-stage" 
+      data-accent-color={accentColor}
+      data-opening-text={openingText}
+      data-envelope-color={envelopeColor}
+      data-wax-color={waxColor}
+      data-seal-initial={sealInitial}
+      className={`envelope-opening-stage ${opened ? "is-opened" : ""}`}
+    >
+      <EnvelopeCover style={envelopeStyle} customColor={envelopeColor}>
         <InvitationCard 
           brideName={brideName} 
           groomName={groomName} 
@@ -63,7 +81,7 @@ export function EnvelopeOpening({
         {styleConfig.id === "champagne-gold" && (
           <div className="satin-ribbon" aria-hidden="true" />
         )}
-        <WaxSeal style={sealStyle} initials={initials} insignia={insignia} />
+        <WaxSeal style={sealStyle} initials={sealInitial} insignia={insignia} customColor={waxColor} />
       </EnvelopeCover>
     </div>
   );

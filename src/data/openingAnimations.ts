@@ -8,6 +8,28 @@ export type OpeningFamily =
   | 'CORPORATE'
   | 'EDITORIAL_FASHION';
 
+export interface AnimationControlField {
+  id: string;
+  label: string;
+  type: 'select' | 'color' | 'text' | 'range' | 'boolean';
+  options?: { value: string; label: string }[];
+  min?: number;
+  max?: number;
+  step?: number;
+  unit?: string;
+  defaultValue: any;
+  description?: string;
+}
+
+export interface AnimationCapabilities {
+  supportsColors?: boolean;
+  supportsSeal?: boolean;
+  supportsSpeed?: boolean;
+  supportsText?: boolean;
+  supportsIntensity?: boolean;
+  customControls: AnimationControlField[];
+}
+
 export interface EntranceAnimationType {
   id: string;
   name: string;
@@ -15,6 +37,9 @@ export interface EntranceAnimationType {
   icon: string;
   family: OpeningFamily;
   isPremium?: boolean;
+  capabilities?: AnimationCapabilities;
+  defaults?: Record<string, any>;
+  recommendedSettings?: Record<string, any>;
 }
 
 export interface EntranceAnimationStyle {
@@ -613,3 +638,455 @@ export function getRecommendedOpeningForTemplate(templateId?: string, eventType?
 
   return 'wax-seal-starfield';
 }
+
+export function getAnimationCapabilities(animationId: string): AnimationCapabilities {
+  const normId = (animationId || '').toLowerCase().replace(/[-_]/g, '');
+
+  if (normId === 'waxsealstarfield') {
+    return {
+      supportsColors: true,
+      supportsSeal: true,
+      supportsSpeed: true,
+      supportsText: true,
+      supportsIntensity: true,
+      customControls: [
+        {
+          id: 'envelopeColor',
+          label: 'Zarf Rengi',
+          type: 'color',
+          defaultValue: '#1e293b',
+          description: 'Zarf gövdesi ve kapak ana tonu'
+        },
+        {
+          id: 'waxColor',
+          label: 'Wax Mühür Rengi',
+          type: 'color',
+          defaultValue: '#d97706',
+          description: '3D metalik wax mühür pigmenti'
+        },
+        {
+          id: 'sealInitial',
+          label: 'Mühür Üzerindeki Harf / Monogram',
+          type: 'text',
+          defaultValue: '',
+          description: 'Örn: A&M veya boş bırakın'
+        },
+        {
+          id: 'paperTone',
+          label: 'İç Kart Kağıt Dokusu',
+          type: 'select',
+          options: [
+            { value: 'ivory', label: 'Fildişi Dokulu (Ivory)' },
+            { value: 'kraft', label: 'Rustik Doğal Kraft' },
+            { value: 'marble', label: 'Lüks Mermer Dokusu' },
+            { value: 'dark-velvet', label: 'Mat Siyah Kadife' },
+            { value: 'linen', label: 'Organik Keten' }
+          ],
+          defaultValue: 'ivory'
+        },
+        {
+          id: 'openingText',
+          label: 'Açılış Karşılama Metni',
+          type: 'text',
+          defaultValue: 'Davetiyenizi Açmak İçin Dokunun',
+          description: 'Mührün altında beliren kılavuz yazı'
+        },
+        {
+          id: 'starDensity',
+          label: 'Yıldız Parıltı Miktarı',
+          type: 'range',
+          min: 20,
+          max: 150,
+          defaultValue: 70,
+          unit: 'adet'
+        },
+        {
+          id: 'celestialBody',
+          label: 'Gökyüzü Teması',
+          type: 'select',
+          options: [
+            { value: 'full-moon', label: 'Dolunay & Gümüş Parıltı' },
+            { value: 'crescent-star', label: 'Hilal & Takımyıldızı' },
+            { value: 'cosmic-nebula', label: 'Kozmik Altın Tozu' }
+          ],
+          defaultValue: 'crescent-star'
+        },
+        {
+          id: 'sparkleColor',
+          label: 'Yıldız Işıltı Tonu',
+          type: 'color',
+          defaultValue: '#fde047'
+        }
+      ]
+    };
+  }
+
+  if (normId.includes('waxseal') || normId.includes('envelope') || normId.includes('zarf') || normId.includes('mühür')) {
+    return {
+      supportsColors: true,
+      supportsSeal: true,
+      supportsSpeed: true,
+      supportsText: true,
+      supportsIntensity: true,
+      customControls: [
+        {
+          id: 'envelopeColor',
+          label: 'Zarf Rengi',
+          type: 'color',
+          defaultValue: '#1e293b',
+          description: 'Zarf gövdesi ve kapak ana tonu'
+        },
+        {
+          id: 'waxColor',
+          label: 'Wax Mühür Rengi',
+          type: 'color',
+          defaultValue: '#d97706',
+          description: '3D metalik wax mühür pigmenti'
+        },
+        {
+          id: 'sealInitial',
+          label: 'Mühür Üzerindeki Harf / Monogram',
+          type: 'text',
+          defaultValue: '',
+          description: 'Örn: A&M veya boş bırakın'
+        },
+        {
+          id: 'paperTone',
+          label: 'İç Kart Kağıt Dokusu',
+          type: 'select',
+          options: [
+            { value: 'ivory', label: 'Fildişi Dokulu (Ivory)' },
+            { value: 'kraft', label: 'Rustik Doğal Kraft' },
+            { value: 'marble', label: 'Lüks Mermer Dokusu' },
+            { value: 'dark-velvet', label: 'Mat Siyah Kadife' },
+            { value: 'linen', label: 'Organik Keten' }
+          ],
+          defaultValue: 'ivory'
+        },
+        {
+          id: 'openingText',
+          label: 'Açılış Karşılama Metni',
+          type: 'text',
+          defaultValue: 'Davetiyenizi Açmak İçin Dokunun',
+          description: 'Mührün altında beliren kılavuz yazı'
+        }
+      ]
+    };
+  }
+
+  if (normId.includes('curtain') || normId.includes('opera') || normId.includes('perde')) {
+    return {
+      supportsColors: true,
+      supportsSpeed: true,
+      supportsText: true,
+      supportsIntensity: true,
+      customControls: [
+        {
+          id: 'curtainStyle',
+          label: 'Perde Kumaş Tipi',
+          type: 'select',
+          options: [
+            { value: 'velvet-royal', label: 'Bordo Kraliyet Kadifesi' },
+            { value: 'silk-emerald', label: 'Zümrüt İpek Kumaş' },
+            { value: 'noir-minimal', label: 'Minimalist Mat Siyah' },
+            { value: 'gold-brocade', label: 'Altın Varaklı Jakar' }
+          ],
+          defaultValue: 'velvet-royal'
+        },
+        {
+          id: 'curtainColor',
+          label: 'Perde Tonu',
+          type: 'color',
+          defaultValue: '#881337'
+        },
+        {
+          id: 'spotlight',
+          label: 'Sahne Projektör Işığı (Spotlight)',
+          type: 'boolean',
+          defaultValue: true
+        },
+        {
+          id: 'revealSpeed',
+          label: 'Perde Açılma Hızı',
+          type: 'select',
+          options: [
+            { value: 'slow', label: 'Görkemli & Yavaş (2.5s)' },
+            { value: 'normal', label: 'Dengeli (1.6s)' },
+            { value: 'fast', label: 'Dinamik & Hızlı (1.0s)' }
+          ],
+          defaultValue: 'normal'
+        },
+        {
+          id: 'openingText',
+          label: 'Sahne Başlık Yazısı',
+          type: 'text',
+          defaultValue: 'Perde Açılıyor...'
+        }
+      ]
+    };
+  }
+
+  if (normId.includes('door') || normId.includes('gate') || normId.includes('palace') || normId.includes('kapi') || normId.includes('saray')) {
+    return {
+      supportsColors: true,
+      supportsSpeed: true,
+      supportsText: true,
+      customControls: [
+        {
+          id: 'gateStyle',
+          label: 'Kapı Materyali',
+          type: 'select',
+          options: [
+            { value: 'gold-filigree', label: 'Altın Telkari Saray Kapısı' },
+            { value: 'wrought-iron', label: 'Ferforje Bahçe Kemeri' },
+            { value: 'antique-wood', label: 'Antik Ahşap Kapı' },
+            { value: 'modern-glass', label: 'Modern Şeffaf Cam Kanatlar' }
+          ],
+          defaultValue: 'gold-filigree'
+        },
+        {
+          id: 'emblemType',
+          label: 'Kapı Arması / Tokmak',
+          type: 'select',
+          options: [
+            { value: 'royal-crown', label: 'Kraliyet Tacı' },
+            { value: 'vintage-lion', label: 'Aslan Başı Tokmak' },
+            { value: 'monogram-crest', label: 'Çift Monogramı' },
+            { value: 'none', label: 'Sade & Armasız' }
+          ],
+          defaultValue: 'royal-crown'
+        },
+        {
+          id: 'beamIntensity',
+          label: 'Açılış Işık Hüzmesi',
+          type: 'range',
+          min: 0,
+          max: 100,
+          defaultValue: 75,
+          unit: '%'
+        }
+      ]
+    };
+  }
+
+  if (normId.includes('film') || normId.includes('cinema') || normId.includes('premiere') || normId.includes('gala')) {
+    return {
+      supportsColors: true,
+      supportsSpeed: true,
+      supportsText: true,
+      customControls: [
+        {
+          id: 'filmAtmosphere',
+          label: 'Film Atmosferi',
+          type: 'select',
+          options: [
+            { value: 'classic-hollywood', label: 'Klasik Hollywood Altın Çağ' },
+            { value: 'vintage-sepia', label: 'Nostaljik 8mm Sepya' },
+            { value: 'modern-premiere', label: 'Modern Kırmızı Halı Galası' }
+          ],
+          defaultValue: 'classic-hollywood'
+        },
+        {
+          id: 'projectorLight',
+          label: 'Projektör Işık Hüzmesi',
+          type: 'boolean',
+          defaultValue: true
+        },
+        {
+          id: 'openingTitle',
+          label: 'Gala Başlık Yazısı',
+          type: 'text',
+          defaultValue: 'BÜYÜK GÜNÜN FİLMİ'
+        }
+      ]
+    };
+  }
+
+  if (normId.includes('botanical') || normId.includes('blossom') || normId.includes('flower') || normId.includes('petal') || normId.includes('cicek')) {
+    return {
+      supportsColors: true,
+      supportsIntensity: true,
+      supportsSpeed: true,
+      customControls: [
+        {
+          id: 'flowerType',
+          label: 'Çiçek & Yaprak Türü',
+          type: 'select',
+          options: [
+            { value: 'rose-petals', label: 'Kırmızı & Pembe Gül Yaprakları' },
+            { value: 'sakura', label: 'Japon Kiraz Çiçeği (Sakura)' },
+            { value: 'olive-leaves', label: 'Ege Zeytin Dalları' },
+            { value: 'eucalyptus', label: 'Zarif Okaliptüs Yaprakları' }
+          ],
+          defaultValue: 'rose-petals'
+        },
+        {
+          id: 'petalDensity',
+          label: 'Düşen Yaprak Yoğunluğu',
+          type: 'select',
+          options: [
+            { value: 'subtle', label: 'Hafif & Zarif (10 yaprak)' },
+            { value: 'medium', label: 'Dengeli (24 yaprak)' },
+            { value: 'rich', label: 'Zengin & Dolgun (40 yaprak)' }
+          ],
+          defaultValue: 'medium'
+        },
+        {
+          id: 'fallingSpeed',
+          label: 'Süzülme Hızı',
+          type: 'select',
+          options: [
+            { value: 'gentle', label: 'Yavaş & Sakin' },
+            { value: 'lively', label: 'Dinamik' }
+          ],
+          defaultValue: 'gentle'
+        }
+      ]
+    };
+  }
+
+  if (normId.includes('star') || normId.includes('night') || normId.includes('celestial') || normId.includes('moon') || normId.includes('yildiz')) {
+    return {
+      supportsColors: true,
+      supportsIntensity: true,
+      customControls: [
+        {
+          id: 'starDensity',
+          label: 'Yıldız Parıltı Miktarı',
+          type: 'range',
+          min: 20,
+          max: 150,
+          defaultValue: 70,
+          unit: 'adet'
+        },
+        {
+          id: 'celestialBody',
+          label: 'Gökyüzü Teması',
+          type: 'select',
+          options: [
+            { value: 'full-moon', label: 'Dolunay & Gümüş Parıltı' },
+            { value: 'crescent-star', label: 'Hilal & Takımyıldızı' },
+            { value: 'cosmic-nebula', label: 'Kozmik Altın Tozu' }
+          ],
+          defaultValue: 'crescent-star'
+        },
+        {
+          id: 'sparkleColor',
+          label: 'Yıldız Işıltı Tonu',
+          type: 'color',
+          defaultValue: '#fde047'
+        }
+      ]
+    };
+  }
+
+  if (normId.includes('story') || normId.includes('book') || normId.includes('kitap') || normId.includes('masal')) {
+    return {
+      supportsColors: true,
+      supportsText: true,
+      customControls: [
+        {
+          id: 'bookCoverColor',
+          label: 'Kitap Kapağı Rengi',
+          type: 'color',
+          defaultValue: '#1e3a8a'
+        },
+        {
+          id: 'flipStyle',
+          label: 'Sayfa Çevrilme Hareketi',
+          type: 'select',
+          options: [
+            { value: '3d-curl', label: '3D Gerçekçi Sayfa Kıvrılması' },
+            { value: 'smooth-open', label: 'Pürüzsüz İki Yana Açılış' }
+          ],
+          defaultValue: '3d-curl'
+        },
+        {
+          id: 'coverTitle',
+          label: 'Kitap Kapağı Başlığı',
+          type: 'text',
+          defaultValue: 'Bizim Hikayemiz'
+        }
+      ]
+    };
+  }
+
+  if (normId.includes('henna') || normId.includes('velvet') || normId.includes('kina')) {
+    return {
+      supportsColors: true,
+      supportsText: true,
+      customControls: [
+        {
+          id: 'velvetTone',
+          label: 'Kadife Zemin Tonu',
+          type: 'select',
+          options: [
+            { value: 'bordeaux', label: 'Derin Bordo Kadife' },
+            { value: 'emerald', label: 'Zümrüt Yeşili Kadife' },
+            { value: 'night-black', label: 'Gece Siyahı & Altın' }
+          ],
+          defaultValue: 'bordeaux'
+        },
+        {
+          id: 'orientalMotif',
+          label: 'Geleneksel Kına Motifi',
+          type: 'select',
+          options: [
+            { value: 'gold-paisley', label: 'Altın Varaklı Şal Deseni' },
+            { value: 'ottoman-tulip', label: 'Osmanlı Lalesi & Tezhip' },
+            { value: 'moroccan-arch', label: 'Fas Saray Kemeri' }
+          ],
+          defaultValue: 'gold-paisley'
+        },
+        {
+          id: 'hennaNote',
+          label: 'Karşılama Metni',
+          type: 'text',
+          defaultValue: 'Kına Gecemize Hoş Geldiniz'
+        }
+      ]
+    };
+  }
+
+  // Generic fallback for any other animation
+  return {
+    supportsColors: true,
+    supportsSpeed: true,
+    supportsText: true,
+    customControls: [
+      {
+        id: 'accentColor',
+        label: 'Animasyon Vurgu Rengi',
+        type: 'color',
+        defaultValue: '#d97706'
+      },
+      {
+        id: 'openingText',
+        label: 'Açılış Başlık Metni',
+        type: 'text',
+        defaultValue: 'Davetiyeyi Görüntüle'
+      },
+      {
+        id: 'animationSpeed',
+        label: 'Oynatma Hızı',
+        type: 'select',
+        options: [
+          { value: 'slow', label: 'Yavaş & Zarif' },
+          { value: 'normal', label: 'Normal' },
+          { value: 'fast', label: 'Hızlı' }
+        ],
+        defaultValue: 'normal'
+      }
+    ]
+  };
+}
+
+export function getAnimationDefaults(animationId: string): Record<string, any> {
+  const caps = getAnimationCapabilities(animationId);
+  const defaults: Record<string, any> = {};
+  for (const ctrl of caps.customControls) {
+    defaults[ctrl.id] = ctrl.defaultValue;
+  }
+  return defaults;
+}
+

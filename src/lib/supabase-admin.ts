@@ -6,16 +6,14 @@ import { createClient } from '@supabase/supabase-js';
  */
 export function getSupabaseAdmin() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || (
-    process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST ? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY : ''
-  );
+  const serviceRoleKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl) {
     throw new Error('NEXT_PUBLIC_SUPABASE_URL is missing');
   }
 
   if (!serviceRoleKey) {
-    throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for server-side operations');
+    throw new Error('SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY is required for server-side operations');
   }
 
   return createClient(supabaseUrl, serviceRoleKey, {

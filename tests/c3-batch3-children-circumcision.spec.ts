@@ -84,13 +84,14 @@ test.describe("C3-B3 - Children & Circumcision Templates E2E", () => {
       await opening.click();
       const wrapper = page.locator('[data-testid="wedding-content-wrapper"]');
       await expect(wrapper).toHaveAttribute('data-layout-ready', 'true', { timeout: 20000 });
+      await page.waitForTimeout(500);
 
       // Verify template layout renders correctly
       const layout = page.locator(`[data-testid="${theme.testId}"]`);
       await expect(layout).toBeVisible();
 
       // Scroll to the very bottom to trigger Scene 5 (RSVP and events)
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await page.evaluate(() => window.scrollTo(0, Math.max(document.documentElement.scrollHeight, document.body.scrollHeight, 999999)));
       await page.waitForTimeout(1000);
 
       // Verify signature element exists after scroll

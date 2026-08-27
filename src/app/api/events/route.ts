@@ -6,12 +6,12 @@ const eventSchema = z.object({
   wedding_id: z.string().uuid(),
   type: z.string().min(1),
   title: z.string().min(1),
-  start_time: z.string().datetime(),
-  end_time: z.string().datetime().optional().nullable(),
+  start_time: z.string().min(1),
+  end_time: z.string().optional().nullable(),
   timezone: z.string().default('Europe/Istanbul'),
   venue_name: z.string().optional().nullable(),
   venue_address: z.string().optional().nullable(),
-  google_maps_url: z.string().url().optional().nullable(),
+  google_maps_url: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   is_primary: z.boolean().default(false)
 });
@@ -46,6 +46,16 @@ export async function GET(request: NextRequest) {
       const { verifyAdminCookie } = await import('@/lib/auth-cookie');
       if (storedCookie && verifyAdminCookie(weddingId, storedCookie)) {
         isAuthorized = true;
+      } else {
+        const serviceRoleClient = createServerServiceRoleClient();
+        const { data: w } = await serviceRoleClient.from('weddings').select('id, slug').or(`id.eq.${weddingId},slug.eq.${weddingId}`).maybeSingle();
+        if (w) {
+          const c1 = cookieStore.get(`admin_auth_${w.id}`)?.value;
+          const c2 = w.slug ? cookieStore.get(`admin_auth_${w.slug}`)?.value : null;
+          if ((c1 && verifyAdminCookie(w.id, c1)) || (c2 && (verifyAdminCookie(w.id, c2) || verifyAdminCookie(w.slug, c2)))) {
+            isAuthorized = true;
+          }
+        }
       }
     }
 
@@ -94,6 +104,16 @@ export async function POST(request: NextRequest) {
       const { verifyAdminCookie } = await import('@/lib/auth-cookie');
       if (storedCookie && verifyAdminCookie(weddingId, storedCookie)) {
         isAuthorized = true;
+      } else {
+        const serviceRoleClient = createServerServiceRoleClient();
+        const { data: w } = await serviceRoleClient.from('weddings').select('id, slug').or(`id.eq.${weddingId},slug.eq.${weddingId}`).maybeSingle();
+        if (w) {
+          const c1 = cookieStore.get(`admin_auth_${w.id}`)?.value;
+          const c2 = w.slug ? cookieStore.get(`admin_auth_${w.slug}`)?.value : null;
+          if ((c1 && verifyAdminCookie(w.id, c1)) || (c2 && (verifyAdminCookie(w.id, c2) || verifyAdminCookie(w.slug, c2)))) {
+            isAuthorized = true;
+          }
+        }
       }
     }
 

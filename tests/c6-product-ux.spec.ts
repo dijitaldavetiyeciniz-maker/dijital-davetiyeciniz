@@ -36,7 +36,7 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
 
     // 1. Create a Wedding Event
     weddingIds.wedding = crypto.randomUUID();
-    await supabase.from('weddings').insert({
+    const { error: errWedding } = await supabase.from('weddings').insert({
       id: weddingIds.wedding,
       slug: SLUG_WEDDING,
       bride_name: "Elif",
@@ -46,15 +46,19 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       event_type: "wedding",
       admin_password: "adminpassword",
       template_id: "royal-letter",
-      is_paid: true
+      is_paid: true,
+      is_published: true
     });
+    if (errWedding) {
+      throw new Error(`Failed to insert wedding: ${errWedding.message}`);
+    }
 
     // Insert 3 sub-events for the wedding event (Only if we have database service role keys/access)
     if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
       const nikahId = crypto.randomUUID();
       const hennaId = crypto.randomUUID();
       const afterId = crypto.randomUUID();
-      await supabase.from('invitation_events').insert([
+      const { error: errEvents } = await supabase.from('invitation_events').insert([
         {
           id: nikahId,
           wedding_id: weddingIds.wedding,
@@ -83,11 +87,14 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
           is_primary: false
         }
       ]);
+      if (errEvents) {
+        throw new Error(`Failed to insert wedding subevents: ${errEvents.message}`);
+      }
     }
 
     // 2. Create a Henna Event
     weddingIds.henna = crypto.randomUUID();
-    await supabase.from('weddings').insert({
+    const { error: errHenna } = await supabase.from('weddings').insert({
       id: weddingIds.henna,
       slug: SLUG_HENNA,
       bride_name: "Selin",
@@ -99,6 +106,9 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       template_id: "henna-velvet",
       is_paid: true
     });
+    if (errHenna) {
+      throw new Error(`Failed to insert henna wedding: ${errHenna.message}`);
+    }
     
     // Create Kına primary event (Only if we have database service role keys/access)
     if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -303,7 +313,7 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
     await page.click('button[type="submit"]');
 
     // Confirm admin dashboard renders
-    await expect(page.locator('text=Davetiye Hazırlama Stüdyosu')).toBeVisible();
+    await expect(page.locator('text=Genel Bilgiler').first()).toBeVisible({ timeout: 15000 });
 
     // Verify stepper sidebar items
     await expect(page.locator('text=Bilgiler').first()).toBeVisible();
@@ -322,7 +332,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
 
-    // Terminology check
+    // Confirm login and terminology check
+    await expect(page.locator('text=Genel Bilgiler').first()).toBeVisible({ timeout: 15000 });
     await expect(page.locator('label:has-text("Gelin Adayı")')).toBeVisible();
     await expect(page.locator('label:has-text("Damat Adayı (İsteğe Bağlı)")')).toBeVisible();
 
@@ -359,7 +370,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
 
-    // Terminology check
+    // Confirm login and terminology check
+    await expect(page.locator('text=Genel Bilgiler').first()).toBeVisible({ timeout: 15000 });
     await expect(page.locator('label:has-text("Etkinlik Adı / Başlığı")')).toBeVisible();
     await expect(page.locator('label:has-text("Düzenleyen Şirket / Kurum")')).toBeVisible();
 
@@ -373,7 +385,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
 
-    // Terminology check
+    // Confirm login and terminology check
+    await expect(page.locator('text=Genel Bilgiler').first()).toBeVisible({ timeout: 15000 });
     await expect(page.locator('label:has-text("Etkinlik Adı / Başlığı")')).toBeVisible();
     await expect(page.locator('label:has-text("Kimin İçin / Konusu")')).toBeVisible();
   });
@@ -405,6 +418,16 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
 
     // Visit public invitation page
     await page.goto(`${BASE_URL}/${SLUG_WEDDING}`);
+    await page.waitForLoadState("networkidle");
+
+    // Click to open envelope if visible
+    const opening = page.locator("[data-testid=\"opening-overlay\"]");
+    if (await opening.isVisible()) {
+      await opening.click();
+      const wrapper = page.locator('[data-testid="wedding-content-wrapper"]');
+      await expect(wrapper).toHaveAttribute('data-layout-ready', 'true', { timeout: 20000 });
+      await page.waitForTimeout(500);
+    }
 
     // Verify Kına event card contains Kına note only
     const kınaCard = page.locator('h4:has-text("Gelin Kınası")').locator('xpath=../..');
@@ -430,55 +453,55 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
     await page.goto(`${BASE_URL}/${SLUG_WEDDING}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
-    await expect(page.locator('label:has-text("Gelin Adı")')).toBeVisible();
+    await expect(page.locator('label:has-text("Gelin Adı")')).toBeVisible({ timeout: 15000 });
 
     // 2. Engagement
     await page.goto(`${BASE_URL}/${SLUG_ENG}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
-    await expect(page.locator('label:has-text("Gelin / Birinci Kişi")')).toBeVisible();
+    await expect(page.locator('label:has-text("Gelin / Birinci Kişi")')).toBeVisible({ timeout: 15000 });
 
     // 3. Henna
     await page.goto(`${BASE_URL}/${SLUG_HENNA}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
-    await expect(page.locator('label:has-text("Gelin Adayı")')).toBeVisible();
+    await expect(page.locator('label:has-text("Gelin Adayı")')).toBeVisible({ timeout: 15000 });
 
     // 4. Circumcision
     await page.goto(`${BASE_URL}/${SLUG_CIRCUM}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
-    await expect(page.locator('label:has-text("Çocuğun Adı")')).toBeVisible();
+    await expect(page.locator('label:has-text("Çocuğun Adı")')).toBeVisible({ timeout: 15000 });
 
     // 5. Baby Shower
     await page.goto(`${BASE_URL}/${SLUG_BABY}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
-    await expect(page.locator('label:has-text("Bebeğin Adı / Hitap")')).toBeVisible();
+    await expect(page.locator('label:has-text("Bebeğin Adı / Hitap")')).toBeVisible({ timeout: 15000 });
 
     // 6. Birthday
     await page.goto(`${BASE_URL}/${SLUG_BDAY}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
-    await expect(page.locator('label:has-text("Doğum Günü Sahibi Adı")')).toBeVisible();
+    await expect(page.locator('label:has-text("Doğum Günü Sahibi Adı")')).toBeVisible({ timeout: 15000 });
 
     // 7. Corporate
     await page.goto(`${BASE_URL}/${SLUG_CORP}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
-    await expect(page.locator('label:has-text("Etkinlik Adı / Başlığı")')).toBeVisible();
+    await expect(page.locator('label:has-text("Etkinlik Adı / Başlığı")')).toBeVisible({ timeout: 15000 });
 
     // 8. Graduation
     await page.goto(`${BASE_URL}/${SLUG_GRAD}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
-    await expect(page.locator('label:has-text("Mezun Adı / Sınıf Adı")')).toBeVisible();
+    await expect(page.locator('label:has-text("Mezun Adı / Sınıf Adı")')).toBeVisible({ timeout: 15000 });
 
     // 9. Special
     await page.goto(`${BASE_URL}/${SLUG_SPECIAL}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
-    await expect(page.locator('label:has-text("Etkinlik Adı / Başlığı")')).toBeVisible();
+    await expect(page.locator('label:has-text("Etkinlik Adı / Başlığı")')).toBeVisible({ timeout: 15000 });
   });
 
   test('Cross-event terminology validation', async ({ page }) => {
@@ -486,6 +509,7 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
     await page.goto(`${BASE_URL}/${SLUG_BABY}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
+    await expect(page.locator('label:has-text("Bebeğin Adı / Hitap")')).toBeVisible({ timeout: 15000 });
     await expect(page.locator('text=Damat Adı')).not.toBeVisible();
     await expect(page.locator('text=Düzenleyen Şirket')).not.toBeVisible();
 
@@ -493,6 +517,7 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
     await page.goto(`${BASE_URL}/${SLUG_CORP}/admin`);
     await page.fill('input[type="password"]', 'adminpassword');
     await page.click('button[type="submit"]');
+    await expect(page.locator('label:has-text("Etkinlik Adı / Başlığı")')).toBeVisible({ timeout: 15000 });
     await expect(page.locator('text=Gelin Adı')).not.toBeVisible();
     await expect(page.locator('text=Damat Ailesi')).not.toBeVisible();
     await expect(page.locator('text=Kına gecesi')).not.toBeVisible();

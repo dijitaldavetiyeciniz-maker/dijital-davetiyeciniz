@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { resolveGuestTokenDetailed, generateGuestToken, revokeGuestToken, renewGuestToken, verifyGuestToken } from '@/server/guestTokens';
 
 export async function POST(request: Request) {
-  if (process.env.NODE_ENV !== 'test' && process.env.PART5_TEST_MODE !== 'true') {
+  if (process.env.NODE_ENV === 'production' && process.env.PART5_TEST_MODE !== 'true') {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 

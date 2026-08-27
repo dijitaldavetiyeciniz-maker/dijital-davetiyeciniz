@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
 export async function GET(
   req: Request,
@@ -8,6 +8,7 @@ export async function GET(
   try {
     const { id: weddingId } = await params;
 
+    const supabase = getSupabaseAdmin();
     // Resolve wedding id if slug provided
     const { data: wedding } = await supabase
       .from('weddings')
@@ -63,6 +64,7 @@ export async function POST(
     const body = await req.json().catch(() => ({}));
     const action = body.action || 'restore'; // 'restore' or 'snapshot'
 
+    const supabase = getSupabaseAdmin();
     const { data: wedding } = await supabase
       .from('weddings')
       .select('*')
@@ -106,8 +108,7 @@ export async function POST(
           draft_data: restoredSnapshot,
           has_unpublished_changes: true,
           draft_revision: (wedding.draft_revision || 1) + 1,
-          custom_overrides: overrides,
-          updated_at: new Date().toISOString()
+          custom_overrides: overrides
         })
         .eq('id', wedding.id);
 
@@ -115,8 +116,7 @@ export async function POST(
         const { error: fallbackErr } = await supabase
           .from('weddings')
           .update({
-            custom_overrides: overrides,
-            updated_at: new Date().toISOString()
+            custom_overrides: overrides
           })
           .eq('id', wedding.id);
         updateErr = fallbackErr;

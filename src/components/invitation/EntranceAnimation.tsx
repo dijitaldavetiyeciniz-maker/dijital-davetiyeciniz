@@ -180,7 +180,8 @@ function parseLegacyAnimation(animationVal: string, styleVal: string) {
     "parisianBlackTie", "grandOpera", "moonlitGarden", "vogueEditorial", 
     "mediterraneanCeramic", "ottomanIllumination", "coastalSunset", 
     "auroraGlass", "botanicalWatercolor", "filmPremiere", "swissGallery", 
-    "royalPalace", "hennaPalace", "princeCeremony", "storybook", "futureSummit"
+    "royalPalace", "hennaPalace", "princeCeremony", "storybook", "futureSummit",
+    "wax-seal-starfield", "waxSealStarfield"
   ];
   if (validTypes.includes(animationVal)) {
     return { type: animationVal, style };
