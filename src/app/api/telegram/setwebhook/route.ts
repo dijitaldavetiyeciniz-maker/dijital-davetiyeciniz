@@ -1,10 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { createServerServiceRoleClient } from '@/server/supabaseClient';
 
 export async function POST(request: Request) {
   try {
@@ -29,6 +24,7 @@ export async function POST(request: Request) {
     const botName = getMeData.result.first_name;
 
     // 2. Token'ı DB'ye kaydet
+    const supabase = createServerServiceRoleClient();
     const { error: saveError } = await supabase
       .from('weddings')
       .update({ telegram_bot_token: bot_token, telegram_chat_id: null })

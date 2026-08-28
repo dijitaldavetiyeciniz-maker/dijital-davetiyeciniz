@@ -13,7 +13,7 @@ export async function generateMetadata({
   
   const { data: wedding } = await supabase
     .from('weddings')
-    .select('bride_name, groom_name, venue_name, event_type, updated_at')
+    .select('bride_name, groom_name, venue_name, event_type, created_at')
     .eq('slug', wedding_id)
     .single();
 
@@ -21,7 +21,7 @@ export async function generateMetadata({
 
   const title = `${wedding.bride_name} & ${wedding.groom_name} Davetiyesi`;
   const description = `${wedding.venue_name} salonundaki ${wedding.event_type === 'wedding' ? 'düğün' : 'etkinlik'} davetiyemize bekliyoruz.`;
-  const cacheBust = wedding.updated_at ? new Date(wedding.updated_at).getTime() : Date.now();
+  const cacheBust = wedding.created_at ? new Date(wedding.created_at).getTime() : Date.now();
   const ogImageUrl = `/api/og?wedding_id=${wedding_id}&v=${cacheBust}`;
 
   return {

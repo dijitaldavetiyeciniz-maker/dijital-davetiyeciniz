@@ -22,6 +22,7 @@ test.describe('C8 — VERSION HISTORY & SAFE RESTORE SUITE', () => {
         admin_password: 'test',
         is_paid: true,
         is_active: true,
+        is_published: true,
         template_id: 'template1',
         custom_overrides: {
           is_published: true,
@@ -67,6 +68,7 @@ test.describe('C8 — VERSION HISTORY & SAFE RESTORE SUITE', () => {
           .from('weddings')
           .update({
             bride_name: 'Defne Sürüm 2 (Güncellenmiş)',
+            is_published: true,
             custom_overrides: {
               is_published: true,
               published_version_number: 2,
@@ -129,8 +131,9 @@ test.describe('C8 — VERSION HISTORY & SAFE RESTORE SUITE', () => {
     });
 
     if (!res.ok()) {
-      console.error("VERSION RESTORE FAILED:", res.status(), await res.text());
+      console.log("RESTORE API FAILED: status =", res.status(), "body =", await res.text());
     }
+
     expect(res.ok()).toBeTruthy();
     const data = await res.json();
     expect(data.success).toBe(true);
@@ -149,16 +152,6 @@ test.describe('C8 — VERSION HISTORY & SAFE RESTORE SUITE', () => {
     // 3. Verify public page still serves Version 2
     await page.goto(`/${testSlug}`);
     await page.waitForLoadState('domcontentloaded');
-
-    // Open envelope
-    const opening = page.locator("[data-testid=\"opening-overlay\"]");
-    if (await opening.isVisible()) {
-      await opening.click();
-      const wrapper = page.locator('[data-testid="wedding-content-wrapper"]');
-      await expect(wrapper).toHaveAttribute('data-layout-ready', 'true', { timeout: 20000 });
-      await page.waitForTimeout(500);
-    }
-
     const liveV2Text = page.locator('text=Defne Sürüm 2');
     await expect(liveV2Text.first()).toBeVisible({ timeout: 15000 });
   });
@@ -175,16 +168,6 @@ test.describe('C8 — VERSION HISTORY & SAFE RESTORE SUITE', () => {
     // Public page now serves the newly published snapshot
     await page.goto(`/${testSlug}`);
     await page.waitForLoadState('domcontentloaded');
-
-    // Open envelope
-    const opening = page.locator("[data-testid=\"opening-overlay\"]");
-    if (await opening.isVisible()) {
-      await opening.click();
-      const wrapper = page.locator('[data-testid="wedding-content-wrapper"]');
-      await expect(wrapper).toHaveAttribute('data-layout-ready', 'true', { timeout: 20000 });
-      await page.waitForTimeout(500);
-    }
-
     const restoredText = page.locator('text=Defne');
     await expect(restoredText.first()).toBeVisible({ timeout: 15000 });
   });

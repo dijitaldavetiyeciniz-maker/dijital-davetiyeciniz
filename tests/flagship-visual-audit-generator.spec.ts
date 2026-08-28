@@ -347,6 +347,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
     page.on('dialog', async dialog => {
       const msg = dialog.message();
+      if (dialog.type() === 'beforeunload' || !msg) {
+        await dialog.accept();
+        return;
+      }
       if (msg.includes('Bu şablonu uygulamak istediğinize emin misiniz')) {
         await dialog.accept();
       } else if (msg.includes('başarıyla kaydedildi')) {
@@ -476,6 +480,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     page.on('dialog', async dialog => {
       const msg = dialog.message();
+      if (dialog.type() === 'beforeunload' || !msg) {
+        await dialog.accept();
+        return;
+      }
       if (msg.includes('Bu şablonu uygulamak istediğinize emin misiniz')) {
         if (isRejecting) {
           await dialog.dismiss();

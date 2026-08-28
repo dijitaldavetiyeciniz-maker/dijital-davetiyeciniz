@@ -68,7 +68,6 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
     test(`Verify template: ${theme.id}`, async ({ page }) => {
       const consoleErrors: string[] = [];
       page.on("pageerror", (err) => consoleErrors.push(err.message));
-      page.on("console", (msg) => console.log(`[BROWSER CONSOLE] ${msg.text()}`));
 
       await page.setViewportSize({ width: 1280, height: 800 });
       
@@ -81,27 +80,18 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
       await expect(opening).toBeVisible();
       
       // Click and wait for the custom wrapper to transition to ready state
-      await opening.click();
+      await page.waitForTimeout(500);
+      await opening.click({ force: true });
       const wrapper = page.locator('[data-testid="wedding-content-wrapper"]');
       await expect(wrapper).toHaveAttribute('data-layout-ready', 'true', { timeout: 20000 });
-      await page.waitForTimeout(500);
 
       // Verify template layout renders correctly
       const layout = page.locator(`[data-testid="${theme.testId}"]`);
       await expect(layout).toBeVisible();
 
       // Scroll to the very bottom to trigger Scene 5 (RSVP and events)
-      await page.evaluate(() => window.scrollTo(0, Math.max(document.documentElement.scrollHeight, document.body.scrollHeight, 999999)));
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await page.waitForTimeout(1000);
-
-      console.log(`--- TELEMETRY --- theme: ${theme.id}`);
-      console.log(`SCROLL HEIGHT:`, await page.evaluate(() => document.documentElement.scrollHeight));
-      console.log(`BODY SCROLL HEIGHT:`, await page.evaluate(() => document.body.scrollHeight));
-      console.log(`WINDOW INNER HEIGHT:`, await page.evaluate(() => window.innerHeight));
-      console.log(`WINDOW SCROLL Y:`, await page.evaluate(() => window.scrollY));
-      console.log(`RECT TOP:`, await page.evaluate((sel) => document.querySelector(sel)?.getBoundingClientRect().top, `[data-testid="${theme.testId}"]`));
-      console.log(`RECT HEIGHT:`, await page.evaluate((sel) => document.querySelector(sel)?.getBoundingClientRect().height, `[data-testid="${theme.testId}"]`));
-      console.log(`PLAQUE IN HTML:`, (await page.content()).includes(theme.signatureSelector.replace('#', '')) ? 'FOUND' : 'NOT FOUND');
 
       // Verify signature element exists after scroll
       const signature = page.locator(theme.signatureSelector);
@@ -121,7 +111,8 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
 
       const opening = page.locator("[data-testid=\"opening-overlay\"]");
       await expect(opening).toBeVisible();
-      await opening.click();
+      await page.waitForTimeout(500);
+      await opening.click({ force: true });
       
       const wrapper = page.locator('[data-testid="wedding-content-wrapper"]');
       await expect(wrapper).toHaveAttribute('data-layout-ready', 'true', { timeout: 20000 });

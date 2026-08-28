@@ -38,10 +38,16 @@ test.describe('PART 3 — Flagship Collection Templates & Visual Quality Tests',
     await page.waitForTimeout(500);
 
     // If envelope seal button exists, click to open
-    const seal = page.locator('.cursor-pointer, button').first();
-    if (await seal.isVisible()) {
-      await seal.click().catch(() => {});
-      await page.waitForTimeout(500);
+    const opening = page.locator('[data-testid="opening-overlay"]');
+    if (await opening.isVisible()) {
+      await opening.click().catch(() => {});
+      await page.waitForTimeout(1000);
+    } else {
+      const seal = page.locator('.cursor-pointer, button').first();
+      if (await seal.isVisible()) {
+        await seal.click().catch(() => {});
+        await page.waitForTimeout(1000);
+      }
     }
 
     const content = await page.content();

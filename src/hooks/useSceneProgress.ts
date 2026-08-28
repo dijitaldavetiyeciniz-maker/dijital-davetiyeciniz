@@ -15,34 +15,38 @@ export function useSceneProgress(
     if (!el) return;
 
     const handleScroll = () => {
-      const rect = el.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const totalHeight = rect.height - viewportHeight;
-      
-      if (totalHeight <= 0) return;
+      if (rafIdRef.current !== null) return;
 
-      // Calculate progress based on how far the container has scrolled past the viewport top
-      const currentScroll = -rect.top;
-      const pct = Math.max(0, Math.min(1, currentScroll / totalHeight));
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        
+        const rect = el.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const totalHeight = rect.height - viewportHeight;
+        
+        if (totalHeight <= 0) return;
 
-      // Set the CSS Custom Property on the container for CSS-based GPU-accelerated transitions
-      el.style.setProperty('--scroll-progress', pct.toFixed(4));
-      el.style.setProperty('--scroll-progress-pct', `${(pct * 100).toFixed(2)}%`);
+        // Calculate progress based on how far the container has scrolled past the viewport top
+        const currentScroll = -rect.top;
+        const pct = Math.max(0, Math.min(1, currentScroll / totalHeight));
 
-      // Determine which scene is active based on the scroll range
-      const sceneIndex = Math.min(
-        sceneCount - 1,
-        Math.floor(pct * sceneCount)
-      );
+        // Set the CSS Custom Property on the container for CSS-based GPU-accelerated transitions
+        el.style.setProperty('--scroll-progress', pct.toFixed(4));
+        el.style.setProperty('--scroll-progress-pct', `${(pct * 100).toFixed(2)}%`);
 
-      console.log(`[useSceneProgress] rect.top = ${rect.top}, totalHeight = ${totalHeight}, pct = ${pct}`);
+        // Determine which scene is active based on the scroll range
+        const sceneIndex = Math.min(
+          sceneCount - 1,
+          Math.floor(pct * sceneCount)
+        );
 
-      // Only update React state if the change is significant (helps prevent re-renders)
-      if (Math.abs(pct - lastProgressRef.current) > 0.002) {
-        lastProgressRef.current = pct;
-        setProgress(pct);
-        setActiveScene(sceneIndex);
-      }
+        // Only update React state if the change is significant (helps prevent re-renders)
+        if (Math.abs(pct - lastProgressRef.current) > 0.002) {
+          lastProgressRef.current = pct;
+          setProgress(pct);
+          setActiveScene(sceneIndex);
+        }
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -54,6 +58,9 @@ export function useSceneProgress(
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
     };
   }, [containerRef, sceneCount]);
 

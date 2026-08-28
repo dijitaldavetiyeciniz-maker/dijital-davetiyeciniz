@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { createServerServiceRoleClient } from '@/server/supabaseClient';
 
 export async function GET(
   req: Request,
@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { id: weddingId } = await params;
 
-    const supabase = getSupabaseAdmin();
+    const supabase = createServerServiceRoleClient();
     // Resolve wedding id if slug provided
     const { data: wedding } = await supabase
       .from('weddings')
@@ -64,7 +64,7 @@ export async function POST(
     const body = await req.json().catch(() => ({}));
     const action = body.action || 'restore'; // 'restore' or 'snapshot'
 
-    const supabase = getSupabaseAdmin();
+    const supabase = createServerServiceRoleClient();
     const { data: wedding } = await supabase
       .from('weddings')
       .select('*')
