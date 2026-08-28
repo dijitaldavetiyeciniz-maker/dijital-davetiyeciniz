@@ -9,7 +9,7 @@ import WeddingClientWrapper from '@/components/invitation/WeddingClientWrapper';
 import { Heart, Upload, Link as LinkIcon, Download, Smartphone, Share2, Sparkles, MapPin, Search, Grid, Eye, CheckCircle2, Navigation, Wand2, Calendar, Clock, Lock, ShieldAlert, Monitor, Type, Palette, ArrowRight, Save, Shield, Settings, Info, Music, StopCircle, RefreshCw, X, Users, MessageSquare, Paintbrush, CreditCard, Copy, ExternalLink, Tablet, Trash2, Check, Volume2, VolumeX, QrCode, RotateCcw, LogOut } from 'lucide-react';
 import SafeImage from '@/components/ui/SafeImage';
 import { getRandomQuote } from '@/lib/aiQuotes';
-import { entranceAnimationTypes, entranceAnimationStyles } from '@/data/openingAnimations';
+import { entranceAnimationTypes, entranceAnimationStyles, getAnimationDefaults } from '@/data/openingAnimations';
 import { envelopeStyles } from '@/data/envelopeStyles';
 import { sealStyles } from '@/data/sealStyles';
 import { getInitials } from '@/utils/getInitials';
@@ -1166,15 +1166,20 @@ export default function CoupleAdminPage({
 
   function resetOpeningToRecommended() {
     const activeTheme = themes.find(t => t.template_id === templateId || t.id === templateId) || themes[0];
-    if (activeTheme && activeTheme.recommendedOpeningType) {
-      setEntranceAnimation(activeTheme.recommendedOpeningType);
-      setAnimationSettings({});
-      setUserChangedOpeningType(false);
-      setHasUnsavedChanges(true);
-      setSaveStatus('unsaved');
-      setToastMessage('Açılış animasyonu şablon önerisine sıfırlandı.');
-      setTimeout(() => setToastMessage(''), 2000);
-    }
+    const recAnimId = activeTheme?.recommendedOpeningType || 'wax-seal-starfield';
+    setEntranceAnimation(recAnimId);
+    
+    const defaults = getAnimationDefaults(recAnimId);
+    setAnimationSettings(prev => ({
+      ...prev,
+      [recAnimId]: defaults
+    }));
+    
+    setUserChangedOpeningType(false);
+    setHasUnsavedChanges(true);
+    setSaveStatus('unsaved');
+    setToastMessage('Açılış animasyonu şablon önerisine sıfırlandı.');
+    setTimeout(() => setToastMessage(''), 2000);
   }
 
   function handleReplayAnimation() {
@@ -2286,6 +2291,9 @@ export default function CoupleAdminPage({
               {designSubTab === 'animation' && (
                 <AnimationCustomizer
                   selectedAnimation={entranceAnimation}
+                  recommendedAnimationId={
+                    (themes.find(t => t.template_id === templateId || t.id === templateId) || themes[0])?.recommendedOpeningType || 'wax-seal-starfield'
+                  }
                   onAnimationChange={(newAnim) => {
                     setEntranceAnimation(newAnim);
                     setUserChangedOpeningType(true);

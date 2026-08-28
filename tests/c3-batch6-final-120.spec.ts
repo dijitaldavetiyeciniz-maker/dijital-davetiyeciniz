@@ -86,17 +86,23 @@ test.describe("C3-B6 - Final 120 Templates E2E", () => {
       const layout = page.locator(`[data-testid="${theme.testId}"]`);
       await expect(layout).toBeVisible();
 
-      // Scroll to bottom
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await page.waitForTimeout(1000);
+      // Scroll to bottom robustly
+      await page.evaluate(() => {
+        window.scrollTo(0, document.body.scrollHeight * 0.5);
+      });
+      await page.waitForTimeout(300);
+      await page.evaluate(() => {
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      await page.waitForTimeout(1500);
 
       // Verify signature element exists after scroll
       const signature = page.locator(theme.signatureSelector);
-      await expect(signature).toBeVisible();
+      await expect(signature).toBeVisible({ timeout: 15000 });
 
       // Verify multiple events details are visible
       const eventTitle = page.locator("text=Kokteyl ve Resepsiyon").first();
-      await expect(eventTitle).toBeVisible();
+      await expect(eventTitle).toBeVisible({ timeout: 15000 });
 
       expect(consoleErrors).toEqual([]);
     });

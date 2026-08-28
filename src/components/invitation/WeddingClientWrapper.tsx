@@ -12,8 +12,16 @@ type WeddingClientWrapperProps = {
 };
 
 export default function WeddingClientWrapper({ wedding, children, mode = 'public' }: WeddingClientWrapperProps) {
-  const [showEntrance, setShowEntrance] = useState(true);
+  const hasNoAnimation = wedding.entrance_animation === 'none';
+  const [showEntrance, setShowEntrance] = useState(!hasNoAnimation);
 
+  useEffect(() => {
+    if (hasNoAnimation) {
+      setShowEntrance(false);
+    } else {
+      setShowEntrance(true);
+    }
+  }, [wedding.entrance_animation, hasNoAnimation]);
 
   const [isPreview] = useState(() => {
     if (mode === 'preview') return true;
@@ -58,7 +66,7 @@ export default function WeddingClientWrapper({ wedding, children, mode = 'public
       )}
 
       {/* Replay Animation Floating Button (Only in Design Studio Emulator) */}
-      {isPreview && !showEntrance && (
+      {isPreview && !showEntrance && !hasNoAnimation && (
         <div className="fixed bottom-6 right-6 z-[100] animate-in fade-in slide-in-from-bottom-3 duration-300">
           <button
             type="button"
