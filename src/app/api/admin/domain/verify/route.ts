@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { verifyAdminCookie } from '@/lib/auth-cookie';
 import { getDomainProvider } from '@/lib/domain-provider';
 import { normalizeHostname } from '@/lib/domain-utils';
+import { publishActiveDomainMapping } from '@/lib/host-resolution-store';
 
 /**
  * Helper to authenticate admin for wedding ownership
@@ -101,6 +102,15 @@ export async function POST(req: NextRequest) {
 
     if (updateErr) {
       return NextResponse.json({ error: 'Veritabanı güncelleme hatası', code: 'DATABASE_ERROR' }, { status: 500 });
+    }
+
+    // 5. Control Plane -> Data Plane: Publish active mapping to Shared Host Store
+    if (isVerified) {
+      try {
+        await publishActiveDomainMapping(wedding.id, wedding.slug || wedding.id, normalized);
+      } catch (err) {
+        console.warn('[DomainVerify] Failed to publish active mapping to shared host store:', err);
+      }
     }
 
     return NextResponse.json({

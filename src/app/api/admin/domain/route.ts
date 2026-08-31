@@ -5,6 +5,7 @@ import { verifyAdminCookie } from '@/lib/auth-cookie';
 import { getUserEntitlements } from '@/lib/entitlements';
 import { getDomainProvider } from '@/lib/domain-provider';
 import { normalizeHostname, isValidHostname, isPlatformDomain } from '@/lib/domain-utils';
+import { removeDomainMapping } from '@/lib/host-resolution-store';
 
 /**
  * Helper to authenticate admin for wedding ownership
@@ -252,6 +253,13 @@ export async function DELETE(req: NextRequest) {
 
     if (dbError) {
       return NextResponse.json({ error: 'Veritabanı silme hatası', code: 'DATABASE_ERROR' }, { status: 500 });
+    }
+
+    // 4. Invalidate / remove mapping from Shared Host Store
+    try {
+      await removeDomainMapping(normalized);
+    } catch (err) {
+      console.warn('[DomainDelete] Failed to remove mapping from shared host store:', err);
     }
 
     return NextResponse.json({ success: true, message: 'Alan adı başarıyla kaldırıldı' });
