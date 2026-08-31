@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { SiteHeaderConfig, SiteBrandingConfig } from '@/lib/site-settings';
 import { Menu, X, Heart, Sparkles } from 'lucide-react';
 
@@ -26,7 +27,7 @@ export default function GlobalHeader({ headerConfig, brandingConfig }: GlobalHea
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-slate-900 group">
           {logoUrl ? (
-            <img src={logoUrl} alt={brandName} className="h-8 w-auto object-contain" />
+            <Image src={logoUrl} alt={brandName} width={120} height={32} unoptimized className="h-8 w-auto object-contain" />
           ) : (
             <div className="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition">
               <Heart className="w-4 h-4 fill-current" />

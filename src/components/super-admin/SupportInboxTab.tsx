@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   MessageSquare,
   Search,
@@ -27,7 +27,7 @@ export default function SupportInboxTab() {
   const [isSending, setIsSending] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchConversations = async () => {
+  const fetchConversations = useCallback(async () => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams();
@@ -45,11 +45,11 @@ export default function SupportInboxTab() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [statusFilter, categoryFilter, searchTerm]);
 
   useEffect(() => {
     fetchConversations();
-  }, [statusFilter, categoryFilter, searchTerm]);
+  }, [fetchConversations]);
 
   const handleSelectConversation = async (conv: any) => {
     setSelectedConv(conv);

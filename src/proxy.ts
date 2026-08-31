@@ -119,6 +119,8 @@ export async function proxy(request: NextRequest) {
     // Response debug / verification headers
     response.headers.set('x-tenant-id', mapping.weddingId);
     response.headers.set('x-custom-domain', mapping.hostname);
+    // Custom domain HSTS: 1 year, NO includeSubDomains, NO preload
+    response.headers.set('Strict-Transport-Security', 'max-age=31536000');
 
     return response;
   } catch (err) {

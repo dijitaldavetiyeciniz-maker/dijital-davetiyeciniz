@@ -352,12 +352,62 @@ CREATE POLICY "Service Role Audit Logs" ON public.audit_logs
     FOR ALL TO service_role
     USING (true);
 
-DROP POLICY IF EXISTS "Service Role Impersonations" ON public.support_impersonation_sessions;
-CREATE POLICY "Service Role Impersonations" ON public.support_impersonation_sessions
+-- ============================================================
+-- Distributed Atomic Rate Limit Store
+-- ============================================================
+CREATE TABLE IF NOT EXISTS public.rate_limits (
+    key TEXT PRIMARY KEY,
+    count INT NOT NULL DEFAULT 1,
+    reset_at TIMESTAMPTZ NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_rate_limits_reset ON public.rate_limits(reset_at);
+
+ALTER TABLE public.rate_limits ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Service Role Rate Limits" ON public.rate_limits;
+CREATE POLICY "Service Role Rate Limits" ON public.rate_limits
     FOR ALL TO service_role
     USING (true);
 
-DROP POLICY IF EXISTS "Service Role Overrides" ON public.entitlement_overrides;
-CREATE POLICY "Service Role Overrides" ON public.entitlement_overrides
-    FOR ALL TO service_role
-    USING (true);
+-- Atomic sliding-window rate limit evaluation
+CREATE OR REPLACE FUNCTION public.check_distributed_rate_limit(
+    p_key TEXT,
+    p_max_requests INT,
+    p_window_seconds INT
+) RETURNS JSONB AS $$
+DECLARE
+    v_now TIMESTAMPTZ := now();
+    v_reset_at TIMESTAMPTZ := v_now + (p_window_seconds || ' seconds')::INTERVAL;
+    v_entry public.rate_limits%ROWTYPE;
+BEGIN
+    INSERT INTO public.rate_limits (key, count, reset_at)
+    VALUES (p_key, 1, v_reset_at)
+    ON CONFLICT (key) DO UPDATE
+    SET 
+        count = CASE 
+            WHEN public.rate_limits.reset_at <= v_now THEN 1
+            ELSE public.rate_limits.count + 1
+        END,
+        reset_at = CASE
+            WHEN public.rate_limits.reset_at <= v_now THEN v_reset_at
+            ELSE public.rate_limits.reset_at
+        END
+    RETURNING * INTO v_entry;
+
+    IF v_entry.count > p_max_requests THEN
+        RETURN jsonb_build_object(
+            'allowed', false,
+            'remaining', 0,
+            'reset_in_seconds', GREATEST(0, EXTRACT(EPOCH FROM (v_entry.reset_at - v_now))::INT)
+        );
+    ELSE
+        RETURN jsonb_build_object(
+            'allowed', true,
+            'remaining', p_max_requests - v_entry.count,
+            'reset_in_seconds', GREATEST(0, EXTRACT(EPOCH FROM (v_entry.reset_at - v_now))::INT)
+        );
+    END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+

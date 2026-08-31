@@ -9,6 +9,8 @@ DROP TABLE IF EXISTS public.support_impersonation_sessions CASCADE;
 DROP TABLE IF EXISTS public.support_messages CASCADE;
 DROP TABLE IF EXISTS public.support_conversations CASCADE;
 DROP TABLE IF EXISTS public.site_settings CASCADE;
+DROP TABLE IF EXISTS public.rate_limits CASCADE;
+DROP FUNCTION IF EXISTS public.check_distributed_rate_limit(TEXT, INT, INT);
 
 ALTER TABLE public.weddings
 DROP COLUMN IF EXISTS is_quarantined,

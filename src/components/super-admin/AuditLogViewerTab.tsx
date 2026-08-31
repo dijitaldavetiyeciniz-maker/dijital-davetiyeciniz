@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ShieldCheck, Search, Filter, RefreshCw, Clock, User, Activity } from 'lucide-react';
 
 export default function AuditLogViewerTab() {
@@ -8,7 +8,7 @@ export default function AuditLogViewerTab() {
   const [actionFilter, setActionFilter] = useState<string>('all');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams();
@@ -24,11 +24,11 @@ export default function AuditLogViewerTab() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [actionFilter]);
 
   useEffect(() => {
     fetchLogs();
-  }, [actionFilter]);
+  }, [fetchLogs]);
 
   return (
     <div className="space-y-6">

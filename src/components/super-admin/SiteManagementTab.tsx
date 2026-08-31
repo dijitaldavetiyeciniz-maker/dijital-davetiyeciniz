@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { SiteGlobalConfig, defaultSiteConfig, isSafeUrl } from '@/lib/site-settings';
 import {
   Globe,
@@ -33,7 +34,7 @@ export default function SiteManagementTab() {
   const [mediaList, setMediaList] = useState<any[]>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
-  const fetchConfig = async () => {
+  const fetchConfig = useCallback(async () => {
     try {
       const res = await fetch('/api/super-admin/site-settings');
       const data = await res.json();
@@ -43,9 +44,9 @@ export default function SiteManagementTab() {
     } catch {
       // Fallback
     }
-  };
+  }, []);
 
-  const fetchMedia = async () => {
+  const fetchMedia = useCallback(async () => {
     try {
       const res = await fetch('/api/super-admin/media');
       const data = await res.json();
@@ -55,13 +56,13 @@ export default function SiteManagementTab() {
     } catch {
       // Fallback
     }
-  };
+  }, []);
 
   // Load configuration on mount
   useEffect(() => {
     fetchConfig();
     fetchMedia();
-  }, []);
+  }, [fetchConfig, fetchMedia]);
 
   const handleSaveDraft = async () => {
     setSaveStatus('saving');
@@ -676,7 +677,7 @@ export default function SiteManagementTab() {
             {mediaList.map((m) => (
               <div key={m.name} className="p-3 bg-slate-50 rounded-2xl border border-slate-200 group relative">
                 <div className="h-28 rounded-xl bg-slate-200 overflow-hidden flex items-center justify-center mb-2">
-                  <img src={m.url} alt={m.name} className="h-full w-full object-cover" />
+                  <Image src={m.url} alt={m.name} width={200} height={120} unoptimized className="h-full w-full object-cover" />
                 </div>
                 <p className="text-[11px] font-bold text-slate-800 truncate">{m.name}</p>
                 <p className="text-[10px] text-slate-400">{(m.size / 1024).toFixed(0)} KB</p>
