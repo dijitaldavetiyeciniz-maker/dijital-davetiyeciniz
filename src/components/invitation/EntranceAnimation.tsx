@@ -287,14 +287,14 @@ function EntranceAnimation({
         setIsFadingOut(true);
         setTimeout(() => {
           if (onCompleteRef.current) onCompleteRef.current();
-        }, 300); // wait for fade out
+        }, 300); // snappy fade out
       }, 1200);
     } else {
       setAnimationState('opened');
       setIsFadingOut(true);
       setTimeout(() => {
         if (onCompleteRef.current) onCompleteRef.current();
-      }, 300); // fade out duration
+      }, 300); // snappy fade out
     }
   }, [doorOpened, isCurtainType]);
 
