@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function runTests() {
-  console.log('=== C13 W2 MIGRATION TEST SUITE ===\n');
+  console.log('=== C13 W2 MIGRATION TEST SUITE (EMULATION & INTEGRITY HARNESS) ===\n');
 
   let passed = 0;
   let failed = 0;
@@ -96,7 +96,22 @@ async function runTests() {
   assert(fs.existsSync(migrationFile), '018_c13_custom_domains.sql migration file exists');
   assert(fs.existsSync(rollbackFile), '018_c13_custom_domains_rollback.sql rollback file exists');
 
-  // Test 1: Legacy duplicate detection guard logic
+  // Test 1: RLS Security Policy Audit - Ensure strict anonymous default-deny
+  try {
+    const hasRlsEnable = migrationSql.includes('ALTER TABLE public.custom_domains ENABLE ROW LEVEL SECURITY;');
+    const hasServiceRolePolicy = migrationSql.includes('CREATE POLICY "Service role has full access to custom_domains"');
+    const hasNoPublicSelectPolicy = !migrationSql.includes('CREATE POLICY "Public can resolve active custom domains"');
+    const hasNoAnonAllowPolicy = !/TO\s+anon/i.test(migrationSql) && !/TO\s+public(?!\.)/i.test(migrationSql);
+
+    assert(
+      hasRlsEnable && hasServiceRolePolicy && hasNoPublicSelectPolicy && hasNoAnonAllowPolicy,
+      'RLS security policy enforces default-deny for anonymous/public clients (no public SELECT allowed)'
+    );
+  } catch (e) {
+    assert(false, 'RLS security policy audit', e.message);
+  }
+
+  // Test 2: Legacy duplicate detection guard logic
   try {
     const db = createTestDb();
     db.public.none(`
@@ -166,7 +181,7 @@ async function runTests() {
     assert(false, 'custom_domains DDL table creation', e.message);
   }
 
-  // Backfill execution
+  // Backfill execution (Step 3 in migration - runs BEFORE trigger creation)
   try {
     db.public.none(`
       INSERT INTO public.custom_domains (
@@ -202,6 +217,17 @@ async function runTests() {
     );
   } catch (e) {
     assert(false, 'Backfill execution', e.message);
+  }
+
+  // Test: Legacy Pending Backfill Mirror Preservation (CRITICAL)
+  try {
+    const wedding1 = db.public.one(`SELECT custom_domain FROM public.weddings WHERE id = 'b0000000-0000-0000-0000-000000000001'`);
+    assert(
+      wedding1.custom_domain === 'legacy-domain.com.',
+      'Legacy weddings.custom_domain value preserved after pending backfill (no data loss / NULL wipe during migration)'
+    );
+  } catch (e) {
+    assert(false, 'Legacy mirror preservation test', e.message);
   }
 
   // Test: Canonical Hostname CHECK Constraint
@@ -265,14 +291,10 @@ async function runTests() {
 
   // Test: Non-primary alias domain allowed
   try {
-    try {
-      db.public.none(`
-        INSERT INTO public.custom_domains (wedding_id, hostname, status, is_primary)
-        VALUES ('b0000000-0000-0000-0000-000000000001', 'alias-domain.com', 'pending', false);
-      `);
-    } catch (insertErr) {
-      console.error('Insert error for alias:', insertErr);
-    }
+    db.public.none(`
+      INSERT INTO public.custom_domains (wedding_id, hostname, status, is_primary)
+      VALUES ('b0000000-0000-0000-0000-000000000001', 'alias-domain.com', 'pending', false);
+    `);
     const allRows = db.public.many(`SELECT * FROM public.custom_domains`);
     const rows = allRows.filter(r => r.wedding_id === 'b0000000-0000-0000-0000-000000000001');
     assert(rows.length === 2 && rows.some(r => r.hostname === 'alias-domain.com' && r.is_primary === false), 
@@ -316,11 +338,8 @@ async function runTests() {
   // Test: Compatibility Mirror Functionality Simulation
   // Sync helper implementing the EXACT logic of sync_wedding_custom_domain_mirror()
   function syncMirror(target_wedding_id) {
-    const activePrimary = db.public.many(`
-      SELECT hostname FROM public.custom_domains 
-      WHERE wedding_id = '${target_wedding_id}' AND is_primary = true AND status = 'active'
-      LIMIT 1
-    `);
+    const all = db.public.many(`SELECT * FROM public.custom_domains`);
+    const activePrimary = all.filter(r => r.wedding_id === target_wedding_id && r.is_primary === true && r.status === 'active');
     const canonical = activePrimary.length > 0 ? `'${activePrimary[0].hostname}'` : 'NULL';
     db.public.none(`
       UPDATE public.weddings 
@@ -355,12 +374,32 @@ async function runTests() {
     assert(false, 'Non-primary mirror isolation', e.message);
   }
 
-  // 3. Status change to non-active (error/removing) -> mirror becomes NULL
+  // 3. Active Primary Replacement -> mirror updates to new primary domain
+  try {
+    // Demote old primary, promote alias to active primary
+    db.public.none(`
+      UPDATE public.custom_domains
+      SET is_primary = false
+      WHERE hostname = 'wedding2-active.com';
+    `);
+    db.public.none(`
+      UPDATE public.custom_domains
+      SET is_primary = true
+      WHERE hostname = 'wedding2-alias.com';
+    `);
+    syncMirror('b0000000-0000-0000-0000-000000000002');
+    const w2Replaced = db.public.one(`SELECT custom_domain FROM public.weddings WHERE id = 'b0000000-0000-0000-0000-000000000002'`);
+    assert(w2Replaced.custom_domain === 'wedding2-alias.com', 'Active primary replacement correctly updates weddings.custom_domain to new primary');
+  } catch (e) {
+    assert(false, 'Active primary replacement test', e.message);
+  }
+
+  // 4. Status change to non-active (error/removing) -> mirror becomes NULL
   try {
     db.public.none(`
       UPDATE public.custom_domains 
       SET status = 'error' 
-      WHERE hostname = 'wedding2-active.com';
+      WHERE hostname = 'wedding2-alias.com';
     `);
     syncMirror('b0000000-0000-0000-0000-000000000002');
     const w2 = db.public.one(`SELECT custom_domain FROM public.weddings WHERE id = 'b0000000-0000-0000-0000-000000000002'`);
@@ -369,7 +408,7 @@ async function runTests() {
     assert(false, 'Mirror clear on status change', e.message);
   }
 
-  // 4. Primary domain deletion -> mirror is reset safely to NULL
+  // 5. Primary domain deletion -> mirror is reset safely to NULL
   try {
     // Re-activate legacy domain for wedding 1
     db.public.none(`

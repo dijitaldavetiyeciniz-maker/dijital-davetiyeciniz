@@ -137,14 +137,12 @@ FOR EACH ROW EXECUTE FUNCTION sync_wedding_custom_domain_mirror();
 -- 5. Row Level Security Policies
 ALTER TABLE public.custom_domains ENABLE ROW LEVEL SECURITY;
 
--- Public can only resolve active domains for routing
+-- Anonymous and public client access is strictly DENIED for all operations (SELECT, INSERT, UPDATE, DELETE).
+-- Host resolution routing is handled server-side via memory cache / privileged server fallback.
+-- Clean up any legacy public policy if present
 DROP POLICY IF EXISTS "Public can resolve active custom domains" ON public.custom_domains;
-CREATE POLICY "Public can resolve active custom domains"
-ON public.custom_domains
-FOR SELECT
-USING (status = 'active');
 
--- Service role has full administrative access
+-- Service role / server-side admin operations have full access
 DROP POLICY IF EXISTS "Service role has full access to custom_domains" ON public.custom_domains;
 CREATE POLICY "Service role has full access to custom_domains"
 ON public.custom_domains
