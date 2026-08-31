@@ -9,6 +9,10 @@ import {
   FileText, ShieldCheck, UserX, Trash2, Edit3, Plus, ArrowRight,
   TrendingUp, Compass, Cpu, History
 } from 'lucide-react';
+import SiteManagementTab from '@/components/super-admin/SiteManagementTab';
+import SupportInboxTab from '@/components/super-admin/SupportInboxTab';
+import DataCleanupTab from '@/components/super-admin/DataCleanupTab';
+import AuditLogViewerTab from '@/components/super-admin/AuditLogViewerTab';
 
 export default function SuperAdminUltimateCommandCenter() {
   // 1. Auth States
@@ -18,7 +22,7 @@ export default function SuperAdminUltimateCommandCenter() {
   const [authLoading, setAuthLoading] = useState(false);
 
   // 2. Navigation & Tabs
-  const [activeTab, setActiveTab] = useState<'overview' | 'members' | 'invitations' | 'contacts' | 'analytics' | 'security' | 'system' | 'audit'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'members' | 'invitations' | 'site_management' | 'support_center' | 'data_cleanup' | 'contacts' | 'analytics' | 'security' | 'system' | 'audit'>('overview');
   const [securitySubTab, setSecuritySubTab] = useState<'verifications' | 'delivery' | 'events'>('verifications');
 
   // 3. Global Data States
@@ -724,10 +728,12 @@ export default function SuperAdminUltimateCommandCenter() {
             { id: 'overview', label: 'Genel Bakış', icon: Activity },
             { id: 'members', label: 'Üyeler', icon: Users, badge: stats?.totalMembers },
             { id: 'invitations', label: 'Davetiyeler', icon: Layers, badge: stats?.totalInvitations },
-            { id: 'contacts', label: 'İletişim', icon: MessageSquare, badge: stats?.unreadMessages, highlightBadge: stats?.unreadMessages > 0 },
+            { id: 'site_management', label: 'Site Yönetimi & CMS', icon: Globe },
+            { id: 'support_center', label: 'Destek Merkezi', icon: MessageSquare, badge: stats?.unreadMessages, highlightBadge: stats?.unreadMessages > 0 },
+            { id: 'data_cleanup', label: 'Veri Temizliği', icon: ShieldAlert },
             { id: 'analytics', label: 'Analitik', icon: BarChart3 },
             { id: 'security', label: 'Güvenlik', icon: ShieldCheck, badge: stats?.pendingVerifications, highlightBadge: stats?.pendingVerifications > 0 },
-            { id: 'system', label: 'Sistem & Bakım', icon: Server },
+            { id: 'system', label: 'Sistem Durumu', icon: Server },
             { id: 'audit', label: 'Denetim Kayıtları', icon: History }
           ].map(tab => {
             const Icon = tab.icon;
@@ -1931,6 +1937,15 @@ export default function SuperAdminUltimateCommandCenter() {
             </div>
           </div>
         )}
+
+        {/* TAB: SITE MANAGEMENT & GLOBAL CMS */}
+        {activeTab === 'site_management' && <SiteManagementTab />}
+
+        {/* TAB: SUPPORT CENTER */}
+        {activeTab === 'support_center' && <SupportInboxTab />}
+
+        {/* TAB: DATA CLEANUP */}
+        {activeTab === 'data_cleanup' && <DataCleanupTab />}
 
       </main>
 

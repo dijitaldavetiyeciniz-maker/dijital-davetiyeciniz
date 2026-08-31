@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import { X, Check, Sparkles, Calendar, MapPin, Heart } from 'lucide-react';
 import { TemplatePreset } from '@/lib/themes';
+import { getFontFamilyUrl } from '@/data/fontOptions';
 
 interface TemplatePreviewModalProps {
   isOpen: boolean;
@@ -51,6 +52,23 @@ export default function TemplatePreviewModal({
       };
     }
   }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (isOpen && theme) {
+      const fontsToLoad = [theme.names_font_family, theme.font_family].filter(Boolean);
+      fontsToLoad.forEach(fontId => {
+        if (!fontId) return;
+        const existing = document.querySelector(`link[data-preview-font="${fontId}"]`);
+        if (!existing) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.setAttribute('data-preview-font', fontId);
+          link.href = getFontFamilyUrl(fontId);
+          document.head.appendChild(link);
+        }
+      });
+    }
+  }, [isOpen, theme]);
 
   if (!isOpen || !theme) return null;
 
