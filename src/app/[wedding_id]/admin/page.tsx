@@ -20,6 +20,8 @@ import FontPicker from '@/components/admin/FontPicker';
 import BackgroundCustomizer, { BackgroundSettings, ColorSettings } from '@/components/admin/BackgroundCustomizer';
 import AnimationCustomizer from '@/components/admin/AnimationCustomizer';
 import CustomSectionsManager, { CustomSectionItem } from '@/components/admin/CustomSectionsManager';
+import DomainManagerTab from '@/components/admin/DomainManagerTab';
+import { Globe } from 'lucide-react';
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dijital-davetiyeciniz.vercel.app';
 
 function getTemplatePreset(id: string) {
@@ -243,7 +245,7 @@ export default function CoupleAdminPage({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
-  const [activeTab, setActiveTab] = useState<'info' | 'events' | 'design' | 'content' | 'special' | 'preview' | 'share' | 'settings' | 'rsvps' | 'guests'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'events' | 'design' | 'content' | 'special' | 'preview' | 'share' | 'settings' | 'rsvps' | 'guests' | 'domain'>('info');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'unsaved' | 'saving' | 'saved' | 'error'>('idle');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [subEvents, setSubEvents] = useState<any[]>([]);
@@ -1826,6 +1828,16 @@ export default function CoupleAdminPage({
                 <span>Versiyon Geçmişi</span>
               </button>
 
+              <button 
+                type="button"
+                data-testid="admin-nav-domain"
+                onClick={() => setActiveTab('domain')} 
+                className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-semibold text-slate-700 w-full hover:bg-slate-50 cursor-pointer ${activeTab === 'domain' ? 'bg-purple-50 text-purple-700 border border-purple-200' : ''}`}
+              >
+                <Globe className="w-4 h-4 text-purple-600" />
+                <span>Özel Alan Adı</span>
+              </button>
+
               <button onClick={() => setActiveTab('settings')} className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-semibold text-slate-600 w-full hover:bg-slate-50 cursor-pointer ${activeTab === 'settings' ? 'bg-slate-100' : ''}`}>
                 <Settings className="w-4 h-4" />
                 <span>Genel Ayarlar</span>
@@ -2839,6 +2851,11 @@ export default function CoupleAdminPage({
                 </div>
               </div>
             </div>
+          )}
+
+          {/* Tab: ÖZEL ALAN ADI */}
+          {activeTab === 'domain' && (
+            <DomainManagerTab wedding={wedding} onRefresh={() => {}} />
           )}
 
           {/* Tab 7: AYARLAR */}
