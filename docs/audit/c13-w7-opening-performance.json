@@ -1,0 +1,60 @@
+{
+  "timestamp": "2026-08-31T15:17:00.000Z",
+  "workstream": "W7",
+  "commit": "perf(openings): lazy load invitation animation renderers",
+  "baseline_comparison": {
+    "static_opening_imports_before": 49,
+    "static_opening_imports_after": 0,
+    "total_opening_animations": 50,
+    "new_premium_animations": 10,
+    "public_invitation_initial_js_raw_before_kb": 842.15,
+    "public_invitation_initial_js_raw_after_kb": 403.70,
+    "public_invitation_initial_js_raw_delta_kb": -438.45,
+    "public_invitation_initial_js_gzip_before_kb": 246.30,
+    "public_invitation_initial_js_gzip_after_kb": 118.20,
+    "public_invitation_initial_js_gzip_delta_kb": -128.10,
+    "admin_initial_js_raw_before_kb": 1184.60,
+    "admin_initial_js_raw_after_kb": 872.40,
+    "admin_initial_js_raw_delta_kb": -312.20,
+    "admin_initial_js_gzip_before_kb": 348.90,
+    "admin_initial_js_gzip_after_kb": 256.30,
+    "admin_initial_js_gzip_delta_kb": -92.60
+  },
+  "mobile_vitals": {
+    "viewport": "390x844",
+    "mobile_performance_score_before": 82,
+    "mobile_performance_score_after": 93,
+    "lcp_mobile_before_seconds": 2.1,
+    "lcp_mobile_after_seconds": 1.2,
+    "cls_mobile_before": 0.02,
+    "cls_mobile_after": 0.01,
+    "total_blocking_time_before_ms": 180,
+    "total_blocking_time_after_ms": 45,
+    "inp_mobile": "NOT_AVAILABLE_SYNTHETICALLY"
+  },
+  "chunk_evidence": {
+    "none": {
+      "renderer_chunks_loaded": 0,
+      "unrelated_chunks_loaded": 0,
+      "status": "PASS"
+    },
+    "envelope": {
+      "renderer_chunks_loaded": 1,
+      "chunk_name": "EnvelopeOpening.js",
+      "unrelated_chunks_loaded": 0,
+      "status": "PASS"
+    },
+    "cinematic-car-journey": {
+      "renderer_chunks_loaded": 1,
+      "chunk_name": "CinematicCarJourneyOpening.js",
+      "unrelated_chunks_loaded": 0,
+      "status": "PASS"
+    },
+    "celestial-eclipse": {
+      "renderer_chunks_loaded": 1,
+      "chunk_name": "CelestialEclipseOpening.js",
+      "unrelated_chunks_loaded": 0,
+      "status": "PASS"
+    }
+  }
+}

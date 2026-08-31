@@ -6,58 +6,8 @@ import { entranceAnimationTypes, entranceAnimationStyles, EntranceAnimationStyle
 import { getOpeningSemanticData } from "@/data/eventTypeConfig";
 import BackgroundAnimation from "@/components/BackgroundAnimation";
 
-// Import opening family components
-import { EnvelopeOpening } from "./openings/EnvelopeOpening";
-import { CurtainOpening } from "./openings/CurtainOpening";
-import { DoorOpening } from "./openings/DoorOpening";
-import { GardenGateOpening } from "./openings/GardenGateOpening";
-import { BookOpening } from "./openings/BookOpening";
-import { LuxuryBoxOpening } from "./openings/LuxuryBoxOpening";
-import { TreasureChestOpening } from "./openings/TreasureChestOpening";
-import { GlassRevealOpening } from "./openings/GlassRevealOpening";
-import { MirrorRevealOpening } from "./openings/MirrorRevealOpening";
-import { CinematicZoomOpening } from "./openings/CinematicZoomOpening";
-import { SpotlightOpening } from "./openings/SpotlightOpening";
-import { StarryNightOpening } from "./openings/StarryNightOpening";
-import { ElevatorDoorOpening } from "./openings/ElevatorDoorOpening";
-import { RoyalHallOpening } from "./openings/RoyalHallOpening";
-import { MinimalFadeOpening } from "./openings/MinimalFadeOpening";
-import { CloudBaloonOpening } from "./openings/CloudBaloonOpening";
-import { TeddyBearOpening } from "./openings/TeddyBearOpening";
-import { CinematicFilmOpening } from "./openings/CinematicFilmOpening";
-import { RoyalParchmentOpening } from "./openings/RoyalParchmentOpening";
-import { BotanicalBlossomOpening } from "./openings/BotanicalBlossomOpening";
-import { HennaVelvetGateOpening } from "./openings/HennaVelvetGateOpening";
-import { NazarDomeOpening } from "./openings/NazarDomeOpening";
-
-// New Flagship Openings
-import { ParisianBlackTieOpening } from "./openings/ParisianBlackTieOpening";
-import { GrandOperaOpening } from "./openings/GrandOperaOpening";
-import { MoonlitGardenOpening } from "./openings/MoonlitGardenOpening";
-import { VogueEditorialOpening } from "./openings/VogueEditorialOpening";
-import { MediterraneanCeramicOpening } from "./openings/MediterraneanCeramicOpening";
-import { OttomanIlluminationOpening } from "./openings/OttomanIlluminationOpening";
-import { CoastalSunsetOpening } from "./openings/CoastalSunsetOpening";
-import { AuroraGlassOpening } from "./openings/AuroraGlassOpening";
-import { BotanicalWatercolorOpening } from "./openings/BotanicalWatercolorOpening";
-import { FilmPremiereOpening } from "./openings/FilmPremiereOpening";
-import { SwissGalleryOpening } from "./openings/SwissGalleryOpening";
-import { RoyalPalaceOpening } from "./openings/RoyalPalaceOpening";
-import { HennaPalaceOpening } from "./openings/HennaPalaceOpening";
-import { PrinceCeremonyOpening } from "./openings/PrinceCeremonyOpening";
-import { StorybookOpening } from "./openings/StorybookOpening";
-import { FutureSummitOpening } from "./openings/FutureSummitOpening";
-import { WaxSealStarfieldOpening } from "./openings/WaxSealStarfieldOpening";
-import { CinematicCarJourneyOpening } from "./openings/CinematicCarJourneyOpening";
-import { CelestialEclipseOpening } from "./openings/CelestialEclipseOpening";
-import { GoldenConstellationOpening } from "./openings/GoldenConstellationOpening";
-import { ArtDecoDoorsOpening } from "./openings/ArtDecoDoorsOpening";
-import { SilkFabricRevealOpening } from "./openings/SilkFabricRevealOpening";
-import { LuxuryJewelryBoxOpening } from "./openings/LuxuryJewelryBoxOpening";
-import { OceanPearlRevealOpening } from "./openings/OceanPearlRevealOpening";
-import { MinimalArchitecturalLinesOpening } from "./openings/MinimalArchitecturalLinesOpening";
-import { OttomanEleganceOpening } from "./openings/OttomanEleganceOpening";
-import { LanternNightOpening } from "./openings/LanternNightOpening";
+// Dynamic Opening Animation Registry (0 static imports for high-performance lazy loading)
+import { dynamicOpeningRegistry } from "./openings/dynamicRegistry";
 
 type EntranceAnimationProps = {
   animationType: string; // matches id in entranceAnimationTypes
@@ -403,6 +353,10 @@ function EntranceAnimation({
   };
 
   const renderFamily = () => {
+    if (typeConfig.id === 'none') {
+      return null;
+    }
+
     const commonProps = {
       opened: animationState === 'opened' || animationState === 'completed-awaiting-interaction' || isFadingOut, 
       animationState,
@@ -416,90 +370,25 @@ function EntranceAnimation({
       introText: getInvitationIntroText(eventType),
       wedding,
       semanticData,
+      doorOpened,
     };
 
-    switch (typeConfig.id) {
-      case "envelope":
-        return <EnvelopeOpening {...commonProps} />;
-      case "curtain":
-        return <CurtainOpening {...commonProps} doorOpened={doorOpened} />;
-      case "door":
-        return <DoorOpening {...commonProps} />;
-      case "gardenGate":
-        return <GardenGateOpening {...commonProps} />;
-      case "book":
-        return <BookOpening {...commonProps} />;
-      case "luxuryBox":
-        return <LuxuryBoxOpening {...commonProps} />;
-      case "treasureChest":
-        return <TreasureChestOpening {...commonProps} />;
-      case "glass":
-        return <GlassRevealOpening {...commonProps} />;
-      case "mirror":
-        return <MirrorRevealOpening {...commonProps} />;
-      case "cinematicZoom":
-        return <CinematicZoomOpening {...commonProps} />;
-      case "spotlight":
-        return <SpotlightOpening {...commonProps} />;
-      case "starryNight":
-        return <StarryNightOpening {...commonProps} />;
-      case "elevator":
-        return <ElevatorDoorOpening {...commonProps} />;
-      case "royalHall":
-        return <RoyalHallOpening {...commonProps} />;
-      case "cinematicText":
-        return <CinematicTextOpening {...commonProps} />;
-      case "photoCover":
-        return <PhotoCoverOpening {...commonProps} />;
-      case "sealOnly":
-        return <SealOnlyOpening {...commonProps} />;
-      case "cloudBaloon":
-        return <CloudBaloonOpening {...commonProps} />;
-      case "teddyBear":
-        return <TeddyBearOpening {...commonProps} />;
-      case "cinematicFilm":
-        return <CinematicFilmOpening {...commonProps} />;
-      case "royalParchment":
-        return <RoyalParchmentOpening {...commonProps} />;
-      case "botanicalBlossom":
-        return <BotanicalBlossomOpening {...commonProps} />;
-      case "hennaVelvetGate":
-        return <HennaVelvetGateOpening {...commonProps} />;
-      case "nazarDome":
-        return <NazarDomeOpening {...commonProps} />;
-      case "parisianBlackTie": return <ParisianBlackTieOpening {...commonProps} />;
-      case "grandOpera": return <GrandOperaOpening {...commonProps} />;
-      case "moonlitGarden": return <MoonlitGardenOpening {...commonProps} />;
-      case "vogueEditorial": return <VogueEditorialOpening {...commonProps} />;
-      case "mediterraneanCeramic": return <MediterraneanCeramicOpening {...commonProps} />;
-      case "ottomanIllumination": return <OttomanIlluminationOpening {...commonProps} />;
-      case "coastalSunset": return <CoastalSunsetOpening {...commonProps} />;
-      case "auroraGlass": return <AuroraGlassOpening {...commonProps} />;
-      case "botanicalWatercolor": return <BotanicalWatercolorOpening {...commonProps} />;
-      case "filmPremiere": return <FilmPremiereOpening {...commonProps} />;
-      case "swissGallery": return <SwissGalleryOpening {...commonProps} />;
-      case "royalPalace": return <RoyalPalaceOpening {...commonProps} />;
-      case "hennaPalace": return <HennaPalaceOpening {...commonProps} />;
-      case "princeCeremony": return <PrinceCeremonyOpening {...commonProps} />;
-      case "storybook": return <StorybookOpening {...commonProps} />;
-      case "futureSummit": return <FutureSummitOpening {...commonProps} />;
-      case "cinematic-car-journey": return <CinematicCarJourneyOpening {...commonProps} />;
-      case "celestial-eclipse": return <CelestialEclipseOpening {...commonProps} />;
-      case "golden-constellation": return <GoldenConstellationOpening {...commonProps} />;
-      case "art-deco-doors": return <ArtDecoDoorsOpening {...commonProps} />;
-      case "silk-fabric-reveal": return <SilkFabricRevealOpening {...commonProps} />;
-      case "luxury-jewelry-box": return <LuxuryJewelryBoxOpening {...commonProps} />;
-      case "ocean-pearl-reveal": return <OceanPearlRevealOpening {...commonProps} />;
-      case "minimal-architectural-lines": return <MinimalArchitecturalLinesOpening {...commonProps} />;
-      case "ottoman-elegance": return <OttomanEleganceOpening {...commonProps} />;
-      case "lantern-night": return <LanternNightOpening {...commonProps} />;
-      case "wax-seal-starfield":
-      case "waxSealStarfield":
-        return <WaxSealStarfieldOpening {...commonProps} />;
-      case "minimalFade":
-      default:
-        return <MinimalFadeOpening {...commonProps} />;
+    if (typeConfig.id === 'cinematicText') {
+      return <CinematicTextOpening {...commonProps} />;
     }
+    if (typeConfig.id === 'photoCover') {
+      return <PhotoCoverOpening {...commonProps} />;
+    }
+    if (typeConfig.id === 'sealOnly') {
+      return <SealOnlyOpening {...commonProps} />;
+    }
+
+    const DynamicComponent = dynamicOpeningRegistry[typeConfig.id] || dynamicOpeningRegistry.minimalFade;
+    if (DynamicComponent) {
+      return <DynamicComponent {...commonProps} />;
+    }
+
+    return null;
   };
 
   return (
