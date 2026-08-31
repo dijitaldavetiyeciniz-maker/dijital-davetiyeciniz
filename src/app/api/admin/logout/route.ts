@@ -18,11 +18,14 @@ export async function POST(req: Request) {
 
     const cookieStore = await cookies();
     if (w) {
+      cookieStore.set(`admin_auth_${w.id}`, '', { path: '/', maxAge: 0, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax' });
       cookieStore.delete(`admin_auth_${w.id}`);
       if (w.slug) {
+        cookieStore.set(`admin_auth_${w.slug}`, '', { path: '/', maxAge: 0, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax' });
         cookieStore.delete(`admin_auth_${w.slug}`);
       }
     } else {
+      cookieStore.set(`admin_auth_${wedding_id}`, '', { path: '/', maxAge: 0, httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax' });
       cookieStore.delete(`admin_auth_${wedding_id}`);
     }
     

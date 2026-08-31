@@ -14,10 +14,49 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Static and system path bypass guard
+  // 2. Extract and sanitize Host header
+  const rawHost = request.headers.get('host') || request.headers.get('x-forwarded-host') || '';
+  const { hostname: normalizedHost, error: normError } = normalizeHostname(rawHost);
+
+  // If host is empty or unparseable, pass through
+  if (!normalizedHost || normError) {
+    return NextResponse.next();
+  }
+
+  // 3. Platform Domain Bypass (localhost, platform domain, .vercel.app, preview hosts)
+  if (isPlatformDomain(normalizedHost)) {
+    return NextResponse.next();
+  }
+
+  // --- CUSTOM DOMAIN BOUNDARY ---
+
+  // 4. Custom Host Surface Policy: Strictly DENY admin, super-admin, and platform management routes
+  if (
+    pathname === '/admin' ||
+    pathname.startsWith('/admin/') ||
+    pathname.startsWith('/api/admin') ||
+    pathname === '/super-admin' ||
+    pathname.startsWith('/super-admin/') ||
+    pathname.startsWith('/api/super-admin') ||
+    pathname === '/dashboard' ||
+    pathname.startsWith('/dashboard/') ||
+    pathname === '/giris-yap' ||
+    pathname === '/kayit-ol' ||
+    pathname === '/onboarding'
+  ) {
+    return new NextResponse('Güvenlik nedeniyle bu alana yalnızca platform ana adresi üzerinden erişilebilir.', {
+      status: 403,
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'x-domain-status': 'admin-restricted',
+      },
+    });
+  }
+
+  // 5. Static assets and public API bypass on custom domains
   if (
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/api') ||
+    pathname.startsWith('/api/') ||
     pathname === '/favicon.ico' ||
     pathname === '/robots.txt' ||
     pathname === '/sitemap.xml' ||
@@ -28,21 +67,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 3. Extract and sanitize Host header
-  const rawHost = request.headers.get('host') || request.headers.get('x-forwarded-host') || '';
-  const { hostname: normalizedHost, error: normError } = normalizeHostname(rawHost);
-
-  // If host is empty or unparseable, pass through or reject
-  if (!normalizedHost || normError) {
-    return NextResponse.next();
-  }
-
-  // 4. Platform Domain Bypass (localhost, platform domain, .vercel.app, preview hosts)
-  if (isPlatformDomain(normalizedHost)) {
-    return NextResponse.next();
-  }
-
-  // 5. Host Trust Boundary Validation (reject malformed, IP literals, etc.)
+  // 6. Host Trust Boundary Validation (reject malformed, IP literals, etc.)
   if (!isValidHostname(normalizedHost)) {
     return new NextResponse('Invalid Hostname', {
       status: 400,
@@ -50,30 +75,19 @@ export async function proxy(request: NextRequest) {
     });
   }
 
-  // 6. Fast Data-Plane Host Resolution (Shared Store: Edge Config / Low-latency store)
+  // 7. Fast Data-Plane Host Resolution (Shared Store: Edge Config / Low-latency store)
   // ZERO Supabase / SQL DB queries on this path!
   try {
     const store = getHostResolutionStore();
     const mapping = await store.resolve(normalizedHost);
 
-    // 7. Unknown / Inactive Host: Fail closed (404)
+    // 8. Unknown / Inactive Host: Fail closed (404)
     if (!mapping || mapping.status !== 'active') {
       return new NextResponse('Domain Not Found - Bu alan adı henüz bir davetiye ile eşleştirilmemiş veya aktif edilmemiş.', {
         status: 404,
         headers: {
           'Content-Type': 'text/plain; charset=utf-8',
           'x-domain-status': 'unresolved',
-        },
-      });
-    }
-
-    // 8. Custom Host Policy: Admin route access is restricted to platform domain
-    if (pathname === '/admin' || pathname.startsWith('/admin/')) {
-      return new NextResponse('Admin paneli güvenlik nedeniyle yalnızca platform ana adresi üzerinden erişilebilir.', {
-        status: 403,
-        headers: {
-          'Content-Type': 'text/plain; charset=utf-8',
-          'x-domain-status': 'admin-restricted',
         },
       });
     }
