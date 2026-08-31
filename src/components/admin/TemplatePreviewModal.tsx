@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { X, Check, Sparkles, Calendar, MapPin, Heart } from 'lucide-react';
+import { X, Check, Sparkles, Calendar, MapPin, Heart, Flower2, Crown, Compass, Feather } from 'lucide-react';
 import { TemplatePreset } from '@/lib/themes';
 import { getFontFamilyUrl } from '@/data/fontOptions';
 
@@ -82,6 +82,15 @@ export default function TemplatePreviewModal({
   const fontFamily = theme.font_family || 'Cormorant Garamond';
   const namesFont = theme.names_font_family || 'Playfair Display';
 
+  // Distinct composition archetype based on theme identity & category
+  const themeId = (theme.id || '').toLowerCase();
+  const category = (theme.category || '').toLowerCase();
+
+  const isLuxuryRoyal = themeId.includes('gold') || themeId.includes('royal') || category.includes('luxury') || category.includes('luxe');
+  const isBotanical = themeId.includes('botanical') || themeId.includes('flower') || themeId.includes('garden') || category.includes('floral');
+  const isDarkNight = themeId.includes('dark') || themeId.includes('midnight') || themeId.includes('night') || (theme as any).background_color === '#0f172a';
+  const isMinimal = themeId.includes('minimal') || category.includes('minimal') || category.includes('modern');
+
   return (
     <div
       role="dialog"
@@ -121,51 +130,87 @@ export default function TemplatePreviewModal({
           </button>
         </div>
 
-        {/* Live Template Visual Preview Stage */}
+        {/* Live Faithful Template Stage with Distinct Composition */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-gradient-to-b from-slate-100 to-slate-200 flex items-center justify-center min-h-[340px]">
           <div
-            className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-10 border border-slate-100 text-center relative overflow-hidden transition-all"
+            className={`w-full max-w-md rounded-2xl shadow-xl p-6 sm:p-10 text-center relative overflow-hidden transition-all ${
+              isDarkNight ? 'bg-slate-950 text-white' : 'bg-white'
+            }`}
             style={{
               borderColor: `${primaryColor}40`,
-              boxShadow: `0 20px 40px -15px ${primaryColor}25`
+              boxShadow: `0 20px 40px -15px ${primaryColor}25`,
+              borderWidth: isLuxuryRoyal ? '3px' : '1px',
+              borderStyle: isLuxuryRoyal ? 'double' : 'solid'
             }}
           >
-            {/* Top Decorative Monogram Bar */}
+            {/* Template Archetype Top Accent */}
             <div className="flex justify-center mb-6">
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-xs"
-                style={{ borderColor: primaryColor, color: primaryColor }}
-              >
-                <Heart className="w-5 h-5 fill-current opacity-80" />
-              </div>
+              {isLuxuryRoyal ? (
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-xs"
+                  style={{ borderColor: primaryColor, color: primaryColor }}
+                >
+                  <Crown className="w-5 h-5 fill-current opacity-90" />
+                </div>
+              ) : isBotanical ? (
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center border shadow-xs"
+                  style={{ borderColor: primaryColor, color: primaryColor, backgroundColor: `${primaryColor}15` }}
+                >
+                  <Flower2 className="w-5 h-5" />
+                </div>
+              ) : isMinimal ? (
+                <div className="w-10 h-0.5" style={{ backgroundColor: primaryColor }} />
+              ) : (
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center border-2 shadow-xs"
+                  style={{ borderColor: primaryColor, color: primaryColor }}
+                >
+                  <Heart className="w-5 h-5 fill-current opacity-80" />
+                </div>
+              )}
             </div>
 
             {/* Event Header Note */}
-            <div className="text-[11px] font-semibold tracking-widest uppercase mb-3 text-slate-400">
-              DÜĞÜN DAVETİYESİ
+            <div
+              className={`text-[11px] font-semibold uppercase mb-3 ${
+                isMinimal ? 'tracking-[0.3em] font-sans' : 'tracking-widest'
+              } ${isDarkNight ? 'text-slate-400' : 'text-slate-500'}`}
+            >
+              {theme.category?.toUpperCase() || 'DÜĞÜN DAVETİYESİ'}
             </div>
 
-            {/* Couple Names in Target Typography */}
+            {/* Couple Names in Target Typography & Composition */}
             <h2
-              className="text-2xl sm:text-3xl font-bold mb-4 tracking-tight"
+              className={`font-bold mb-4 tracking-tight ${
+                isMinimal ? 'text-xl sm:text-2xl uppercase' : 'text-2xl sm:text-3xl'
+              }`}
               style={{
                 fontFamily: `'${namesFont}', serif`,
-                color: textColor
+                color: isDarkNight ? '#ffffff' : textColor
               }}
             >
-              {displayBride} & {displayGroom}
+              {displayBride} <span style={{ color: primaryColor }}>&</span> {displayGroom}
             </h2>
 
             {/* Decorative Divider */}
             <div className="flex items-center justify-center gap-2 my-4 opacity-60">
               <div className="w-10 h-px" style={{ backgroundColor: primaryColor }} />
-              <Sparkles className="w-3.5 h-3.5" style={{ color: primaryColor }} />
+              {isLuxuryRoyal ? (
+                <Crown className="w-3.5 h-3.5" style={{ color: primaryColor }} />
+              ) : isBotanical ? (
+                <Feather className="w-3.5 h-3.5" style={{ color: primaryColor }} />
+              ) : (
+                <Sparkles className="w-3.5 h-3.5" style={{ color: primaryColor }} />
+              )}
               <div className="w-10 h-px" style={{ backgroundColor: primaryColor }} />
             </div>
 
-            {/* Invitation Message */}
+            {/* Invitation Message in Template Typography */}
             <p
-              className="text-xs sm:text-sm text-slate-600 mb-6 italic max-w-xs mx-auto leading-relaxed"
+              className={`text-xs sm:text-sm mb-6 max-w-xs mx-auto leading-relaxed ${
+                isMinimal ? 'font-sans text-slate-500 font-normal' : 'italic text-slate-600'
+              } ${isDarkNight ? '!text-slate-300' : ''}`}
               style={{ fontFamily: `'${fontFamily}', serif, sans-serif` }}
             >
               "Bu mutlu günümüzde siz değerli dostlarımızı aramızda görmekten onur ve mutluluk duyarız."
@@ -175,16 +220,16 @@ export default function TemplatePreviewModal({
             <div
               className="p-3.5 rounded-xl border space-y-2 text-xs"
               style={{
-                backgroundColor: `${primaryColor}08`,
+                backgroundColor: isDarkNight ? `${primaryColor}15` : `${primaryColor}08`,
                 borderColor: `${primaryColor}30`,
-                color: textColor
+                color: isDarkNight ? '#ffffff' : textColor
               }}
             >
               <div className="flex items-center justify-center gap-1.5 font-bold">
                 <Calendar className="w-3.5 h-3.5" style={{ color: primaryColor }} />
                 <span>{displayDate}</span>
               </div>
-              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 font-medium">
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 font-medium">
                 <MapPin className="w-3.5 h-3.5 text-slate-400" />
                 <span>{displayVenue}</span>
               </div>

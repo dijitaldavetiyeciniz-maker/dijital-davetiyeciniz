@@ -24,10 +24,6 @@ export default function DataCleanupTab() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchAuditData();
-  }, []);
-
   const fetchAuditData = async () => {
     setIsLoading(true);
     try {
@@ -43,6 +39,10 @@ export default function DataCleanupTab() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAuditData();
+  }, []);
 
   const handleQuarantineSelected = async () => {
     if (selectedIds.length === 0) return;

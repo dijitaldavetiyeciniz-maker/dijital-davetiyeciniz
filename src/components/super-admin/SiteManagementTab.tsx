@@ -33,12 +33,6 @@ export default function SiteManagementTab() {
   const [mediaList, setMediaList] = useState<any[]>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
-  // Load configuration on mount
-  useEffect(() => {
-    fetchConfig();
-    fetchMedia();
-  }, []);
-
   const fetchConfig = async () => {
     try {
       const res = await fetch('/api/super-admin/site-settings');
@@ -62,6 +56,12 @@ export default function SiteManagementTab() {
       // Fallback
     }
   };
+
+  // Load configuration on mount
+  useEffect(() => {
+    fetchConfig();
+    fetchMedia();
+  }, []);
 
   const handleSaveDraft = async () => {
     setSaveStatus('saving');

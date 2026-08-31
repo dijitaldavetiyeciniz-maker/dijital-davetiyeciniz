@@ -27,10 +27,6 @@ export default function SupportInboxTab() {
   const [isSending, setIsSending] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    fetchConversations();
-  }, [statusFilter, categoryFilter, searchTerm]);
-
   const fetchConversations = async () => {
     setIsLoading(true);
     try {
@@ -50,6 +46,10 @@ export default function SupportInboxTab() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchConversations();
+  }, [statusFilter, categoryFilter, searchTerm]);
 
   const handleSelectConversation = async (conv: any) => {
     setSelectedConv(conv);

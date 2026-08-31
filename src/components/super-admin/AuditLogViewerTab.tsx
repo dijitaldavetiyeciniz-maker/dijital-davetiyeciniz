@@ -8,10 +8,6 @@ export default function AuditLogViewerTab() {
   const [actionFilter, setActionFilter] = useState<string>('all');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    fetchLogs();
-  }, [actionFilter]);
-
   const fetchLogs = async () => {
     setIsLoading(true);
     try {
@@ -29,6 +25,10 @@ export default function AuditLogViewerTab() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchLogs();
+  }, [actionFilter]);
 
   return (
     <div className="space-y-6">
