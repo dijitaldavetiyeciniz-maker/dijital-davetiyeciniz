@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { createServerServiceRoleClient } from '@/server/supabaseClient';
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
@@ -26,6 +21,7 @@ export async function POST(request: Request) {
     }
 
     // Düğün ve sahip e-posta bilgisini çek
+    const supabaseAdmin = createServerServiceRoleClient();
     const { data: wedding, error } = await supabaseAdmin
       .from('weddings')
       .select('bride_name, groom_name, owner_email, slug')

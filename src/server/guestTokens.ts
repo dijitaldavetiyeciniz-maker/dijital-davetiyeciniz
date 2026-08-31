@@ -5,8 +5,10 @@ import { generateGuestTokenCore, verifyGuestTokenCore, GuestTokenPayload } from 
 export type { GuestTokenPayload };
 
 const getSecretKey = () => {
-  const secret = process.env.GUEST_TOKEN_SECRET_V1;
-  if (!secret) throw new Error('GUEST_TOKEN_SECRET_V1 is not configured');
+  const secret = process.env.GUEST_TOKEN_SECRET_V1 
+    || process.env.SUPABASE_SECRET_KEY 
+    || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!secret) throw new Error('GUEST_TOKEN_SECRET_V1 (or SUPABASE_SECRET_KEY) is not configured');
   return secret;
 };
 

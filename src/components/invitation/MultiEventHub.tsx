@@ -28,10 +28,17 @@ export default function MultiEventHub({
   subEvents = [],
   onOpenRsvp
 }: MultiEventHubProps) {
+  const [now, setNow] = useState<number>(0);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    setNow(Date.now());
+    
+    const interval = setInterval(() => {
+      setNow(Date.now());
+    }, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const brideName = wedding?.bride_name || 'Gelin';
@@ -118,8 +125,8 @@ export default function MultiEventHub({
 
   // Countdown calculations
   const calculateRemaining = (dateStr: string) => {
-    if (!mounted) return { days: 0, hours: 0, minutes: 0 };
-    const diff = new Date(dateStr).getTime() - Date.now();
+    if (!mounted || now === 0) return { days: 0, hours: 0, minutes: 0 };
+    const diff = new Date(dateStr).getTime() - now;
     if (diff <= 0) return { days: 0, hours: 0, minutes: 0 };
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);

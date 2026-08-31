@@ -29,29 +29,39 @@ export function WaxSealStarfieldOpening({
   const secondaryName = semanticData?.secondaryName || groomName || 'Damat';
   const monogram = semanticData?.monogram || initials || `${primaryName[0]} & ${secondaryName[0]}`;
 
-  const STAR_DATA = [
-    { x: 12, y: 14, s: 2, delay: 0.2, dur: 3.2 },
-    { x: 26, y: 9, s: 3, delay: 1.1, dur: 4.0 },
-    { x: 38, y: 20, s: 1.5, delay: 0.5, dur: 2.8 },
-    { x: 50, y: 11, s: 2.5, delay: 1.8, dur: 3.5 },
-    { x: 64, y: 16, s: 2, delay: 0.9, dur: 4.2 },
-    { x: 78, y: 8, s: 3, delay: 2.1, dur: 3.0 },
-    { x: 90, y: 22, s: 1.5, delay: 0.4, dur: 2.6 },
-    { x: 8, y: 34, s: 2.5, delay: 1.4, dur: 3.8 },
-    { x: 18, y: 46, s: 1.5, delay: 0.7, dur: 4.5 },
-    { x: 86, y: 40, s: 3, delay: 2.3, dur: 3.3 },
-    { x: 94, y: 52, s: 2, delay: 1.0, dur: 2.9 },
-    { x: 14, y: 66, s: 2.5, delay: 0.3, dur: 3.6 },
-    { x: 22, y: 80, s: 1.5, delay: 1.6, dur: 4.1 },
-    { x: 34, y: 90, s: 3, delay: 0.8, dur: 3.4 },
-    { x: 48, y: 84, s: 2, delay: 2.0, dur: 2.7 },
-    { x: 62, y: 88, s: 2.5, delay: 1.2, dur: 3.9 },
-    { x: 76, y: 76, s: 1.5, delay: 0.6, dur: 4.3 },
-    { x: 88, y: 86, s: 2.5, delay: 1.9, dur: 3.1 }
-  ];
+  // Extract dynamic animation settings
+  const animSettings = wedding?.custom_overrides?.animation_settings?.['wax-seal-starfield'] || {};
+  const starDensity = animSettings.starDensity ?? 70;
+  const celestialBody = animSettings.celestialBody ?? 'crescent-star';
+  const sparkleColor = animSettings.sparkleColor ?? '#fde047';
+  const envelopeColor = animSettings.envelopeColor;
+  const waxColor = animSettings.waxColor;
+  const displayMonogram = animSettings.sealInitial || monogram;
+
+  // Dynamically generate stars based on user controls
+  const stars = React.useMemo(() => {
+    const list = [];
+    for (let i = 0; i < starDensity; i++) {
+      list.push({
+        x: (i * 17 + 12) % 100, // deterministic random positions
+        y: (i * 23 + 9) % 100,
+        s: (i % 3) + 1.5, // sizes 1.5 - 3.5px
+        delay: (i * 0.3) % 2,
+        dur: ((i * 0.7) % 3) + 2.5 // durations 2.5 - 5.5s
+      });
+    }
+    return list;
+  }, [starDensity]);
 
   return (
     <div 
+      data-testid="wax-seal-starfield-stage"
+      data-celestial-body={celestialBody}
+      data-sparkle-color={sparkleColor}
+      data-star-count={stars.length}
+      data-envelope-color={envelopeColor || (isBurgundy ? "#240d09" : "#0e1728")}
+      data-wax-color={waxColor || (isBurgundy ? "#c98a3e" : "#a9aeb4")}
+      data-seal-initial={displayMonogram}
       className={`fixed inset-0 w-full h-full flex items-center justify-center overflow-hidden transition-all duration-700 ${
         opened ? "opacity-0 scale-105" : "opacity-100 scale-100"
       }`}
@@ -61,24 +71,41 @@ export function WaxSealStarfieldOpening({
           : "radial-gradient(ellipse at center, #16233b 0%, #0d1626 65%, #050a12 100%)"
       }}
     >
-      {/* 1. Twinkling Stars */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {STAR_DATA.map((star, i) => (
+      {/* 1. Twinkling Stars (dynamically controlled count and color) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" data-testid="starfield-container" data-star-count={stars.length}>
+        {stars.map((star, i) => (
           <div
             key={i}
-            className="absolute rounded-full"
+            className="absolute rounded-full star-element"
             style={{
               left: `${star.x}%`,
               top: `${star.y}%`,
               width: `${star.s}px`,
               height: `${star.s}px`,
-              backgroundColor: isBurgundy ? "#f5e6d8" : "#f2f4f6",
-              boxShadow: `0 0 6px ${isBurgundy ? "rgba(245,230,216,0.9)" : "rgba(242,244,246,0.9)"}`,
+              backgroundColor: sparkleColor,
+              boxShadow: `0 0 6px ${sparkleColor}`,
               animation: `twinkle ${star.dur}s ease-in-out infinite`,
               animationDelay: `${star.delay}s`
             }}
           />
         ))}
+      </div>
+
+      {/* Celestial Body Theme Element */}
+      <div 
+        data-testid="celestial-body" 
+        data-theme={celestialBody}
+        className="absolute top-10 right-10 w-16 h-16 pointer-events-none z-10"
+      >
+        {celestialBody === 'full-moon' && (
+          <div className="w-12 h-12 rounded-full bg-slate-100 opacity-80 blur-[1px]" style={{ boxShadow: `0 0 20px ${sparkleColor}` }} />
+        )}
+        {celestialBody === 'crescent-star' && (
+          <div className="w-10 h-10 rounded-full bg-transparent border-r-[4px] border-slate-200" style={{ transform: 'rotate(-25deg)', boxShadow: `0 0 8px ${sparkleColor}` }} />
+        )}
+        {celestialBody === 'cosmic-nebula' && (
+          <div className="w-24 h-24 rounded-full bg-purple-500/20 blur-xl" style={{ boxShadow: `0 0 45px ${sparkleColor}` }} />
+        )}
       </div>
 
       {/* 2. 3D Envelope Container */}
@@ -87,7 +114,7 @@ export function WaxSealStarfieldOpening({
         style={{
           perspective: 1200,
           transformStyle: "preserve-3d",
-          backgroundColor: isBurgundy ? "#240d09" : "#0e1728",
+          backgroundColor: envelopeColor || (isBurgundy ? "#240d09" : "#0e1728"),
           border: `1px solid ${isBurgundy ? "rgba(201,138,62,0.45)" : "rgba(216,220,224,0.45)"}`,
           boxShadow: "0 30px 80px -15px rgba(0,0,0,0.85), 0 0 35px rgba(0,0,0,0.5)"
         }}
@@ -142,7 +169,7 @@ export function WaxSealStarfieldOpening({
           className="absolute inset-0 z-20 pointer-events-none rounded-2xl overflow-hidden"
           style={{
             clipPath: "polygon(0 0, 50% 50%, 0 100%)",
-            backgroundColor: isBurgundy ? "#240d09" : "#0e1728",
+            backgroundColor: envelopeColor || (isBurgundy ? "#240d09" : "#0e1728"),
             backgroundImage: "linear-gradient(to right, rgba(0,0,0,0.3), rgba(255,255,255,0.03))"
           }}
         />
@@ -150,7 +177,7 @@ export function WaxSealStarfieldOpening({
           className="absolute inset-0 z-20 pointer-events-none rounded-2xl overflow-hidden"
           style={{
             clipPath: "polygon(100% 0, 50% 50%, 100% 100%)",
-            backgroundColor: isBurgundy ? "#240d09" : "#0e1728",
+            backgroundColor: envelopeColor || (isBurgundy ? "#240d09" : "#0e1728"),
             backgroundImage: "linear-gradient(to left, rgba(0,0,0,0.3), rgba(255,255,255,0.03))"
           }}
         />
@@ -160,7 +187,7 @@ export function WaxSealStarfieldOpening({
           className="absolute inset-0 z-25 pointer-events-none rounded-2xl overflow-hidden"
           style={{
             clipPath: "polygon(0 100%, 50% 50%, 100% 100%)",
-            backgroundColor: isBurgundy ? "#240d09" : "#0e1728",
+            backgroundColor: envelopeColor || (isBurgundy ? "#240d09" : "#0e1728"),
             backgroundImage: "linear-gradient(to top, rgba(0,0,0,0.4), rgba(255,255,255,0.05))"
           }}
         />
@@ -172,7 +199,7 @@ export function WaxSealStarfieldOpening({
           }`}
           style={{
             clipPath: "polygon(0 0, 50% 100%, 100% 0)",
-            backgroundColor: isBurgundy ? "#2e100c" : "#142036",
+            backgroundColor: envelopeColor || (isBurgundy ? "#2e100c" : "#142036"),
             backgroundImage: "linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.35) 100%)",
             transformStyle: "preserve-3d"
           }}
@@ -184,9 +211,11 @@ export function WaxSealStarfieldOpening({
             <div
               className="relative w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center shadow-2xl"
               style={{
-                background: isBurgundy
-                  ? "radial-gradient(circle at 35% 35%, #fce7c8 0%, #e5a958 35%, #c98a3e 70%, #78350f 100%)"
-                  : "radial-gradient(circle at 35% 35%, #ffffff 0%, #d8dce0 35%, #a9aeb4 70%, #686c72 100%)",
+                background: waxColor
+                  ? `radial-gradient(circle at 35% 35%, #ffffff 0%, ${waxColor} 45%, ${waxColor} 75%, #000 100%)`
+                  : (isBurgundy
+                      ? "radial-gradient(circle at 35% 35%, #fce7c8 0%, #e5a958 35%, #c98a3e 70%, #78350f 100%)"
+                      : "radial-gradient(circle at 35% 35%, #ffffff 0%, #d8dce0 35%, #a9aeb4 70%, #686c72 100%)"),
                 boxShadow: isBurgundy
                   ? "inset 0 0 12px rgba(255,255,255,0.7), 0 10px 30px rgba(0,0,0,0.8), 0 0 25px rgba(201,138,62,0.5)"
                   : "inset 0 0 12px rgba(255,255,255,0.8), 0 10px 30px rgba(0,0,0,0.8), 0 0 25px rgba(216,220,224,0.5)",
@@ -203,7 +232,7 @@ export function WaxSealStarfieldOpening({
                       : "0 1px 1px rgba(255,255,255,0.9), 0 -1px 1px rgba(0,0,0,0.6)"
                   }}
                 >
-                  {monogram}
+                  {displayMonogram}
                 </span>
               </div>
             </div>

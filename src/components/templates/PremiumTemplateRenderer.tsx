@@ -145,9 +145,15 @@ interface TemplateProps {
   wedding: any;
   templateId: string;
   mode?: 'preview' | 'public';
+  hideCustomSections?: boolean;
 }
 
-export default function PremiumTemplateRenderer({ wedding, templateId, mode = 'public' }: TemplateProps) {
+export default function PremiumTemplateRenderer({ 
+  wedding, 
+  templateId, 
+  mode = 'public',
+  hideCustomSections = false
+}: TemplateProps) {
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -1523,6 +1529,56 @@ case 'asymmetric':
         className="relative z-[20]"
       >
         {renderLayout()}
+
+        {/* User-defined Custom Content Sections */}
+        {wedding?.custom_overrides?.custom_sections && Array.isArray(wedding.custom_overrides.custom_sections) && !hideCustomSections && (
+          <div className="w-full max-w-2xl mx-auto px-4 space-y-6 mt-6 relative z-20">
+            {wedding.custom_overrides.custom_sections
+              .filter((sec: any) => sec.isVisible !== false)
+              .map((sec: any) => (
+                <div 
+                  key={sec.id}
+                  data-testid={`custom-section-${sec.id}`}
+                  className={`p-6 md:p-8 rounded-3xl backdrop-blur-md border shadow-sm transition hover:shadow-md ${
+                    sec.alignment === 'left' ? 'text-left' : sec.alignment === 'right' ? 'text-right' : 'text-center'
+                  }`}
+                  style={{
+                    backgroundColor: cardBgColor ? `${cardBgColor}F0` : 'rgba(255,255,255,0.92)',
+                    borderColor: `${primaryColor}30`,
+                    color: textColor
+                  }}
+                >
+                  <h3 className="text-xl md:text-2xl font-bold mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
+                    {sec.title}
+                  </h3>
+                  {sec.subtitle && (
+                    <p className="text-xs uppercase tracking-widest opacity-70 mb-3 font-semibold">
+                      {sec.subtitle}
+                    </p>
+                  )}
+                  <p className="text-sm md:text-base leading-relaxed opacity-90 whitespace-pre-line font-sans">
+                    {sec.content}
+                  </p>
+                  {sec.buttonText && sec.buttonUrl && (
+                    <div className="mt-4">
+                      <a
+                        href={sec.buttonUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-block px-5 py-2.5 rounded-full font-bold text-xs shadow-md transition hover:scale-105"
+                        style={{
+                          backgroundColor: primaryColor,
+                          color: '#ffffff'
+                        }}
+                      >
+                        {sec.buttonText}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ))}
+          </div>
+        )}
       </div>
 
       

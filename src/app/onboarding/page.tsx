@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { eventJourneyConfigs, getEventJourneyConfig } from '@/data/eventJourneyConfig';
+import { getRecommendedOpeningForTemplate } from '@/data/openingAnimations';
 import { isEmailVerified } from '@/lib/auth-guard';
 import { Sparkles, Calendar, MapPin, ArrowRight, ArrowLeft, CheckCircle2, Heart, Award, Gift, Compass, ShieldCheck, Flame, Stars } from 'lucide-react';
 
@@ -46,6 +47,7 @@ export default function OnboardingPage() {
   const [venueAddress, setVenueAddress] = useState('');
   const [selectedStyle, setSelectedStyle] = useState('romantic');
   const [selectedTemplate, setSelectedTemplate] = useState('template1');
+  const [useOpeningAnimation, setUseOpeningAnimation] = useState(true);
 
   // Verify auth on mount
   useEffect(() => {
@@ -143,6 +145,7 @@ export default function OnboardingPage() {
         venue_name: venueName.trim() || 'Belirtilmedi',
         venue_address: venueAddress.trim(),
         template_id: selectedTemplate,
+        entrance_animation: useOpeningAnimation ? getRecommendedOpeningForTemplate(selectedTemplate, selectedEventType) : 'none',
         admin_password: Math.random().toString(36).slice(-8) + 'Aa1!',
         is_paid: true, // Allow initial draft editing
         is_active: true,
@@ -158,7 +161,8 @@ export default function OnboardingPage() {
           venue_name: venueName.trim() || 'Belirtilmedi',
           venue_address: venueAddress.trim(),
           template_id: selectedTemplate,
-          event_type: selectedEventType
+          event_type: selectedEventType,
+          entrance_animation: useOpeningAnimation ? getRecommendedOpeningForTemplate(selectedTemplate, selectedEventType) : 'none'
         },
         is_published: false,
         published_snapshot: null,
@@ -578,6 +582,41 @@ export default function OnboardingPage() {
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Onboarding Opening Animation Preference */}
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+                <div className="flex items-center gap-2 text-white font-bold text-sm">
+                  <Sparkles className="w-4 h-4 text-purple-400" />
+                  <span>Açılış Animasyonu Tercihiniz</span>
+                </div>
+                <p className="text-xs text-slate-400">
+                  Davetiyeniz ilk kez açıldığında konuklarınızı karşılayacak premium bir giriş animasyonu (zarf açılışı, saray kapısı vb.) kullanmak ister misiniz?
+                </p>
+                <div className="flex flex-col sm:flex-row items-center gap-3 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setUseOpeningAnimation(true)}
+                    className={`w-full sm:flex-1 py-3 px-4 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                      useOpeningAnimation
+                        ? 'bg-purple-600 text-white border-purple-500 shadow-md ring-2 ring-purple-500/20'
+                        : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/20'
+                    }`}
+                  >
+                    ✨ Evet, Premium Animasyon Kullan
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUseOpeningAnimation(false)}
+                    className={`w-full sm:flex-1 py-3 px-4 rounded-xl border text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                      !useOpeningAnimation
+                        ? 'bg-slate-700 text-white border-slate-600 shadow-md ring-2 ring-slate-600/20'
+                        : 'bg-white/5 text-slate-300 border-white/10 hover:border-white/20'
+                    }`}
+                  >
+                    🚫 Hayır, Doğrudan Davetiye Açılsın
+                  </button>
+                </div>
               </div>
 
               <div className="p-4 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-between text-xs text-slate-300">

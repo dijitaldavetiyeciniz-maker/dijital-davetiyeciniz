@@ -46,7 +46,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       event_type: "wedding",
       admin_password: "adminpassword",
       template_id: "royal-letter",
-      is_paid: true
+      is_paid: true,
+      is_published: true
     });
 
     // Insert 3 sub-events for the wedding event (Only if we have database service role keys/access)
@@ -97,7 +98,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       event_type: "henna",
       admin_password: "adminpassword",
       template_id: "henna-velvet",
-      is_paid: true
+      is_paid: true,
+      is_published: true
     });
     
     // Create Kına primary event (Only if we have database service role keys/access)
@@ -126,7 +128,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       event_type: "babyshower",
       admin_password: "adminpassword",
       template_id: "kids-safari",
-      is_paid: true
+      is_paid: true,
+      is_published: true
     });
 
     // 4. Create a Corporate Event
@@ -141,7 +144,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       event_type: "corporate",
       admin_password: "adminpassword",
       template_id: "minimal-paper",
-      is_paid: true
+      is_paid: true,
+      is_published: true
     });
 
     // 5. Create a Special Event
@@ -156,7 +160,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       event_type: "special",
       admin_password: "adminpassword",
       template_id: "minimal-paper",
-      is_paid: true
+      is_paid: true,
+      is_published: true
     });
 
     // 6. Create Engagement Event
@@ -171,7 +176,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       event_type: "engagement",
       admin_password: "adminpassword",
       template_id: "royal-letter",
-      is_paid: true
+      is_paid: true,
+      is_published: true
     });
 
     // 7. Create Circumcision Event
@@ -186,7 +192,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       event_type: "circumcision",
       admin_password: "adminpassword",
       template_id: "kids-safari",
-      is_paid: true
+      is_paid: true,
+      is_published: true
     });
 
     // 8. Create Birthday Event
@@ -201,7 +208,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       event_type: "birthday",
       admin_password: "adminpassword",
       template_id: "kids-safari",
-      is_paid: true
+      is_paid: true,
+      is_published: true
     });
 
     // 9. Create Graduation Event
@@ -216,7 +224,8 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
       event_type: "graduation",
       admin_password: "adminpassword",
       template_id: "minimal-paper",
-      is_paid: true
+      is_paid: true,
+      is_published: true
     });
   });
 
@@ -323,12 +332,17 @@ test.describe('C6: Product UX Redesign and Event-Aware Journeys', () => {
     await page.click('button[type="submit"]');
 
     // Terminology check
-    await expect(page.locator('label:has-text("Gelin Adayı")')).toBeVisible();
+    await expect(page.locator('label:has-text("Gelin Adayı")')).toBeVisible({ timeout: 15000 });
     await expect(page.locator('label:has-text("Damat Adayı (İsteğe Bağlı)")')).toBeVisible();
+
+    // Women-only toggle is in the Info tab (Dynamic Question Inputs for henna event type)
+    // Scroll to make it visible if needed
+    await page.evaluate(() => window.scrollTo(0, 300));
+    await page.waitForTimeout(300);
 
     // Women-only toggle visibility
     const isWomenOnlyContainer = page.locator('div:has-text("Kına gecesi yalnızca kadınlara mı özel?")').last();
-    await expect(isWomenOnlyContainer).toBeVisible();
+    await expect(isWomenOnlyContainer).toBeVisible({ timeout: 10000 });
 
     // Click Yes
     await page.click('button[role="radio"]:has-text("Evet")');

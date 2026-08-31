@@ -48,6 +48,16 @@ import { PrinceCeremonyOpening } from "./openings/PrinceCeremonyOpening";
 import { StorybookOpening } from "./openings/StorybookOpening";
 import { FutureSummitOpening } from "./openings/FutureSummitOpening";
 import { WaxSealStarfieldOpening } from "./openings/WaxSealStarfieldOpening";
+import { CinematicCarJourneyOpening } from "./openings/CinematicCarJourneyOpening";
+import { CelestialEclipseOpening } from "./openings/CelestialEclipseOpening";
+import { GoldenConstellationOpening } from "./openings/GoldenConstellationOpening";
+import { ArtDecoDoorsOpening } from "./openings/ArtDecoDoorsOpening";
+import { SilkFabricRevealOpening } from "./openings/SilkFabricRevealOpening";
+import { LuxuryJewelryBoxOpening } from "./openings/LuxuryJewelryBoxOpening";
+import { OceanPearlRevealOpening } from "./openings/OceanPearlRevealOpening";
+import { MinimalArchitecturalLinesOpening } from "./openings/MinimalArchitecturalLinesOpening";
+import { OttomanEleganceOpening } from "./openings/OttomanEleganceOpening";
+import { LanternNightOpening } from "./openings/LanternNightOpening";
 
 type EntranceAnimationProps = {
   animationType: string; // matches id in entranceAnimationTypes
@@ -180,7 +190,12 @@ function parseLegacyAnimation(animationVal: string, styleVal: string) {
     "parisianBlackTie", "grandOpera", "moonlitGarden", "vogueEditorial", 
     "mediterraneanCeramic", "ottomanIllumination", "coastalSunset", 
     "auroraGlass", "botanicalWatercolor", "filmPremiere", "swissGallery", 
-    "royalPalace", "hennaPalace", "princeCeremony", "storybook", "futureSummit"
+    "royalPalace", "hennaPalace", "princeCeremony", "storybook", "futureSummit",
+    "wax-seal-starfield", "waxSealStarfield", "none",
+    "cinematic-car-journey", "celestial-eclipse", "golden-constellation",
+    "art-deco-doors", "silk-fabric-reveal", "luxury-jewelry-box",
+    "ocean-pearl-reveal", "minimal-architectural-lines", "ottoman-elegance",
+    "lantern-night"
   ];
   if (validTypes.includes(animationVal)) {
     return { type: animationVal, style };
@@ -468,6 +483,16 @@ function EntranceAnimation({
       case "princeCeremony": return <PrinceCeremonyOpening {...commonProps} />;
       case "storybook": return <StorybookOpening {...commonProps} />;
       case "futureSummit": return <FutureSummitOpening {...commonProps} />;
+      case "cinematic-car-journey": return <CinematicCarJourneyOpening {...commonProps} />;
+      case "celestial-eclipse": return <CelestialEclipseOpening {...commonProps} />;
+      case "golden-constellation": return <GoldenConstellationOpening {...commonProps} />;
+      case "art-deco-doors": return <ArtDecoDoorsOpening {...commonProps} />;
+      case "silk-fabric-reveal": return <SilkFabricRevealOpening {...commonProps} />;
+      case "luxury-jewelry-box": return <LuxuryJewelryBoxOpening {...commonProps} />;
+      case "ocean-pearl-reveal": return <OceanPearlRevealOpening {...commonProps} />;
+      case "minimal-architectural-lines": return <MinimalArchitecturalLinesOpening {...commonProps} />;
+      case "ottoman-elegance": return <OttomanEleganceOpening {...commonProps} />;
+      case "lantern-night": return <LanternNightOpening {...commonProps} />;
       case "wax-seal-starfield":
       case "waxSealStarfield":
         return <WaxSealStarfieldOpening {...commonProps} />;

@@ -13,7 +13,7 @@ export async function generateMetadata({
   
   const { data: wedding } = await supabase
     .from('weddings')
-    .select('bride_name, groom_name, venue_name, event_type, updated_at')
+    .select('bride_name, groom_name, venue_name, event_type, created_at')
     .eq('slug', wedding_id)
     .single();
 
@@ -21,7 +21,7 @@ export async function generateMetadata({
 
   const title = `${wedding.bride_name} & ${wedding.groom_name} Davetiyesi`;
   const description = `${wedding.venue_name} salonundaki ${wedding.event_type === 'wedding' ? 'düğün' : 'etkinlik'} davetiyemize bekliyoruz.`;
-  const cacheBust = wedding.updated_at ? new Date(wedding.updated_at).getTime() : Date.now();
+  const cacheBust = wedding.created_at ? new Date(wedding.created_at).getTime() : Date.now();
   const ogImageUrl = `/api/og?wedding_id=${wedding_id}&v=${cacheBust}`;
 
   return {
@@ -200,6 +200,7 @@ export default async function WeddingPage({
     <PremiumTemplateRenderer 
       wedding={cleanWedding} 
       templateId={cleanWedding.template_id || 'template1'} 
+      hideCustomSections={true}
     />
   );
 
@@ -234,18 +235,75 @@ export default async function WeddingPage({
     effectComponent = <SnowEffect />;
   }
 
+  const defaultOrder = ['template', 'custom_sections', 'events'];
+  const sectionsOrder = cleanWedding.custom_overrides?.active_sections_order || defaultOrder;
+
   const contentWithMusic = (
     <>
       {effectComponent}
-      <div className="relative z-10 flex flex-col items-center">
-        {templateComponent}
-        {cleanWedding.invitation_events && cleanWedding.invitation_events.length > 0 && (
-          <EventsTimeline 
-            events={cleanWedding.invitation_events} 
-            primaryColor={cleanWedding.primary_color}
-            textColor={cleanWedding.text_color}
-          />
-        )}
+      <div className="relative z-10 flex flex-col items-center w-full">
+        {sectionsOrder.map((sectionId: string) => {
+          if (sectionId === 'template') {
+            return (
+              <div key="template" className="w-full" data-testid="section-template">
+                {templateComponent}
+              </div>
+            );
+          }
+          if (sectionId === 'custom_sections') {
+            return (
+              cleanWedding.custom_overrides?.custom_sections && 
+              Array.isArray(cleanWedding.custom_overrides.custom_sections) && (
+                <div key="custom_sections" className="w-full" data-testid="section-custom-sections">
+                  <div className="w-full max-w-2xl mx-auto px-4 space-y-6 mt-6 relative z-20">
+                    {cleanWedding.custom_overrides.custom_sections
+                      .filter((sec: any) => sec.isVisible !== false)
+                      .map((sec: any) => (
+                        <div 
+                          key={sec.id}
+                          data-testid={`custom-section-${sec.id}`}
+                          className={`p-6 md:p-8 rounded-3xl backdrop-blur-md border shadow-sm transition hover:shadow-md ${
+                            sec.alignment === 'left' ? 'text-left' : sec.alignment === 'right' ? 'text-right' : 'text-center'
+                          }`}
+                          style={{
+                            backgroundColor: cleanWedding.custom_overrides?.design?.cardBgColor ? `${cleanWedding.custom_overrides.design.cardBgColor}F0` : 'rgba(255,255,255,0.92)',
+                            borderColor: `${cleanWedding.primary_color}30`,
+                            color: cleanWedding.text_color
+                          }}
+                        >
+                          <h3 className="text-xl md:text-2xl font-bold mb-1" style={{ fontFamily: 'var(--font-heading)' }}>
+                            {sec.title}
+                          </h3>
+                          {sec.subtitle && (
+                            <p className="text-xs uppercase tracking-widest opacity-70 mb-3 font-semibold">
+                              {sec.subtitle}
+                            </p>
+                          )}
+                          <p className="text-sm md:text-base leading-relaxed opacity-90 whitespace-pre-line font-sans">
+                            {sec.content}
+                          </p>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )
+            );
+          }
+          if (sectionId === 'events') {
+            return (
+              cleanWedding.invitation_events && cleanWedding.invitation_events.length > 0 && (
+                <div key="events" className="w-full" data-testid="section-events">
+                  <EventsTimeline 
+                    events={cleanWedding.invitation_events} 
+                    primaryColor={cleanWedding.primary_color}
+                    textColor={cleanWedding.text_color}
+                  />
+                </div>
+              )
+            );
+          }
+          return null;
+        })}
       </div>
       <BackgroundMusic 
         url={cleanWedding.music_url} 

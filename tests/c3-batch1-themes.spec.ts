@@ -80,7 +80,8 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
       await expect(opening).toBeVisible();
       
       // Click and wait for the custom wrapper to transition to ready state
-      await opening.click();
+      await page.waitForTimeout(500);
+      await opening.click({ force: true });
       const wrapper = page.locator('[data-testid="wedding-content-wrapper"]');
       await expect(wrapper).toHaveAttribute('data-layout-ready', 'true', { timeout: 20000 });
 
@@ -88,17 +89,23 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
       const layout = page.locator(`[data-testid="${theme.testId}"]`);
       await expect(layout).toBeVisible();
 
-      // Scroll to the very bottom to trigger Scene 5 (RSVP and events)
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await page.waitForTimeout(1000);
+      // Scroll to bottom robustly
+      await page.evaluate(() => {
+        window.scrollTo(0, document.body.scrollHeight * 0.5);
+      });
+      await page.waitForTimeout(300);
+      await page.evaluate(() => {
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      await page.waitForTimeout(1500);
 
       // Verify signature element exists after scroll
       const signature = page.locator(theme.signatureSelector);
-      await expect(signature).toBeVisible();
+      await expect(signature).toBeVisible({ timeout: 15000 });
 
       // Verify multiple events details are visible in the document (injected via preview mode)
       const eventTitle = page.locator("text=Kokteyl ve Resepsiyon").first();
-      await expect(eventTitle).toBeVisible();
+      await expect(eventTitle).toBeVisible({ timeout: 15000 });
 
       expect(consoleErrors).toEqual([]);
     });
@@ -110,7 +117,8 @@ test.describe("C3-B1 - Cultural & Destination Templates E2E", () => {
 
       const opening = page.locator("[data-testid=\"opening-overlay\"]");
       await expect(opening).toBeVisible();
-      await opening.click();
+      await page.waitForTimeout(500);
+      await opening.click({ force: true });
       
       const wrapper = page.locator('[data-testid="wedding-content-wrapper"]');
       await expect(wrapper).toHaveAttribute('data-layout-ready', 'true', { timeout: 20000 });

@@ -5,12 +5,12 @@ import { createAdminClient, createServerServiceRoleClient } from '@/server/supab
 const eventSchema = z.object({
   type: z.string().min(1).optional(),
   title: z.string().min(1).optional(),
-  start_time: z.string().datetime().optional(),
-  end_time: z.string().datetime().optional().nullable(),
+  start_time: z.string().optional(),
+  end_time: z.string().optional().nullable(),
   timezone: z.string().optional(),
   venue_name: z.string().optional().nullable(),
   venue_address: z.string().optional().nullable(),
-  google_maps_url: z.string().url().optional().nullable(),
+  google_maps_url: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   is_primary: z.boolean().optional()
 });

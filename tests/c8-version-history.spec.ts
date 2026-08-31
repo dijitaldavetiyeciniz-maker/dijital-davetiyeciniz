@@ -22,6 +22,7 @@ test.describe('C8 — VERSION HISTORY & SAFE RESTORE SUITE', () => {
         admin_password: 'test',
         is_paid: true,
         is_active: true,
+        is_published: true,
         template_id: 'template1',
         custom_overrides: {
           is_published: true,
@@ -67,6 +68,7 @@ test.describe('C8 — VERSION HISTORY & SAFE RESTORE SUITE', () => {
           .from('weddings')
           .update({
             bride_name: 'Defne Sürüm 2 (Güncellenmiş)',
+            is_published: true,
             custom_overrides: {
               is_published: true,
               published_version_number: 2,
@@ -127,6 +129,10 @@ test.describe('C8 — VERSION HISTORY & SAFE RESTORE SUITE', () => {
         version_id: version1Id
       }
     });
+
+    if (!res.ok()) {
+      console.log("RESTORE API FAILED: status =", res.status(), "body =", await res.text());
+    }
 
     expect(res.ok()).toBeTruthy();
     const data = await res.json();

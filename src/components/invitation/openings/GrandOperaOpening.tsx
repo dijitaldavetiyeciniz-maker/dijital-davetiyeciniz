@@ -6,6 +6,7 @@ export interface OpeningProps {
   semanticData: OpeningSemanticContent;
   introText?: string;
   animationState?: 'playing' | 'completed-awaiting-interaction' | 'opened';
+  wedding?: any;
 }
 export function GrandOperaOpening({ opened, semanticData }: OpeningProps) {
   return (

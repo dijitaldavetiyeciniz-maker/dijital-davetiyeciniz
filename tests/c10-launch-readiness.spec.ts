@@ -132,7 +132,7 @@ test.describe('C10 — Launch Readiness & Production Hardening Suite', () => {
     expect(templateIds.length).toBe(149);
 
     const openingCount = entranceAnimationTypes.length;
-    expect(openingCount).toBe(39);
+    expect(openingCount).toBe(50);
 
     const usageCount: Record<string, number> = {};
     templateIds.forEach(id => {
