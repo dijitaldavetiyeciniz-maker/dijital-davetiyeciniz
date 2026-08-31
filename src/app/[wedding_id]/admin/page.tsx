@@ -21,6 +21,9 @@ import BackgroundCustomizer, { BackgroundSettings, ColorSettings } from '@/compo
 import AnimationCustomizer from '@/components/admin/AnimationCustomizer';
 import CustomSectionsManager, { CustomSectionItem } from '@/components/admin/CustomSectionsManager';
 import DomainManagerTab from '@/components/admin/DomainManagerTab';
+import TemplateCatalogTab from '@/components/admin/TemplateCatalogTab';
+import TemplatePreviewModal from '@/components/admin/TemplatePreviewModal';
+import { TemplatePreset } from '@/lib/themes';
 import { Globe } from 'lucide-react';
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dijital-davetiyeciniz.vercel.app';
 
@@ -363,6 +366,7 @@ export default function CoupleAdminPage({
   const [sealStyle, setSealStyle] = useState('burgundy');
   const [userChangedOpeningType, setUserChangedOpeningType] = useState(false);
   const [isAnimationModalOpen, setIsAnimationModalOpen] = useState(false);
+  const [previewModalTheme, setPreviewModalTheme] = useState<TemplatePreset | null>(null);
 
 
   
@@ -1739,7 +1743,7 @@ export default function CoupleAdminPage({
   };
 
   return (
-    <div className="min-w-0 min-h-screen bg-slate-50 p-4 md:p-8 text-slate-800">
+    <div className="min-w-0 min-h-screen bg-slate-50 p-4 md:p-8 pb-28 text-slate-800 overflow-x-hidden">
       
       {toastMessage && (
         <div className="fixed top-4 right-4 z-[250] bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-2 text-xs font-bold animate-in fade-in">
@@ -2182,8 +2186,12 @@ export default function CoupleAdminPage({
                 <p className="text-xs text-slate-400 mt-1">Şablon seçin, tipografiyi, arka plan renklerini ve açılış animasyonunu özelleştirin.</p>
               </div>
 
-              {/* Design Sub-Tabs Navigation */}
-              <div className="flex gap-2 p-1 bg-slate-100 rounded-xl overflow-x-auto text-xs font-bold">
+              {/* Design Sub-Tabs Navigation (Scrollbar-Free, Touch-Snap Mobile UX) */}
+              <div
+                role="tablist"
+                aria-label="Tasarım Stüdyosu Adımları"
+                className="flex gap-1.5 p-1 bg-slate-100 rounded-xl overflow-x-auto scrollbar-none snap-x touch-pan-x text-xs font-bold"
+              >
                 {[
                   { id: 'template', label: '1. Şablon Kataloğu' },
                   { id: 'font', label: '2. Yazı Tipleri' },
@@ -2193,10 +2201,13 @@ export default function CoupleAdminPage({
                   <button
                     key={tab.id}
                     type="button"
+                    role="tab"
+                    id={`design-tab-${tab.id}`}
+                    aria-selected={designSubTab === tab.id}
                     onClick={() => setDesignSubTab(tab.id as any)}
-                    className={`flex-1 py-2 px-3 rounded-lg text-center whitespace-nowrap transition cursor-pointer ${
+                    className={`flex-1 py-2 px-3 rounded-lg text-center whitespace-nowrap transition cursor-pointer snap-start ${
                       designSubTab === tab.id
-                        ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
+                        ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60 font-extrabold'
                         : 'text-slate-500 hover:text-slate-800'
                     }`}
                   >
@@ -2207,55 +2218,36 @@ export default function CoupleAdminPage({
 
               {/* Sub Tab 1: Şablon Kataloğu */}
               {designSubTab === 'template' && (
-                <div className="space-y-4">
-                  <div className="flex gap-2 flex-wrap">
-                    <input 
-                      type="text" 
-                      placeholder="Şablon ara..." 
-                      value={templateSearch} 
-                      onChange={e => setTemplateSearch(e.target.value)} 
-                      className="flex-1 min-w-[150px] px-3 py-1.5 text-xs border rounded-lg bg-white"
-                    />
-                    <select 
-                      value={templateCategory} 
-                      onChange={e => setTemplateCategory(e.target.value)} 
-                      className="border rounded-lg text-xs bg-white px-2.5 py-1.5 font-semibold text-slate-700"
-                    >
-                      <option value="all">Tüm Kategoriler</option>
-                      <option value="wedding">Düğün</option>
-                      <option value="engagement">Nişan</option>
-                      <option value="henna">Kına</option>
-                      <option value="circumcision">Sünnet</option>
-                      <option value="babyshower">Baby Shower</option>
-                      <option value="birthday">Doğum Günü</option>
-                      <option value="corporate">Kurumsal</option>
-                      <option value="graduation">Mezuniyet</option>
-                      <option value="special">Özel Davet</option>
-                    </select>
-                  </div>
+                <>
+                  <TemplateCatalogTab
+                    themes={themes}
+                    currentTemplateId={templateId}
+                    onSelectTemplate={(theme) => {
+                      applyPreset(theme);
+                      setHasUnsavedChanges(true);
+                      setSaveStatus('unsaved');
+                    }}
+                    onPreviewTemplate={(theme) => {
+                      setPreviewModalTheme(theme);
+                    }}
+                  />
 
-                  <div className="max-h-[360px] overflow-y-auto grid grid-cols-2 gap-3 p-2 bg-slate-50 rounded-xl border">
-                    {themes.filter(theme => {
-                      const matchesSearch = !templateSearch || theme.name?.toLowerCase().includes(templateSearch.toLowerCase());
-                      const matchesCat = templateCategory === 'all' || theme.eventType === templateCategory;
-                      return matchesSearch && matchesCat;
-                    }).map(theme => {
-                      const isActive = templateId === theme.id || templateId === theme.template_id;
-                      return (
-                        <button
-                          key={theme.id}
-                          data-testid={`template-${theme.id}`}
-                          onClick={() => applyPreset(theme)}
-                          className={`p-3 bg-white border rounded-xl text-left text-xs font-bold cursor-pointer transition ${isActive ? 'border-rose-500 shadow-sm ring-2 ring-rose-200' : 'border-slate-200 hover:border-slate-300'}`}
-                        >
-                          <div className="truncate text-slate-800">{theme.name}</div>
-                          <div className="text-[9px] text-slate-400 font-medium capitalize mt-0.5">{theme.category || theme.eventType || 'Premium'}</div>
-                          {isActive && <span className="text-[10px] text-rose-600 block mt-1 font-semibold">✓ Uygulandı</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                  <TemplatePreviewModal
+                    isOpen={!!previewModalTheme}
+                    theme={previewModalTheme}
+                    wedding={wedding}
+                    brideName={brideName}
+                    groomName={groomName}
+                    weddingDate={weddingDate}
+                    venueName={venueName}
+                    onClose={() => setPreviewModalTheme(null)}
+                    onSelect={(theme) => {
+                      applyPreset(theme);
+                      setHasUnsavedChanges(true);
+                      setSaveStatus('unsaved');
+                    }}
+                  />
+                </>
               )}
 
               {/* Sub Tab 2: Yazı Tipleri */}
