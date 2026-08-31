@@ -1742,6 +1742,50 @@ export default function CoupleAdminPage({
     settings: 'Ayarlar'
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-500"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+        <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-xl border border-slate-100 text-center">
+          <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-8 h-8 text-rose-500" />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-800 mb-2">Davetiye Yönetim Paneli</h1>
+          <p className="text-slate-500 text-sm mb-6">Lütfen davetiyenizi düzenlemek için şifrenizi girin.</p>
+          
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <input
+                type="password"
+                placeholder="Şifre"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition text-center text-lg tracking-widest"
+                required
+              />
+            </div>
+            {errorMsg && (
+              <p className="text-rose-500 text-xs font-medium">{errorMsg}</p>
+            )}
+            <button
+              type="submit"
+              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 rounded-xl transition duration-200 shadow-md cursor-pointer"
+            >
+              Giriş Yap
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-w-0 min-h-screen bg-slate-50 p-4 md:p-8 pb-28 text-slate-800 overflow-x-hidden">
       
