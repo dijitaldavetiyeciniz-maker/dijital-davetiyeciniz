@@ -12,7 +12,20 @@ Platform sahibi için Super Admin paneli, tüm statik kalıntılardan arındır�
 
 ---
 
-## 2. Onarılan ve Devreye Alınan Sistemler
+## 2. Gerçek Veritabanı ve Temizlik Sayıları (Exact Production Accounting)
+
+| Metrik | Temizlik Öncesi (Before) | Silinen / Sıfırlanan | Güncel Durum (After) | Durum |
+| :--- | :--- | :--- | :--- | :--- |
+| **Toplam Davetiye (Total Weddings)** | **861** | **6** (Test Fixture) | **855** | **PASS** ($861 - 6 = 855$) |
+| **Gerçek Kullanıcı Davetiyesi (Real)** | **855** | **0** (Korundu) | **855** | **PASS** |
+| **Test Davetiyesi (High-Confidence)** | **6** | **6** | **0** | **PASS** |
+| **Toplam Auth / Üye Profili** | **0** | **0** | **0** | **PASS** |
+| **Analitik Olayları (Analytics Events)** | **18** | **18** | **0** | **PASS** |
+| **Denetim Logları (Audit Logs)** | **1** | **0** (Korundu) | **1** | **PRESERVED** |
+
+---
+
+## 3. Onarılan ve Devreye Alınan Sistemler
 
 | Modül | Önceki Durum | Yeni Durum / Çözüm |
 | :--- | :--- | :--- |
@@ -23,11 +36,3 @@ Platform sahibi için Super Admin paneli, tüm statik kalıntılardan arındır�
 | **Destek Merkezi** | Canlı destek simülasyon düzeyindeydi. | Kullanıcı formundan açılan biletler (`/api/support/messages`) ve Super Admin Gelen Kutusu (`SupportInboxTab`) canlı bağlandı. |
 | **Sistem Durumu** | Sistem durumu paneli boş/çalışmıyordu. | Next.js Runtime, Postgres, Auth, Storage, Edge Config ve Rate Limiter probları ile canlı sağlık paneli (`SystemStatusTab`) kuruldu. |
 | **Veri Temizliği & Metrikler** | UI'da 859/362/488/9 şeklinde sabit fallback sayıları vardı. | %100 canlı veritabanı sorguları (`DataCleanupTab`) ve korumalı analitik sıfırlama (`SIFIRLA` onayı ile) getirildi. |
-
----
-
-## 3. Güvenlik ve Uyumluluk
-
-- **CSP 2.0**: `unsafe-eval` kesinlikle yasaktır, Supabase ve Google Font kaynakları minimal tutulmuştur.
-- **Yetkilendirme Kapısı**: Super Admin API rotaları (`/api/super-admin/*`) sunucu tarafında sıkı şifre/oturum kontrolü altındadır.
-- **Audit Logging**: Tüm CMS yayınlama, bakım modu açma/kapama, bilet yanıtlama ve veri temizliği eylemleri `super_admin_audit_logs` tablosuna yazılır.
