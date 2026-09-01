@@ -34,7 +34,8 @@ export default function TemplateCatalogTab({
 
   const filteredThemes = useMemo(() => {
     return themes.filter(theme => {
-      const nameMatch = !searchTerm || theme.name?.toLowerCase().includes(searchTerm.toLowerCase());
+      const query = searchTerm.toLowerCase().trim();
+      const nameMatch = !query || theme.name?.toLowerCase().includes(query) || theme.id.toLowerCase().includes(query);
       const catMatch = selectedCategory === 'all' || theme.eventType === selectedCategory;
       const styleMatch =
         selectedStyle === 'all' ||
@@ -52,6 +53,8 @@ export default function TemplateCatalogTab({
           <input
             type="text"
             placeholder="Şablon adı veya stil ara..."
+            aria-label="Şablon ara"
+            data-testid="template-search-input"
             value={searchTerm}
             onChange={e => {
               setSearchTerm(e.target.value);
@@ -214,6 +217,7 @@ export default function TemplateCatalogTab({
         <div className="text-center pt-2">
           <button
             type="button"
+            data-testid="load-more-templates"
             onClick={() => setVisibleCount(prev => prev + 12)}
             className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition cursor-pointer"
           >
