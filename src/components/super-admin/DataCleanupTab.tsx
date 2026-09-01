@@ -187,29 +187,35 @@ export default function DataCleanupTab() {
       )}
 
       {/* Metrics Cards Grid (100% Live DB values) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-xs">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Toplam Davetiye</span>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Toplam Davetiye</span>
           <p className="text-2xl font-extrabold text-slate-900 mt-1">{summary?.total ?? 0}</p>
-          <span className="text-[10px] text-slate-400">Veritabanındaki tüm satırlar</span>
+          <span className="text-[10px] text-slate-400">Tüm veritabanı satırları</span>
         </div>
 
         <div className="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-200 shadow-xs">
-          <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Gerçek Kullanıcı</span>
-          <p className="text-2xl font-extrabold text-emerald-800 mt-1">{summary?.realUsers ?? 0}</p>
-          <span className="text-[10px] text-emerald-600">Aktif & içerikli davetiyeler</span>
+          <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Kayıtlı Üye Davetiyesi</span>
+          <p className="text-2xl font-extrabold text-emerald-800 mt-1">{summary?.registeredUserWeddings ?? 0}</p>
+          <span className="text-[10px] text-emerald-600">Auth sahibi doğrulanmış</span>
+        </div>
+
+        <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-200 shadow-xs">
+          <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Legacy / Üyeliksiz</span>
+          <p className="text-2xl font-extrabold text-blue-800 mt-1">{summary?.legacyUnauthenticatedWeddings ?? 0}</p>
+          <span className="text-[10px] text-blue-600">Eski sistem davetiyeleri</span>
+        </div>
+
+        <div className="p-4 bg-purple-50/50 rounded-2xl border border-purple-200 shadow-xs">
+          <span className="text-[10px] font-bold text-purple-700 uppercase tracking-wider">Kayıtlı Auth Üyesi</span>
+          <p className="text-2xl font-extrabold text-purple-800 mt-1">{summary?.totalAuthUsers ?? 0}</p>
+          <span className="text-[10px] text-purple-600">auth.users tablosu</span>
         </div>
 
         <div className="p-4 bg-amber-50/50 rounded-2xl border border-amber-200 shadow-xs">
-          <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">Test / Fixture Kayıt</span>
+          <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">Test / Fixture</span>
           <p className="text-2xl font-extrabold text-amber-800 mt-1">{summary?.testRecords ?? 0}</p>
-          <span className="text-[10px] text-amber-600">Otomasyon test artıkları</span>
-        </div>
-
-        <div className="p-4 bg-rose-50/50 rounded-2xl border border-rose-200 shadow-xs">
-          <span className="text-[11px] font-bold text-rose-700 uppercase tracking-wider">Yetim / Karantina</span>
-          <p className="text-2xl font-extrabold text-rose-800 mt-1">{summary?.orphanRecords ?? 0}</p>
-          <span className="text-[10px] text-rose-600">Sahipsiz / atıl kayıtlar</span>
+          <span className="text-[10px] text-amber-600">Aktif test artığı</span>
         </div>
       </div>
 

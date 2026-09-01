@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { isSuperAdminAuthorized } from '@/lib/superadmin-auth';
 import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { logAuditEvent } from '@/lib/audit-logger';
 
 export const dynamic = 'force-dynamic';
@@ -12,6 +13,22 @@ export async function GET() {
   }
 
   try {
+    let authUserIds = new Set<string>();
+    let authUserEmails = new Set<string>();
+    let totalAuthUsersCount = 0;
+
+    try {
+      const adminClient = getSupabaseAdmin();
+      const { data: uData } = await adminClient.auth.admin.listUsers({ page: 1, perPage: 1000 });
+      if (uData?.users) {
+        totalAuthUsersCount = uData.users.length;
+        uData.users.forEach(u => {
+          authUserIds.add(u.id);
+          if (u.email) authUserEmails.add(u.email.toLowerCase());
+        });
+      }
+    } catch {}
+
     const { data: allWeddings, error } = await supabase
       .from('weddings')
       .select('id, slug, created_at, is_paid, is_active, bride_name, groom_name, is_quarantined, deleted_at, user_id, user_email')
@@ -21,18 +38,23 @@ export async function GET() {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 
-    const total = allWeddings.length;
+    const total = (allWeddings || []).length;
+    let registeredUserWeddings = 0;
+    let legacyUnauthenticatedWeddings = 0;
     let testRecords = 0;
+    let demoRecords = 0;
     let orphanRecords = 0;
     let quarantinedRecords = 0;
-    let realUserRecords = 0;
     let ambiguousRecords = 0;
 
-    const classified = allWeddings.map(w => {
+    const classified = (allWeddings || []).map(w => {
       const slug = (w.slug || '').toLowerCase();
       const bride = (w.bride_name || '').toLowerCase();
       const groom = (w.groom_name || '').toLowerCase();
       const email = (w.user_email || '').toLowerCase();
+      const userId = w.user_id;
+
+      const hasAuthOwner = (userId && authUserIds.has(userId)) || (email && authUserEmails.has(email));
 
       const isHighConfidenceTest = (
         slug.startsWith('test-') ||
@@ -41,11 +63,14 @@ export async function GET() {
         slug.startsWith('e2e-') ||
         slug.startsWith('playwright-') ||
         slug.includes('-test-') ||
+        slug.includes('test_') ||
         bride.includes('test fixture') ||
         groom.includes('regression test') ||
         email.endsWith('@test.com') ||
         email.endsWith('@example.com')
       ) && !w.is_paid;
+
+      const isDemo = slug.startsWith('demo-') || slug.includes('demo');
 
       if (w.is_quarantined) {
         quarantinedRecords++;
@@ -54,35 +79,45 @@ export async function GET() {
 
       if (isHighConfidenceTest) {
         testRecords++;
-        return { ...w, category: 'TEST_FIXTURE', reason: 'Otomatik test paketi tarafından oluşturuldu (Yüksek Güven)' };
+        return { ...w, category: 'TEST_FIXTURE', reason: 'Otomasyon test paketi tarafından oluşturuldu' };
       }
 
-      if (!w.bride_name && !w.groom_name && !w.user_id && !w.is_paid) {
+      if (isDemo) {
+        demoRecords++;
+        return { ...w, category: 'DEMO', reason: 'Tanıtım / Demo şablon davetiyesi' };
+      }
+
+      if (hasAuthOwner) {
+        registeredUserWeddings++;
+        return { ...w, category: 'REGISTERED_USER_OWNED', reason: 'Kayıtlı ve doğrulanmış kullanıcıya ait davetiye' };
+      }
+
+      if (userId && !authUserIds.has(userId)) {
         orphanRecords++;
-        return { ...w, category: 'ORPHAN', reason: 'İçeriksiz ve sahipsiz taslak' };
+        return { ...w, category: 'ORPHAN', reason: 'Kullanıcı hesabı silinmiş yetim kayıt' };
       }
 
-      if (w.is_paid || (!isHighConfidenceTest && (w.bride_name || w.groom_name))) {
-        realUserRecords++;
-        return { ...w, category: 'REAL_USER', reason: 'Aktif / Gerçek kullanıcı davetiyesi (Korunuyor)' };
-      }
-
-      ambiguousRecords++;
-      return { ...w, category: 'AMBIGUOUS', reason: 'İnceleme gerektiren taslak kayıt' };
+      // Legacy unauthenticated (created before mandatory login)
+      legacyUnauthenticatedWeddings++;
+      return { ...w, category: 'LEGACY_UNAUTHENTICATED', reason: 'Üyeliksiz / Eski sistemden aktarılan davetiye' };
     });
 
     return NextResponse.json({
       success: true,
       summary: {
         total,
-        realUsers: realUserRecords,
+        totalAuthUsers: totalAuthUsersCount,
+        registeredUserWeddings,
+        legacyUnauthenticatedWeddings,
         testRecords,
+        demoRecords,
         orphanRecords,
         quarantinedRecords,
         ambiguousRecords,
+        primaryTotal: registeredUserWeddings + legacyUnauthenticatedWeddings + testRecords + demoRecords + orphanRecords + quarantinedRecords,
         deleteCandidates: testRecords,
         quarantineCandidates: orphanRecords,
-        keepCandidates: realUserRecords,
+        keepCandidates: registeredUserWeddings + legacyUnauthenticatedWeddings,
         productionDeletionExecuted: false
       },
       records: classified.slice(0, 100)
@@ -112,11 +147,8 @@ export async function POST(req: Request) {
       }
 
       try {
-        // Clear analytics events table if exists
         await supabase.from('analytics_events').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-      } catch {
-        // Table might not exist or already empty
-      }
+      } catch {}
 
       await logAuditEvent({
         action: 'analytics.reset',
@@ -188,7 +220,6 @@ export async function POST(req: Request) {
     }
 
     if (action === 'hard_delete') {
-      // Strict safety: require typed confirmation
       if (typed_confirmation !== 'SIL' && typed_confirmation !== 'DELETE') {
         return NextResponse.json({
           success: false,
