@@ -14,7 +14,7 @@ export async function GET() {
   try {
     const { data: allWeddings, error } = await supabase
       .from('weddings')
-      .select('id, slug, created_at, is_paid, bride_name, groom_name, is_quarantined, deleted_at')
+      .select('id, slug, created_at, is_paid, is_active, bride_name, groom_name, is_quarantined, deleted_at, user_id, user_email')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -26,39 +26,49 @@ export async function GET() {
     let orphanRecords = 0;
     let quarantinedRecords = 0;
     let realUserRecords = 0;
+    let ambiguousRecords = 0;
 
     const classified = allWeddings.map(w => {
       const slug = (w.slug || '').toLowerCase();
       const bride = (w.bride_name || '').toLowerCase();
       const groom = (w.groom_name || '').toLowerCase();
+      const email = (w.user_email || '').toLowerCase();
 
-      const isTest = (
+      const isHighConfidenceTest = (
         slug.startsWith('test-') ||
         slug.startsWith('c12-') ||
         slug.startsWith('c13-') ||
         slug.startsWith('e2e-') ||
+        slug.startsWith('playwright-') ||
         slug.includes('-test-') ||
-        bride.includes('test') ||
-        groom.includes('test')
-      );
+        bride.includes('test fixture') ||
+        groom.includes('regression test') ||
+        email.endsWith('@test.com') ||
+        email.endsWith('@example.com')
+      ) && !w.is_paid;
 
       if (w.is_quarantined) {
         quarantinedRecords++;
         return { ...w, category: 'QUARANTINED', reason: 'Kullanıcı veya sistem tarafından karantinaya alındı' };
       }
 
-      if (isTest) {
+      if (isHighConfidenceTest) {
         testRecords++;
-        return { ...w, category: 'TEST_FIXTURE', reason: 'Otomatik test paketi tarafından oluşturuldu' };
+        return { ...w, category: 'TEST_FIXTURE', reason: 'Otomatik test paketi tarafından oluşturuldu (Yüksek Güven)' };
       }
 
-      if (!w.bride_name && !w.groom_name) {
+      if (!w.bride_name && !w.groom_name && !w.user_id && !w.is_paid) {
         orphanRecords++;
         return { ...w, category: 'ORPHAN', reason: 'İçeriksiz ve sahipsiz taslak' };
       }
 
-      realUserRecords++;
-      return { ...w, category: 'REAL_USER', reason: 'Aktif kullanıcı davetiyesi' };
+      if (w.is_paid || (!isHighConfidenceTest && (w.bride_name || w.groom_name))) {
+        realUserRecords++;
+        return { ...w, category: 'REAL_USER', reason: 'Aktif / Gerçek kullanıcı davetiyesi (Korunuyor)' };
+      }
+
+      ambiguousRecords++;
+      return { ...w, category: 'AMBIGUOUS', reason: 'İnceleme gerektiren taslak kayıt' };
     });
 
     return NextResponse.json({
@@ -69,6 +79,7 @@ export async function GET() {
         testRecords,
         orphanRecords,
         quarantinedRecords,
+        ambiguousRecords,
         deleteCandidates: testRecords,
         quarantineCandidates: orphanRecords,
         keepCandidates: realUserRecords,
@@ -90,6 +101,34 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { action, wedding_ids, typed_confirmation, reason } = body;
+
+    // Reset Analytics Action
+    if (action === 'reset_analytics') {
+      if (typed_confirmation !== 'SIFIRLA' && typed_confirmation !== 'RESET') {
+        return NextResponse.json({
+          success: false,
+          error: 'Analitik sıfırlama işlemi için onay kutusuna "SIFIRLA" veya "RESET" yazılması zorunludur.'
+        }, { status: 400 });
+      }
+
+      try {
+        // Clear analytics events table if exists
+        await supabase.from('analytics_events').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      } catch {
+        // Table might not exist or already empty
+      }
+
+      await logAuditEvent({
+        action: 'analytics.reset',
+        targetType: 'analytics',
+        details: { resetBy: 'Super Admin', confirmation: typed_confirmation }
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: 'Kullanım ve test analitik verileri başarıyla sıfırlandı. Denetim logları korundu.'
+      });
+    }
 
     if (!wedding_ids || !Array.isArray(wedding_ids) || wedding_ids.length === 0) {
       return NextResponse.json({ success: false, error: 'İşlem yapılacak davetiyeler seçilmedi.' }, { status: 400 });
