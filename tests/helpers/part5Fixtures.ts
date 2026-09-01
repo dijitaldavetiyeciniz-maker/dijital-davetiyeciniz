@@ -24,7 +24,8 @@ export async function setupPart5Fixture(testSlugPrefix: string = 'part5-fixture'
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const testSlug = `${testSlugPrefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  const normalizedPrefix = testSlugPrefix.startsWith('test-') ? testSlugPrefix : `test-${testSlugPrefix}`;
+  const testSlug = `${normalizedPrefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
   const isPublished = options.published !== false;
 

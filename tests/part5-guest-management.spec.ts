@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { setupPart5Fixture } from './helpers/part5Fixtures';
+import { loginAsAdmin } from './helpers/adminAuth';
 
 test.describe('PART 5A - Guest Management E2E', () => {
   const isCI = process.env.CI === "true";
@@ -29,10 +30,8 @@ test.describe('PART 5A - Guest Management E2E', () => {
   });
 
   test('C6 - Guest Management Removed From Admin Navigation', async ({ page }) => {
-    // 1. Visit admin dashboard and login
-    await page.goto(`/${fixture.testSlug}/admin`);
-    await page.fill('input[placeholder="Şifre"]', 'test');
-    await page.click('button:has-text("Giriş Yap")');
+    // 1. Visit admin dashboard and login using canonical helper
+    await loginAsAdmin(page, fixture.testSlug, 'test');
 
     // 2. Wait for page load
     await expect(page.locator('text=Davetiye Hazırlama Stüdyosu')).toBeVisible();
@@ -60,10 +59,8 @@ test.describe('PART 5A - Guest Management E2E', () => {
   });
 
   test('PART 5A - Guest Backend Preservation', async ({ page }) => {
-    // 1. Authenticate session by logging in
-    await page.goto(`/${fixture.testSlug}/admin`);
-    await page.fill('input[placeholder="Şifre"]', 'test');
-    await page.click('button:has-text("Giriş Yap")');
+    // 1. Authenticate session by logging in using canonical helper
+    await loginAsAdmin(page, fixture.testSlug, 'test');
     await expect(page.locator('text=Davetiye Hazırlama Stüdyosu')).toBeVisible();
 
     // 2. Add Guest (POST /api/guests) using Zod-compliant payload shape
