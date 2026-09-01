@@ -198,7 +198,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       await page.click(`[data-testid="template-${tplId}"]`);
       
       // Wait for actual DOM state update (No timeouts!)
-      await page.waitForSelector(`[data-testid="template-${tplId}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
+      await expect(page.locator(`[data-testid="template-${tplId}"]`)).toHaveAttribute('data-selected', 'true', { timeout: 5000 });
+      await expect(page.locator(`[data-testid="template-${tplId}"]`)).toContainText('Seçili');
       
       // Step 6: Save & Publish
       const saveBtn = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
@@ -390,13 +391,13 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     // STEP B: Rapid selection A -> B -> C
     await page.click(`[data-testid="template-${templateA}"]`);
-    await page.waitForSelector(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
+    await expect(page.locator(`[data-testid="template-${templateA}"]`)).toHaveAttribute('data-selected', 'true', { timeout: 5000 });
     
     await page.click(`[data-testid="template-${templateB}"]`);
-    await page.waitForSelector(`[data-testid="template-${templateB}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
+    await expect(page.locator(`[data-testid="template-${templateB}"]`)).toHaveAttribute('data-selected', 'true', { timeout: 5000 });
     
     await page.click(`[data-testid="template-${templateC}"]`);
-    await page.waitForSelector(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
+    await expect(page.locator(`[data-testid="template-${templateC}"]`)).toHaveAttribute('data-selected', 'true', { timeout: 5000 });
     
     // STEP C: Save draft (Older async saves for A or B must not overwrite C)
     const saveBtn1 = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
@@ -414,8 +415,9 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await studioBtnReload1.click();
     const subtab1Reload = page.locator('button:has-text("Şablon & Tema")');
     if (await subtab1Reload.isVisible()) await subtab1Reload.click();
-    const selectedTemplate = page.locator(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`);
-    await expect(selectedTemplate).toBeVisible();
+    const selectedTemplate = page.locator(`[data-testid="template-${templateC}"]`);
+    await expect(selectedTemplate).toHaveAttribute('data-selected', 'true');
+    await expect(selectedTemplate).toContainText('Seçili');
 
     // STEP D: Public invitation BEFORE publish must serve initial published snapshot (C8 draft isolation)
     const publicContextBefore = await browser.newContext();
@@ -524,7 +526,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     
     // Select A, accept
     await page.click(`[data-testid="template-${templateA}"]`);
-    await page.waitForSelector(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
+    await expect(page.locator(`[data-testid="template-${templateA}"]`)).toHaveAttribute('data-selected', 'true', { timeout: 5000 });
     
     // Enable rejection for the next click
     isRejecting = true;
@@ -533,7 +535,8 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await page.click(`[data-testid="template-${templateB}"]`);
     
     // B should NOT be selected
-    await expect(page.locator(`[data-testid="template-${templateB}"]`)).not.toContainText('Uygulandı');
+    await expect(page.locator(`[data-testid="template-${templateB}"]`)).toHaveAttribute('data-selected', 'false');
+    await expect(page.locator(`[data-testid="template-${templateB}"]`)).not.toContainText('Seçili');
     
     // Set to accept for the save success dialog
     isRejecting = false;
@@ -554,8 +557,9 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await studioBtnReload2.click();
     const subtab2Reload = page.locator('button:has-text("Şablon & Tema")');
     if (await subtab2Reload.isVisible()) await subtab2Reload.click();
-    const selectedTemplate = page.locator(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`);
-    await expect(selectedTemplate).toBeVisible();
+    const selectedTemplate = page.locator(`[data-testid="template-${templateA}"]`);
+    await expect(selectedTemplate).toHaveAttribute('data-selected', 'true');
+    await expect(selectedTemplate).toContainText('Seçili');
 
     const publicContext = await browser.newContext();
     const publicPage = await publicContext.newPage();

@@ -115,6 +115,7 @@ export default function TemplateCatalogTab({
             <div
               key={theme.id}
               data-testid={`template-card-${theme.id}`}
+              data-selected={isSelected ? 'true' : 'false'}
               className={`rounded-2xl border bg-white p-3.5 flex flex-col justify-between gap-3 transition ${
                 isSelected
                   ? 'border-rose-500 ring-2 ring-rose-200 bg-rose-50/20 shadow-sm'
@@ -184,6 +185,8 @@ export default function TemplateCatalogTab({
                 <button
                   type="button"
                   data-testid={`template-${theme.id}`}
+                  data-selected={isSelected ? 'true' : 'false'}
+                  aria-pressed={isSelected}
                   onClick={() => onSelectTemplate(theme)}
                   className={`py-1.5 px-2.5 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer ${
                     isSelected
