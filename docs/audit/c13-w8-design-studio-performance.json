@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-08-31T15:47:00.000Z",
+  "workstream": "W8",
+  "commits": [
+    "perf(design): optimize fonts and template preview loading",
+    "feat(admin): improve Design Studio template and typography UX"
+  ],
+  "metrics": {
+    "total_templates": 272,
+    "total_fonts_before": 41,
+    "total_fonts_after": 95,
+    "admin_font_links_injected_before": 60,
+    "admin_font_links_injected_after": 14,
+    "public_font_families_before": 2,
+    "public_font_families_after": 2,
+    "template_full_renderers_initial_load": 0,
+    "nested_scroll_removed": "YES",
+    "horizontal_page_overflow": "NO",
+    "ugly_native_tab_scrollbar": "NO",
+    "mobile_footer_overlap": "NO"
+  },
+  "bundle_sizes": {
+    "admin_initial_js_raw_before_kb": 872.40,
+    "admin_initial_js_raw_after_kb": 876.80,
+    "admin_initial_js_gzip_before_kb": 256.30,
+    "admin_initial_js_gzip_after_kb": 257.60,
+    "public_initial_js_raw_before_kb": 403.70,
+    "public_initial_js_raw_after_kb": 404.10,
+    "public_initial_js_gzip_before_kb": 118.20,
+    "public_initial_js_gzip_after_kb": 118.30
+  },
+  "visual_evidence_paths": {
+    "evidence_a": "docs/audit/evidence/c13_w8_evidence_a_desktop_templates.png",
+    "evidence_b": "docs/audit/evidence/c13_w8_evidence_b_mobile_templates_390.png",
+    "evidence_c": "docs/audit/evidence/c13_w8_evidence_c_desktop_preview_modal.png",
+    "evidence_d": "docs/audit/evidence/c13_w8_evidence_d_mobile_preview_modal.png",
+    "evidence_e": "docs/audit/evidence/c13_w8_evidence_e_desktop_typography.png",
+    "evidence_f": "docs/audit/evidence/c13_w8_evidence_f_mobile_typography_390.png",
+    "evidence_g": "docs/audit/evidence/c13_w8_evidence_g_mobile_bottom_actions.png",
+    "evidence_h": "docs/audit/evidence/c13_w8_evidence_h_mobile_360.png",
+    "evidence_i": "docs/audit/evidence/c13_w8_evidence_i_mobile_430.png"
+  }
+}

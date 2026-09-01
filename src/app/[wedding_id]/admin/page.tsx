@@ -20,6 +20,11 @@ import FontPicker from '@/components/admin/FontPicker';
 import BackgroundCustomizer, { BackgroundSettings, ColorSettings } from '@/components/admin/BackgroundCustomizer';
 import AnimationCustomizer from '@/components/admin/AnimationCustomizer';
 import CustomSectionsManager, { CustomSectionItem } from '@/components/admin/CustomSectionsManager';
+import DomainManagerTab from '@/components/admin/DomainManagerTab';
+import TemplateCatalogTab from '@/components/admin/TemplateCatalogTab';
+import TemplatePreviewModal from '@/components/admin/TemplatePreviewModal';
+import { TemplatePreset } from '@/lib/themes';
+import { Globe } from 'lucide-react';
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dijital-davetiyeciniz.vercel.app';
 
 function getTemplatePreset(id: string) {
@@ -243,7 +248,7 @@ export default function CoupleAdminPage({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   
-  const [activeTab, setActiveTab] = useState<'info' | 'events' | 'design' | 'content' | 'special' | 'preview' | 'share' | 'settings' | 'rsvps' | 'guests'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'events' | 'design' | 'content' | 'special' | 'preview' | 'share' | 'settings' | 'rsvps' | 'guests' | 'domain'>('info');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'unsaved' | 'saving' | 'saved' | 'error'>('idle');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [subEvents, setSubEvents] = useState<any[]>([]);
@@ -361,6 +366,7 @@ export default function CoupleAdminPage({
   const [sealStyle, setSealStyle] = useState('burgundy');
   const [userChangedOpeningType, setUserChangedOpeningType] = useState(false);
   const [isAnimationModalOpen, setIsAnimationModalOpen] = useState(false);
+  const [previewModalTheme, setPreviewModalTheme] = useState<TemplatePreset | null>(null);
 
 
   
@@ -550,64 +556,65 @@ export default function CoupleAdminPage({
     });
 
     async function loadData() {
-      // 1. Düğün bilgilerini çek (slug veya UUID id ile)
-      let query = supabase.from('weddings').select('*');
-      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(wedding_id);
-      if (isUuid) {
-        query = query.eq('id', wedding_id);
-      } else {
-        query = query.eq('slug', wedding_id);
-      }
-      const { data: weddingData, error } = await query.single();
-        
-      if (error || !weddingData) {
-        setLoading(false);
-        return;
-      }
-      setWedding(weddingData);
-      
-      // 2. Mevcut kullanıcının (Auth) oturumunu kontrol et
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (session?.user) {
-        try {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('is_email_verified')
-            .eq('id', session.user.id)
-            .maybeSingle();
-
-          if (profile && profile.is_email_verified === false && !session.user.email_confirmed_at) {
-            window.location.href = `/dogrula?email=${encodeURIComponent(session.user.email || '')}`;
-            return;
-          }
-        } catch {}
-      }
-      
-      let isAuth = false;
-      if (session?.user?.id && session.user.id === weddingData.user_id) {
-        setIsOwner(true);
-        isAuth = true;
-      } else {
-        try {
-          const res = await fetch('/api/admin/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ wedding_id: weddingData.id })
-          });
-          const data = await res.json();
-          isAuth = data.authenticated;
-        } catch(e) {
-          console.error(e);
+      try {
+        // 1. Düğün bilgilerini çek (slug veya UUID id ile)
+        let query = supabase.from('weddings').select('*');
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(wedding_id);
+        if (isUuid) {
+          query = query.eq('id', wedding_id);
+        } else {
+          query = query.eq('slug', wedding_id);
         }
-      }
+        const { data: weddingData, error } = await query.single();
+          
+        if (error || !weddingData) {
+          setIsAuthenticated(false);
+          return;
+        }
+        setWedding(weddingData);
+        
+        // 2. Mevcut kullanıcının (Auth) oturumunu kontrol et
+        const { data: { session } } = await supabase.auth.getSession();
 
-      if (isAuth) {
-        setIsAuthenticated(true);
-        fetchRsvps(weddingData.id);
-      } else {
-        setIsAuthenticated(false);
-      }
+        if (session?.user) {
+          try {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('is_email_verified')
+              .eq('id', session.user.id)
+              .maybeSingle();
+
+            if (profile && profile.is_email_verified === false && !session.user.email_confirmed_at) {
+              window.location.href = `/dogrula?email=${encodeURIComponent(session.user.email || '')}`;
+              return;
+            }
+          } catch {}
+        }
+        
+        let isAuth = false;
+        if (session?.user?.id && session.user.id === weddingData.user_id) {
+          setIsOwner(true);
+          isAuth = true;
+        } else {
+          try {
+            const res = await fetch('/api/admin/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ wedding_id: weddingData.id })
+            });
+            const data = await res.json();
+            isAuth = data.authenticated;
+          } catch(e) {
+            console.error(e);
+          }
+        }
+
+        if (isAuth) {
+          setIsAuthenticated(true);
+          fetchRsvps(weddingData.id);
+        } else {
+          setIsAuthenticated(false);
+        }
       
       // Hydrate C8 Draft & Published state
       if (weddingData.is_published !== undefined) {
@@ -704,8 +711,12 @@ export default function CoupleAdminPage({
       if (weddingData.custom_message) setCustomMessage(weddingData.custom_message);
       if (weddingData.quote_font_family) setQuoteFontFamily(weddingData.quote_font_family);
       if (weddingData.quote_font_size) setQuoteFontSize(weddingData.quote_font_size);
-      
-      setLoading(false);
+      } catch (err) {
+        console.error('Error loading wedding admin data:', err);
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
     }
     loadData();
   }, [wedding_id]);
@@ -725,22 +736,27 @@ export default function CoupleAdminPage({
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (!wedding) return;
+    const targetWeddingId = wedding?.id || wedding_id;
+    if (!targetWeddingId) return;
     try {
       const res = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wedding_id: wedding.id, password: passwordInput })
+        body: JSON.stringify({ wedding_id: targetWeddingId, password: passwordInput })
       });
       const data = await res.json();
-      if (data.success || passwordInput === wedding.admin_password) {
+      if (data.success || (wedding && passwordInput === wedding.admin_password)) {
         setIsAuthenticated(true);
-        fetchRsvps(wedding.id);
+        if (wedding?.id) {
+          fetchRsvps(wedding.id);
+        } else {
+          window.location.reload();
+        }
       } else {
         setErrorMsg('Şifre hatalı. Lütfen tekrar deneyin.');
       }
     } catch (err) {
-      if (passwordInput === wedding.admin_password) {
+      if (wedding && passwordInput === wedding.admin_password) {
         setIsAuthenticated(true);
         fetchRsvps(wedding.id);
       } else {
@@ -1736,8 +1752,52 @@ export default function CoupleAdminPage({
     settings: 'Ayarlar'
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-500"></div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+        <div className="max-w-md w-full bg-white rounded-3xl p-8 shadow-xl border border-slate-100 text-center">
+          <div className="w-16 h-16 bg-rose-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-8 h-8 text-rose-500" />
+          </div>
+          <h1 className="text-2xl font-bold text-slate-800 mb-2">Davetiye Yönetim Paneli</h1>
+          <p className="text-slate-500 text-sm mb-6">Lütfen davetiyenizi düzenlemek için şifrenizi girin.</p>
+          
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <input
+                type="password"
+                placeholder="Şifre"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition text-center text-lg tracking-widest"
+                required
+              />
+            </div>
+            {errorMsg && (
+              <p className="text-rose-500 text-xs font-medium">{errorMsg}</p>
+            )}
+            <button
+              type="submit"
+              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 rounded-xl transition duration-200 shadow-md cursor-pointer"
+            >
+              Giriş Yap
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-w-0 min-h-screen bg-slate-50 p-4 md:p-8 text-slate-800">
+    <div className="min-w-0 min-h-screen bg-slate-50 p-4 md:p-8 pb-28 text-slate-800 overflow-x-hidden">
       
       {toastMessage && (
         <div className="fixed top-4 right-4 z-[250] bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-2 text-xs font-bold animate-in fade-in">
@@ -1824,6 +1884,16 @@ export default function CoupleAdminPage({
               >
                 <Clock className="w-4 h-4 text-indigo-500" />
                 <span>Versiyon Geçmişi</span>
+              </button>
+
+              <button 
+                type="button"
+                data-testid="admin-nav-domain"
+                onClick={() => setActiveTab('domain')} 
+                className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-semibold text-slate-700 w-full hover:bg-slate-50 cursor-pointer ${activeTab === 'domain' ? 'bg-purple-50 text-purple-700 border border-purple-200' : ''}`}
+              >
+                <Globe className="w-4 h-4 text-purple-600" />
+                <span>Özel Alan Adı</span>
               </button>
 
               <button onClick={() => setActiveTab('settings')} className={`flex items-center gap-2 p-2.5 rounded-xl text-xs font-semibold text-slate-600 w-full hover:bg-slate-50 cursor-pointer ${activeTab === 'settings' ? 'bg-slate-100' : ''}`}>
@@ -2170,8 +2240,12 @@ export default function CoupleAdminPage({
                 <p className="text-xs text-slate-400 mt-1">Şablon seçin, tipografiyi, arka plan renklerini ve açılış animasyonunu özelleştirin.</p>
               </div>
 
-              {/* Design Sub-Tabs Navigation */}
-              <div className="flex gap-2 p-1 bg-slate-100 rounded-xl overflow-x-auto text-xs font-bold">
+              {/* Design Sub-Tabs Navigation (Scrollbar-Free, Touch-Snap Mobile UX) */}
+              <div
+                role="tablist"
+                aria-label="Tasarım Stüdyosu Adımları"
+                className="flex gap-1.5 p-1 bg-slate-100 rounded-xl overflow-x-auto scrollbar-none snap-x touch-pan-x text-xs font-bold"
+              >
                 {[
                   { id: 'template', label: '1. Şablon Kataloğu' },
                   { id: 'font', label: '2. Yazı Tipleri' },
@@ -2181,10 +2255,13 @@ export default function CoupleAdminPage({
                   <button
                     key={tab.id}
                     type="button"
+                    role="tab"
+                    id={`design-tab-${tab.id}`}
+                    aria-selected={designSubTab === tab.id}
                     onClick={() => setDesignSubTab(tab.id as any)}
-                    className={`flex-1 py-2 px-3 rounded-lg text-center whitespace-nowrap transition cursor-pointer ${
+                    className={`flex-1 py-2 px-3 rounded-lg text-center whitespace-nowrap transition cursor-pointer snap-start ${
                       designSubTab === tab.id
-                        ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
+                        ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60 font-extrabold'
                         : 'text-slate-500 hover:text-slate-800'
                     }`}
                   >
@@ -2195,55 +2272,36 @@ export default function CoupleAdminPage({
 
               {/* Sub Tab 1: Şablon Kataloğu */}
               {designSubTab === 'template' && (
-                <div className="space-y-4">
-                  <div className="flex gap-2 flex-wrap">
-                    <input 
-                      type="text" 
-                      placeholder="Şablon ara..." 
-                      value={templateSearch} 
-                      onChange={e => setTemplateSearch(e.target.value)} 
-                      className="flex-1 min-w-[150px] px-3 py-1.5 text-xs border rounded-lg bg-white"
-                    />
-                    <select 
-                      value={templateCategory} 
-                      onChange={e => setTemplateCategory(e.target.value)} 
-                      className="border rounded-lg text-xs bg-white px-2.5 py-1.5 font-semibold text-slate-700"
-                    >
-                      <option value="all">Tüm Kategoriler</option>
-                      <option value="wedding">Düğün</option>
-                      <option value="engagement">Nişan</option>
-                      <option value="henna">Kına</option>
-                      <option value="circumcision">Sünnet</option>
-                      <option value="babyshower">Baby Shower</option>
-                      <option value="birthday">Doğum Günü</option>
-                      <option value="corporate">Kurumsal</option>
-                      <option value="graduation">Mezuniyet</option>
-                      <option value="special">Özel Davet</option>
-                    </select>
-                  </div>
+                <>
+                  <TemplateCatalogTab
+                    themes={themes}
+                    currentTemplateId={templateId}
+                    onSelectTemplate={(theme) => {
+                      applyPreset(theme);
+                      setHasUnsavedChanges(true);
+                      setSaveStatus('unsaved');
+                    }}
+                    onPreviewTemplate={(theme) => {
+                      setPreviewModalTheme(theme);
+                    }}
+                  />
 
-                  <div className="max-h-[360px] overflow-y-auto grid grid-cols-2 gap-3 p-2 bg-slate-50 rounded-xl border">
-                    {themes.filter(theme => {
-                      const matchesSearch = !templateSearch || theme.name?.toLowerCase().includes(templateSearch.toLowerCase());
-                      const matchesCat = templateCategory === 'all' || theme.eventType === templateCategory;
-                      return matchesSearch && matchesCat;
-                    }).map(theme => {
-                      const isActive = templateId === theme.id || templateId === theme.template_id;
-                      return (
-                        <button
-                          key={theme.id}
-                          data-testid={`template-${theme.id}`}
-                          onClick={() => applyPreset(theme)}
-                          className={`p-3 bg-white border rounded-xl text-left text-xs font-bold cursor-pointer transition ${isActive ? 'border-rose-500 shadow-sm ring-2 ring-rose-200' : 'border-slate-200 hover:border-slate-300'}`}
-                        >
-                          <div className="truncate text-slate-800">{theme.name}</div>
-                          <div className="text-[9px] text-slate-400 font-medium capitalize mt-0.5">{theme.category || theme.eventType || 'Premium'}</div>
-                          {isActive && <span className="text-[10px] text-rose-600 block mt-1 font-semibold">✓ Uygulandı</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                  <TemplatePreviewModal
+                    isOpen={!!previewModalTheme}
+                    theme={previewModalTheme}
+                    wedding={wedding}
+                    brideName={brideName}
+                    groomName={groomName}
+                    weddingDate={weddingDate}
+                    venueName={venueName}
+                    onClose={() => setPreviewModalTheme(null)}
+                    onSelect={(theme) => {
+                      applyPreset(theme);
+                      setHasUnsavedChanges(true);
+                      setSaveStatus('unsaved');
+                    }}
+                  />
+                </>
               )}
 
               {/* Sub Tab 2: Yazı Tipleri */}
@@ -2839,6 +2897,11 @@ export default function CoupleAdminPage({
                 </div>
               </div>
             </div>
+          )}
+
+          {/* Tab: ÖZEL ALAN ADI */}
+          {activeTab === 'domain' && (
+            <DomainManagerTab wedding={wedding} onRefresh={() => {}} />
           )}
 
           {/* Tab 7: AYARLAR */}

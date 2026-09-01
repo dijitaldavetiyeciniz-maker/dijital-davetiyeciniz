@@ -72,6 +72,53 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 }
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+async function resetCatalogSearch(page: any) {
+  const searchInput = page.locator('[data-testid="template-search-input"], input[placeholder*="Şablon"]').first();
+  if (await searchInput.isVisible()) {
+    const val = await searchInput.inputValue();
+    if (val) {
+      await searchInput.fill('');
+      await page.waitForTimeout(50);
+    }
+  }
+}
+
+async function revealTemplateCard(page: any, tplId: string) {
+  const cardLocator = page.locator(`[data-testid="template-${tplId}"]`);
+  
+  // 1. If already visible in current view, return it
+  if (await cardLocator.isVisible()) {
+    return cardLocator;
+  }
+
+  // 2. Clear and search for target template (primary user strategy)
+  const searchInput = page.locator('[data-testid="template-search-input"], input[placeholder*="Şablon"]').first();
+  if (await searchInput.isVisible()) {
+    await searchInput.fill('');
+    await searchInput.fill(tplId);
+    await page.waitForTimeout(100);
+  }
+
+  if (await cardLocator.isVisible()) {
+    return cardLocator;
+  }
+
+  // 3. Fallback: Click load more button if still needed
+  for (let attempt = 0; attempt < 25; attempt++) {
+    if (await cardLocator.isVisible()) break;
+    const loadMore = page.locator('button:has-text("Daha Fazla"), [data-testid="load-more-templates"]').first();
+    if (await loadMore.isVisible()) {
+      await loadMore.click();
+      await page.waitForTimeout(100);
+    } else {
+      break;
+    }
+  }
+
+  await expect(cardLocator).toBeVisible({ timeout: 5000 });
+  return cardLocator;
+}
+
 test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
   // Use sequential mode because we are persisting state on the same test wedding
   test.describe.configure({ mode: 'serial' });
@@ -168,37 +215,12 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
         await subtab.click();
       }
       
-      // Load more templates dynamically if the target template is paginated out of view
-      let isVisible = false;
-      for (let attempt = 0; attempt < 25; attempt++) {
-        isVisible = await page.locator(`[data-testid="template-${tplId}"]`).isVisible();
-        if (isVisible) break;
-        
-        const loadMore = page.locator('button:has-text("Daha Fazla Göster")');
-        if (await loadMore.isVisible()) {
-          await loadMore.click();
-          await page.waitForTimeout(200);
-        } else {
-          break;
-        }
-      }
-      
-      try {
-        await page.waitForSelector(`[data-testid="template-${tplId}"]`, { state: 'visible', timeout: 5000 });
-      } catch (e) {
-        console.error(`Could not find [data-testid="template-${tplId}"]. Printing available testids:`);
-        const availableTemplates = await page.evaluate(() => {
-          return Array.from(document.querySelectorAll('[data-testid^="template-"]'))
-            .map(el => el.getAttribute('data-testid'));
-        });
-        console.error(availableTemplates);
-        throw e;
-      }
-      
+      await revealTemplateCard(page, tplId);
       await page.click(`[data-testid="template-${tplId}"]`);
       
       // Wait for actual DOM state update (No timeouts!)
-      await page.waitForSelector(`[data-testid="template-${tplId}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
+      await expect(page.locator(`[data-testid="template-${tplId}"]`)).toHaveAttribute('data-selected', 'true', { timeout: 5000 });
+      await expect(page.locator(`[data-testid="template-${tplId}"]`)).toContainText('Seçili');
       
       // Step 6: Save & Publish
       const saveBtn = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
@@ -386,17 +408,19 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const templateB = 'grand-opera-ballroom';
     const templateC = 'moonlit-secret-garden';
     
-    await page.waitForSelector(`[data-testid="template-${templateA}"]`, { state: 'visible' });
+    await revealTemplateCard(page, templateA);
     
     // STEP B: Rapid selection A -> B -> C
     await page.click(`[data-testid="template-${templateA}"]`);
-    await page.waitForSelector(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
+    await expect(page.locator(`[data-testid="template-${templateA}"]`)).toHaveAttribute('data-selected', 'true', { timeout: 5000 });
     
+    await revealTemplateCard(page, templateB);
     await page.click(`[data-testid="template-${templateB}"]`);
-    await page.waitForSelector(`[data-testid="template-${templateB}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
+    await expect(page.locator(`[data-testid="template-${templateB}"]`)).toHaveAttribute('data-selected', 'true', { timeout: 5000 });
     
+    await revealTemplateCard(page, templateC);
     await page.click(`[data-testid="template-${templateC}"]`);
-    await page.waitForSelector(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
+    await expect(page.locator(`[data-testid="template-${templateC}"]`)).toHaveAttribute('data-selected', 'true', { timeout: 5000 });
     
     // STEP C: Save draft (Older async saves for A or B must not overwrite C)
     const saveBtn1 = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
@@ -414,8 +438,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await studioBtnReload1.click();
     const subtab1Reload = page.locator('button:has-text("Şablon & Tema")');
     if (await subtab1Reload.isVisible()) await subtab1Reload.click();
-    const selectedTemplate = page.locator(`[data-testid="template-${templateC}"]:has-text("Uygulandı")`);
-    await expect(selectedTemplate).toBeVisible();
+    await revealTemplateCard(page, templateC);
+    const selectedTemplate = page.locator(`[data-testid="template-${templateC}"]`);
+    await expect(selectedTemplate).toHaveAttribute('data-selected', 'true');
+    await expect(selectedTemplate).toContainText('Seçili');
 
     // STEP D: Public invitation BEFORE publish must serve initial published snapshot (C8 draft isolation)
     const publicContextBefore = await browser.newContext();
@@ -523,17 +549,20 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const templateB = 'parisian-black-tie';
     
     // Select A, accept
+    await revealTemplateCard(page, templateA);
     await page.click(`[data-testid="template-${templateA}"]`);
-    await page.waitForSelector(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`, { state: 'visible', timeout: 5000 });
+    await expect(page.locator(`[data-testid="template-${templateA}"]`)).toHaveAttribute('data-selected', 'true', { timeout: 5000 });
     
     // Enable rejection for the next click
     isRejecting = true;
     
     // Select B, which will be dismissed
+    await revealTemplateCard(page, templateB);
     await page.click(`[data-testid="template-${templateB}"]`);
     
     // B should NOT be selected
-    await expect(page.locator(`[data-testid="template-${templateB}"]`)).not.toContainText('Uygulandı');
+    await expect(page.locator(`[data-testid="template-${templateB}"]`)).toHaveAttribute('data-selected', 'false');
+    await expect(page.locator(`[data-testid="template-${templateB}"]`)).not.toContainText('Seçili');
     
     // Set to accept for the save success dialog
     isRejecting = false;
@@ -554,8 +583,10 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     await studioBtnReload2.click();
     const subtab2Reload = page.locator('button:has-text("Şablon & Tema")');
     if (await subtab2Reload.isVisible()) await subtab2Reload.click();
-    const selectedTemplate = page.locator(`[data-testid="template-${templateA}"]:has-text("Uygulandı")`);
-    await expect(selectedTemplate).toBeVisible();
+    await revealTemplateCard(page, templateA);
+    const selectedTemplate = page.locator(`[data-testid="template-${templateA}"]`);
+    await expect(selectedTemplate).toHaveAttribute('data-selected', 'true');
+    await expect(selectedTemplate).toContainText('Seçili');
 
     const publicContext = await browser.newContext();
     const publicPage = await publicContext.newPage();

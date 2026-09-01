@@ -1,0 +1,79 @@
+{
+  "timestamp": "2026-08-28T21:51:56.646Z",
+  "nextVersion": "16.3.0",
+  "buildStatus": "SUCCESS",
+  "buildDurationSec": 7.2,
+  "buildMode": "Turbopack (Optimized Production)",
+  "totalChunksCount": 372,
+  "totalChunksRawKB": 5577.38,
+  "totalChunksGzipKB": 1723.98,
+  "publicInvitation": {
+    "route": "/[wedding_id]",
+    "initialJsRawKB": 842.15,
+    "initialJsGzipKB": 246.3,
+    "chunks": []
+  },
+  "admin": {
+    "route": "/[wedding_id]/admin",
+    "initialJsRawKB": 1184.6,
+    "initialJsGzipKB": 348.9,
+    "chunks": []
+  },
+  "openingAnimations": {
+    "totalRegistryCount": 50,
+    "staticOpeningImportsCount": 49,
+    "codeSplitBaseline": "NO (All 50 opening renderers statically imported into client entry graph)",
+    "topChunkSample": [
+      {
+        "file": "1b9iryl-p772_.js",
+        "relPath": ".next/static/chunks/1b9iryl-p772_.js",
+        "rawKB": 229.62,
+        "gzipKB": 59.74
+      },
+      {
+        "file": "08ttfj81-47mu.js",
+        "relPath": ".next/static/chunks/08ttfj81-47mu.js",
+        "rawKB": 223.71,
+        "gzipKB": 69.93
+      },
+      {
+        "file": "419il4n-pph4_.js",
+        "relPath": ".next/static/chunks/419il4n-pph4_.js",
+        "rawKB": 222.87,
+        "gzipKB": 21.68
+      },
+      {
+        "file": "2_kj6kxzawxym.js",
+        "relPath": ".next/static/chunks/2_kj6kxzawxym.js",
+        "rawKB": 150.41,
+        "gzipKB": 41.3
+      },
+      {
+        "file": "06j1cm200esz4.js",
+        "relPath": ".next/static/chunks/06j1cm200esz4.js",
+        "rawKB": 117.01,
+        "gzipKB": 38.16
+      }
+    ]
+  },
+  "fonts": {
+    "adminInitialFontRequests": 36,
+    "publicInitialFontRequests": 2,
+    "publicFontFamiliesLoaded": 2,
+    "totalAvailableFontOptions": 36
+  },
+  "images": {
+    "largestAsset": "public/backgrounds/marble-gold-sage.png",
+    "largestBytes": 1004131,
+    "largestKB": 980.6,
+    "unoptimizedCount": 4
+  },
+  "mobilePerformance": {
+    "syntheticProfile": "Mobile 390x844 (4G Fast)",
+    "score": 82,
+    "lcpMobileSec": 2.1,
+    "clsMobile": 0.02,
+    "totalBlockingTimeMs": 180,
+    "inpMobile": "NOT_AVAILABLE_SYNTHETICALLY"
+  }
+}

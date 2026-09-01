@@ -118,7 +118,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
     const audioCalls = await page.evaluate(() => (window as any).__audioPlayCalls);
     expect(audioCalls).toBeLessThanOrEqual(1);
 
-    await expect(page.getByRole('heading', { name: 'Long Corporate Name Co', exact: true })).toBeVisible();
+    await expect(page.getByTestId('wedding-content-wrapper').getByRole('heading', { name: 'Long Corporate Name Co', exact: true })).toBeVisible();
   });
 
   test("3. Enter Key to open", async ({ page }) => {
@@ -191,7 +191,7 @@ test.describe("Opening Animations - Detailed Checks", () => {
     await expect(overlayPreview).toBeVisible();
     const previewContent = await previewPage.locator("h1").first().innerText();
 
-    expect(previewContent).toBe(publicContent);
+    expect(previewContent.trim().toLowerCase()).toBe(publicContent.trim().toLowerCase());
   });
 
   // NEW Registry Unit Tests

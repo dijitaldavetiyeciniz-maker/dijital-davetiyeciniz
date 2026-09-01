@@ -5,6 +5,8 @@ import { getInitials } from '@/utils/getInitials';
 import { getPrimarySubjectName, getSecondarySubjectName } from '@/data/eventTypeConfig';
 import BackgroundMusic from '@/components/BackgroundMusic';
 
+import { getFontFamilyUrl } from '@/data/fontOptions';
+
 type WeddingClientWrapperProps = {
   wedding: any;
   children: React.ReactNode;
@@ -14,6 +16,24 @@ type WeddingClientWrapperProps = {
 export default function WeddingClientWrapper({ wedding, children, mode = 'public' }: WeddingClientWrapperProps) {
   const hasNoAnimation = wedding.entrance_animation === 'none';
   const [showEntrance, setShowEntrance] = useState(!hasNoAnimation);
+
+  // Dynamic on-demand font injection for ONLY the active wedding's selected heading & body fonts (<= 2 families)
+  useEffect(() => {
+    const fontsToLoad = new Set<string>();
+    if (wedding.names_font_family) fontsToLoad.add(wedding.names_font_family);
+    if (wedding.font_family) fontsToLoad.add(wedding.font_family);
+
+    fontsToLoad.forEach(fontId => {
+      const existing = document.querySelector(`link[data-public-font="${fontId}"]`);
+      if (!existing) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.setAttribute('data-public-font', fontId);
+        link.href = getFontFamilyUrl(fontId);
+        document.head.appendChild(link);
+      }
+    });
+  }, [wedding.names_font_family, wedding.font_family]);
 
   useEffect(() => {
     if (hasNoAnimation) {
