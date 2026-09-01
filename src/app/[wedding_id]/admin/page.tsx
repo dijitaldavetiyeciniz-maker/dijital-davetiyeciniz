@@ -556,64 +556,65 @@ export default function CoupleAdminPage({
     });
 
     async function loadData() {
-      // 1. Düğün bilgilerini çek (slug veya UUID id ile)
-      let query = supabase.from('weddings').select('*');
-      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(wedding_id);
-      if (isUuid) {
-        query = query.eq('id', wedding_id);
-      } else {
-        query = query.eq('slug', wedding_id);
-      }
-      const { data: weddingData, error } = await query.single();
-        
-      if (error || !weddingData) {
-        setLoading(false);
-        return;
-      }
-      setWedding(weddingData);
-      
-      // 2. Mevcut kullanıcının (Auth) oturumunu kontrol et
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (session?.user) {
-        try {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('is_email_verified')
-            .eq('id', session.user.id)
-            .maybeSingle();
-
-          if (profile && profile.is_email_verified === false && !session.user.email_confirmed_at) {
-            window.location.href = `/dogrula?email=${encodeURIComponent(session.user.email || '')}`;
-            return;
-          }
-        } catch {}
-      }
-      
-      let isAuth = false;
-      if (session?.user?.id && session.user.id === weddingData.user_id) {
-        setIsOwner(true);
-        isAuth = true;
-      } else {
-        try {
-          const res = await fetch('/api/admin/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ wedding_id: weddingData.id })
-          });
-          const data = await res.json();
-          isAuth = data.authenticated;
-        } catch(e) {
-          console.error(e);
+      try {
+        // 1. Düğün bilgilerini çek (slug veya UUID id ile)
+        let query = supabase.from('weddings').select('*');
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(wedding_id);
+        if (isUuid) {
+          query = query.eq('id', wedding_id);
+        } else {
+          query = query.eq('slug', wedding_id);
         }
-      }
+        const { data: weddingData, error } = await query.single();
+          
+        if (error || !weddingData) {
+          setIsAuthenticated(false);
+          return;
+        }
+        setWedding(weddingData);
+        
+        // 2. Mevcut kullanıcının (Auth) oturumunu kontrol et
+        const { data: { session } } = await supabase.auth.getSession();
 
-      if (isAuth) {
-        setIsAuthenticated(true);
-        fetchRsvps(weddingData.id);
-      } else {
-        setIsAuthenticated(false);
-      }
+        if (session?.user) {
+          try {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('is_email_verified')
+              .eq('id', session.user.id)
+              .maybeSingle();
+
+            if (profile && profile.is_email_verified === false && !session.user.email_confirmed_at) {
+              window.location.href = `/dogrula?email=${encodeURIComponent(session.user.email || '')}`;
+              return;
+            }
+          } catch {}
+        }
+        
+        let isAuth = false;
+        if (session?.user?.id && session.user.id === weddingData.user_id) {
+          setIsOwner(true);
+          isAuth = true;
+        } else {
+          try {
+            const res = await fetch('/api/admin/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ wedding_id: weddingData.id })
+            });
+            const data = await res.json();
+            isAuth = data.authenticated;
+          } catch(e) {
+            console.error(e);
+          }
+        }
+
+        if (isAuth) {
+          setIsAuthenticated(true);
+          fetchRsvps(weddingData.id);
+        } else {
+          setIsAuthenticated(false);
+        }
       
       // Hydrate C8 Draft & Published state
       if (weddingData.is_published !== undefined) {
@@ -710,8 +711,12 @@ export default function CoupleAdminPage({
       if (weddingData.custom_message) setCustomMessage(weddingData.custom_message);
       if (weddingData.quote_font_family) setQuoteFontFamily(weddingData.quote_font_family);
       if (weddingData.quote_font_size) setQuoteFontSize(weddingData.quote_font_size);
-      
-      setLoading(false);
+      } catch (err) {
+        console.error('Error loading wedding admin data:', err);
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
     }
     loadData();
   }, [wedding_id]);
@@ -731,22 +736,27 @@ export default function CoupleAdminPage({
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (!wedding) return;
+    const targetWeddingId = wedding?.id || wedding_id;
+    if (!targetWeddingId) return;
     try {
       const res = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wedding_id: wedding.id, password: passwordInput })
+        body: JSON.stringify({ wedding_id: targetWeddingId, password: passwordInput })
       });
       const data = await res.json();
-      if (data.success || passwordInput === wedding.admin_password) {
+      if (data.success || (wedding && passwordInput === wedding.admin_password)) {
         setIsAuthenticated(true);
-        fetchRsvps(wedding.id);
+        if (wedding?.id) {
+          fetchRsvps(wedding.id);
+        } else {
+          window.location.reload();
+        }
       } else {
         setErrorMsg('Şifre hatalı. Lütfen tekrar deneyin.');
       }
     } catch (err) {
-      if (passwordInput === wedding.admin_password) {
+      if (wedding && passwordInput === wedding.admin_password) {
         setIsAuthenticated(true);
         fetchRsvps(wedding.id);
       } else {
