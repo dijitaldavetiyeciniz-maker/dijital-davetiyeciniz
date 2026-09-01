@@ -18,9 +18,25 @@ export async function GET() {
       .from('site_settings')
       .select('*')
       .eq('id', 'global')
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
+      // Auto-initialize safe default settings row in DB
+      try {
+        await supabase.from('site_settings').upsert({
+          id: 'global',
+          draft_config: defaultSiteConfig,
+          published_config: defaultSiteConfig,
+          version: 1,
+          is_published: true,
+          published_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          updated_by: 'Super Admin Initializer'
+        });
+      } catch (seedErr) {
+        console.warn('Auto-seed site_settings warning:', seedErr);
+      }
+
       return NextResponse.json({
         success: true,
         settings: defaultSiteConfig,
@@ -33,7 +49,7 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       settings: data.published_config || defaultSiteConfig,
-      draft: data.draft_config || defaultSiteConfig,
+      draft: data.draft_config || data.published_config || defaultSiteConfig,
       version: data.version || 1,
       is_published: data.is_published ?? true,
       published_at: data.published_at,
@@ -120,33 +136,30 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { data: current, error: fetchErr } = await supabase
+    const { data: current } = await supabase
       .from('site_settings')
       .select('*')
       .eq('id', 'global')
-      .single();
+      .maybeSingle();
 
-    if (fetchErr || !current) {
-      return NextResponse.json({ success: false, error: 'Ayar kaydı bulunamadı.' }, { status: 404 });
-    }
+    const draftConfig = current?.draft_config || defaultSiteConfig;
+    const newVersion = (current?.version || 1) + 1;
 
-    const draftConfig = current.draft_config || defaultSiteConfig;
-    const newVersion = (current.version || 1) + 1;
-
-    const { error: updateErr } = await supabase
+    const { error: upsertErr } = await supabase
       .from('site_settings')
-      .update({
+      .upsert({
+        id: 'global',
+        draft_config: draftConfig,
         published_config: draftConfig,
         version: newVersion,
         is_published: true,
         published_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         updated_by: 'Super Admin'
-      })
-      .eq('id', 'global');
+      });
 
-    if (updateErr) {
-      return NextResponse.json({ success: false, error: updateErr.message }, { status: 500 });
+    if (upsertErr) {
+      return NextResponse.json({ success: false, error: upsertErr.message }, { status: 500 });
     }
 
     // Invalidate global caches

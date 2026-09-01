@@ -13,7 +13,23 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+import { useState, useEffect } from 'react';
+import { defaultSiteConfig, SiteHomepageConfig } from '@/lib/site-settings';
+
 export default function Home() {
+  const [homepageConfig, setHomepageConfig] = useState<SiteHomepageConfig>(defaultSiteConfig.homepage);
+
+  useEffect(() => {
+    fetch('/api/site-settings/public')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.settings?.homepage) {
+          setHomepageConfig(data.settings.homepage);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const showcaseTemplates = [
     {
       id: 'template1',
@@ -133,13 +149,19 @@ export default function Home() {
             </motion.div>
             
             <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tight mb-8 leading-[1.1] font-serif text-slate-900">
-              Davetiyenizi <br className="hidden md:block"/> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 to-orange-400 relative inline-block">
-                Dijitale Taşıyın.
-                <svg className="absolute w-full h-4 -bottom-1 left-0 text-orange-400/30 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
-                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="4" fill="transparent" />
-                </svg>
-              </span>
+              {homepageConfig.heroHeadline ? (
+                <span>{homepageConfig.heroHeadline}</span>
+              ) : (
+                <>
+                  Davetiyenizi <br className="hidden md:block"/> 
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-pink-500 to-orange-400 relative inline-block">
+                    Dijitale Taşıyın.
+                    <svg className="absolute w-full h-4 -bottom-1 left-0 text-orange-400/30 -z-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+                      <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="4" fill="transparent" />
+                    </svg>
+                  </span>
+                </>
+              )}
             </h1>
             
             <motion.p 
@@ -148,7 +170,7 @@ export default function Home() {
               transition={{ delay: 0.4, duration: 0.8 }}
               className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed"
             >
-              Kağıt masrafına son! Etkinliğiniz için <strong className="text-slate-800">dakikalar içinde</strong> göz alıcı zarf açılış animasyonlu bir web sitesi oluşturun ve sevdiklerinize tek tıkla gönderin.
+              {homepageConfig.heroSubtitle || 'Kağıt masrafına son! Etkinliğiniz için dakikalar içinde göz alıcı zarf açılış animasyonlu bir web sitesi oluşturun ve sevdiklerinize tek tıkla gönderin.'}
             </motion.p>
 
             <motion.div 
@@ -157,9 +179,9 @@ export default function Home() {
               transition={{ delay: 0.6, duration: 0.5 }}
               className="flex flex-col sm:flex-row justify-center gap-5 items-center"
             >
-              <Link href="/olustur" className="group relative bg-gradient-to-r from-rose-500 to-orange-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:-translate-y-1 transition-all shadow-[0_8px_30px_-4px_rgba(225,29,72,0.4)] flex items-center justify-center gap-2 w-full sm:w-auto overflow-hidden">
+              <Link href={homepageConfig.heroCtaUrl || '/olustur'} className="group relative bg-gradient-to-r from-rose-500 to-orange-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:-translate-y-1 transition-all shadow-[0_8px_30px_-4px_rgba(225,29,72,0.4)] flex items-center justify-center gap-2 w-full sm:w-auto overflow-hidden">
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
-                <span className="relative z-10 flex items-center gap-2">Davetiyeni Oluştur <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></span>
+                <span className="relative z-10 flex items-center gap-2">{homepageConfig.heroCtaText || 'Davetiyeni Oluştur'} <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></span>
               </Link>
               <Link href="/sablonlar" className="bg-white/80 backdrop-blur-md text-slate-800 border border-slate-200 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white hover:border-slate-300 hover:-translate-y-1 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 w-full sm:w-auto">
                 <ExternalLink className="w-5 h-5 text-slate-400" /> Şablonları Keşfet
