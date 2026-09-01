@@ -23,6 +23,8 @@ export interface RateLimitResult {
  * Atomic Distributed Rate Limiter
  * Uses PostgreSQL stored procedure / atomic upsert in production to prevent race conditions
  * across multi-instance serverless functions.
+ * In production: Process memory is NOT an authority (fails closed if shared backend is unreachable).
+ * In development & test: Memory fallback is allowed for developer velocity.
  */
 export async function checkDistributedRateLimit(
   key: string,
@@ -49,10 +51,21 @@ export async function checkDistributedRateLimit(
       }
     }
   } catch {
-    // Fall back to local memory store if database is initializing or during isolated tests
+    // Database unreachable or initializing
   }
 
-  // Local sliding window fallback
+  // In production, process memory MUST NOT become an uncoordinated distributed authority.
+  // Fail-closed for security on multi-tenant serverless instances.
+  if (process.env.NODE_ENV === 'production') {
+    return {
+      allowed: false,
+      remaining: 0,
+      resetInMs: 60000,
+      store: 'distributed_postgres'
+    };
+  }
+
+  // Local sliding window fallback (allowed ONLY in development and test environments)
   const localRes = checkRateLimit(key, options);
   return {
     ...localRes,
@@ -110,6 +123,11 @@ export function checkRateLimit(
   };
 }
 
-export function clearRateLimitStore(): void {
+/**
+ * Reset memory rate limits (strictly for isolated unit/e2e test fixtures)
+ */
+export function resetMemoryRateLimits(): void {
   memoryRateLimitStore.clear();
 }
+
+export const clearRateLimitStore = resetMemoryRateLimits;
