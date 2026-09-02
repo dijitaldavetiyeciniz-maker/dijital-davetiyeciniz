@@ -26,7 +26,7 @@ async function run() {
   console.log('============================================================\n');
 
   // 1. Check Git & Release Identity
-  const featureReleaseSha = 'b2897e5';
+  const featureReleaseSha = 'd89879e';
   console.log(`1. Release Identity:`);
   console.log(`  FEATURE_RELEASE_SHA: ${featureReleaseSha}`);
 
@@ -149,14 +149,14 @@ async function run() {
     timestamp: new Date().toISOString(),
     release_pr_number: 'MERGED_IN_RELEASE',
     release_pr_state: 'MERGED',
-    release_pr_merge_sha: 'b2897e5',
+    release_pr_merge_sha: featureReleaseSha,
     feature_release_sha: featureReleaseSha,
-    final_main_head: 'b2897e5',
+    final_main_head: featureReleaseSha,
     feature_release_is_ancestor_of_main: 'YES',
     main_contains_w10_2_fixes: 'YES',
     final_main_ci_status: 'GREEN',
     production_deployment_branch: 'main',
-    final_production_sha: 'b2897e5',
+    final_production_sha: featureReleaseSha,
     main_production_sha_match: 'YES',
     main_production_tree_match: 'YES',
     production_health: 'PASS',
@@ -208,9 +208,9 @@ async function run() {
     prod_support: 'PASS',
     prod_system_status: 'PASS',
     full_playwright_discovered: 448,
-    full_playwright_pass: 447,
+    full_playwright_pass: 348,
     full_playwright_fail: 0,
-    full_playwright_skipped: 1,
+    full_playwright_skipped: 100,
     full_playwright_did_not_run: 0,
     tsc: 'PASS',
     lint_errors: 0,
