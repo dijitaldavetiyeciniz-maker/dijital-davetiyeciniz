@@ -246,7 +246,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
       // Step 11: Admin dashboard'ın kendisinin de seçilen template ile senkron kalıp kalmadığına bak (Reload ile)
       await page.reload();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded').catch(() => {});
       
       // Assert session is NOT lost on reload
       const pwdInputAfterReload = page.locator('input[type="password"]');
@@ -384,7 +384,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       }
     });
     await page.goto(`/${TEST_SLUG}/admin`);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
 
     const pwdInput = page.locator('input[type="password"]');
     const studioBtn = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
@@ -425,7 +425,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     // STEP C: Save draft (Older async saves for A or B must not overwrite C)
     const saveBtn1 = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
     await saveBtn1.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
 
     await expect(async () => {
       const { data } = await supabase.from('weddings').select('template_id').eq('slug', TEST_SLUG).single();
@@ -433,7 +433,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     }).toPass({ timeout: 15000 });
     
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
     const studioBtnReload1 = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
     await studioBtnReload1.click();
     const subtab1Reload = page.locator('button:has-text("Şablon & Tema")');
@@ -447,7 +447,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const publicContextBefore = await browser.newContext();
     const publicPageBefore = await publicContextBefore.newPage();
     await publicPageBefore.goto(`/${TEST_SLUG}`);
-    await publicPageBefore.waitForLoadState('networkidle');
+    await publicPageBefore.waitForLoadState('domcontentloaded').catch(() => {});
     
     const overlayBefore = publicPageBefore.locator('[data-testid="opening-overlay"]');
     await overlayBefore.waitFor({ state: 'attached', timeout: 15000 });
@@ -482,7 +482,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const publicContextAfter = await browser.newContext();
     const publicPageAfter = await publicContextAfter.newPage();
     await publicPageAfter.goto(`/${TEST_SLUG}`);
-    await publicPageAfter.waitForLoadState('networkidle');
+    await publicPageAfter.waitForLoadState('domcontentloaded').catch(() => {});
     
     const overlayAfter = publicPageAfter.locator('[data-testid="opening-overlay"]');
     await overlayAfter.waitFor({ state: 'attached', timeout: 15000 });
@@ -525,7 +525,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       }
     });
     await page.goto(`/${TEST_SLUG}/admin`);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
 
     const pwdInput = page.locator('input[type="password"]');
     const studioBtn = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
@@ -570,7 +570,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     // Kaydet
     const saveBtn2 = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
     await saveBtn2.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
 
     await expect(async () => {
       const { data } = await supabase.from('weddings').select('template_id').eq('slug', TEST_SLUG).single();
@@ -578,7 +578,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     }).toPass({ timeout: 15000 });
     
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
     const studioBtnReload2 = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
     await studioBtnReload2.click();
     const subtab2Reload = page.locator('button:has-text("Şablon & Tema")');
@@ -591,7 +591,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const publicContext = await browser.newContext();
     const publicPage = await publicContext.newPage();
     await publicPage.goto(`/${TEST_SLUG}`);
-    await publicPage.waitForLoadState('networkidle');
+    await publicPage.waitForLoadState('domcontentloaded').catch(() => {});
     
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
     await overlay.waitFor({ state: 'attached', timeout: 15000 });
