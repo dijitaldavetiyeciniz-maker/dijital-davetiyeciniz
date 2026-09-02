@@ -14,8 +14,8 @@ export async function GET() {
   try {
     // 1. Fetch Registered Auth Users via Admin API
     let authUsersList: any[] = [];
-    let authUserIds = new Set<string>();
-    let authUserEmails = new Set<string>();
+    const authUserIds = new Set<string>();
+    const authUserEmails = new Set<string>();
 
     try {
       const adminClient = getSupabaseAdmin();

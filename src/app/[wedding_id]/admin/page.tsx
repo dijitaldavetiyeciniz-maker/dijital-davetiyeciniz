@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, use, useMemo, useRef } from 'react';
+import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { getSmartAutoMatch } from '@/lib/autoMatch';
 import { mapEnumToDbEventType } from '@/lib/themes';
@@ -235,9 +236,10 @@ const categoryMap: Record<string, number[]> = {
 export default function CoupleAdminPage({
   params,
 }: {
-  params: Promise<{ wedding_id: string }>;
+  params?: Promise<{ wedding_id: string }>;
 }) {
-  const { wedding_id } = use(params);
+  const routeParams = useParams();
+  const wedding_id = (routeParams?.wedding_id as string) || '';
   
   const [wedding, setWedding] = useState<any>(null);
   const [rsvps, setRsvps] = useState<any[]>([]);

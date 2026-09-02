@@ -13,8 +13,8 @@ export async function GET() {
   }
 
   try {
-    let authUserIds = new Set<string>();
-    let authUserEmails = new Set<string>();
+    const authUserIds = new Set<string>();
+    const authUserEmails = new Set<string>();
     let totalAuthUsersCount = 0;
 
     try {
@@ -45,7 +45,7 @@ export async function GET() {
     let demoRecords = 0;
     let orphanRecords = 0;
     let quarantinedRecords = 0;
-    let ambiguousRecords = 0;
+    const ambiguousRecords = 0;
 
     const classified = (allWeddings || []).map(w => {
       const slug = (w.slug || '').toLowerCase();

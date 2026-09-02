@@ -20,45 +20,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   },
 });
 
-async function loginAsAdmin(page: any, slug: string) {
-  // Attach listeners for console and uncaught errors
-  page.on('console', (msg: any) => console.log(`[BROWSER CONSOLE] ${msg.type()}: ${msg.text()}`));
-  page.on('pageerror', (err: any) => console.error(`[BROWSER ERROR] ${err.stack || err.message}`));
-
-  console.log(`--- Navigating to /${slug}/admin`);
-  await page.goto(`/${slug}/admin`);
-  await page.waitForLoadState('networkidle').catch(() => {});
-  
-  // Wait for either the loading screen to disappear and password input to show, or dashboard header to show
-  console.log(`--- Waiting for page hydration/compilation (up to 30s)`);
-  const loginOrDashboard = page.locator('input[type="password"], header h1');
-  await expect(loginOrDashboard.first()).toBeVisible({ timeout: 30000 });
-
-  const passwordInput = page.locator('input[type="password"]');
-  const submitBtn = page.locator('form button[type="submit"]').first();
-
-  const isVisible = await passwordInput.isVisible();
-  if (isVisible) {
-    console.log(`--- Filling password`);
-    await passwordInput.fill('test');
-    await page.waitForTimeout(200);
-    
-    console.log(`--- Clicking submit button and waiting for POST /api/admin/auth`);
-    await Promise.all([
-      page.waitForResponse(
-        (resp: any) => resp.url().includes('/api/admin/auth') && resp.request().method() === 'POST',
-        { timeout: 20000 }
-      ),
-      submitBtn.click()
-    ]);
-    
-    console.log(`--- Auth response received, waiting for dashboard h1`);
-    await page.waitForSelector('header h1', { timeout: 20000 });
-    console.log(`--- Dashboard loaded successfully`);
-  } else {
-    console.log(`--- Already authenticated`);
-  }
-}
+import { loginAsAdmin } from './helpers/adminAuth';
 
 test.describe('C12 Admin Panel Functional Completion Gate', () => {
   const testSlug = `c12-admin-a-${Date.now().toString(36)}`;
@@ -399,8 +361,8 @@ test.describe('C12 Admin Panel Functional Completion Gate', () => {
 
     // Go to Public Invitation View and verify dynamic ordering has Program -> Custom Section -> Template
     await page.goto(`/${testSlug}`);
-    await page.waitForLoadState('networkidle').catch(() => {});
-    await page.waitForTimeout(2000);
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
+    await page.waitForTimeout(1000);
 
     const overlay = page.locator('[data-testid="opening-overlay"]').first();
     if (await overlay.isVisible()) {
@@ -455,7 +417,7 @@ test.describe('C12 Admin Panel Functional Completion Gate', () => {
 
     // Perform hard F5 reload
     await page.reload();
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
     await loginAsAdmin(page, testSlug);
 
     // Navigate to another tab (Design) then back to Content
@@ -473,7 +435,7 @@ test.describe('C12 Admin Panel Functional Completion Gate', () => {
       page.waitForNavigation().catch(() => {}),
       logoutBtn.click()
     ]);
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
 
     // Log back in
     const passwordInput = page.locator('input[type="password"]');
@@ -552,7 +514,7 @@ test.describe('C12 Admin Panel Functional Completion Gate', () => {
 
     // Load Public invitation for Wedding B and check for error components or blank pages
     await page.goto(`/${testSlugB}`);
-    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForLoadState('domcontentloaded').catch(() => {});
     await page.waitForTimeout(1500);
 
     // Verify opening overlay or core elements load correctly

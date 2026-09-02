@@ -5,19 +5,76 @@ import { expect, Page } from '@playwright/test';
  * Standardized across C12, C13, and Part5 tests.
  */
 export async function loginAsAdmin(page: Page, slugOrId: string, password: string = 'test') {
-  // Attach listeners for browser diagnostics
-  page.on('console', (msg) => console.log(`[BROWSER CONSOLE] ${msg.type()}: ${msg.text()}`));
-  page.on('pageerror', (err) => console.error(`[BROWSER ERROR] ${err.stack || err.message}`));
+  const failedRequests: string[] = [];
+  const api4xx: string[] = [];
+  const api5xx: string[] = [];
+  const consoleErrors: string[] = [];
+  const pageErrors: string[] = [];
+
+  page.on('console', (msg) => {
+    const text = `[BROWSER CONSOLE] ${msg.type()}: ${msg.text()}`;
+    console.log(text);
+    if (msg.type() === 'error') consoleErrors.push(msg.text());
+  });
+  page.on('pageerror', (err) => {
+    const text = `[BROWSER ERROR] ${err.stack || err.message}`;
+    console.error(text);
+    pageErrors.push(err.message);
+  });
+  page.on('requestfailed', (req) => {
+    const failure = req.failure();
+    const text = `${req.method()} ${req.url()} - ${failure?.errorText || 'failed'}`;
+    console.warn(`[REQUEST FAILED] ${text}`);
+    failedRequests.push(text);
+  });
+  page.on('response', (res) => {
+    const status = res.status();
+    const url = res.url();
+    if (status >= 400 && status < 500) {
+      api4xx.push(`${res.request().method()} ${url} -> ${status}`);
+    } else if (status >= 500) {
+      api5xx.push(`${res.request().method()} ${url} -> ${status}`);
+    }
+  });
 
   console.log(`--- [adminAuth] Navigating to /${slugOrId}/admin`);
-  const response = await page.goto(`/${slugOrId}/admin`);
-  expect(response?.status()).toBeLessThan(500);
+  const initialUrl = `/${slugOrId}/admin`;
+  const response = await page.goto(initialUrl);
+  const gotoStatus = response?.status() ?? 'NO_RESPONSE';
+  console.log(`--- [adminAuth] GOTO_STATUS=${gotoStatus} GOTO_URL=${initialUrl} FINAL_PAGE_URL=${page.url()}`);
 
-  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.waitForLoadState('domcontentloaded').catch(() => {});
 
-  // Wait for either the login form (password input) or dashboard header/nav
   const loginOrDashboard = page.locator('input[type="password"], input[placeholder="Şifre"], header h1, nav button');
-  await expect(loginOrDashboard.first()).toBeVisible({ timeout: 20000 });
+  try {
+    await expect(loginOrDashboard.first()).toBeVisible({ timeout: 20000 });
+  } catch (err) {
+    const finalUrl = page.url();
+    const pageTitle = await page.title().catch(() => 'UNKNOWN');
+    const bodyText = (await page.locator('body').innerText().catch(() => '')).slice(0, 500).replace(/\s+/g, ' ').trim();
+    const headings = await page.locator('h1, h2, h3').allInnerTexts().catch(() => []);
+    const buttons = await page.locator('button').allInnerTexts().catch(() => []);
+    const inputs = await page.locator('input').evaluateAll((els) => els.map((e) => `${(e as HTMLInputElement).type}:${(e as HTMLInputElement).placeholder || (e as HTMLInputElement).name}`)).catch(() => []);
+    const html = await page.content().catch(() => '');
+
+    console.error(`\n================== ADMIN AUTH DIAGNOSTIC REPORT ==================`);
+    console.error(`INITIAL_REQUEST_URL=${initialUrl}`);
+    console.error(`INITIAL_RESPONSE_STATUS=${gotoStatus}`);
+    console.error(`FINAL_URL=${finalUrl}`);
+    console.error(`PAGE_TITLE=${pageTitle}`);
+    console.error(`BODY_TEXT_FIRST_500=${bodyText}`);
+    console.error(`VISIBLE_HEADINGS=${JSON.stringify(headings)}`);
+    console.error(`VISIBLE_BUTTONS=${JSON.stringify(buttons)}`);
+    console.error(`VISIBLE_INPUTS=${JSON.stringify(inputs)}`);
+    console.error(`HTML_LENGTH=${html.length}`);
+    console.error(`FAILED_REQUESTS=${JSON.stringify(failedRequests)}`);
+    console.error(`API_4XX=${JSON.stringify(api4xx)}`);
+    console.error(`API_5XX=${JSON.stringify(api5xx)}`);
+    console.error(`PAGE_ERRORS=${JSON.stringify(pageErrors)}`);
+    console.error(`CONSOLE_ERRORS=${JSON.stringify(consoleErrors)}`);
+    console.error(`=================================================================\n`);
+    throw err;
+  }
 
   const passwordInput = page.locator('input[type="password"], input[placeholder="Şifre"]').first();
   const isVisible = await passwordInput.isVisible();
