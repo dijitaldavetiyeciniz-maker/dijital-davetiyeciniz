@@ -1,7 +1,34 @@
-import Link from 'next/link';
-import { Sparkles, Globe, MessageCircle, Mail, MapPin, Phone } from 'lucide-react';
+'use client';
 
-export default function Footer() {
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Sparkles, Mail, Phone } from 'lucide-react';
+import { defaultSiteConfig, SiteFooterConfig } from '@/lib/site-settings';
+
+interface FooterProps {
+  initialConfig?: SiteFooterConfig;
+}
+
+export default function Footer({ initialConfig }: FooterProps) {
+  const [footerConfig, setFooterConfig] = useState<SiteFooterConfig>(initialConfig || defaultSiteConfig.footer);
+
+  useEffect(() => {
+    if (!initialConfig) {
+      fetch('/api/site-settings/public')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.settings?.footer) {
+            setFooterConfig(data.settings.footer);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialConfig]);
+
+  if (footerConfig.enabled === false) {
+    return null;
+  }
+
   return (
     <footer className="bg-slate-950 text-slate-400 pt-16 pb-12 px-6 border-t border-slate-900 w-full font-sans mt-auto">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
@@ -12,26 +39,28 @@ export default function Footer() {
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-500 to-pink-600 text-white flex items-center justify-center shadow-md shadow-rose-500/20">
               <Sparkles className="w-5 h-5" />
             </div>
-            <span>Dijital <span className="text-rose-500">Davetiyeciniz</span></span>
+            <span>
+              {footerConfig.logoText || 'Dijital Davetiyeciniz'}
+            </span>
           </Link>
           <p className="text-sm leading-relaxed mb-6 max-w-sm text-slate-400">
-            En özel gününüzü geleceğin teknolojisiyle buluşturun. Doğa dostu, zarf animasyonlu, müzikli ve anlık LCV takipli 120+ şık davetiye tasarımı.
+            {footerConfig.description || 'Hayalinizdeki dijital düğün, nişan ve kına davetiyesini dakikalar içinde oluşturun, misafirlerinizle anında paylaşın.'}
           </p>
           <div className="space-y-2 text-xs text-slate-400">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-3.5 h-3.5 text-rose-500" />
-              <span>Levent, Büyükdere Cad. No: 199, Şişli / İstanbul</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Mail className="w-3.5 h-3.5 text-rose-500" />
-              <a href="mailto:dijitaldavetiyeciniz@gmail.com" className="hover:text-white transition-colors">
-                dijitaldavetiyeciniz@gmail.com
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <Phone className="w-3.5 h-3.5 text-rose-500" />
-              <span>+90 555 000 0000 (Haftanın 7 Günü Destek)</span>
-            </div>
+            {footerConfig.contactEmail && (
+              <div className="flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 text-rose-500" />
+                <a href={`mailto:${footerConfig.contactEmail}`} className="hover:text-white transition-colors">
+                  {footerConfig.contactEmail}
+                </a>
+              </div>
+            )}
+            {footerConfig.contactPhone && (
+              <div className="flex items-center gap-2">
+                <Phone className="w-3.5 h-3.5 text-rose-500" />
+                <span>{footerConfig.contactPhone}</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -63,19 +92,19 @@ export default function Footer() {
         <div>
           <h4 className="text-white text-sm font-bold uppercase tracking-wider mb-5">Yasal</h4>
           <ul className="space-y-3 text-sm">
-            <li><Link href="/gizlilik-politikasi" className="hover:text-rose-400 transition-colors">Gizlilik Politikası</Link></li>
-            <li><Link href="/kvkk" className="hover:text-rose-400 transition-colors">KVKK Aydınlatma Metni</Link></li>
-            <li><Link href="/cerez-politikasi" className="hover:text-rose-400 transition-colors">Çerez Politikası</Link></li>
+            <li><Link href={footerConfig.legalLinks?.privacy || "/gizlilik-politikasi"} className="hover:text-rose-400 transition-colors">Gizlilik Politikası</Link></li>
+            <li><Link href={footerConfig.legalLinks?.kvkk || "/kvkk"} className="hover:text-rose-400 transition-colors">KVKK Aydınlatma Metni</Link></li>
+            <li><Link href={footerConfig.legalLinks?.cookies || "/cerez-politikasi"} className="hover:text-rose-400 transition-colors">Çerez Politikası</Link></li>
             <li><Link href="/mesafeli-satis" className="hover:text-rose-400 transition-colors">Mesafeli Satış Sözleşmesi</Link></li>
             <li><Link href="/iptal-ve-iade" className="hover:text-rose-400 transition-colors">İptal ve İade Koşulları</Link></li>
-            <li><Link href="/kullanim-kosullari" className="hover:text-rose-400 transition-colors">Kullanım Koşulları</Link></li>
+            <li><Link href={footerConfig.legalLinks?.terms || "/kullanim-kosullari"} className="hover:text-rose-400 transition-colors">Kullanım Koşulları</Link></li>
           </ul>
         </div>
 
       </div>
 
       <div className="max-w-7xl mx-auto pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-        <p>© {new Date().getFullYear()} Dijital Davetiyeciniz. Tüm hakları saklıdır.</p>
+        <p>{footerConfig.copyrightText || `© ${new Date().getFullYear()} Dijital Davetiyeciniz. Tüm hakları saklıdır.`}</p>
         <p className="flex items-center gap-1">
           <span>Doğa dostu, kağıtsız dijital gelecek</span>
         </p>

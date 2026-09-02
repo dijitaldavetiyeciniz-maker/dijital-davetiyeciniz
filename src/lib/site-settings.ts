@@ -215,3 +215,31 @@ export function isSafeUrl(url?: string): boolean {
   }
   return false;
 }
+
+import { supabase } from './supabase';
+
+export async function getPublicSiteSettings(): Promise<SiteGlobalConfig> {
+  try {
+    const { data, error } = await supabase
+      .from('site_settings')
+      .select('published_config')
+      .eq('id', 'global')
+      .single();
+
+    if (error || !data || !data.published_config) {
+      return defaultSiteConfig;
+    }
+
+    return {
+      branding: { ...defaultSiteConfig.branding, ...(data.published_config.branding || {}) },
+      announcement: { ...defaultSiteConfig.announcement, ...(data.published_config.announcement || {}) },
+      header: { ...defaultSiteConfig.header, ...(data.published_config.header || {}) },
+      footer: { ...defaultSiteConfig.footer, ...(data.published_config.footer || {}) },
+      homepage: { ...defaultSiteConfig.homepage, ...(data.published_config.homepage || {}) },
+      maintenance: { ...defaultSiteConfig.maintenance, ...(data.published_config.maintenance || {}) },
+      support: { ...defaultSiteConfig.support, ...(data.published_config.support || {}) }
+    };
+  } catch {
+    return defaultSiteConfig;
+  }
+}

@@ -16,28 +16,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
-async function loginAsAdmin(page: any, slug: string) {
-  await page.goto(`/${slug}/admin`);
-  await page.waitForLoadState('networkidle').catch(() => {});
-
-  const loginOrDashboard = page.locator('input[type="password"], header h1');
-  await expect(loginOrDashboard.first()).toBeVisible({ timeout: 30000 });
-
-  const passwordInput = page.locator('input[type="password"]');
-  const submitBtn = page.locator('form button[type="submit"]').first();
-
-  if (await passwordInput.isVisible()) {
-    await passwordInput.fill('test');
-    await Promise.all([
-      page.waitForResponse(
-        (resp: any) => resp.url().includes('/api/admin/auth') && resp.request().method() === 'POST',
-        { timeout: 20000 }
-      ),
-      submitBtn.click(),
-    ]);
-    await page.waitForSelector('header h1', { timeout: 20000 });
-  }
-}
+import { loginAsAdmin } from './helpers/adminAuth';
 
 test.describe('C13 W4 — Admin Domain Management Browser E2E & Real Visual Evidence', () => {
   const testSlugPaid = `w4-paid-${Date.now().toString(36)}`;

@@ -13,6 +13,7 @@ import SiteManagementTab from '@/components/super-admin/SiteManagementTab';
 import SupportInboxTab from '@/components/super-admin/SupportInboxTab';
 import DataCleanupTab from '@/components/super-admin/DataCleanupTab';
 import AuditLogViewerTab from '@/components/super-admin/AuditLogViewerTab';
+import SystemStatusTab from '@/components/super-admin/SystemStatusTab';
 
 export default function SuperAdminUltimateCommandCenter() {
   // 1. Auth States
@@ -1946,6 +1947,9 @@ export default function SuperAdminUltimateCommandCenter() {
 
         {/* TAB: DATA CLEANUP */}
         {activeTab === 'data_cleanup' && <DataCleanupTab />}
+
+        {/* TAB: SYSTEM STATUS */}
+        {activeTab === 'system' && <SystemStatusTab />}
 
       </main>
 

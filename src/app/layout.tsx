@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Great_Vibes, Montserrat, Outfit, Lora, Cinzel, Playfair_Display, Inter, Caveat } from "next/font/google";
 import "./globals.css";
-import StickyWhatsAppCTA from "@/components/StickyWhatsAppCTA";
+import SupportWidget from "@/components/SupportWidget";
 import PlatformAnnouncementBanner from "@/components/PlatformAnnouncementBanner";
 import MaintenanceGate from "@/components/MaintenanceGate";
 
@@ -34,7 +34,6 @@ export const metadata: Metadata = {
     "baby shower davetiyesi",
     "lcv toplama",
     "interaktif davetiye",
-    "whatsapp davetiye",
     "e davetiye"
   ],
   authors: [{ name: "Dijital Davetiyeciniz" }],
@@ -167,7 +166,7 @@ export default function RootLayout({
         <MaintenanceGate>
           {children}
         </MaintenanceGate>
-        <StickyWhatsAppCTA />
+        <SupportWidget />
       </body>
     </html>
   );
