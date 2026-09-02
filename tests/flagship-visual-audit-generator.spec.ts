@@ -187,7 +187,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
 
       // Step 2: /[wedding_id]/admin rotasını aç
       await page.goto(`/${TEST_SLUG}/admin`);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded').catch(() => {});
 
       // Login or Dashboard step
       const pwdInput = page.locator('input[type="password"]');
@@ -225,7 +225,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       // Step 6: Save & Publish
       const saveBtn = page.locator('button:has-text("Değişiklikleri Kaydet & Önizlemeyi Yenile"), button:has-text("Kaydet")').first();
       await saveBtn.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded').catch(() => {});
 
       const publishBtn = page.locator('[data-testid="admin-publish-btn"]').first();
       if (await publishBtn.isVisible()) {
@@ -248,18 +248,14 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       await page.reload();
       await page.waitForLoadState('domcontentloaded').catch(() => {});
       
+      const studioBtnReload = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
+      await expect(studioBtnReload).toBeVisible({ timeout: 15000 });
+      
       // Assert session is NOT lost on reload
       const pwdInputAfterReload = page.locator('input[type="password"]');
       expect(await pwdInputAfterReload.isVisible(), 'Session was lost on reload!').toBe(false);
-
-      const studioBtnReload = page.locator('[data-testid="admin-nav-design"], button:has-text("Tasarım")').first();
-      await Promise.any([
-        studioBtnReload.waitFor({ state: 'visible', timeout: 15000 })
-      ]).catch(() => {});
       
-      if (await studioBtnReload.isVisible()) {
-        await studioBtnReload.click();
-      }
+      await studioBtnReload.click();
 
       // Step 12: Yeni ve temiz browser context oluştur
       const publicContext = await browser.newContext();
@@ -267,7 +263,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
       
       // Step 13: /[slug] public rotasını aç
       await publicPage.goto(`/${TEST_SLUG}`);
-      await publicPage.waitForLoadState('networkidle');
+      await publicPage.waitForLoadState('domcontentloaded').catch(() => {});
       
       // Hydration check
       const errors: string[] = [];
@@ -638,7 +634,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const publicContext = await browser.newContext();
     const publicPage = await publicContext.newPage();
     await publicPage.goto(`/${BABY_SLUG}`);
-    await publicPage.waitForLoadState('networkidle');
+    await publicPage.waitForLoadState('domcontentloaded').catch(() => {});
 
     // 3. Clear Overlay
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
@@ -697,7 +693,7 @@ test.describe('PART 3 — 20-Step Flagship Visual Audit', () => {
     const publicContext = await browser.newContext();
     const publicPage = await publicContext.newPage();
     await publicPage.goto(`/${BDAY_SLUG}`);
-    await publicPage.waitForLoadState('networkidle');
+    await publicPage.waitForLoadState('domcontentloaded').catch(() => {});
 
     // 3. Clear Overlay
     const overlay = publicPage.locator('[data-testid="opening-overlay"]');
