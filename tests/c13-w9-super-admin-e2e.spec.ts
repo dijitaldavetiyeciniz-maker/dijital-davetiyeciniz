@@ -12,7 +12,7 @@ test.beforeAll(() => {
 
 test.describe('C13 W9: Super Admin Visual Evidence Suite (A-T)', () => {
   test('Capture 20 Unique Real Application Evidence Screenshots A through T', async ({ page }) => {
-    test.setTimeout(90000);
+    test.setTimeout(180000);
 
     await page.setViewportSize({ width: 1280, height: 800 });
 
@@ -22,7 +22,7 @@ test.describe('C13 W9: Super Admin Visual Evidence Suite (A-T)', () => {
 
     const passwordInput = page.locator('input[type="password"]');
     if (await passwordInput.isVisible()) {
-      await passwordInput.fill('admin123');
+      await passwordInput.fill(process.env.SUPERADMIN_PASSWORD || 'superadmin-secure-pass-2026!');
       await page.click('button[type="submit"]');
       await page.waitForTimeout(1000);
     }

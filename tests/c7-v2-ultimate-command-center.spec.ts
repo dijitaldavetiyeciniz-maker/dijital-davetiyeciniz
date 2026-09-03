@@ -5,7 +5,7 @@ async function ensureSuperAdminLoggedIn(page: any) {
   const passwordInput = page.locator('input[type="password"]');
   const needsLogin = await passwordInput.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
   if (needsLogin) {
-    await passwordInput.fill('admin123');
+    await passwordInput.fill(process.env.SUPERADMIN_PASSWORD || 'superadmin-secure-pass-2026!');
     await page.click('button[type="submit"]');
   }
   await expect(page.getByText('Platform Operasyon & Yönetim Merkezi')).toBeVisible({ timeout: 15000 });

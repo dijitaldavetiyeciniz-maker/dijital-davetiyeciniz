@@ -7,7 +7,7 @@ async function ensureSuperAdminLoggedIn(page: any) {
   const passwordInput = page.locator('input[type="password"]');
   const needsLogin = await passwordInput.waitFor({ state: 'visible', timeout: 6000 }).then(() => true).catch(() => false);
   if (needsLogin) {
-    await passwordInput.fill('admin123');
+    await passwordInput.fill(process.env.SUPERADMIN_PASSWORD || 'superadmin-secure-pass-2026!');
     await page.click('button[type="submit"]');
   }
   await expect(page.getByText('Platform Operasyon & Yönetim Merkezi')).toBeVisible({ timeout: 15000 });
@@ -54,7 +54,7 @@ test.describe('C7 — Super Admin Command Center & Operations Suite', () => {
     await expect(page.getByText('Hatalı şifre')).toBeVisible({ timeout: 5000 });
 
     // 2. Test correct password
-    await passwordInput.fill('admin123');
+    await passwordInput.fill(process.env.SUPERADMIN_PASSWORD || 'superadmin-secure-pass-2026!');
     await page.click('button[type="submit"]');
 
     // Should open command center header
