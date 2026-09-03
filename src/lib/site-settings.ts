@@ -1,3 +1,5 @@
+import { getSupabaseAdmin } from './supabase-admin';
+
 export interface SiteBrandingConfig {
   siteName: string;
   logoUrl?: string;
@@ -150,14 +152,14 @@ export const defaultSiteConfig: SiteGlobalConfig = {
     enabled: true,
     logoText: 'Dijital Davetiyeciniz',
     description: 'Hayalinizdeki dijital düğün, nişan ve kına davetiyesini dakikalar içinde oluşturun, misafirlerinizle anında paylaşın.',
-    companyName: 'Dijital Davetiyeciniz Ltd. Şti.',
+    companyName: 'Dijital Davetiyeciniz Yazılım Hizmetleri',
     contactEmail: 'destek@dijitaldavetiyeciniz.com',
-    contactPhone: '+90 (850) 000 00 00',
+    contactPhone: '',
     copyrightText: '© 2026 Dijital Davetiyeciniz. Tüm hakları saklıdır.',
     socialLinks: {
-      instagram: 'https://instagram.com',
-      facebook: 'https://facebook.com',
-      twitter: 'https://twitter.com',
+      instagram: '',
+      facebook: '',
+      twitter: '',
       youtube: ''
     },
     legalLinks: {
@@ -200,8 +202,10 @@ export const defaultSiteConfig: SiteGlobalConfig = {
 };
 
 /**
- * Validates that an URL is safe (http, https, or relative internal route)
- * Strictly denies javascript: and data: URIs
+ * Validates that an URL is safe:
+ * - Allows relative internal routes (/...)
+ * - Allows secure https URLs
+ * - Strictly denies javascript:, data:, and insecure http: in production
  */
 export function isSafeUrl(url?: string): boolean {
   if (!url || typeof url !== 'string') return true;
@@ -210,34 +214,40 @@ export function isSafeUrl(url?: string): boolean {
   if (trimmed.startsWith('javascript:') || trimmed.startsWith('data:') || trimmed.startsWith('vbscript:')) {
     return false;
   }
-  if (trimmed.startsWith('/') || trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('mailto:') || trimmed.startsWith('tel:')) {
+  if (trimmed.startsWith('/')) {
+    return true;
+  }
+  if (trimmed.startsWith('https://') || trimmed.startsWith('mailto:') || trimmed.startsWith('tel:')) {
+    return true;
+  }
+  if (process.env.NODE_ENV !== 'production' && trimmed.startsWith('http://localhost')) {
     return true;
   }
   return false;
 }
 
-import { supabase } from './supabase';
-
 export async function getPublicSiteSettings(): Promise<SiteGlobalConfig> {
   try {
-    const { data, error } = await supabase
+    const supabaseAdmin = getSupabaseAdmin();
+    const { data, error } = await supabaseAdmin
       .from('site_settings')
       .select('published_config')
       .eq('id', 'global')
-      .single();
+      .maybeSingle();
 
     if (error || !data || !data.published_config) {
       return defaultSiteConfig;
     }
 
+    const pub = data.published_config;
     return {
-      branding: { ...defaultSiteConfig.branding, ...(data.published_config.branding || {}) },
-      announcement: { ...defaultSiteConfig.announcement, ...(data.published_config.announcement || {}) },
-      header: { ...defaultSiteConfig.header, ...(data.published_config.header || {}) },
-      footer: { ...defaultSiteConfig.footer, ...(data.published_config.footer || {}) },
-      homepage: { ...defaultSiteConfig.homepage, ...(data.published_config.homepage || {}) },
-      maintenance: { ...defaultSiteConfig.maintenance, ...(data.published_config.maintenance || {}) },
-      support: { ...defaultSiteConfig.support, ...(data.published_config.support || {}) }
+      branding: { ...defaultSiteConfig.branding, ...(pub.branding || {}) },
+      announcement: { ...defaultSiteConfig.announcement, ...(pub.announcement || {}) },
+      header: { ...defaultSiteConfig.header, ...(pub.header || {}) },
+      footer: { ...defaultSiteConfig.footer, ...(pub.footer || {}) },
+      homepage: { ...defaultSiteConfig.homepage, ...(pub.homepage || {}) },
+      maintenance: { ...defaultSiteConfig.maintenance, ...(pub.maintenance || {}) },
+      support: { ...defaultSiteConfig.support, ...(pub.support || {}) }
     };
   } catch {
     return defaultSiteConfig;
