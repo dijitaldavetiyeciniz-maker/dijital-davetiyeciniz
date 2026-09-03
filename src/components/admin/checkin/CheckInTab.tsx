@@ -99,7 +99,6 @@ export default function CheckInTab({ weddingId }: CheckInTabProps) {
     if (storedQueue) {
       try {
         const parsed = JSON.parse(storedQueue);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setRetryQueue(parsed);
       } catch (e) {
         console.error('Failed to parse stored queue');

@@ -59,7 +59,6 @@ export default function GuestManagementTab({ weddingId }: { weddingId: string })
   };
 
   useEffect(() => {
-    // eslint-disable-next-line
     fetchGuestsAndGroups();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [weddingId]);
