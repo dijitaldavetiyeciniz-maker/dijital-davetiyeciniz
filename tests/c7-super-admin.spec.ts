@@ -153,7 +153,7 @@ test.describe('C7 — Super Admin Command Center & Operations Suite', () => {
     await ensureSuperAdminLoggedIn(page);
 
     // Navigate to System Tab
-    await page.click('button:has-text("Sistem & Bakım")');
+    await page.click('button:has-text("Sistem Durumu"), button:has-text("Sistem")');
     await expect(page.getByText('Platform Bakım Anahtarı')).toBeVisible();
 
     // Open Maintenance Modal using unambiguous selector

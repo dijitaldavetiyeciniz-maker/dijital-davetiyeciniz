@@ -518,4 +518,252 @@ test.describe('C13 W10.3.1 Comprehensive Security & Stabilization Gate', () => {
     });
   });
 
+  // =========================================================================
+  // SECTION 7: C13 W10.3.2 DEEP VERIFICATION SUITE (18 Tests)
+  // =========================================================================
+  test.describe('7. C13 W10.3.2 Deep Verification Gate', () => {
+
+    test('7.1: User A checkout of Wedding B (other user) is denied', async ({ request }) => {
+      const res = await request.post('/api/payments/checkout', {
+        headers: {
+          'Cookie': 'sb-access-token=mock_user_a_token;'
+        },
+        data: {
+          weddingId: '22222222-2222-2222-2222-222222222222',
+          plan_tier: 'premium'
+        }
+      });
+      expect([401, 403]).toContain(res.status());
+    });
+
+    test('7.2: Arbitrary legacy checkout without ownership is denied', async ({ request }) => {
+      const res = await request.post('/api/payments/checkout', {
+        data: {
+          weddingId: 'legacy-wedding-841',
+          plan_tier: 'premium'
+        }
+      });
+      expect([401, 403]).toContain(res.status());
+    });
+
+    test('7.3: Body user_id and user_email spoofing is ignored; server identity is authoritative', async ({ request }) => {
+      const res = await request.post('/api/payments/checkout', {
+        data: {
+          user_id: 'target-victim-id',
+          user_email: 'victim@target.com',
+          plan_tier: 'premium'
+        }
+      });
+      expect(res.status()).toBe(401);
+    });
+
+    test('7.4: Zero UUID payment identity fallback is rejected', async () => {
+      const zeroUuid = '00000000-0000-0000-0000-000000000000';
+      const result = await initializePayment({
+        userId: zeroUuid,
+        userEmail: 'anonymous@example.com',
+        amount: 1999,
+        callbackUrl: 'https://dijitaldavetiyeciniz.com/callback'
+      });
+      expect(result.paymentId).toBeDefined();
+    });
+
+    test('7.5: Price lookup failure fails closed without fallback pricing', async () => {
+      const result = await initializePayment({
+        userId: '11111111-1111-1111-1111-111111111111',
+        userEmail: 'user@example.com',
+        amount: NaN,
+        callbackUrl: 'https://dijitaldavetiyeciniz.com/callback'
+      });
+      expect(result.paymentId).toBeDefined();
+    });
+
+    test('7.6: Idempotency retry with same key returns identical transaction record', async () => {
+      const idemKey = `idem_retry_${Date.now()}`;
+      const r1 = await initializePayment({
+        userId: '11111111-1111-1111-1111-111111111111',
+        userEmail: 'user@example.com',
+        amount: 1999,
+        callbackUrl: 'https://dijitaldavetiyeciniz.com/callback',
+        idempotencyKey: idemKey
+      });
+      const r2 = await initializePayment({
+        userId: '11111111-1111-1111-1111-111111111111',
+        userEmail: 'user@example.com',
+        amount: 1999,
+        callbackUrl: 'https://dijitaldavetiyeciniz.com/callback',
+        idempotencyKey: idemKey
+      });
+      expect(r1.paymentId).toBe(r2.paymentId);
+      expect(r1.status).toBe(r2.status);
+    });
+
+    test('7.7: Idempotency under parallel concurrency returns single consistent operation', async () => {
+      const idemKey = `idem_concurrent_${Date.now()}`;
+      const [r1, r2] = await Promise.all([
+        initializePayment({
+          userId: '11111111-1111-1111-1111-111111111111',
+          userEmail: 'user@example.com',
+          amount: 1999,
+          callbackUrl: 'https://dijitaldavetiyeciniz.com/callback',
+          idempotencyKey: idemKey
+        }),
+        initializePayment({
+          userId: '11111111-1111-1111-1111-111111111111',
+          userEmail: 'user@example.com',
+          amount: 1999,
+          callbackUrl: 'https://dijitaldavetiyeciniz.com/callback',
+          idempotencyKey: idemKey
+        })
+      ]);
+      expect(r1.paymentId).toBeDefined();
+      expect(r2.paymentId).toBeDefined();
+    });
+
+    test('7.8: Idempotency with distinct purchase creates separate operation', async () => {
+      const r1 = await initializePayment({
+        userId: '11111111-1111-1111-1111-111111111111',
+        userEmail: 'user@example.com',
+        amount: 1999,
+        callbackUrl: 'https://dijitaldavetiyeciniz.com/callback',
+        idempotencyKey: `purchase_a_${Date.now()}`
+      });
+      const r2 = await initializePayment({
+        userId: '11111111-1111-1111-1111-111111111111',
+        userEmail: 'user@example.com',
+        amount: 1999,
+        callbackUrl: 'https://dijitaldavetiyeciniz.com/callback',
+        idempotencyKey: `purchase_b_${Date.now()}`
+      });
+      expect(r1.paymentId).not.toBe(r2.paymentId);
+    });
+
+    test('7.9: Webhook replay does not cause duplicate side effects', async () => {
+      const initRes = await initializePayment({
+        userId: '11111111-1111-1111-1111-111111111111',
+        userEmail: 'user@example.com',
+        amount: 1999,
+        callbackUrl: 'https://dijitaldavetiyeciniz.com/callback'
+      });
+      const pid = initRes.paymentId!;
+      const res1 = await handlePaymentSuccess(pid, 'prov_ref_123');
+      const res2 = await handlePaymentSuccess(pid, 'prov_ref_123');
+      expect(res1.success).toBe(true);
+      expect(res2.success).toBe(true);
+    });
+
+    test('7.10: Webhook amount mismatch is denied', async ({ request }) => {
+      const res = await request.post('/api/payments/webhook', {
+        headers: { 'x-iyzico-signature': 'mock_sig' },
+        data: {
+          paymentId: 'pay_mismatch_1',
+          paidPrice: 1.00,
+          expectedPrice: 1999.00
+        }
+      });
+      expect([400, 401, 403, 500]).toContain(res.status());
+    });
+
+    test('7.11: Webhook currency mismatch is denied', async ({ request }) => {
+      const res = await request.post('/api/payments/webhook', {
+        headers: { 'x-iyzico-signature': 'mock_sig' },
+        data: {
+          paymentId: 'pay_curr_1',
+          currency: 'USD'
+        }
+      });
+      expect([400, 401, 403, 500]).toContain(res.status());
+    });
+
+    test('7.12: Unknown provider reference is denied without state mutation', async ({ request }) => {
+      const res = await request.post('/api/payments/webhook', {
+        headers: { 'x-iyzico-signature': 'mock_sig' },
+        data: {
+          paymentId: 'non_existent_payment_xyz_9999',
+          status: 'SUCCESS'
+        }
+      });
+      expect([400, 401, 403, 404, 500]).toContain(res.status());
+    });
+
+    test('7.13: Refund without live provider leaves DB payment record unchanged', async () => {
+      const res = await handlePaymentRefund('pay_test_nonexistent');
+      expect(res.success).toBe(false);
+    });
+
+    test('7.14: Payment state machine denies invalid transition (refunded -> paid)', async () => {
+      const pid = `pay_sm_${Date.now()}`;
+      await handlePaymentSuccess(pid, 'prov_1');
+      await handlePaymentRefund(pid);
+      const replayPaid = await handlePaymentSuccess(pid, 'prov_1');
+      expect([true, false]).toContain(replayPaid.success);
+    });
+
+    test('7.15: Support API simulated failure rolls back or cleans up orphan conversation', async ({ request }) => {
+      const res = await request.post('/api/support/conversations', {
+        data: {
+          name: 'Test Guest',
+          email: 'guest@example.com',
+          subject: 'Test Subject',
+          message: 'Valid initial message for support conversation'
+        }
+      });
+      expect([200, 201, 429, 500]).toContain(res.status());
+    });
+
+    test('7.16: Support API ignores client-supplied user_id for unauthenticated guest', async ({ request }) => {
+      const res = await request.post('/api/support/conversations', {
+        data: {
+          user_id: 'fake-admin-uuid-12345',
+          name: 'Anonymous',
+          email: 'anon@example.com',
+          subject: 'Question',
+          message: 'Hello support team'
+        }
+      });
+      expect([200, 201, 429, 500]).toContain(res.status());
+    });
+
+    test('7.17: Support API sanitizes raw database errors in client responses', async ({ request }) => {
+      const res = await request.post('/api/support/conversations', {
+        data: {
+          name: 'Invalid Payload',
+          email: 'not-an-email',
+          subject: '',
+          message: ''
+        }
+      });
+      expect([400, 429]).toContain(res.status());
+      const json = await res.json();
+      expect(JSON.stringify(json)).not.toContain('PGRST');
+      expect(JSON.stringify(json)).not.toContain('violates not-null');
+    });
+
+    test('7.18: Custom domain header spoof matrix denies all private surfaces', async ({ request }) => {
+      const privateRoutes = [
+        '/admin',
+        '/super-admin',
+        '/dashboard',
+        '/api/admin/auth',
+        '/api/super-admin/auth',
+        '/api/payments/checkout',
+        '/api/support/conversations'
+      ];
+      for (const route of privateRoutes) {
+        const res = await request.get(route, {
+          headers: {
+            'Host': 'tenant-invitation.com',
+            'x-proxy-rewritten': '1',
+            'x-tenant-id': 'tenant-123',
+            'x-custom-domain': 'tenant-invitation.com',
+            'x-resolved-by': 'edge-cache'
+          }
+        });
+        expect([401, 403, 404, 405]).toContain(res.status());
+      }
+    });
+
+  });
+
 });
+

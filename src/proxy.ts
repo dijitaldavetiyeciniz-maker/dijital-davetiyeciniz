@@ -11,8 +11,6 @@ const ALLOWED_CUSTOM_DOMAIN_API_PREFIXES = [
   '/api/guestbook',
   '/api/checkin',
   '/api/invitation',
-  '/api/health',
-  '/api/ready',
 ];
 
 function isCustomDomainApiAllowed(pathname: string): boolean {
