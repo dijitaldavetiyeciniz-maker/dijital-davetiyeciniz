@@ -1,13 +1,15 @@
-import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const payment_id = searchParams.get('payment_id');
 
   if (!payment_id) {
     return NextResponse.redirect(new URL('/odeme/sonuc?status=failed&error=missing_payment_id', request.url));
   }
+
+  const supabase = getSupabaseAdmin();
 
   // Server-to-server check of payment status (Never trust URL params)
   const { data: payment } = await supabase

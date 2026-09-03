@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createAdminClient, createServerServiceRoleClient } from '@/server/supabaseClient';
 import { generateGuestToken } from '@/server/guestTokens';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkDistributedRateLimit } from '@/lib/rate-limiter';
 
 // Zod schemas
 const GuestSchema = z.object({
@@ -27,8 +27,8 @@ const PostGuestsSchema = z.object({
 export async function GET(request: NextRequest) {
   // Rate limiting
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anon';
-  const rate = checkRateLimit(`guests_get_${ip}`, { windowMs: 60000, max: 60 });
-  if (!rate.success) {
+  const rate = await checkDistributedRateLimit(`guests_get_${ip}`, { intervalMs: 60000, maxRequests: 60 });
+  if (!rate.allowed) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
@@ -116,8 +116,8 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   // Rate limiting
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anon';
-  const rate = checkRateLimit(`guests_post_${ip}`, { windowMs: 60000, max: 20 });
-  if (!rate.success) {
+  const rate = await checkDistributedRateLimit(`guests_post_${ip}`, { intervalMs: 60000, maxRequests: 20 });
+  if (!rate.allowed) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 

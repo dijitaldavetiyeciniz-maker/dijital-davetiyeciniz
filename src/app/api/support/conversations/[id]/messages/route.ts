@@ -1,24 +1,32 @@
-import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
-import { checkRateLimit } from '@/lib/rate-limiter';
+import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { checkDistributedRateLimit } from '@/lib/rate-limiter';
+import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
 
+const SupportMessageSchema = z.object({
+  message: z.string().trim().min(1).max(5000),
+  sender_name: z.string().trim().max(100).optional(),
+  sender_type: z.enum(['user', 'admin']).default('user')
+});
+
 export async function GET(
-  req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    if (!id) {
+    if (!id || !z.string().uuid().safeParse(id).success) {
       return NextResponse.json({ success: false, error: 'Geçersiz talep numarası.' }, { status: 400 });
     }
 
+    const supabase = getSupabaseAdmin();
     const { data: conv, error: convErr } = await supabase
       .from('support_conversations')
       .select('*')
       .eq('id', id)
-      .single();
+      .maybeSingle();
 
     if (convErr || !conv) {
       return NextResponse.json({ success: false, error: 'Talep bulunamadı.' }, { status: 404 });
@@ -31,7 +39,7 @@ export async function GET(
       .order('created_at', { ascending: true });
 
     if (msgErr) {
-      return NextResponse.json({ success: false, error: msgErr.message }, { status: 500 });
+      return NextResponse.json({ success: false, error: 'Mesajlar getirilemedi.' }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -39,19 +47,27 @@ export async function GET(
       conversation: conv,
       messages: messages || []
     });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  } catch {
+    return NextResponse.json({ success: false, error: 'Sunucu hatası oluştu.' }, { status: 500 });
   }
 }
 
 export async function POST(
-  req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
-    const rateCheck = checkRateLimit(`support_msg:${id}:${ip}`, { maxRequests: 10, intervalMs: 60000 });
+    if (!id || !z.string().uuid().safeParse(id).success) {
+      return NextResponse.json({ success: false, error: 'Geçersiz talep numarası.' }, { status: 400 });
+    }
+
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1';
+    const rateCheck = await checkDistributedRateLimit(`support_msg:${id}:${ip}`, { 
+      maxRequests: 10, 
+      intervalMs: 60000 
+    });
+
     if (!rateCheck.allowed) {
       return NextResponse.json({
         success: false,
@@ -59,18 +75,24 @@ export async function POST(
       }, { status: 429 });
     }
 
-    const body = await req.json();
-    const { message, sender_name, sender_type } = body;
+    const body = await req.json().catch(() => ({}));
+    const parseResult = SupportMessageSchema.safeParse(body);
 
-    if (!message?.trim()) {
-      return NextResponse.json({ success: false, error: 'Mesaj içeriği boş olamaz.' }, { status: 400 });
+    if (!parseResult.success) {
+      return NextResponse.json({
+        success: false,
+        error: 'Geçersiz mesaj verisi.'
+      }, { status: 400 });
     }
+
+    const { message, sender_name, sender_type } = parseResult.data;
+    const supabase = getSupabaseAdmin();
 
     const { data: conv, error: convErr } = await supabase
       .from('support_conversations')
       .select('*')
       .eq('id', id)
-      .single();
+      .maybeSingle();
 
     if (convErr || !conv) {
       return NextResponse.json({ success: false, error: 'Talep bulunamadı.' }, { status: 404 });
@@ -91,7 +113,7 @@ export async function POST(
       .single();
 
     if (msgErr || !msg) {
-      return NextResponse.json({ success: false, error: msgErr?.message || 'Mesaj kaydedilemedi.' }, { status: 500 });
+      return NextResponse.json({ success: false, error: 'Mesaj kaydedilemedi.' }, { status: 500 });
     }
 
     // 2. Update conversation metadata
@@ -111,7 +133,7 @@ export async function POST(
       message: 'Mesajınız iletildi.',
       newMessage: msg
     }, { status: 201 });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  } catch {
+    return NextResponse.json({ success: false, error: 'Mesaj gönderilirken sunucu hatası oluştu.' }, { status: 500 });
   }
 }

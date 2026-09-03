@@ -1,73 +1,88 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { initializePayment } from '@/lib/paymentProvider';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkDistributedRateLimit } from '@/lib/rate-limiter';
 
-// Fixed server-side tier prices in TRY fallback
 const TIER_PRICES_TRY: Record<string, number> = {
   standard: 0,
   premium: 1999,
   corporate: 4999,
 };
 
-export async function POST(request: Request) {
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anon';
-  const rate = checkRateLimit(`checkout_${ip}`, { windowMs: 60000, max: 10 });
-  if (!rate.success) {
-    return NextResponse.json({ error: 'Çok fazla ödeme denemesi yapıldı. Lütfen bekleyin.' }, { status: 429 });
+export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1';
+  
+  // Distributed Rate Limiting: 10 attempts per minute per IP
+  const rateLimit = await checkDistributedRateLimit(`checkout_${ip}`, {
+    intervalMs: 60000,
+    maxRequests: 10
+  });
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Çok fazla ödeme denemesi yapıldı. Lütfen bir süre sonra tekrar deneyiniz.' },
+      { status: 429 }
+    );
   }
 
   try {
-    const body = await request.json();
-    const { wedding_id, plan_tier = 'premium', user_id, user_email } = body;
     const supabase = getSupabaseAdmin();
+    const authHeader = request.headers.get('authorization');
+    let authenticatedUserId: string | null = null;
+    let authenticatedUserEmail = '';
 
-    // 1. Resolve user ID from session or payload in test/development
-    let targetUserId = user_id;
-    let targetUserEmail = user_email || '';
-
-    if (!targetUserId) {
-      const authHeader = request.headers.get('authorization');
-      if (authHeader) {
-        const token = authHeader.replace('Bearer ', '');
-        const { data: { user } } = await supabase.auth.getUser(token);
-        if (user) {
-          targetUserId = user.id;
-          targetUserEmail = user.email || '';
-        }
+    // Verify user identity strictly from server auth session / token
+    if (authHeader) {
+      const token = authHeader.replace('Bearer ', '');
+      const { data: { user } } = await supabase.auth.getUser(token);
+      if (user) {
+        authenticatedUserId = user.id;
+        authenticatedUserEmail = user.email || '';
       }
     }
 
-    // 2. Ownership Check if wedding_id provided
+    const body = await request.json().catch(() => ({}));
+    const { wedding_id, plan_tier = 'premium' } = body;
+
+    // Reject checkout without verified server authentication
+    if (!authenticatedUserId) {
+      // In non-production test runner, if body specifies user_id for unit test mocking:
+      if (process.env.NODE_ENV !== 'production' && body.user_id) {
+        authenticatedUserId = body.user_id;
+        authenticatedUserEmail = body.user_email || 'test@example.com';
+      } else {
+        return NextResponse.json({ error: 'Ödeme işlemi için oturum açmış olmanız gerekmektedir.' }, { status: 401 });
+      }
+    }
+
+    // Ownership Verification if wedding_id is provided
     if (wedding_id) {
-      const { data: wedding } = await supabase
+      const { data: wedding, error: wErr } = await supabase
         .from('weddings')
         .select('id, user_id, is_paid, slug')
         .eq('id', wedding_id)
         .maybeSingle();
 
-      if (!wedding) {
+      if (wErr || !wedding) {
         return NextResponse.json({ error: 'Davetiye bulunamadı.' }, { status: 404 });
       }
 
-      if (targetUserId && wedding.user_id && wedding.user_id !== targetUserId) {
-        return NextResponse.json({ error: 'Bu davetiye için ödeme yapma yetkiniz yoktur.' }, { status: 403 });
+      // Check that the authenticated user owns this wedding
+      if (wedding.user_id && wedding.user_id !== authenticatedUserId) {
+        return NextResponse.json({ error: 'Bu davetiye için ödeme yapma yetkiniz bulunmamaktadır.' }, { status: 403 });
+      }
+
+      // Ownerless legacy wedding policy: cannot claim/pay without ownership link
+      if (!wedding.user_id && process.env.NODE_ENV === 'production') {
+        return NextResponse.json({ error: 'Bu davetiye kaydı sahiplendirilmemiştir. Lütfen destek ile iletişime geçiniz.' }, { status: 403 });
       }
 
       if (wedding.is_paid) {
         return NextResponse.json({ error: 'Bu davetiye zaten ödenmiş ve yayındadır.' }, { status: 400 });
       }
-
-      if (!targetUserId && wedding.user_id) {
-        targetUserId = wedding.user_id;
-      }
     }
 
-    if (!targetUserId) {
-      targetUserId = '00000000-0000-0000-0000-000000000000';
-    }
-
-    // 3. Resolve Price from Database Plans Table & Validate Active Plan
+    // Resolve plan price
     const validTiers = ['standard', 'premium', 'corporate'];
     if (!plan_tier || !validTiers.includes(plan_tier)) {
       return NextResponse.json({ error: 'Geçersiz veya aktif olmayan paket seçimi.' }, { status: 400 });
@@ -85,20 +100,23 @@ export async function POST(request: Request) {
         if (plan.is_active === false) {
           return NextResponse.json({ error: 'Bu paket şu anda satışa kapalıdır.' }, { status: 400 });
         }
-        if (plan.price !== undefined) {
+        if (plan.price !== undefined && plan.price !== null) {
           amount = Number(plan.price);
         }
       }
-    } catch {}
+    } catch (err) {
+      console.error('[Checkout] Failed to fetch plan price:', err);
+    }
 
     const currency = 'TRY';
-    const idempotencyKey = `checkout_${wedding_id || targetUserId}_${plan_tier}_${Date.now()}`;
+    // Stable idempotency key based on entity and plan (no timestamp)
+    const idempotencyKey = `checkout_${wedding_id || authenticatedUserId}_${plan_tier}`;
 
-    // 4. Initialize Payment via Provider Abstraction
+    // Initialize Payment via Provider Abstraction
     const result = await initializePayment({
       weddingId: wedding_id,
-      userId: targetUserId,
-      userEmail: targetUserEmail,
+      userId: authenticatedUserId!,
+      userEmail: authenticatedUserEmail,
       amount,
       currency,
       planCode: plan_tier,
@@ -107,7 +125,7 @@ export async function POST(request: Request) {
     });
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error || 'Ödeme başlatılamadı.' }, { status: 500 });
+      return NextResponse.json({ error: result.error || 'Ödeme başlatılamadı.' }, { status: result.error?.startsWith('BILLING_NOT_CONFIGURED') ? 503 : 500 });
     }
 
     return NextResponse.json({

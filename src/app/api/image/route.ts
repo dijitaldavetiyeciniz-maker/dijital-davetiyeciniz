@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { NextRequest, NextResponse } from 'next/server';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { isSafeUrl } from '@/lib/ssrfProtection';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkDistributedRateLimit } from '@/lib/rate-limiter';
 
-export async function GET(request: Request) {
-  const ip = request.headers.get('x-forwarded-for') || 'anon';
-  const rate = checkRateLimit(`image_api_${ip}`, { windowMs: 60000, max: 60 });
-  if (!rate.success) {
+export async function GET(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1';
+  const rate = await checkDistributedRateLimit(`image_api_${ip}`, { intervalMs: 60000, maxRequests: 60 });
+  if (!rate.allowed) {
     return new NextResponse('Çok fazla istek gönderildi. Lütfen bekleyin.', { status: 429 });
   }
 
@@ -19,12 +19,13 @@ export async function GET(request: Request) {
   }
 
   try {
+    const supabase = getSupabaseAdmin();
     // 1. Düğünün Bot Token bilgisini çek
     const { data: wedding } = await supabase
       .from('weddings')
       .select('telegram_bot_token')
       .eq('id', wedding_id)
-      .single();
+      .maybeSingle();
 
     if (!wedding) {
       return new NextResponse('Davetiye bulunamadı', { status: 404 });
@@ -55,7 +56,7 @@ export async function GET(request: Request) {
 
     const filePath = fileData.result.file_path;
 
-    // 3. Dosyanın kendisini Telegram'dan indir ve doğrudan istemciye (tarayıcıya) gönder
+    // 3. Dosyanın kendisini Telegram'dan indir ve doğrudan istemciye gönder
     const imageUrl = `https://api.telegram.org/file/bot${token}/${filePath}`;
     const imageRes = await fetch(imageUrl);
 
@@ -63,7 +64,6 @@ export async function GET(request: Request) {
       return new NextResponse('Fotoğraf indirilemedi', { status: 500 });
     }
 
-    // Proxy (Aracı) olarak Telegram'dan aldığımız raw veriyi aynen döndürüyoruz
     return new NextResponse(imageRes.body, {
       status: 200,
       headers: {

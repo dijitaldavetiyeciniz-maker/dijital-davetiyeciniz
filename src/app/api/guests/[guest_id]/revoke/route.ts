@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createAdminClient, createServerServiceRoleClient } from '@/server/supabaseClient';
 import { revokeGuestToken } from '@/server/guestTokens';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkDistributedRateLimit } from '@/lib/rate-limiter';
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ guest_id: string }> }) {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anon';
-  const rate = checkRateLimit(`guests_revoke_${ip}`, { windowMs: 60000, max: 20 });
-  if (!rate.success) {
+  const rate = await checkDistributedRateLimit(`guests_revoke_${ip}`, { intervalMs: 60000, maxRequests: 20 });
+  if (!rate.allowed) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 

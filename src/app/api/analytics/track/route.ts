@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { trackEvent } from '@/lib/analytics';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkDistributedRateLimit } from '@/lib/rate-limiter';
 
-export async function POST(req: Request) {
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anon';
-  const rate = checkRateLimit(`analytics_${ip}`, { windowMs: 60000, max: 60 });
-  if (!rate.success) {
+export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '127.0.0.1';
+  const rate = await checkDistributedRateLimit(`analytics_${ip}`, { intervalMs: 60000, maxRequests: 60 });
+  if (!rate.allowed) {
     return NextResponse.json({ error: 'Çok fazla istek.' }, { status: 429 });
   }
 
