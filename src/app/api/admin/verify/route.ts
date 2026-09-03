@@ -1,25 +1,13 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { verifyAdminCookie } from '@/lib/auth-cookie';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
-const supabaseAdmin = (() => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
-  const key = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url) throw new Error("NEXT_PUBLIC_SUPABASE_URL is missing");
-  if (!key) throw new Error("SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY is missing");
-  return createClient(url, key, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    }
-  });
-})();
-
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { wedding_id } = await req.json();
-    if (!wedding_id) {
+    const body = await req.json().catch(() => ({}));
+    const { wedding_id } = body;
+    if (!wedding_id || typeof wedding_id !== 'string') {
       return NextResponse.json({ authenticated: false });
     }
 
@@ -30,6 +18,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ authenticated: true });
     }
 
+    const supabaseAdmin = getSupabaseAdmin();
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(wedding_id);
     let query = supabaseAdmin.from('weddings').select('id, slug');
     if (isUuid) {
@@ -53,7 +42,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ authenticated: false });
-  } catch (e: any) {
+  } catch {
     return NextResponse.json({ authenticated: false });
   }
 }

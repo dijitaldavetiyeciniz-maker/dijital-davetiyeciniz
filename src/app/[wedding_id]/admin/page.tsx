@@ -747,7 +747,7 @@ export default function CoupleAdminPage({
         body: JSON.stringify({ wedding_id: targetWeddingId, password: passwordInput })
       });
       const data = await res.json();
-      if (data.success || (wedding && passwordInput === wedding.admin_password)) {
+      if (data.success) {
         setIsAuthenticated(true);
         if (wedding?.id) {
           fetchRsvps(wedding.id);
@@ -755,15 +755,10 @@ export default function CoupleAdminPage({
           window.location.reload();
         }
       } else {
-        setErrorMsg('Şifre hatalı. Lütfen tekrar deneyin.');
+        setErrorMsg(data.error || 'Şifre hatalı. Lütfen tekrar deneyin.');
       }
-    } catch (err) {
-      if (wedding && passwordInput === wedding.admin_password) {
-        setIsAuthenticated(true);
-        fetchRsvps(wedding.id);
-      } else {
-        setErrorMsg('Giriş yapılırken bir hata oluştu.');
-      }
+    } catch {
+      setErrorMsg('Giriş yapılırken bir hata oluştu.');
     }
   }
 
