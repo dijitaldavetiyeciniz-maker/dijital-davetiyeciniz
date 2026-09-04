@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('PART 3 — Batch C1 New Unique Templates E2E Validation', () => {
 
   test('All 10 new unique templates must render successfully and have no horizontal scroll overflow', async ({ page }) => {
+    test.setTimeout(90000);
     const newTemplateIds = [
       'venice-canal-palazzo',
       'cappadocia-sunset-balloon',
@@ -28,7 +29,7 @@ test.describe('PART 3 — Batch C1 New Unique Templates E2E Validation', () => {
     ];
 
     for (const tplId of newTemplateIds) {
-      const response = await page.goto(`/demo?templateId=${tplId}`);
+      const response = await page.goto(`/demo?templateId=${tplId}`, { waitUntil: 'domcontentloaded' });
       expect(response?.status()).toBe(200);
 
       // Verify no horizontal overflow

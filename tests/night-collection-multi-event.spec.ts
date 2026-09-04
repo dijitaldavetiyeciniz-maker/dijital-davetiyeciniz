@@ -20,7 +20,7 @@ test.describe('Zarf & Mühür Gece Koleksiyonu & Çoklu Etkinlik Yapısı (Multi
 
   test('2. Night collection themes & catalog templates are listed with badges', async ({ page }) => {
     await page.goto('/sablonlar');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check presence of "Yıldızlı Gece" and "Kına Gecesi Lüks Bordo"
     const navyStarlight = page.locator('h3:has-text("Yıldızlı Gece & Gümüş Zarafet")');
@@ -38,7 +38,7 @@ test.describe('Zarf & Mühür Gece Koleksiyonu & Çoklu Etkinlik Yapısı (Multi
 
   test('3. Multi-event branching RSVP displays event selection and per-event guest counts', async ({ page }) => {
     await page.goto('/demo?preview=true');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Bypass envelope if visible
     const overlay = page.locator('[data-testid="opening-overlay"], [aria-label*="Davetiyeyi açmak"], [aria-label*="Özel Gece Davetiyesini Açmak"]');

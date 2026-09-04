@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Great_Vibes, Montserrat, Outfit, Lora, Cinzel, Playfair_Display, Inter, Caveat } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import SupportWidget from "@/components/SupportWidget";
+import SupportWidget from "@/components/support/SupportWidget";
 import PlatformAnnouncementBanner from "@/components/PlatformAnnouncementBanner";
 import MaintenanceGate from "@/components/MaintenanceGate";
+import { PRODUCT_STATS } from "@/lib/productStats";
 
-const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-cormorant", display: "swap" });
-const greatVibes = Great_Vibes({ weight: "400", subsets: ["latin"], variable: "--font-great-vibes", display: "swap" });
-const montserrat = Montserrat({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-montserrat", display: "swap" });
-const outfit = Outfit({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-outfit", display: "swap" });
-const lora = Lora({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-lora", display: "swap" });
-const cinzel = Cinzel({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-cinzel", display: "swap" });
-const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-playfair", display: "swap" });
 const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-inter", display: "swap" });
-const caveat = Caveat({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-caveat", display: "swap" });
+const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-playfair", display: "swap" });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dijital-davetiyeciniz.vercel.app';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://dijitaldavetiyeciniz.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -23,7 +17,7 @@ export const metadata: Metadata = {
     default: "Dijital Davetiyeciniz - Online Düğün, Nişan & Etkinlik Davetiyesi",
     template: "%s | Dijital Davetiyeciniz",
   },
-  description: "Zarf açılış animasyonlu, müzikli, konum tarifli ve anlık LCV takipli 120+ premium dijital davetiye şablonu. Düğün, nişan, kına ve kurumsal etkinlikleriniz için 2 dakikada oluşturun.",
+  description: `${PRODUCT_STATS.templateCount}+ premium dijital davetiye şablonu, ${PRODUCT_STATS.openingCount} zarf açılış animasyonu, müzikli, konum tarifli ve anlık LCV takipli yeni nesil online davetiye platformu.`,
   keywords: [
     "dijital davetiye",
     "online davetiye",
@@ -53,7 +47,7 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: "Dijital Davetiyeciniz",
     title: "Dijital Davetiyeciniz - Premium Online Davetiye Deneyimi",
-    description: "Zarf açılış animasyonlu, müzikli, konum tarifli ve anlık LCV takipli 120+ premium dijital davetiye şablonu.",
+    description: `${PRODUCT_STATS.templateCount}+ premium dijital davetiye şablonu, ${PRODUCT_STATS.openingCount} zarf açılış animasyonu ve anlık LCV takibi.`,
     images: [
       {
         url: `${SITE_URL}/images/og-main.png`,
@@ -66,7 +60,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Dijital Davetiyeciniz - Premium Online Davetiye",
-    description: "Zarf animasyonlu, müzikli, yol tarifli ve LCV takipli 120+ dijital davetiye şablonu.",
+    description: `${PRODUCT_STATS.templateCount}+ dijital davetiye şablonu, ${PRODUCT_STATS.openingCount} zarf animasyonu ve LCV takibi.`,
     images: [`${SITE_URL}/images/og-main.png`],
   },
   robots: {
@@ -80,9 +74,11 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "google-site-verification-token",
-  },
+  ...(process.env.GOOGLE_SITE_VERIFICATION ? {
+    verification: {
+      google: process.env.GOOGLE_SITE_VERIFICATION,
+    }
+  } : {}),
 };
 
 export default function RootLayout({
@@ -99,57 +95,29 @@ export default function RootLayout({
     "description": "Yeni nesil online düğün, nişan, kına ve kurumsal etkinlik dijital davetiye platformu.",
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+90-555-000-0000",
+      "email": "destek@dijitaldavetiyeciniz.com",
       "contactType": "customer service",
-      "areaServed": "TR",
       "availableLanguage": "Turkish"
-    },
-    "sameAs": [
-      "https://instagram.com/dijitaldavetiyeciniz"
-    ]
+    }
   };
 
-  const localBusinessSchema = {
+  const webSiteSchema = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "WebSite",
     "name": "Dijital Davetiyeciniz",
-    "image": `${SITE_URL}/favicon.ico`,
     "url": SITE_URL,
-    "telephone": "+90-555-000-0000",
-    "priceRange": "₺₺",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Levent, Büyükdere Cad. No: 199",
-      "addressLocality": "Şişli",
-      "addressRegion": "İstanbul",
-      "postalCode": "34394",
-      "addressCountry": "TR"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 41.0805,
-      "longitude": 29.0117
-    },
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday"
-      ],
-      "opens": "00:00",
-      "closes": "23:59"
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${SITE_URL}/sablonlar?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
     }
   };
 
   return (
     <html
       lang="tr"
-      className={`${cormorant.variable} ${greatVibes.variable} ${montserrat.variable} ${outfit.variable} ${lora.variable} ${cinzel.variable} ${playfair.variable} ${inter.variable} ${caveat.variable} h-full antialiased`}
+      className={`${inter.variable} ${playfair.variable} antialiased`}
+      suppressHydrationWarning
     >
       <head>
         <script
@@ -158,15 +126,15 @@ export default function RootLayout({
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
       </head>
-      <body className="min-h-full flex flex-col relative">
-        <PlatformAnnouncementBanner />
+      <body className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-rose-500 selection:text-white flex flex-col relative overflow-x-hidden">
         <MaintenanceGate>
+          <PlatformAnnouncementBanner />
           {children}
+          <SupportWidget />
         </MaintenanceGate>
-        <SupportWidget />
       </body>
     </html>
   );

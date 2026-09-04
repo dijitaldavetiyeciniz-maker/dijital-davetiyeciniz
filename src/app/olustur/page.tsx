@@ -204,30 +204,23 @@ function CreateForm() {
       show_program: false
     };
 
-    const { data: createdWedding, error } = await supabase
-      .from('weddings')
-      .insert([insertPayload])
-      .select('id, slug')
-      .single();
+    try {
+      const res = await fetch('/api/weddings/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(insertPayload)
+      });
+      const data = await res.json();
+      setIsSubmitting(false);
 
-    setIsSubmitting(false);
-
-    if (!error && createdWedding) {
-      // Otomatik giriş cookie'si oluştur
-      try {
-        await fetch('/api/admin/auth', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ wedding_id: createdWedding.id, password })
-        });
-      } catch (authErr) {
-        console.error('Auto auth error:', authErr);
+      if (res.ok && data.success && data.wedding) {
+        router.push(`/${cleanSlug}/admin`);
+      } else {
+        setErrorMsg(data.error || 'Kayıt oluşturulurken bir hata oluştu.');
       }
-      router.push(`/${cleanSlug}/admin`);
-    } else if (!error) {
-      router.push(`/${cleanSlug}/admin`);
-    } else {
-      setErrorMsg('Kayıt oluşturulurken bir hata oluştu: ' + error.message);
+    } catch {
+      setIsSubmitting(false);
+      setErrorMsg('Kayıt oluşturulurken sunucu bağlantı hatası oluştu.');
     }
   }
 

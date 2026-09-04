@@ -81,8 +81,8 @@ export default function SeatingTab({ weddingId }: SeatingTabProps) {
   }, [weddingId]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/set-state-in-effect
     if (selectedEventId) fetchData(selectedEventId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEventId]);
 
   const handleCreateTable = async (e: React.FormEvent) => {

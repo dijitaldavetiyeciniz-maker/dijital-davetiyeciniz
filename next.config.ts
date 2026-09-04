@@ -21,9 +21,6 @@ function getCspHeader() {
 }
 
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   turbopack: {
     root: process.cwd(),
   },

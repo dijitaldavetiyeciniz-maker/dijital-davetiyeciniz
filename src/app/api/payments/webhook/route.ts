@@ -1,10 +1,19 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { verifyWebhookSignature, handlePaymentSuccess, handlePaymentFailed, handlePaymentRefund } from '@/lib/paymentProvider';
 
-const WEBHOOK_SECRET = process.env.IYZICO_WEBHOOK_SECRET || 'iyzico_secret_key_mock';
+function getWebhookSecret(): string | null {
+  const secret = process.env.IYZICO_WEBHOOK_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      return null;
+    }
+    return process.env.DEV_IYZICO_WEBHOOK_SECRET || 'dev_mock_webhook_secret_for_tests';
+  }
+  return secret;
+}
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const rawBody = await request.text();
     const signature = request.headers.get('x-iyzico-signature') || request.headers.get('x-webhook-signature');
@@ -14,13 +23,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'İmza üstbilgisi (signature header) eksik.' }, { status: 400 });
     }
 
-    const isValidSig = verifyWebhookSignature(rawBody, signature, WEBHOOK_SECRET);
+    const secret = getWebhookSecret();
+    if (!secret) {
+      console.error('[Payment Webhook] IYZICO_WEBHOOK_SECRET is not configured. Failing closed.');
+      return NextResponse.json({ error: 'Webhook altyapısı yapılandırılmamış.' }, { status: 500 });
+    }
+
+    const isValidSig = verifyWebhookSignature(rawBody, signature, secret);
     if (!isValidSig) {
       return NextResponse.json({ error: 'Geçersiz webhook imzası.' }, { status: 401 });
     }
 
     const payload = JSON.parse(rawBody);
-    const { payment_id, wedding_id, amount, currency = 'TRY', status, provider_payment_id, event_type } = payload;
+    const { payment_id, amount, currency = 'TRY', status, provider_payment_id, event_type } = payload;
 
     if (!payment_id) {
       return NextResponse.json({ error: 'Eksik payment_id parametresi.' }, { status: 400 });

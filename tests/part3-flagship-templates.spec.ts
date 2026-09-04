@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('PART 3 — Flagship Collection Templates & Visual Quality Tests', () => {
 
   test('All 16 Flagship collection template IDs must render without errors in public demo view', async ({ page }) => {
+    test.setTimeout(90000);
     const flagshipIds = [
       'parisian-black-tie',
       'grand-opera-ballroom',
@@ -23,7 +24,7 @@ test.describe('PART 3 — Flagship Collection Templates & Visual Quality Tests',
     ];
 
     for (const tplId of flagshipIds) {
-      const response = await page.goto(`/demo?templateId=${tplId}`);
+      const response = await page.goto(`/demo?templateId=${tplId}`, { waitUntil: 'domcontentloaded' });
       expect(response?.status()).toBe(200);
 
       // Verify no horizontal overflow

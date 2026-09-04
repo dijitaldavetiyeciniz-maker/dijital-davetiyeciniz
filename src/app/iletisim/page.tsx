@@ -97,7 +97,7 @@ export default function IletisimPage() {
                 <Mail className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-slate-900 text-lg mb-1 font-serif">E-posta Destek</h3>
-              <p className="text-xs text-slate-500 mb-3">Tüm sorularınızı ortalama 1 saat içinde yanıtlıyoruz.</p>
+              <p className="text-xs text-slate-500 mb-3">Tüm sorularınızı en kısa sürede yanıtlıyoruz.</p>
               <a href={`mailto:${contactInfo.email}`} className="text-rose-600 font-semibold hover:underline text-sm break-all">
                 {contactInfo.email}
               </a>
@@ -105,21 +105,21 @@ export default function IletisimPage() {
 
             <div className="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all">
               <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-5">
-                <Phone className="w-6 h-6" />
+                <MessageSquare className="w-6 h-6" />
               </div>
-              <h3 className="font-bold text-slate-900 text-lg mb-1 font-serif">Telefon & WhatsApp</h3>
-              <p className="text-xs text-slate-500 mb-3">Hafta içi ve hafta sonu kesintisiz destek hattı.</p>
-              <a href={`https://wa.me/${contactInfo.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline text-sm">
-                {contactInfo.phone}
-              </a>
+              <h3 className="font-bold text-slate-900 text-lg mb-1 font-serif">Canlı Destek Merkezi</h3>
+              <p className="text-xs text-slate-500 mb-3">Ekranın sağ alt köşesindeki destek butonundan bize anında ulaşabilirsiniz.</p>
+              <span className="text-emerald-600 font-semibold text-sm">
+                Aktif & Çevrimiçi
+              </span>
             </div>
 
             <div className="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all">
               <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-5">
                 <MapPin className="w-6 h-6" />
               </div>
-              <h3 className="font-bold text-slate-900 text-lg mb-1 font-serif">Ofis Adresimiz</h3>
-              <p className="text-xs text-slate-500 mb-2">Merkez Operasyon Stüdyosu</p>
+              <h3 className="font-bold text-slate-900 text-lg mb-1 font-serif">Dijital Operasyon</h3>
+              <p className="text-xs text-slate-500 mb-2">Merkez Operasyon Ekibi</p>
               <p className="text-slate-700 text-sm font-medium leading-relaxed">
                 {contactInfo.address}
               </p>

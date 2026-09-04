@@ -1,5 +1,5 @@
 /**
- * C13 W5 Shared Host Resolution Store
+ * C13 W5 & W10.3 Shared Host Resolution Store
  * Low-latency tenant mapping store for data-plane edge / proxy host routing.
  * Control plane publishes active domain mappings here; data plane resolves them at request time.
  */
@@ -14,6 +14,13 @@ export interface HostMapping {
   publishedAt: string;
 }
 
+export class HostStoreUnavailableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'HostStoreUnavailableError';
+  }
+}
+
 export interface HostResolutionStore {
   resolve(hostname: string): Promise<HostMapping | null>;
   publish(mapping: HostMapping): Promise<boolean>;
@@ -22,7 +29,7 @@ export interface HostResolutionStore {
 
 /**
  * Production implementation using Vercel Edge Config or REST API.
- * High-speed, globally replicated key-value store with sub-10ms read latency.
+ * High-speed, globally replicated key-value store.
  */
 export class EdgeConfigHostResolutionStore implements HostResolutionStore {
   private edgeConfigUrl: string | null;
@@ -40,19 +47,18 @@ export class EdgeConfigHostResolutionStore implements HostResolutionStore {
   }
 
   /**
-   * Data-plane: Resolves hostname from Edge Config with ultra-low latency.
+   * Data-plane: Resolves hostname from Edge Config.
+   * Eliminates stale 1-hour cache and distinguishes 404 from 500/503.
    */
   async resolve(hostname: string): Promise<HostMapping | null> {
     const { hostname: normalized } = normalizeHostname(hostname);
-    if (!normalized || !this.edgeConfigUrl) {
-      return null;
+    if (!normalized) return null;
+    if (!this.edgeConfigUrl) {
+      throw new HostStoreUnavailableError('Edge Config URL is not configured');
     }
 
     try {
-      // If @vercel/edge-config is available or using Edge Config REST endpoint
       const key = `domain_${normalized.replace(/\./g, '_')}`;
-      
-      // Parse Edge Config connection string URL
       const url = new URL(this.edgeConfigUrl);
       const endpoint = `https://edge-config.vercel.com/${url.pathname.replace(/^\//, '')}/item/${key}`;
 
@@ -60,27 +66,40 @@ export class EdgeConfigHostResolutionStore implements HostResolutionStore {
         headers: {
           Authorization: `Bearer ${this.edgeConfigUrl.split('?token=')[1] || this.apiToken || ''}`,
         },
-        next: { revalidate: 3600 },
+        cache: 'no-store',
       });
 
       if (!res.ok) {
         if (res.status === 404) return null;
+        throw new HostStoreUnavailableError(`Edge Config returned HTTP ${res.status}`);
+      }
+
+      const data = await res.json().catch(() => null);
+      if (!data || typeof data !== 'object') {
         return null;
       }
 
-      const data = await res.json();
-      if (!data || data.status !== 'active') return null;
+      if (data.status !== 'active' || !data.weddingId) {
+        return null;
+      }
+
+      const mappingHostname = data.hostname || normalized;
+      // Cross-host mapping protection: resolved hostname must match normalized host
+      if (mappingHostname.toLowerCase() !== normalized.toLowerCase()) {
+        console.error(`[EdgeConfigStore] Mismatched hostname: expected ${normalized}, got ${mappingHostname}`);
+        return null;
+      }
 
       return {
-        weddingId: data.weddingId,
-        weddingSlug: data.weddingSlug,
-        hostname: data.hostname || normalized,
+        weddingId: String(data.weddingId),
+        weddingSlug: String(data.weddingSlug || data.weddingId),
+        hostname: mappingHostname,
         status: 'active',
         publishedAt: data.publishedAt || new Date().toISOString(),
       };
     } catch (err) {
-      // Fail closed safely on connection errors
-      return null;
+      if (err instanceof HostStoreUnavailableError) throw err;
+      throw new HostStoreUnavailableError(`Edge Config connection failed: ${err instanceof Error ? err.message : 'Unknown'}`);
     }
   }
 
@@ -119,7 +138,7 @@ export class EdgeConfigHostResolutionStore implements HostResolutionStore {
       });
 
       return res.ok;
-    } catch (err) {
+    } catch {
       return false;
     }
   }
@@ -152,7 +171,7 @@ export class EdgeConfigHostResolutionStore implements HostResolutionStore {
       });
 
       return res.ok;
-    } catch (err) {
+    } catch {
       return false;
     }
   }
@@ -181,14 +200,19 @@ export class FakeHostResolutionStore implements HostResolutionStore {
 
     const error = FakeHostResolutionStore.errorInjections.get(normalized);
     if (error === 'STORE_UNAVAILABLE') {
-      throw new Error('[FakeHostResolutionStore] Store unavailable (injected 503)');
+      throw new HostStoreUnavailableError('[FakeHostResolutionStore] Store unavailable (injected 503)');
     }
     if (error === 'TIMEOUT') {
-      throw new Error('[FakeHostResolutionStore] Store request timed out (injected timeout)');
+      throw new HostStoreUnavailableError('[FakeHostResolutionStore] Store request timed out (injected timeout)');
     }
 
     const mapping = FakeHostResolutionStore.mappings.get(normalized);
     if (!mapping || mapping.status !== 'active') {
+      return null;
+    }
+
+    // Cross-host verification
+    if (mapping.hostname.toLowerCase() !== normalized.toLowerCase()) {
       return null;
     }
 
@@ -200,7 +224,6 @@ export class FakeHostResolutionStore implements HostResolutionStore {
     if (!normalized) return false;
 
     if (mapping.status !== 'active') {
-      // Inactive or pending domains must never be published to data-plane routing store
       return false;
     }
 
@@ -224,9 +247,6 @@ export class FakeHostResolutionStore implements HostResolutionStore {
 let fakeStoreInstance: FakeHostResolutionStore | null = null;
 let edgeStoreInstance: EdgeConfigHostResolutionStore | null = null;
 
-/**
- * Factory function to retrieve the appropriate HostResolutionStore.
- */
 export function getHostResolutionStore(): HostResolutionStore {
   if (process.env.NODE_ENV === 'production') {
     if (!edgeStoreInstance) {
@@ -235,16 +255,12 @@ export function getHostResolutionStore(): HostResolutionStore {
     return edgeStoreInstance;
   }
 
-  // In test / dev environments
   if (!fakeStoreInstance) {
     fakeStoreInstance = new FakeHostResolutionStore();
   }
   return fakeStoreInstance;
 }
 
-/**
- * Control plane helper: Publishes verified active domain mapping.
- */
 export async function publishActiveDomainMapping(
   weddingId: string,
   weddingSlug: string,
@@ -260,9 +276,6 @@ export async function publishActiveDomainMapping(
   });
 }
 
-/**
- * Control plane helper: Removes domain mapping upon deletion.
- */
 export async function removeDomainMapping(hostname: string): Promise<boolean> {
   const store = getHostResolutionStore();
   return store.remove(hostname);

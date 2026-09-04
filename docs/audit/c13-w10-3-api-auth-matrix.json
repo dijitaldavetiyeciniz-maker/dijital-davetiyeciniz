@@ -1,0 +1,232 @@
+[
+  {
+    "path": "/api/admin/auth",
+    "method": "POST",
+    "scope": "PUBLIC_CREDENTIAL",
+    "auth": "Wedding Identifier + Password",
+    "ownerCheck": "DB scrypt match",
+    "rateLimit": "IP + Wedding (10/5m)",
+    "csrf": "SameSite=Lax Cookie",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/admin/verify",
+    "method": "POST",
+    "scope": "ADMIN",
+    "auth": "Signed HMAC Cookie",
+    "ownerCheck": "Wedding ID in token payload",
+    "rateLimit": "Distributed RPC",
+    "csrf": "HttpOnly SameSite=Lax",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/admin/logout",
+    "method": "POST",
+    "scope": "ADMIN",
+    "auth": "None (Clears session)",
+    "ownerCheck": "N/A",
+    "rateLimit": "N/A",
+    "csrf": "SameSite=Lax",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/admin/content",
+    "method": "POST",
+    "scope": "ADMIN",
+    "auth": "Signed Admin Cookie / User Auth",
+    "ownerCheck": "Wedding ID Ownership",
+    "rateLimit": "Distributed RPC",
+    "csrf": "Verified Session",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/super-admin/auth",
+    "method": "POST",
+    "scope": "SUPERADMIN_CREDENTIAL",
+    "auth": "Server SUPERADMIN_PASSWORD",
+    "ownerCheck": "Server Environment Key",
+    "rateLimit": "IP (5/5m Distributed RPC)",
+    "csrf": "SameSite=Lax Cookie",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/super-admin/logout",
+    "method": "POST",
+    "scope": "SUPERADMIN",
+    "auth": "None (Clears session)",
+    "ownerCheck": "N/A",
+    "rateLimit": "N/A",
+    "csrf": "SameSite=Lax",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/super-admin/site-settings",
+    "method": "GET, POST, PUT",
+    "scope": "SUPERADMIN",
+    "auth": "Signed SuperAdmin Session Cookie",
+    "ownerCheck": "Super Admin Token",
+    "rateLimit": "Distributed RPC",
+    "csrf": "HttpOnly SameSite=Lax",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/super-admin/system-status",
+    "method": "GET",
+    "scope": "SUPERADMIN",
+    "auth": "Signed SuperAdmin Session Cookie",
+    "ownerCheck": "Super Admin Token",
+    "rateLimit": "Distributed RPC",
+    "csrf": "HttpOnly SameSite=Lax",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/super-admin/support",
+    "method": "GET, POST, PATCH",
+    "scope": "SUPERADMIN",
+    "auth": "Signed SuperAdmin Session Cookie",
+    "ownerCheck": "Super Admin Token",
+    "rateLimit": "Distributed RPC",
+    "csrf": "HttpOnly SameSite=Lax",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/super-admin/data-cleanup",
+    "method": "POST",
+    "scope": "SUPERADMIN",
+    "auth": "Signed SuperAdmin Session Cookie",
+    "ownerCheck": "Super Admin Token + Dry Run Guard",
+    "rateLimit": "Distributed RPC",
+    "csrf": "HttpOnly SameSite=Lax",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/payments/checkout",
+    "method": "POST",
+    "scope": "USER_AUTHENTICATED",
+    "auth": "Server Supabase User Session / Bearer",
+    "ownerCheck": "Wedding User ID == Session User ID",
+    "rateLimit": "IP (10/1m Distributed RPC)",
+    "csrf": "Bearer Header / Session",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/payments/webhook",
+    "method": "POST",
+    "scope": "PROVIDER_WEBHOOK",
+    "auth": "Timing-Safe HMAC-SHA256 Signature",
+    "ownerCheck": "Iyzico Merchant Webhook Secret",
+    "rateLimit": "Distributed RPC",
+    "csrf": "Webhook Signature Header",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/payments/refund",
+    "method": "POST",
+    "scope": "USER_AUTHENTICATED",
+    "auth": "Server Supabase User Session",
+    "ownerCheck": "Payment User ID == Session User ID",
+    "rateLimit": "Distributed RPC",
+    "csrf": "Bearer Header / Session",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/payments/status",
+    "method": "GET",
+    "scope": "USER_AUTHENTICATED",
+    "auth": "Server Supabase User Session",
+    "ownerCheck": "Wedding User ID == Session User ID",
+    "rateLimit": "Distributed RPC",
+    "csrf": "Bearer Header / Session",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/support/conversations",
+    "method": "POST",
+    "scope": "PUBLIC / USER",
+    "auth": "Optional Server User Session",
+    "ownerCheck": "Server-derived user_id (null for guests)",
+    "rateLimit": "IP (5/5m Distributed RPC)",
+    "csrf": "JSON / Schema",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/support/messages",
+    "method": "POST",
+    "scope": "PUBLIC / USER",
+    "auth": "Optional Server User Session",
+    "ownerCheck": "Server-derived user_id (null for guests)",
+    "rateLimit": "IP (5/5m Distributed RPC)",
+    "csrf": "JSON / Schema",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/guests",
+    "method": "GET, POST",
+    "scope": "ADMIN / USER",
+    "auth": "User Session / Admin Cookie",
+    "ownerCheck": "Wedding Ownership Verified",
+    "rateLimit": "IP (60/1m Distributed RPC)",
+    "csrf": "Cookie / Bearer",
+    "cache": "private, no-store"
+  },
+  {
+    "path": "/api/rsvp",
+    "method": "GET, POST",
+    "scope": "PUBLIC_GUEST",
+    "auth": "Public / Guest Token",
+    "ownerCheck": "Wedding Slug / Token Scoped",
+    "rateLimit": "IP + Honeypot Anti-Spam",
+    "csrf": "Schema / Public",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/guestbook",
+    "method": "GET, POST",
+    "scope": "PUBLIC_GUEST",
+    "auth": "Public / Moderation Token",
+    "ownerCheck": "Wedding Slug / Token Scoped",
+    "rateLimit": "IP + Honeypot Anti-Spam",
+    "csrf": "Schema / Public",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/checkin",
+    "method": "POST",
+    "scope": "PUBLIC_GUEST",
+    "auth": "Public Guest Token",
+    "ownerCheck": "Token Cryptographic Verification",
+    "rateLimit": "Distributed RPC",
+    "csrf": "Token Payload",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/site-settings/public",
+    "method": "GET",
+    "scope": "PUBLIC",
+    "auth": "None",
+    "ownerCheck": "Published Config Only",
+    "rateLimit": "Public Edge Cache",
+    "csrf": "N/A",
+    "cache": "s-maxage=60, stale-while-revalidate=300"
+  },
+  {
+    "path": "/api/health",
+    "method": "GET",
+    "scope": "PUBLIC_PROBE",
+    "auth": "None",
+    "ownerCheck": "N/A",
+    "rateLimit": "N/A",
+    "csrf": "N/A",
+    "cache": "no-store"
+  },
+  {
+    "path": "/api/ready",
+    "method": "GET",
+    "scope": "PUBLIC_PROBE",
+    "auth": "None",
+    "ownerCheck": "N/A",
+    "rateLimit": "N/A",
+    "csrf": "N/A",
+    "cache": "no-store"
+  }
+]

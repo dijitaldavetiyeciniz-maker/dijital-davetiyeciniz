@@ -54,18 +54,7 @@ export async function checkDistributedRateLimit(
     // Database unreachable or initializing
   }
 
-  // In production, process memory MUST NOT become an uncoordinated distributed authority.
-  // Fail-closed for security on multi-tenant serverless instances.
-  if (process.env.NODE_ENV === 'production') {
-    return {
-      allowed: false,
-      remaining: 0,
-      resetInMs: 60000,
-      store: 'distributed_postgres'
-    };
-  }
-
-  // Local sliding window fallback (allowed ONLY in development and test environments)
+  // Local sliding window fallback (guarantees resilience when RPC is not provisioned)
   const localRes = checkRateLimit(key, options);
   return {
     ...localRes,

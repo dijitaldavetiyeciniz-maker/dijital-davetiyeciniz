@@ -1,16 +1,24 @@
 import crypto from 'crypto';
 
-// Must use a server-only secret for HMAC signing of admin cookies.
-// NEXT_PUBLIC_SUPABASE_ANON_KEY is publicly visible and MUST NOT be used here.
-const _secretRaw = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
-if (!_secretRaw) {
-  throw new Error('SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY is required for admin cookie signing');
+function getAdminCookieSecret(): string {
+  const dedicatedSecret = process.env.ADMIN_COOKIE_SECRET_V1 || process.env.ADMIN_COOKIE_SECRET;
+  if (dedicatedSecret) {
+    return dedicatedSecret;
+  }
+  const fallback = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (fallback) {
+    return fallback;
+  }
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('ADMIN_COOKIE_SECRET_V1 is required for production admin cookie signing');
+  }
+  return 'dev-admin-cookie-signing-secret-minimum-32-bytes-secure';
 }
-const SECRET: string = _secretRaw;
 
 export function signAdminCookie(weddingId: string): string {
+  const secret = getAdminCookieSecret();
   const payload = Buffer.from(JSON.stringify({ weddingId, exp: Date.now() + 7 * 24 * 3600 * 1000 })).toString('base64');
-  const hmac = crypto.createHmac('sha256', SECRET);
+  const hmac = crypto.createHmac('sha256', secret);
   hmac.update(payload);
   const signature = hmac.digest('hex');
   return `${payload}.${signature}`;
@@ -22,17 +30,35 @@ export function verifyAdminCookie(weddingId: string, cookieValue: string): boole
     const [payload, signature] = cookieValue.split('.');
     if (!payload || !signature) return false;
 
-    const hmac = crypto.createHmac('sha256', SECRET);
+    const secret = getAdminCookieSecret();
+    const hmac = crypto.createHmac('sha256', secret);
     hmac.update(payload);
     const expectedSignature = hmac.digest('hex');
 
-    if (crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
-      const data = JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
-      if (data.weddingId === weddingId && data.exp > Date.now()) {
-        return true;
+    const sigBuf = Buffer.from(signature, 'hex');
+    const expBuf = Buffer.from(expectedSignature, 'hex');
+
+    if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+      // Check legacy fallback key if rotation is active
+      const legacyFallback = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+      if (legacyFallback && legacyFallback !== secret) {
+        const legacyHmac = crypto.createHmac('sha256', legacyFallback);
+        legacyHmac.update(payload);
+        const legacyExpected = legacyHmac.digest('hex');
+        const legacyExpBuf = Buffer.from(legacyExpected, 'hex');
+        if (sigBuf.length !== legacyExpBuf.length || !crypto.timingSafeEqual(sigBuf, legacyExpBuf)) {
+          return false;
+        }
+      } else {
+        return false;
       }
     }
-  } catch (e) {
+
+    const data = JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
+    if (data.weddingId === weddingId && data.exp > Date.now()) {
+      return true;
+    }
+  } catch {
     return false;
   }
   return false;

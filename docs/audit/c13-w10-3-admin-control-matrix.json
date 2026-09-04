@@ -1,0 +1,101 @@
+[
+  {
+    "controlId": "ctrl-couple-names",
+    "tab": "İçerik",
+    "element": "input",
+    "validated": true,
+    "dbField": "bride_name, groom_name",
+    "persists": true,
+    "publicConsumer": "Hero & Invitation Canvas"
+  },
+  {
+    "controlId": "ctrl-event-date",
+    "tab": "İçerik",
+    "element": "input[datetime]",
+    "validated": true,
+    "dbField": "wedding_date",
+    "persists": true,
+    "publicConsumer": "Countdown & Calendar"
+  },
+  {
+    "controlId": "ctrl-venue-address",
+    "tab": "İçerik",
+    "element": "textarea",
+    "validated": true,
+    "dbField": "venue_name, venue_address",
+    "persists": true,
+    "publicConsumer": "Venue Card & Maps"
+  },
+  {
+    "controlId": "ctrl-program-builder",
+    "tab": "Program",
+    "element": "builder / sortable",
+    "validated": true,
+    "dbField": "custom_overrides.program_items",
+    "persists": true,
+    "publicConsumer": "Timeline / Program Section"
+  },
+  {
+    "controlId": "ctrl-custom-sections",
+    "tab": "Özel Bölümler",
+    "element": "dynamic manager",
+    "validated": true,
+    "dbField": "custom_sections (table)",
+    "persists": true,
+    "publicConsumer": "Custom Content Section"
+  },
+  {
+    "controlId": "ctrl-template-selector",
+    "tab": "Tasarım Stüdyosu",
+    "element": "grid selector",
+    "validated": true,
+    "dbField": "template_id",
+    "persists": true,
+    "publicConsumer": "272 Dynamic Layout Renderers"
+  },
+  {
+    "controlId": "ctrl-opening-selector",
+    "tab": "Açılış Animasyonu",
+    "element": "opening catalog",
+    "validated": true,
+    "dbField": "entrance_animation",
+    "persists": true,
+    "publicConsumer": "50 Opening Animations"
+  },
+  {
+    "controlId": "ctrl-font-picker",
+    "tab": "Tipografi",
+    "element": "font selector",
+    "validated": true,
+    "dbField": "font_family, names_font_family",
+    "persists": true,
+    "publicConsumer": "95 Curated Web Fonts"
+  },
+  {
+    "controlId": "ctrl-bg-customizer",
+    "tab": "Arka Plan",
+    "element": "color & gradient picker",
+    "validated": true,
+    "dbField": "custom_overrides.background",
+    "persists": true,
+    "publicConsumer": "Invitation Canvas Backdrop"
+  },
+  {
+    "controlId": "ctrl-guest-table",
+    "tab": "Misafir & LCV",
+    "element": "datagrid / import",
+    "validated": true,
+    "dbField": "guests (table)",
+    "persists": true,
+    "publicConsumer": "Guest Token / Check-in QR"
+  },
+  {
+    "controlId": "ctrl-domain-manager",
+    "tab": "Özel Alan Adı",
+    "element": "domain input / verify",
+    "validated": true,
+    "dbField": "custom_domains (table)",
+    "persists": true,
+    "publicConsumer": "Edge Config Data-Plane Proxy"
+  }
+]
