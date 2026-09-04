@@ -30,18 +30,22 @@ async function run() {
   console.log(`1. Release Identity:`);
   console.log(`  CURRENT_GIT_HEAD: ${currentHead}`);
 
-  // 2. Edge Config Validation
-  console.log('\n2. Auditing Edge Config Connection...');
+  // 2. Global Config / Edge Config Validation
+  console.log('\n2. Auditing Global Config / Edge Config Connection...');
+  const globalConfigEnv = process.env.GLOBAL_CONFIG || '';
   const edgeConfigEnv = process.env.EDGE_CONFIG || '';
-  const edgeConfigEnvConfigured = Boolean(edgeConfigEnv);
-  const edgeConfigStoreExists = edgeConfigEnvConfigured ? 'YES' : 'NO';
-  const edgeConfigProjectConnected = edgeConfigEnvConfigured ? 'YES' : 'NO';
-  let edgeConfigProductionRead = edgeConfigEnvConfigured ? 'PASS' : 'BLOCKED (EDGE_CONFIG_NOT_CONFIGURED)';
+  const configEnv = globalConfigEnv || edgeConfigEnv;
+  const configEnvConfigured = Boolean(configEnv);
+  const edgeConfigStoreExists = configEnvConfigured ? 'YES' : 'NO';
+  const edgeConfigProjectConnected = configEnvConfigured ? 'YES' : 'NO';
+  let edgeConfigProductionRead = configEnvConfigured ? 'PASS' : 'BLOCKED (GLOBAL_CONFIG_NOT_CONFIGURED)';
 
-  if (edgeConfigEnv) {
-    console.log('  ✓ Edge Config connection configured.');
+  if (globalConfigEnv) {
+    console.log('  ✓ Global Config connection configured (GLOBAL_CONFIG).');
+  } else if (edgeConfigEnv) {
+    console.log('  ✓ Edge Config connection configured (EDGE_CONFIG legacy).');
   } else {
-    console.log('  ⚠ EDGE_CONFIG is not present in local environment. Fail-closed proxy behavior verified.');
+    console.log('  ⚠ GLOBAL_CONFIG / EDGE_CONFIG is not present in local environment. Fail-closed proxy behavior verified.');
   }
 
   // 3. Vercel Provider Validation
@@ -150,7 +154,7 @@ async function run() {
     timestamp: new Date().toISOString(),
     audit_gate: 'C13_W10_3_PRE_W11_STABILIZATION',
     git_head: currentHead,
-    edge_config_configured: edgeConfigEnvConfigured,
+    edge_config_configured: configEnvConfigured,
     edge_config_read_status: edgeConfigProductionRead,
     vercel_api_configured: Boolean(vercelApiToken && vercelProjectId),
     vercel_read_status: vercelDomainsRead,

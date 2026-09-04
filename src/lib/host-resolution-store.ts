@@ -37,24 +37,24 @@ export class EdgeConfigHostResolutionStore implements HostResolutionStore {
   private apiToken: string | null;
 
   constructor(edgeConfigUrl?: string, edgeConfigId?: string, apiToken?: string) {
-    this.edgeConfigUrl = edgeConfigUrl || process.env.EDGE_CONFIG || null;
+    this.edgeConfigUrl = edgeConfigUrl || process.env.GLOBAL_CONFIG || process.env.EDGE_CONFIG || null;
     this.edgeConfigId = edgeConfigId || process.env.EDGE_CONFIG_ID || null;
-    this.apiToken = apiToken || process.env.VERCEL_API_TOKEN || null;
+    this.apiToken = apiToken || process.env.VERCEL_API_TOKEN || process.env.VERCEL_AUTH_TOKEN || process.env.VERCEL_TOKEN || null;
 
     if (process.env.NODE_ENV === 'production' && !this.edgeConfigUrl) {
-      console.warn('[EdgeConfigStore] WARNING: EDGE_CONFIG is not configured in production environment. Custom host resolution will fail closed.');
+      console.warn('[EdgeConfigStore] WARNING: GLOBAL_CONFIG / EDGE_CONFIG is not configured in production environment. Custom host resolution will fail closed.');
     }
   }
 
   /**
-   * Data-plane: Resolves hostname from Edge Config.
+   * Data-plane: Resolves hostname from Global Config / Edge Config.
    * Eliminates stale 1-hour cache and distinguishes 404 from 500/503.
    */
   async resolve(hostname: string): Promise<HostMapping | null> {
     const { hostname: normalized } = normalizeHostname(hostname);
     if (!normalized) return null;
     if (!this.edgeConfigUrl) {
-      throw new HostStoreUnavailableError('Edge Config URL is not configured');
+      throw new HostStoreUnavailableError('Global Config / Edge Config URL is not configured');
     }
 
     try {

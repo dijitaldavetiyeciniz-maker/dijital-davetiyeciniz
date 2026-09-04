@@ -38,7 +38,7 @@ async function run() {
   // 2. Environment Variables & External Infra Check
   console.log('\n2. Infra & Environment Status:');
   const missingEnvs: string[] = [];
-  if (!process.env.EDGE_CONFIG) missingEnvs.push('EDGE_CONFIG');
+  if (!process.env.GLOBAL_CONFIG && !process.env.EDGE_CONFIG) missingEnvs.push('GLOBAL_CONFIG');
   if (!process.env.VERCEL_PROJECT_ID) missingEnvs.push('VERCEL_PROJECT_ID');
   if (!process.env.VERCEL_API_TOKEN) missingEnvs.push('VERCEL_API_TOKEN');
 
