@@ -45,8 +45,8 @@ export function validateEnvironment(): EnvironmentValidationResult {
 
   // Optional External Providers
   if (isProd) {
-    if (!process.env.EDGE_CONFIG) {
-      warnings.push('EDGE_CONFIG is not configured (custom domain data plane will fail closed)');
+    if (!process.env.GLOBAL_CONFIG && !process.env.EDGE_CONFIG) {
+      warnings.push('GLOBAL_CONFIG is not configured (custom domain data plane will fail closed)');
     }
     if (!process.env.IYZICO_API_KEY || !process.env.IYZICO_SECRET_KEY) {
       warnings.push('IYZICO credentials are not configured (live billing will return 503)');

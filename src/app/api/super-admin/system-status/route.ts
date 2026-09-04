@@ -164,26 +164,26 @@ export async function GET() {
     });
   }
 
-  // 6. Custom Domain Host Store / Edge Config
-  const hasEdgeConfig = !!process.env.EDGE_CONFIG;
-  if (hasEdgeConfig) {
+  // 6. Custom Domain Host Store / Global Config (Edge Config)
+  const hasGlobalOrEdgeConfig = !!(process.env.GLOBAL_CONFIG || process.env.EDGE_CONFIG);
+  if (hasGlobalOrEdgeConfig) {
     checks.push({
-      name: 'Vercel Edge Config (Domain Store)',
+      name: 'Vercel Global Config (Domain Store)',
       category: 'integration',
       status: 'HEALTHY',
-      message: 'Edge Config bağlı ve senkron'
+      message: process.env.GLOBAL_CONFIG ? 'GLOBAL_CONFIG bağlı ve senkron' : 'EDGE_CONFIG bağlı ve senkron (legacy)'
     });
   } else {
     checks.push({
-      name: 'Vercel Edge Config (Domain Store)',
+      name: 'Vercel Global Config (Domain Store)',
       category: 'integration',
       status: 'NOT_CONFIGURED',
-      message: 'EDGE_CONFIG ortam değişkeni tanımlı değil (Postgres fallback devrede)'
+      message: 'GLOBAL_CONFIG / EDGE_CONFIG ortam değişkeni tanımlı değil (fail-closed koruması devrede)'
     });
   }
 
   // 7. Vercel Provider API
-  const hasVercelToken = !!process.env.VERCEL_BEARER_TOKEN && !!process.env.VERCEL_PROJECT_ID;
+  const hasVercelToken = !!(process.env.VERCEL_API_TOKEN || process.env.VERCEL_AUTH_TOKEN || process.env.VERCEL_TOKEN || process.env.VERCEL_BEARER_TOKEN) && !!process.env.VERCEL_PROJECT_ID;
   if (hasVercelToken) {
     checks.push({
       name: 'Vercel Custom Domain Provider',
@@ -196,7 +196,7 @@ export async function GET() {
       name: 'Vercel Custom Domain Provider',
       category: 'integration',
       status: 'NOT_CONFIGURED',
-      message: 'VERCEL_BEARER_TOKEN tanımlı değil'
+      message: 'VERCEL_API_TOKEN / VERCEL_PROJECT_ID tanımlı değil'
     });
   }
 
